@@ -7,7 +7,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModel
 import org.koin.core.component.KoinComponent
 
-class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
+open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     open fun onCreate() {

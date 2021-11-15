@@ -1,4 +1,4 @@
 package com.buzuriu.dogapp.viewModels
 
-class MainViewModel {
+class MainViewModel:BaseViewModel() {
 }
