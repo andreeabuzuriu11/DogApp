@@ -5,7 +5,7 @@
     <string name="phone_hint">Phone</string>
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
-    <string name="forget_password">Forget Password?</string>
+    <string name="forget_password">Forgot Password?</string>
     <string name="login_text">Log in</string>
     <string name="or_text">or</string>
     <string name="dont_have_account">Don\'t have an account?</string>

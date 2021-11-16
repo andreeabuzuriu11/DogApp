@@ -55,14 +55,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/name_hint"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:text="@={viewModel.name}"/>
 
                     <EditText
                         android:id="@+id/edit_phone_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/phone_hint"
-                        android:inputType="textPassword" />
+                        android:inputType="textPassword"
+                        android:text="@={viewModel.phone}"/>
 
                     <EditText
                         android:id="@+id/edit_email_edit_text"

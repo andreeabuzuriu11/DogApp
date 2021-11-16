@@ -1,10 +1,7 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.buzuriu.dogapp.services.INavigationService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -12,6 +9,7 @@ import org.koin.core.component.inject
 open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
 
     val navigationService : INavigationService by inject()
+    var isLoadingViewVisible : MutableLiveData<Boolean> = MutableLiveData(false)
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     open fun onCreate() {
