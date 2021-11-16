@@ -5,9 +5,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ViewModel
+import com.buzuriu.dogapp.services.INavigationService
 import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
+
+    val navigationService : INavigationService by inject()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     open fun onCreate() {
