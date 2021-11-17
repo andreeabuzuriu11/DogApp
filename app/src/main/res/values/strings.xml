@@ -6,13 +6,15 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="forget_password">Forgot Password?</string>
-    <string name="login_text">Log in</string>
+    <string name="login_text"><u>Log in</u></string>
+    <string name="login_button_text">Log in</string>
     <string name="or_text">or</string>
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="register_button_text">Register</string>
+    <string name="register_text"><u>Register now</u></string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="already_registered_hint">Already have an account?</string>
-    <string name="forget_password_guid">We will use this email to send you link to reset password</string>
-    <string name="write_email_hint">Write your email</string>
+    <string name="forget_password_guid">We will send an email for you to reset your password</string>
+    <string name="write_email_hint">Email address</string>
 
 </resources>
