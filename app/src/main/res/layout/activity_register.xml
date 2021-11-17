@@ -31,6 +31,7 @@
                     android:layout_below="@id/register_fields_layout"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:background="@drawable/rounded_button"
+                    android:onClick="@{()->viewModel.registerClick()}"
                     android:text="@string/register_button_text"
                     android:textColor="#ffffff" />
 

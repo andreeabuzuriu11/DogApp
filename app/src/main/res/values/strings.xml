@@ -16,5 +16,9 @@
     <string name="already_registered_hint">Already have an account?</string>
     <string name="forget_password_guid">We will send an email for you to reset your password</string>
     <string name="write_email_hint">Email address</string>
+    <string name="title_activity_main8">Main8Activity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
 </resources>

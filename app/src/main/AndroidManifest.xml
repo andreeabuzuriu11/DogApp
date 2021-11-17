@@ -11,6 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DogApp">
         <activity
+            android:name=".views.main.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main8" />
+        <activity
             android:name=".views.auth.ForgotPasswordActivity"
             android:exported="false" />
         <activity

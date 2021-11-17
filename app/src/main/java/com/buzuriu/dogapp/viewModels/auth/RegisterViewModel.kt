@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
+import com.buzuriu.dogapp.views.main.MainActivity
 
 class RegisterViewModel : BaseViewModel() {
 
@@ -16,5 +17,10 @@ class RegisterViewModel : BaseViewModel() {
     fun loginClick()
     {
         navigationService.navigateToActivity(LoginActivity::class.java, true)
+    }
+
+    fun registerClick()
+    {
+        navigationService.navigateToActivity(MainActivity::class.java, true)
     }
 }
