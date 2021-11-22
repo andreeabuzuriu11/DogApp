@@ -27,9 +27,12 @@
 
                 <ImageView
                     android:layout_width="144dp"
+
                     android:layout_height="144dp"
+                    android:src="@drawable/ic_dog_walking"
                     android:layout_gravity="center_horizontal"
-                    android:src="@mipmap/ic_launcher" />
+                    android:scaleType="centerInside"
+                    />
 
 
                 <EditText
