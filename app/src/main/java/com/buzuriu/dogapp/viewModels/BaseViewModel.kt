@@ -2,14 +2,19 @@ package com.buzuriu.dogapp.viewModels
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.buzuriu.dogapp.services.IDialogService
+import com.buzuriu.dogapp.services.IFirebaseAuthService
 import com.buzuriu.dogapp.services.INavigationService
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
 
-    val navigationService : INavigationService by inject()
     var isLoadingViewVisible : MutableLiveData<Boolean> = MutableLiveData(false)
+
+    protected val dialogService : IDialogService by inject()
+    protected val firebaseAuthService : IFirebaseAuthService by inject()
+    protected val navigationService : INavigationService by inject()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     open fun onCreate() {

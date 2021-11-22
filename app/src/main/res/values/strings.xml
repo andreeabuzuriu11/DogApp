@@ -20,5 +20,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="email_missing_message">Please add an emai</string>
+    <string name="wrong_email_format_message">Please add a valid email</string>
+    <string name="password_missing_message">Please add a password</string>
+    <string name="password_does_not_match_message">The passwords do not match</string>
+    <string name="password_short_message">The password is too short</string>
+    <string name="unknown_error">Unknown error</string>
 
 </resources>
