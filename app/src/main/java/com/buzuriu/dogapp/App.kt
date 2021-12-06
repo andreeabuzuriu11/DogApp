@@ -15,6 +15,7 @@ class App : Application() {
         single<IDialogService> { DialogService(get()) }
         single<IFirebaseAuthService> { FirebaseAuthService() }
         single<INavigationService> { NavigationService(get()) }
+        single<IConnectivityService> { ConnectivityService(get())}
     }
 
     private val activityService: ICurrentActivityService by inject()

@@ -34,7 +34,6 @@ class LoginViewModel : BaseViewModel() {
                         ShowLoadingView(false)
 
                         if (successful) {
-                            //TODO go to dashboard if login is succesful
                             navigationService.navigateToActivity(MainActivity::class.java, true)
                         } else {
                             if (!exception?.message.isNullOrEmpty())
@@ -52,8 +51,10 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun fieldsAreCompleted(): Boolean {
-
-        //TODO check if internet is available
+        if (!connectivityService.isInternetAvailable()) {
+            dialogService.showSnackbar(R.string.no_internet_message)
+            return false
+        }
 
         if (email.value.isNullOrEmpty()) {
             dialogService.showSnackbar(R.string.email_missing_message)

@@ -26,5 +26,6 @@
     <string name="password_does_not_match_message">The passwords do not match</string>
     <string name="password_short_message">The password is too short</string>
     <string name="unknown_error">Unknown error</string>
+    <string name="no_internet_message">Please check your internet connection</string>
 
 </resources>

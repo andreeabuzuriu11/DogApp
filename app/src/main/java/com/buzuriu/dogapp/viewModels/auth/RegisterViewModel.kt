@@ -26,14 +26,13 @@ class RegisterViewModel : BaseAuthViewModel() {
     fun registerClick() {
         if (!fieldsAreCompleted()) return
 
-        //TODO show a loading view
+        ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
 
             firebaseAuthService.registerWithEmailAndPassword(email.value!!, password.value!!,
                 object : IOnCompleteListener {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
-
-                        //TODO stop showing loading view if onComplete
+                        ShowLoadingView(false)
 
                         if (successful)
                         {
@@ -51,8 +50,11 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
     private fun fieldsAreCompleted(): Boolean {
-
-        //TODO check it user is connected to internet
+        if(!connectivityService.isInternetAvailable())
+        {
+            dialogService.showSnackbar(R.string.no_internet_message)
+            return false
+        }
 
         if (email.value.isNullOrEmpty()) {
             dialogService.showSnackbar(R.string.email_missing_message)
