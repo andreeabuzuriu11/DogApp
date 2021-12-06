@@ -12,6 +12,12 @@ interface IFirebaseAuthService {
         password: String,
         onCompleteListener: IOnCompleteListener
     )
+
+    suspend fun login(
+        email: String,
+        password: String,
+        onCompleteListener: IOnCompleteListener
+    )
 }
 
 class FirebaseAuthService : IFirebaseAuthService {
@@ -21,6 +27,16 @@ class FirebaseAuthService : IFirebaseAuthService {
     override fun getCurrentUser() : FirebaseUser?
     {
         return auth.currentUser
+    }
+
+    override suspend fun login(
+        email: String,
+        password: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+            onCompleteListener.onComplete(it.isSuccessful, it.exception)
+        }
     }
 
     override suspend fun registerWithEmailAndPassword(

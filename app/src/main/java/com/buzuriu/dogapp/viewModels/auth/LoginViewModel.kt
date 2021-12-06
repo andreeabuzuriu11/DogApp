@@ -1,9 +1,16 @@
 package com.buzuriu.dogapp.viewModels.auth
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.R
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.ForgotPasswordActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
+import com.buzuriu.dogapp.views.main.MainActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginViewModel : BaseViewModel() {
 
@@ -15,10 +22,54 @@ class LoginViewModel : BaseViewModel() {
     }
 
     fun loginClicked() {
+        if (!fieldsAreCompleted()) return
 
+        ShowLoadingView(true)
+        viewModelScope.launch(Dispatchers.IO) {
+
+            firebaseAuthService.login(email.value!!, password.value!!,
+                object : IOnCompleteListener {
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+
+                        ShowLoadingView(false)
+
+                        if (successful) {
+                            //TODO go to dashboard if login is succesful
+                            navigationService.navigateToActivity(MainActivity::class.java, true)
+                        } else {
+                            if (!exception?.message.isNullOrEmpty())
+                                dialogService.showSnackbar(exception!!.message!!)
+                            else dialogService.showSnackbar(R.string.unknown_error)
+
+                        }
+                    }
+                })
+        }
     }
 
     fun forgetPasswordClicked() {
         navigationService.navigateToActivity(ForgotPasswordActivity::class.java, true)
+    }
+
+    private fun fieldsAreCompleted(): Boolean {
+
+        //TODO check if internet is available
+
+        if (email.value.isNullOrEmpty()) {
+            dialogService.showSnackbar(R.string.email_missing_message)
+            return false
+        }
+
+        if (!StringUtils.isEmailValid(email.value!!)) {
+            dialogService.showSnackbar(R.string.wrong_email_format_message)
+            return false
+        }
+
+        if (email.value.isNullOrEmpty()) {
+            dialogService.showSnackbar(R.string.password_missing_message)
+            return false
+        }
+
+        return true
     }
 }

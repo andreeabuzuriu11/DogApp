@@ -5,6 +5,8 @@ import androidx.lifecycle.*
 import com.buzuriu.dogapp.services.IDialogService
 import com.buzuriu.dogapp.services.IFirebaseAuthService
 import com.buzuriu.dogapp.services.INavigationService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -43,5 +45,13 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     open fun onDestroy() {
         Log.d("Lifecycle",this.javaClass.name + " onDestroy")
+    }
+
+    protected fun ShowLoadingView(isVisible : Boolean)
+    {
+        viewModelScope.launch(Dispatchers.Main)
+        {
+            isLoadingViewVisible.value = isVisible
+        }
     }
 }
