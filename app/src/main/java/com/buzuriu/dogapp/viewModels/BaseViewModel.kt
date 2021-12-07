@@ -2,10 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.buzuriu.dogapp.services.IConnectivityService
-import com.buzuriu.dogapp.services.IDialogService
-import com.buzuriu.dogapp.services.IFirebaseAuthService
-import com.buzuriu.dogapp.services.INavigationService
+import com.buzuriu.dogapp.services.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -19,6 +16,7 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     protected val firebaseAuthService : IFirebaseAuthService by inject()
     protected val navigationService : INavigationService by inject()
     protected val connectivityService : IConnectivityService by inject()
+    protected val databaseService : IDatabaseService by inject()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     open fun onCreate() {

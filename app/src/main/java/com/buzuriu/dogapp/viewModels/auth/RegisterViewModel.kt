@@ -4,19 +4,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
 class RegisterViewModel : BaseAuthViewModel() {
 
-    var name = MutableLiveData("")
-    var phone = MutableLiveData("")
-    var passwordRepeat = MutableLiveData("")
+    var name = MutableLiveData<String>()
+    var phone = MutableLiveData<String>()
+    var passwordRepeat = MutableLiveData<String>()
 
     fun loginClick()
     {
@@ -34,16 +37,48 @@ class RegisterViewModel : BaseAuthViewModel() {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
                         ShowLoadingView(false)
 
-                        if (successful)
-                        {
-                            navigationService.navigateToActivity(MainActivity::class.java, true)
+                        if (successful) {
+
+                            val user = databaseService.fireAuth.currentUser
+                            if (user != null) {
+                                val userInfo = UserInfo(
+                                    email.value,
+                                    name.value,
+                                    phone.value
+                                )
+                                ShowLoadingView(true)
+                                viewModelScope.launch(Dispatchers.IO) {
+
+                                    databaseService.storeUserInfo(
+                                        user.uid,
+                                        userInfo,
+                                        object : IOnCompleteListener {
+                                            override fun onComplete(successful: Boolean, exception: Exception?) {
+                                                ShowLoadingView(false)
+
+                                                if (successful) {
+                                                    dialogService.showSnackbar(R.string.info_added)
+                                                    viewModelScope.launch(Dispatchers.Main) {
+                                                        delay(1000)
+                                                        navigationService.navigateToActivity(MainActivity::class.java, true)
+                                                    }
+                                                } else {
+                                                    if (!exception?.message.isNullOrEmpty())
+                                                        dialogService.showSnackbar(exception!!.message!!)
+                                                    else dialogService.showSnackbar(R.string.unknown_error)
+                                                }
+                                            }
+                                        })
+                                }
+                            }
+
                         }
-                        else
-                        {
+                        else {
                             if (!exception?.message.isNullOrEmpty())
                                 dialogService.showSnackbar(exception!!.message!!)
-                            else dialogService.showSnackbar(R.string.unknown_error)
+                            dialogService.showSnackbar(R.string.unknown_error)
                         }
+
                     }
                 })
         }

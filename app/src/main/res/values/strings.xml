@@ -27,5 +27,6 @@
     <string name="password_short_message">The password is too short</string>
     <string name="unknown_error">Unknown error</string>
     <string name="no_internet_message">Please check your internet connection</string>
+    <string name="info_added">Info has been added successfully </string>
 
 </resources>
