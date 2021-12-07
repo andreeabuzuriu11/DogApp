@@ -19,6 +19,8 @@ interface IFirebaseAuthService {
         password: String,
         onCompleteListener: IOnCompleteListener
     )
+
+    suspend fun resetPassword(email:String, onCompleteListener: IOnCompleteListener)
 }
 
 class FirebaseAuthService : IFirebaseAuthService {
@@ -40,6 +42,12 @@ class FirebaseAuthService : IFirebaseAuthService {
         }
     }
 
+    override suspend fun resetPassword(email: String, onCompleteListener: IOnCompleteListener) {
+        auth.sendPasswordResetEmail(email).addOnCompleteListener {
+            onCompleteListener.onComplete(it.isSuccessful, it.exception)
+        }
+    }
+
     override suspend fun registerWithEmailAndPassword(
         email: String, password: String, onCompleteListener: IOnCompleteListener)
     {
@@ -47,4 +55,6 @@ class FirebaseAuthService : IFirebaseAuthService {
             onCompleteListener.onComplete(it.isSuccessful, it.exception)
         }
     }
+
+
 }
