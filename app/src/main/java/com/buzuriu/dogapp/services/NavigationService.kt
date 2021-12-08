@@ -15,8 +15,6 @@ interface INavigationService {
 
     fun navigateToFragment(transitionId: Int, navHostId: Int)
 
-    //fun <T : Fragment> navigateToFragment(fragmentClass: KClass<T>, finishCurrentActivity: Boolean)
-
     fun popFragmentBackStack(navHostId: Int)
 
     fun closeCurrentActivityAfterTransition()
