@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="dog"
+            type="com.buzuriu.dogapp.models.DogObj" />
+    </data>
+    <LinearLayout
+        android:id="@+id/dog_cell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+     >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:background="@drawable/rounded_cell"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="100dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/dog_image"
+                    android:scaleType="fitCenter"
+                    />
+
+                <TextView
+                    android:id="@+id/dog_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:text="@{dog.name}"
+                    tool:text="Rex"
+                    android:textColor="@color/text_grey"
+                    android:textSize="24dp"
+                    android:gravity="center_vertical"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/circle"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/ic_baseline_edit_24"
+                    android:text="Edit" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/circle"
+                    android:backgroundTint="@color/red_delete"
+                    android:src="@drawable/ic_baseline_delete_24"
+                    android:tintMode="src_in"
+                    android:text="Delete"
+                    app:tint="@color/white" />
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</layout>
