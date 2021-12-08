@@ -66,7 +66,7 @@ class LoginViewModel : BaseViewModel() {
             return false
         }
 
-        if (email.value.isNullOrEmpty()) {
+        if (password.value.isNullOrEmpty()) {
             dialogService.showSnackbar(R.string.password_missing_message)
             return false
         }

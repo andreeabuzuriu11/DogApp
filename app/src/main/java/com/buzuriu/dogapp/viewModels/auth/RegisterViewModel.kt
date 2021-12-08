@@ -6,14 +6,11 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
-import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.LoginActivity
-import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 
 class RegisterViewModel : BaseAuthViewModel() {
 
@@ -114,6 +111,27 @@ class RegisterViewModel : BaseAuthViewModel() {
         if(password.value!!.length < minPasswordLength)
         {
             dialogService.showSnackbar(R.string.password_short_message)
+            return false
+        }
+        if(name.value.isNullOrEmpty())
+        {
+            dialogService.showSnackbar("Name field is mandatory")
+            return false
+        }
+        if(!StringUtils.isLetters(name.value!!))
+        {
+            dialogService.showSnackbar("Name cannot contain digits")
+            return false
+        }
+
+        if(phone.value.isNullOrEmpty())
+        {
+            dialogService.showSnackbar("Phone field is mandatory")
+            return false
+        }
+        if(phone.value!!.length < 10)
+        {
+            dialogService.showSnackbar("Phone number cannot be this short")
             return false
         }
 

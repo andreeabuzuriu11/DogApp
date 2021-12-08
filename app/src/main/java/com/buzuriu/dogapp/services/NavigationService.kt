@@ -64,31 +64,18 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
         val activity: Activity? = currentActivityService.activity
 
         if (activity != null) {
-            var navController = activity.findNavController(navHostId)
+            val navController = activity.findNavController(navHostId)
             navController.navigate(transitionId)
         } else {
             throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")
         }
     }
 
-    /* override fun <T : Fragment> navigateToFragment(
-         fragmentClass: KClass<T>,
-         finishCurrentActivity: Boolean
-     ) {
-         navigateToActivity(
-             ContainerActivity::class.java,
-             finishCurrentActivity,
-             false,
-             ContainerActivity.fragmentClassNameParam,
-             fragmentClass.qualifiedName
-         )
-     }*/
-
     override fun popFragmentBackStack(navHostId: Int) {
         val activity: Activity? = currentActivityService.activity
 
         if (activity != null) {
-            var navController = activity.findNavController(navHostId)
+            val navController = activity.findNavController(navHostId)
             navController.popBackStack()
         } else {
             throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")

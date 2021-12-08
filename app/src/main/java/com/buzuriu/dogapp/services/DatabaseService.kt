@@ -2,7 +2,6 @@ package com.buzuriu.dogapp.services
 
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.UserInfo
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -20,7 +19,7 @@ class DatabaseService : IDatabaseService {
         firestore.collection(userInfoCollection)
             .document(userUid)
             .set(userInfo)
-            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful,it.exception) }
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
 }

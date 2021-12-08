@@ -91,7 +91,7 @@
                     android:layout_height="50dp"
                     android:layout_below="@+id/register_fields_layout"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rounded_button"
                     android:onClick="@{()->viewModel.registerClick()}"
                     android:text="@string/register_button_text"
@@ -126,7 +126,7 @@
             </LinearLayout>
             </RelativeLayout>
     </ScrollView>
-
+<!--TODO visibility-->
         <RelativeLayout
             android:id="@+id/loadingView"
             android:layout_width="match_parent"

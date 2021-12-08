@@ -32,10 +32,10 @@ class ActivityLifecycleListener : Application.ActivityLifecycleCallbacks {
     var activity: Activity?
         get() = currentActivity?.get()
         private set(value) {
-            if (value != null) {
-                currentActivity = WeakReference<Activity>(value)
+            currentActivity = if (value != null) {
+                WeakReference<Activity>(value)
             } else {
-                currentActivity = null
+                null
             }
         }
 

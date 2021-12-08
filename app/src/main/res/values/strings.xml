@@ -29,5 +29,6 @@
     <string name="unknown_error">Unknown error</string>
     <string name="no_internet_message">Please check your internet connection</string>
     <string name="info_added">Info has been added successfully </string>
+    <string name="man_walking_dog_content_description">Man walking dog image</string>
 
 </resources>
