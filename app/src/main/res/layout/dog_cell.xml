@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 >
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="100dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
