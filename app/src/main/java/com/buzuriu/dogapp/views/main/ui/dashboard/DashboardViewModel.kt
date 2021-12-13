@@ -16,6 +16,10 @@ class DashboardViewModel : BaseViewModel() {
         dogList.add(DogObj("Max",5, AgeEnum.MONTHS, "Bichon", GenderEnum.MALE, "dog_image.jpg"))
         dogList.add(DogObj("Lorelei",3, AgeEnum.YEARS, "Husky", GenderEnum.FEMALE, "dog_image.jpg"))
         dogList.add(DogObj("Rex",4, AgeEnum.YEARS, "Husky", GenderEnum.MALE, "dog_image.jpg"))
+        dogList.add(DogObj("Rex",4, AgeEnum.YEARS, "Husky", GenderEnum.MALE, "dog_image.jpg"))
+        dogList.add(DogObj("Rex",4, AgeEnum.YEARS, "Husky", GenderEnum.MALE, "dog_image.jpg"))
+        dogList.add(DogObj("Max",5, AgeEnum.MONTHS, "Bichon", GenderEnum.MALE, "dog_image.jpg"))
+        dogList.add(DogObj("Lorelei",3, AgeEnum.YEARS, "Husky", GenderEnum.FEMALE, "dog_image.jpg"))
         dogAdapter = DogAdapter(dogList, ::selectedDog)
     }
     private fun selectedDog(dogObj: DogObj)
