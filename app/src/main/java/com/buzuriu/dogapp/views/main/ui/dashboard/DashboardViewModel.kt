@@ -26,6 +26,10 @@ class DashboardViewModel : BaseViewModel() {
     {
 
     }
+    fun addDog()
+    {
+        //TODO add dog
+    }
 
 
 }
