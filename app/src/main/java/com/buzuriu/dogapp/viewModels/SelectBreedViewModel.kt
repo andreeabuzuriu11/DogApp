@@ -1,12 +1,16 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.util.Log
+import com.buzuriu.dogapp.adapters.BreedAdapter
+import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.utils.BreedsFile
 import java.lang.Exception
 
 class SelectBreedViewModel : BaseViewModel(){
 
-    private var breedsList = ArrayList<String>()
+    private var breedsList = ArrayList<BreedObj>()
+    var breedAdapter: BreedAdapter? = null
+    private var selectedBreed: BreedObj? = null
 
     init {
         initBreedsList();
@@ -14,9 +18,12 @@ class SelectBreedViewModel : BaseViewModel(){
     }
 
     private fun initBreedsList() {
-        BreedsFile.breedsList.forEach {
+       /* BreedsFile.breedsList.forEach {
             Log.d("MyTAG",it)
-        }
+        }*/
+        for(breedName in BreedsFile.breedsList)
+            breedsList.add(BreedObj(breedName))
+        breedAdapter = BreedAdapter(breedsList, this)
     }
 
     fun close() {
@@ -29,12 +36,13 @@ class SelectBreedViewModel : BaseViewModel(){
 
     }
 
-    private fun unselectPreviousCountry() {
-  /*      for (breed in breedsList) {
-            if (breed.isSelected!!) {
-                breed.isSelected = false
-                return
-            }
-        }*/
+    fun selectBreed(breedObj: BreedObj) {
+
+        /*unselectPreviousCountry()*/
+        breedObj.isSelected = true
+        selectedBreed = breedObj
+        /*blockActionIfCountryNotSelected.value = false*/
+        /*breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))*/
     }
+
 }

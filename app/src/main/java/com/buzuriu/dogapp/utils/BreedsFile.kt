@@ -3,7 +3,6 @@ package com.buzuriu.dogapp.utils
 class BreedsFile {
     companion object {
        var breedsList = listOf<String>(
-
                     "Afador",
                     "Affenhuahua",
                     "Affenpinscher",

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.SelectBreedViewModel" />
+
+        <variable
+            name="breedItem"
+            type="com.buzuriu.dogapp.models.BreedObj" />
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/breed_cell_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@{breedItem.breedName}"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:textSize="@dimen/normal_size"
+            tools:text="German Shepard" />
+
+
+    </RelativeLayout>
+
+</layout>
