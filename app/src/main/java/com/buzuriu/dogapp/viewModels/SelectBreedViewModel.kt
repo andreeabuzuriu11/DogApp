@@ -1,5 +1,7 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.util.Log
+import com.buzuriu.dogapp.utils.BreedsFile
 import java.lang.Exception
 
 class SelectBreedViewModel : BaseViewModel(){
@@ -8,11 +10,13 @@ class SelectBreedViewModel : BaseViewModel(){
 
     init {
         initBreedsList();
+
     }
 
     private fun initBreedsList() {
-        breedsList.add("Husky");
-        breedsList.add("German Shepard");
+        BreedsFile.breedsList.forEach {
+            Log.d("MyTAG",it)
+        }
     }
 
     fun close() {
