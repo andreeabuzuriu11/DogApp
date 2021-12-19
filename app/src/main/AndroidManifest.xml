@@ -14,6 +14,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".views.main.ui.OverlayActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.AddDogActivity"
             android:exported="false" />
         <activity
