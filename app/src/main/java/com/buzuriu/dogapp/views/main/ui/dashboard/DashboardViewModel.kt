@@ -1,10 +1,11 @@
 package com.buzuriu.dogapp.views.main.ui.dashboard
 
 import com.buzuriu.dogapp.adapters.DogAdapter
-import com.buzuriu.dogapp.enum.AgeEnum
-import com.buzuriu.dogapp.enum.GenderEnum
+import com.buzuriu.dogapp.enums.AgeEnum
+import com.buzuriu.dogapp.enums.GenderEnum
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.views.AddDogActivity
 
 class DashboardViewModel : BaseViewModel() {
 
@@ -28,7 +29,7 @@ class DashboardViewModel : BaseViewModel() {
     }
     fun addDog()
     {
-        //TODO add dog
+        navigationService.navigateToActivity(AddDogActivity::class.java, false);
     }
 
 

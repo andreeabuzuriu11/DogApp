@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.AddDogViewModel" />
+    </data>
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/addButton"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dogProfileImage">
+
+                    <EditText
+                        android:id="@+id/add_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/name_hint"
+                        android:inputType="textPersonName"
+                        android:text="@={viewModel.name}" />
+
+                    <EditText
+                        android:id="@+id/add_breed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick= "@{()->viewModel.selectBreed()}"
+                        android:hint="@string/breed_hint"
+                        android:inputType="textPersonName"
+                        android:text="@={viewModel.breed}" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/add_age"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/age_hint"
+                            android:inputType="numberDecimal"
+                            android:text="@={viewModel.ageValue}" />
+
+                        <Spinner
+                            android:id="@+id/spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="end"
+                            android:textAlignment="textEnd"
+                            cb_entries="@{viewModel.spinnerEntries}"
+                            cb_selectedValue = "@{viewModel.ageString}"/>
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/add_gender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/gender_hint"
+                        android:inputType="textPersonName"
+                        android:text="@={viewModel.breed}" />
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checkedButton="@={viewModel.radio_checked}">
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/male_gender"
+                            android:id="@+id/maleRadioId"
+                            />
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/female_gender"
+                            android:textAlignment="textEnd"
+                            android:id="@+id/femaleRadioId"
+                            />
+                    </RadioGroup>
+
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/addPetTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="ADD PET"
+                    android:textSize="20dp" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/dogProfileImage"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_below="@+id/addPetTextView"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/dog_image"
+                />
+
+
+            </RelativeLayout>
+
+
+        </ScrollView>
+
+        <!--TODO visibility-->
+        <RelativeLayout
+
+            android:id="@+id/loadingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_overlay"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+
+            <ProgressBar
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/addButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/rounded_button"
+            android:onClick="@{()->viewModel.addDogInList()}"
+            android:text="@string/add_button_text"
+            android:textColor="@color/white" />
+       <!-- <fragment
+            android:id="@+id/navigation_to_breed"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/activity_add_dog_select_breed_navigation"/>-->
+    </RelativeLayout>
+
+
+
+</layout>

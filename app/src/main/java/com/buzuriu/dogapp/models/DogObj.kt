@@ -1,9 +1,7 @@
 package com.buzuriu.dogapp.models
 
-import android.security.AppUriAuthenticationPolicy
-import android.widget.ImageView
-import com.buzuriu.dogapp.enum.AgeEnum
-import com.buzuriu.dogapp.enum.GenderEnum
+import com.buzuriu.dogapp.enums.AgeEnum
+import com.buzuriu.dogapp.enums.GenderEnum
 
 class DogObj {
     var name: String = ""
