@@ -18,9 +18,6 @@ class SelectBreedViewModel : BaseViewModel(){
     }
 
     private fun initBreedsList() {
-       /* BreedsFile.breedsList.forEach {
-            Log.d("MyTAG",it)
-        }*/
         for(breedName in BreedsFile.breedsList)
             breedsList.add(BreedObj(breedName))
         breedAdapter = BreedAdapter(breedsList, this)
@@ -38,11 +35,21 @@ class SelectBreedViewModel : BaseViewModel(){
 
     fun selectBreed(breedObj: BreedObj) {
 
-        /*unselectPreviousCountry()*/
+        unselectPreviousCountry()
         breedObj.isSelected = true
         selectedBreed = breedObj
         /*blockActionIfCountryNotSelected.value = false*/
-        /*breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))*/
+        breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))
+    }
+
+    private fun unselectPreviousCountry() {
+        for (breed in breedsList) {
+            if (breed.isSelected!!) {
+                breed.isSelected = false
+                breedAdapter?.notifyItemChanged(breedsList.indexOf(breed))
+                return
+            }
+        }
     }
 
 }
