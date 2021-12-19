@@ -50,6 +50,7 @@
                             android:id="@+id/selectBreedTextView"
                             android:layout_centerVertical="true"
                             android:layout_height="wrap_content"
+                            android:text="@={viewModel.breed}"
                             android:textSize="18dp"
                             android:hint="Breed" />
 

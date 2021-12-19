@@ -26,12 +26,18 @@ class SelectBreedViewModel : BaseViewModel(){
     }
 
     fun close() {
-        try {
-            navigationService.closeCurrentActivity()
-        }
-        catch (e: Exception)
+        navigationService.closeCurrentActivity()
+    }
+
+    fun saveBreed() {
+        if(selectedBreed == null)
         {
+            dialogService.showSnackbar("Please select a breed")
+            return
         }
+        dataExchangeService.put(AddDogViewModel::class.qualifiedName!!, selectedBreed!!)
+        close()
+
     }
 
     fun selectBreed(breedObj: BreedObj) {

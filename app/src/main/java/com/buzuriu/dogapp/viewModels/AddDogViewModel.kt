@@ -1,8 +1,10 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
+import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 
@@ -19,6 +21,15 @@ class AddDogViewModel : BaseViewModel() {
 
     init{
         radio_checked.postValue(R.id.maleRadioId) //def value
+    }
+
+    override fun onResume()
+    {
+        val selectedBreed = dataExchangeService.get<BreedObj>(this::class.qualifiedName!!)
+        if (selectedBreed!=null)
+        {
+            breed.value = selectedBreed.breedName
+        }
     }
 
 
