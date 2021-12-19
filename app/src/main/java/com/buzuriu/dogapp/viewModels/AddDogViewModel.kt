@@ -3,6 +3,8 @@ package com.buzuriu.dogapp.viewModels
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
+import com.buzuriu.dogapp.views.SelectBreedFragment
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 
 class AddDogViewModel : BaseViewModel() {
 
@@ -27,5 +29,12 @@ class AddDogViewModel : BaseViewModel() {
     fun selectBreed()
     {
 
+        navigationService.showOverlay(
+            OverlayActivity::class.java,
+            false,
+            false,
+            OverlayActivity.fragmentClassNameParam,
+            SelectBreedFragment::class.qualifiedName
+        )
     }
 }

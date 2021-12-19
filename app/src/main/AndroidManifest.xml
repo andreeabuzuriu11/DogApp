@@ -15,7 +15,7 @@
         tools:targetApi="m">
         <activity
             android:name=".views.main.ui.OverlayActivity"
-            android:exported="false" />
+            android:theme="@style/Theme.TransparentFullScreen" />
         <activity
             android:name=".views.AddDogActivity"
             android:exported="false" />
