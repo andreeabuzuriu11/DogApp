@@ -32,7 +32,6 @@ class SelectBreedViewModel : BaseViewModel(){
         catch (e: Exception)
         {
         }
-
     }
 
     fun selectBreed(breedObj: BreedObj) {
@@ -41,6 +40,7 @@ class SelectBreedViewModel : BaseViewModel(){
         breedObj.isSelected = true
         isButtonEnabled = MutableLiveData(true)
         selectedBreed = breedObj
+
         /*blockActionIfCountryNotSelected.value = false*/
         breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))
     }

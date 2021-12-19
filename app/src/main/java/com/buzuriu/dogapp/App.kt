@@ -17,6 +17,7 @@ class App : Application() {
         single<INavigationService> { NavigationService(get()) }
         single<IConnectivityService> { ConnectivityService(get())}
         single<IDatabaseService> { DatabaseService()}
+        single<IDataExchangeService> { DataExchangeService() }
     }
 
     private val activityService: ICurrentActivityService by inject()

@@ -17,6 +17,7 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     protected val navigationService : INavigationService by inject()
     protected val connectivityService : IConnectivityService by inject()
     protected val databaseService : IDatabaseService by inject()
+    protected val dataExchangeService: IDataExchangeService by inject()
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     open fun onCreate() {
