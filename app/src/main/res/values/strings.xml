@@ -12,6 +12,7 @@
     <string name="password_hint">Password</string>
     <string name="forget_password">Forgot Password?</string>
     <string name="login_text"><u>Log in</u></string>
+    <string name="save_button_text">Save</string>
     <string name="login_button_text">Log in</string>
     <string name="add_button_text">Add</string>
     <string name="reset_password_button">Reset password</string>

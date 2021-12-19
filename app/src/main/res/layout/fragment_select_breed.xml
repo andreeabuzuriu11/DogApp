@@ -10,10 +10,20 @@
     </data>
 
     <RelativeLayout
+        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/select_country_close_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:onClick="@{()->viewModel.close()}"
+            android:src="@drawable/ic_baseline_close_24"
+            />
 
     <TextView
         android:id="@+id/select_breed_title"
@@ -23,12 +33,32 @@
         android:text="@string/select_breed"
         android:textSize="24sp"/>
 
+        <EditText
+            android:id="@+id/select_breed_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_below="@id/select_breed_title"
+            android:hint="Start typing a breed name"
+            android:inputType="text" />
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/breed_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin" />
+        android:layout_below="@+id/select_breed_edit_text"
+        android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/select_country_save_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@drawable/rounded_button"
+            android:text="@string/save_button_text"
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 </layout>
