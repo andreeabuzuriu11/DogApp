@@ -32,7 +32,6 @@ class AddDogViewModel : BaseViewModel() {
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
-            false,
             OverlayActivity.fragmentClassNameParam,
             SelectBreedFragment::class.qualifiedName
         )
