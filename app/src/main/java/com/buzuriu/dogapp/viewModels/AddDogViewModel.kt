@@ -4,14 +4,20 @@ import android.util.Log
 import android.widget.RadioGroup
 import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
 import com.buzuriu.dogapp.enums.GenderEnum
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AddDogViewModel : BaseViewModel() {
 
@@ -70,6 +76,41 @@ class AddDogViewModel : BaseViewModel() {
             ageString.value!!,
             breed.value!!,
             currentGenderString!!)
+
+        val currentUserUid = currentUser?.uid
+        if(currentUserUid.isNullOrEmpty()) return
+
+        ShowLoadingView(true)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseService.storeDogInfo(currentUserUid, dog, object : IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+
+                    if (successful) {
+                        viewModelScope.launch(Dispatchers.Main) {
+                            dataExchangeService.put(DashboardViewModel::class.java.name, true)
+                            dialogService.showSnackbar(R.string.added_success_message)
+                            delay(2000)
+                            navigationService.closeCurrentActivity()
+
+                        }
+                    } else {
+
+                        viewModelScope.launch(Dispatchers.Main) {
+                            if (!exception?.message.isNullOrEmpty())
+                                dialogService.showSnackbar(exception!!.message!!)
+                            else dialogService.showSnackbar(R.string.unknown_error)
+                            delay(2000)
+                        }
+                    }
+
+                    ShowLoadingView(false)
+
+                }
+            })
+        }
+
+
 
     }
 
