@@ -1,7 +1,5 @@
 package com.buzuriu.dogapp.views
 
-
-import android.os.Bundle
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityAddDogBinding
 import com.buzuriu.dogapp.viewModels.AddDogViewModel
@@ -15,4 +13,5 @@ class AddDogActivity : BaseBoundActivity<AddDogViewModel, ActivityAddDogBinding>
     override fun setupDataBinding(binding: ActivityAddDogBinding) {
         binding.viewModel = mViewModel;
     }
+
 }

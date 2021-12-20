@@ -7,6 +7,8 @@
         <variable
             name="viewModel"
             type="com.buzuriu.dogapp.viewModels.AddDogViewModel" />
+
+        <import type="com.buzuriu.dogapp.enums.GenderEnum" />
     </data>
 
     <RelativeLayout
@@ -85,7 +87,7 @@
                             android:gravity="end"
                             android:textAlignment="textEnd"
                             cb_entries="@{viewModel.spinnerEntries}"
-                            cb_selectedValue = "@{viewModel.ageString}"/>
+                            cb_selectedValue ="@={viewModel.ageString}"/>
 
                     </LinearLayout>
 
@@ -95,12 +97,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/gender_hint"
-                        android:inputType="textPersonName"
                         />
                     <RadioGroup
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:checkedButton="@={viewModel.radio_checked}">
                         android:orientation="horizontal">
 
                         <RadioButton
@@ -108,6 +108,9 @@
                             android:layout_height="wrap_content"
                             android:text="@string/male_gender"
                             android:id="@+id/maleRadioId"
+                            android:checked="@{viewModel.currentGender.equals(GenderEnum.MALE)}"
+                            android:onClick="@{()->viewModel.setGenderType(GenderEnum.MALE)}"
+
                             />
                         <RadioButton
                             android:layout_width="wrap_content"
@@ -115,6 +118,8 @@
                             android:text="@string/female_gender"
                             android:textAlignment="textEnd"
                             android:id="@+id/femaleRadioId"
+                            android:checked="@{viewModel.currentGender.equals(GenderEnum.FEMALE)}"
+                            android:onClick="@{()->viewModel.setGenderType(GenderEnum.FEMALE)}"
                             />
                     </RadioGroup>
 
@@ -173,7 +178,7 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_button"
-            android:onClick="@{()->viewModel.addDogInList()}"
+            android:onClick="@{()->viewModel.addDog()}"
             android:text="@string/add_button_text"
             android:textColor="@color/white" />
 

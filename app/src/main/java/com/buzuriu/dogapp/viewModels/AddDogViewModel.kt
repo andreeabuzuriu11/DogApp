@@ -1,26 +1,35 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.util.Log
+import android.widget.RadioGroup
+import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
+import com.buzuriu.dogapp.enums.GenderEnum
 import com.buzuriu.dogapp.models.BreedObj
+import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 
 class AddDogViewModel : BaseViewModel() {
 
-    var spinnerEntries = listOf(AgeEnum.MONTHS, AgeEnum.YEARS)
+    var spinnerEntries = listOf(AgeEnum.MONTHS.toString(), AgeEnum.YEARS.toString())
 
-    var name = MutableLiveData<String>()
-    var breed = MutableLiveData<String>()
-    var ageValue = MutableLiveData<String>()
-    var ageString = MutableLiveData(AgeEnum.MONTHS)
+    var name = MutableLiveData("")
+    var breed = MutableLiveData("")
+    var ageValue = MutableLiveData("")
+    var ageString = MutableLiveData("")
     var imageURL = MutableLiveData<String>()
-    var radio_checked = MutableLiveData<Int>()
+    var currentGender: GenderEnum? = null
+    var currentGenderString:String? = null
+
+
+
 
     init{
-        radio_checked.postValue(R.id.maleRadioId) //def value
+
     }
 
     override fun onResume()
@@ -33,14 +42,43 @@ class AddDogViewModel : BaseViewModel() {
 
     }
 
-
-    fun addDogInList()
+    fun setGenderType(gender : GenderEnum)
     {
+        if(gender == GenderEnum.MALE)
+            currentGenderString = "male"
+        else
+            currentGenderString = "female"
+    }
+
+    fun addDog()
+    {
+        if(!areFieldsCompleted()) return
+
+        Log.d("info name=", name.value.toString())
+        Log.d("info ageValue=", ageValue.value.toString())
+        Log.d("info ageString=", ageString.value.toString())
+        Log.d("info breed=", breed.value.toString())
+        Log.d("info GenderString=", currentGenderString.toString())
+        Log.d("info imageURL=", imageURL.value.toString())
+
+        //TODO add dog image
+
+
+        val uid = StringUtils.getRandomUID()
+/*        val dog = DogObj(
+            uid,
+            name.value!!,
+            ageValue.value!!,
+            ageString.value!!,
+            breed.value!!,
+            gender.value!!,
+            imageURL.value!!)
+        */
 
     }
+
     fun selectBreed()
     {
-
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
@@ -48,4 +86,26 @@ class AddDogViewModel : BaseViewModel() {
             SelectBreedFragment::class.qualifiedName
         )
     }
+
+    private fun areFieldsCompleted() :Boolean {
+        if(name.value.isNullOrEmpty()) {
+            dialogService.showSnackbar("Please add a name")
+            return false
+        }
+        if(breed.value.isNullOrEmpty()) {
+            dialogService.showSnackbar("Please add a breed")
+            return false
+        }
+        if(ageValue.value.isNullOrEmpty()) {
+            dialogService.showSnackbar("Please add an age")
+            return false
+        }
+        if(currentGenderString.isNullOrEmpty()) {
+            dialogService.showSnackbar("Please select a gender")
+            return false
+        }
+
+        return true
+    }
+
 }
