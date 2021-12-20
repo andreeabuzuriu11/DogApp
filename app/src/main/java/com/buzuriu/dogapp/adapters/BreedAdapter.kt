@@ -39,7 +39,11 @@ class BreedAdapter (
                         }
                     }
                 }
-
             }
+
+    fun filterList(auxList: ArrayList<BreedObj>) {
+        breedsList = auxList
+        notifyDataSetChanged()
+    }
 
 }

@@ -1,15 +1,16 @@
 package com.buzuriu.dogapp.viewModels
 
-import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.BreedAdapter
 import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.utils.BreedsFile
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SelectBreedViewModel : BaseViewModel(){
 
     private var breedsList = ArrayList<BreedObj>()
-    var breedAdapter: BreedAdapter? = null
     private var selectedBreed: BreedObj? = null
+    var breedAdapter: BreedAdapter? = null
 
     init {
         initBreedsList()
@@ -52,6 +53,24 @@ class SelectBreedViewModel : BaseViewModel(){
                 return
             }
         }
+    }
+
+    fun searchByName(searchedString : String) {
+        val auxSearchedBreeds = ArrayList<BreedObj>()
+        if (breedsList.isNotEmpty())
+        {
+            for (item in breedsList)
+            {
+                val mySearchedString = searchedString.toLowerCase(Locale.ROOT)
+                val itemString = item.breedName?.toLowerCase(Locale.ROOT)
+
+                if(itemString!!.contains(mySearchedString) || mySearchedString.isEmpty())
+                {
+                    auxSearchedBreeds.add(item)
+                }
+            }
+        }
+        breedAdapter!!.filterList(auxSearchedBreeds)
     }
 
 }
