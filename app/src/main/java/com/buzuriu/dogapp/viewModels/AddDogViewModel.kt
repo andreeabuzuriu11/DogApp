@@ -59,22 +59,17 @@ class AddDogViewModel : BaseViewModel() {
         Log.d("info ageString=", ageString.value.toString())
         Log.d("info breed=", breed.value.toString())
         Log.d("info GenderString=", currentGenderString.toString())
-        Log.d("info imageURL=", imageURL.value.toString())
 
         //TODO add dog image
 
-
         val uid = StringUtils.getRandomUID()
-/*        val dog = DogObj(
+        val dog = DogObj(
             uid,
             name.value!!,
             ageValue.value!!,
             ageString.value!!,
             breed.value!!,
-            gender.value!!,
-            imageURL.value!!)
-        */
-
+            currentGenderString!!)
     }
 
     fun selectBreed()

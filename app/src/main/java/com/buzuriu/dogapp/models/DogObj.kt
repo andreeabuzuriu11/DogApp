@@ -7,12 +7,12 @@ class DogObj {
     var uid: String = ""
     var name: String = ""
     var ageValue: String = ""
-    var ageString: AgeEnum? = null
+    var ageString: String = ""
     var breed: String = ""
     var gender: String = ""
-    var imageURL: String = ""
 
-    constructor(uid: String, name: String, ageValue: String, ageString: AgeEnum, breed:String, gender: String, imageURL: String)
+    // TODO add imageURL
+    constructor(uid: String, name: String, ageValue: String, ageString: String, breed:String, gender: String)
     {
         this.uid = uid
         this.name = name
@@ -20,7 +20,6 @@ class DogObj {
         this.ageString = ageString
         this.breed = breed
         this.gender = gender
-        this.imageURL = imageURL
     }
 
 }

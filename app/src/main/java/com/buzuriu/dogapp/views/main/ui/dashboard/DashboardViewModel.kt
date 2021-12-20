@@ -13,14 +13,14 @@ class DashboardViewModel : BaseViewModel() {
     var dogAdapter : DogAdapter?
 
     init {
-        dogList.add(DogObj("1","Rex","4", AgeEnum.YEARS, "Husky", "male", "dog_image.jpg"))
-        dogList.add(DogObj("2","Max","5", AgeEnum.MONTHS, "Bichon", "male", "dog_image.jpg"))
-        dogList.add(DogObj("3","Lorelei","3", AgeEnum.YEARS, "Husky", "female", "dog_image.jpg"))
-        dogList.add(DogObj("4","Rex","4", AgeEnum.YEARS, "Husky","female", "dog_image.jpg"))
-        dogList.add(DogObj("5","Rex","4", AgeEnum.YEARS, "Husky", "male", "dog_image.jpg"))
-        dogList.add(DogObj("6","Rex","4", AgeEnum.YEARS, "Husky", "female", "dog_image.jpg"))
-        dogList.add(DogObj("7","Max","5", AgeEnum.MONTHS, "Bichon", "female", "dog_image.jpg"))
-        dogList.add(DogObj("8","Lorelei","3", AgeEnum.YEARS, "Husky", "male", "dog_image.jpg"))
+        dogList.add(DogObj("1","Rex","4", "MONTHS", "Husky", "male"))
+        dogList.add(DogObj("2","Max","5", "YEARS", "Bichon", "male"))
+        dogList.add(DogObj("3","Lorelei","3", "YEARS", "Husky", "female"))
+        dogList.add(DogObj("4","Rex","4", "YEARS", "Husky","female"))
+        dogList.add(DogObj("5","Rex","4", "YEARS", "Husky", "male"))
+        dogList.add(DogObj("6","Rex","4", "YEARS", "Husky", "female"))
+        dogList.add(DogObj("7","Max","5", "MONTHS", "Bichon", "female"))
+        dogList.add(DogObj("8","Lorelei","3", "YEARS", "Husky", "male"))
         dogAdapter = DogAdapter(dogList, ::selectedDog)
     }
     private fun selectedDog(dogObj: DogObj)
