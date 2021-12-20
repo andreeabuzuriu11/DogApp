@@ -30,6 +30,7 @@ class AddDogViewModel : BaseViewModel() {
         {
             breed.value = selectedBreed.breedName
         }
+
     }
 
 

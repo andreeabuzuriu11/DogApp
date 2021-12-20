@@ -4,19 +4,15 @@ import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.BreedAdapter
 import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.utils.BreedsFile
-import java.lang.Exception
 
 class SelectBreedViewModel : BaseViewModel(){
 
     private var breedsList = ArrayList<BreedObj>()
-    public var isButtonEnabled =  MutableLiveData(false)
     var breedAdapter: BreedAdapter? = null
     private var selectedBreed: BreedObj? = null
 
     init {
-        isButtonEnabled = MutableLiveData(false)
-        initBreedsList();
-
+        initBreedsList()
     }
 
     private fun initBreedsList() {
@@ -37,17 +33,14 @@ class SelectBreedViewModel : BaseViewModel(){
         }
         dataExchangeService.put(AddDogViewModel::class.qualifiedName!!, selectedBreed!!)
         close()
-
     }
 
     fun selectBreed(breedObj: BreedObj) {
 
         unselectPreviousCountry()
         breedObj.isSelected = true
-        isButtonEnabled = MutableLiveData(true)
         selectedBreed = breedObj
 
-        /*blockActionIfCountryNotSelected.value = false*/
         breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))
     }
 
