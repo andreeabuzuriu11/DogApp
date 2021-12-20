@@ -18,6 +18,7 @@ class App : Application() {
         single<IConnectivityService> { ConnectivityService(get())}
         single<IDatabaseService> { DatabaseService()}
         single<IDataExchangeService> { DataExchangeService() }
+        single<ISharedPreferencesService> { SharedPreferencesService(get()) }
     }
 
     private val activityService: ICurrentActivityService by inject()

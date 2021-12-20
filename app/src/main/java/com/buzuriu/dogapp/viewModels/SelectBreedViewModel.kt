@@ -8,12 +8,18 @@ import kotlin.collections.ArrayList
 
 class SelectBreedViewModel : BaseViewModel(){
 
+    companion object {
+        const val breedKey = "breedKey"
+        const val currentBreedKey = "currentBreedKey"
+    }
+
     private var breedsList = ArrayList<BreedObj>()
     private var selectedBreed: BreedObj? = null
     var breedAdapter: BreedAdapter? = null
 
     init {
         initBreedsList()
+
     }
 
     private fun initBreedsList() {
@@ -42,6 +48,7 @@ class SelectBreedViewModel : BaseViewModel(){
         breedObj.isSelected = true
         selectedBreed = breedObj
 
+        saveBreedInSharedPreferences()
         breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))
     }
 
@@ -73,4 +80,8 @@ class SelectBreedViewModel : BaseViewModel(){
         breedAdapter!!.filterList(auxSearchedBreeds)
     }
 
+    private fun saveBreedInSharedPreferences()
+    {
+        sharedPreferenceService.writeInSharedPref(currentBreedKey,selectedBreed!!)
+    }
 }
