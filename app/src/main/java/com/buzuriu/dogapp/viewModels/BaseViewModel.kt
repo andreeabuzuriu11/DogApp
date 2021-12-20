@@ -20,6 +20,9 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     protected val dataExchangeService: IDataExchangeService by inject()
     protected val sharedPreferenceService: ISharedPreferencesService by inject()
 
+    protected val currentUser get() = firebaseAuthService.getCurrentUser()
+    protected val isSignedIn get() = currentUser != null
+
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     open fun onCreate() {
         Log.d("Lifecycle",this.javaClass.name + "onCreate")

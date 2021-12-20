@@ -70,6 +70,7 @@ class AddDogViewModel : BaseViewModel() {
             ageString.value!!,
             breed.value!!,
             currentGenderString!!)
+
     }
 
     fun selectBreed()
