@@ -19,6 +19,7 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     protected val databaseService : IDatabaseService by inject()
     protected val dataExchangeService: IDataExchangeService by inject()
     protected val sharedPreferenceService: ISharedPreferencesService by inject()
+    protected val alertBuilderService: IAlertBuilderService by inject()
 
     protected val currentUser get() = firebaseAuthService.getCurrentUser()
     protected val isSignedIn get() = currentUser != null

@@ -142,8 +142,8 @@
                     android:layout_height="130dp"
                     android:layout_below="@+id/addPetTextView"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/dog_image"
-                />
+                    android:onClick="@{()->viewModel.takePicture()}"
+                    android:src="@drawable/dog_image" />
 
 
             </RelativeLayout>

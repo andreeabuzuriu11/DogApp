@@ -9,6 +9,7 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
 import com.buzuriu.dogapp.enums.GenderEnum
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.models.AlertBuilderSettings
 import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.utils.StringUtils
@@ -35,6 +36,28 @@ class AddDogViewModel : BaseViewModel() {
 
 
     init{
+
+    }
+
+    fun takePicture() {
+
+        val methodsMap = HashMap<String, () -> Unit>()
+        val itemsName = arrayOf<CharSequence>("Camera", "Gallery", "Cancel")
+        methodsMap["Camera"] = ::takeImage
+        methodsMap["Gallery"] = ::uploadPictureFromGallery
+        methodsMap["Cancel"] = {}
+
+        val alertBuilderSettings = AlertBuilderSettings(itemsName, methodsMap)
+        alertBuilderService.showAlertDialog(alertBuilderSettings)
+    }
+
+    fun takeImage()
+    {
+
+    }
+
+    fun uploadPictureFromGallery()
+    {
 
     }
 
@@ -109,9 +132,6 @@ class AddDogViewModel : BaseViewModel() {
                 }
             })
         }
-
-
-
     }
 
     fun selectBreed()
