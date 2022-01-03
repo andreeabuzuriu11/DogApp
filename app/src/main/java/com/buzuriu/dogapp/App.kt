@@ -23,6 +23,7 @@ class App : Application() {
         single<IAlertBuilderService> { AlertBuilderService(get())}
         single<IPermissionService> { PermissionService(get())}
         single<IActivityResultService> { ActivityResultService()}
+        single<IStorageService>{StorageService()}
     }
 
     private val activityService: ICurrentActivityService by inject()

@@ -129,7 +129,7 @@ class AddDogViewModel : BaseViewModel() {
         Log.d("info GenderString=", currentGenderString.toString())
 
         //TODO add dog image
-        return
+
 
         val uid = StringUtils.getRandomUID()
         val dog = DogObj(
@@ -149,7 +149,7 @@ class AddDogViewModel : BaseViewModel() {
             if(dogBitmapImage.value!=null)
             {
                 val compressedImage = ImageUtils.getCompressedImage(dogBitmapImage.value!!)
-                // dog.imageUrl = storageService.uploadImage(uid,compressedImage)
+                dog.imageUrl = storageService.uploadImageToDatabase(uid, compressedImage)
             }
 
             databaseService.storeDogInfo(currentUserUid, dog, object : IOnCompleteListener {
