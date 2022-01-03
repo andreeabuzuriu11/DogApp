@@ -20,6 +20,7 @@ class App : Application() {
         single<IDataExchangeService> { DataExchangeService() }
         single<ISharedPreferencesService> { SharedPreferencesService(get()) }
         single<IAlertBuilderService> { AlertBuilderService(get())}
+        single<IPermissionService> { PermissionService(get())}
     }
 
     private val activityService: ICurrentActivityService by inject()

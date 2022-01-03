@@ -1,12 +1,17 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.Manifest
 import android.util.Log
 import androidx.lifecycle.*
 import com.buzuriu.dogapp.services.*
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import kotlin.coroutines.suspendCoroutine
 
 open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
 
@@ -20,6 +25,7 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     protected val dataExchangeService: IDataExchangeService by inject()
     protected val sharedPreferenceService: ISharedPreferencesService by inject()
     protected val alertBuilderService: IAlertBuilderService by inject()
+    protected val permissionService: IPermissionService by inject()
 
     protected val currentUser get() = firebaseAuthService.getCurrentUser()
     protected val isSignedIn get() = currentUser != null
@@ -59,5 +65,53 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
         {
             isLoadingViewVisible.value = isVisible
         }
+    }
+
+    protected suspend fun askReadExternalPermission(): Task<Boolean> {
+        return Tasks.forResult(suspendCoroutine<Boolean> {
+            viewModelScope.launch(Dispatchers.Main) {
+                val permissionsResult = permissionService.requestPermissionStatusAsync(
+                    listOf(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    )
+                ).await()
+                var grantedCounter = 0
+                for (result in permissionsResult) {
+                    if (result.permissionStatus == PermissionStatus.Granted) {
+                        grantedCounter++
+                    }
+                }
+
+                if (grantedCounter == permissionsResult.size) {
+                    it.resumeWith(Result.success(true))
+                } else {
+                    it.resumeWith(Result.success(false))
+                }
+            }
+        })
+    }
+
+    protected suspend fun askCameraPermission(): Task<Boolean> {
+        return Tasks.forResult(suspendCoroutine<Boolean> {
+            viewModelScope.launch(Dispatchers.Main) {
+                val permissionsResult = permissionService.requestPermissionStatusAsync(
+                    listOf(
+                        Manifest.permission.CAMERA)
+                ).await()
+                var grantedCounter = 0
+                for (result in permissionsResult) {
+                    if (result.permissionStatus == PermissionStatus.Granted) {
+                        grantedCounter++
+                    }
+                }
+
+                if (grantedCounter == permissionsResult.size) {
+                    it.resumeWith(Result.success(true))
+                } else {
+                    it.resumeWith(Result.success(false))
+                }
+            }
+        })
     }
 }

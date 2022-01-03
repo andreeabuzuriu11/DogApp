@@ -25,6 +25,7 @@
     <string name="already_registered_hint">Already have an account?</string>
     <string name="forget_password_guid">We will send an email for you to reset your password</string>
     <string name="forgot_password_message">We have sent an email for you to reset your password</string>
+    <string name="err_camera_permission_needed">Please grant camera access</string>
     <string name="write_email_hint">Email address</string>
     <string name="title_activity_main8">Main8Activity</string>
     <string name="title_home">Home</string>

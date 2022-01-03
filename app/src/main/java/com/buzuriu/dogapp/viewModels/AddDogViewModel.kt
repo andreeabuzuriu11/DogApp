@@ -1,7 +1,13 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.RadioGroup
+import androidx.activity.result.ActivityResult
 import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -16,9 +22,13 @@ import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.suspendCoroutine
 
 class AddDogViewModel : BaseViewModel() {
 
