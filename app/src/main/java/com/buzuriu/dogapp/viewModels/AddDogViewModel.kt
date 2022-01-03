@@ -97,7 +97,31 @@ class AddDogViewModel : BaseViewModel() {
 
     fun uploadPictureFromGallery()
     {
+        viewModelScope.launch(Dispatchers.Main) {
 
+            val hasReadExternalPermission = askReadExternalPermission().await()
+            if (!hasReadExternalPermission) {
+                dialogService.showSnackbar("Error permission")
+                return@launch
+            }
+            val intent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            viewModelScope.launch(Dispatchers.Main) {
+
+                activityResultService?.launchCurrentActivityResultLauncher(
+                    intent,
+                    object : IGetActivityForResultListener {
+                        @SuppressLint("NewApi")
+                        override fun activityForResult(activityResult: ActivityResult) {
+                            if (activityResult.resultCode == Activity.RESULT_OK)
+                            {
+                                val imageUri = activityResult.data?.data as Uri
+                                dogBitmapImage.value = ImageUtils.getBitmap(activityService.activity!!,imageUri)
+                            }
+                        }
+                    })
+            }
+        }
     }
 
     override fun onResume()
