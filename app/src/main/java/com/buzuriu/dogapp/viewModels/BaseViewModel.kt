@@ -28,6 +28,7 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     protected val dataExchangeService: IDataExchangeService by inject()
     protected val sharedPreferenceService: ISharedPreferencesService by inject()
     protected val alertBuilderService: IAlertBuilderService by inject()
+    protected val activityService: ICurrentActivityService by inject()
     protected val permissionService: IPermissionService by inject()
     protected val activityResultService: IActivityResultService by inject()
 

@@ -1,14 +1,18 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.RadioGroup
 import androidx.activity.result.ActivityResult
 import androidx.compose.ui.input.key.Key.Companion.D
+import androidx.constraintlayout.helper.widget.MotionPlaceholder
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -19,6 +23,7 @@ import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.AlertBuilderSettings
 import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
@@ -40,15 +45,14 @@ class AddDogViewModel : BaseViewModel() {
     var breed = MutableLiveData("")
     var ageValue = MutableLiveData("")
     var ageString = MutableLiveData("")
-    var imageURL = MutableLiveData<String>()
     var currentGender: GenderEnum? = null
     var currentGenderString:String? = null
 
-
-
+    lateinit var dogPlaceHolder : MutableLiveData<Drawable>
+    var dogImageUrl = MutableLiveData<String>()
 
     init{
-
+        dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
     }
 
     fun takePicture() {
@@ -125,6 +129,7 @@ class AddDogViewModel : BaseViewModel() {
         Log.d("info GenderString=", currentGenderString.toString())
 
         //TODO add dog image
+        return
 
         val uid = StringUtils.getRandomUID()
         val dog = DogObj(
@@ -141,6 +146,12 @@ class AddDogViewModel : BaseViewModel() {
         ShowLoadingView(true)
 
         viewModelScope.launch(Dispatchers.IO) {
+            if(dogBitmapImage.value!=null)
+            {
+                val compressedImage = ImageUtils.getCompressedImage(dogBitmapImage.value!!)
+                // dog.imageUrl = storageService.uploadImage(uid,compressedImage)
+            }
+
             databaseService.storeDogInfo(currentUserUid, dog, object : IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
 
@@ -200,4 +211,8 @@ class AddDogViewModel : BaseViewModel() {
         return true
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun getDogPlaceHolder(): Drawable? {
+        return activityService.activity!!.getDrawable(ImageUtils.getDogPlaceholder())
+    }
 }

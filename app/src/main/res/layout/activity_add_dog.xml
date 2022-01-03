@@ -137,6 +137,9 @@
                     android:textSize="20dp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    cb_bitmap="@{viewModel.dogBitmapImage}"
+                    cb_imageUrl="@{viewModel.dogImageUrl}"
+                    cb_placeholder="@{viewModel.dogPlaceHolder}"
                     android:id="@+id/dogProfileImage"
                     android:layout_width="130dp"
                     android:layout_height="130dp"

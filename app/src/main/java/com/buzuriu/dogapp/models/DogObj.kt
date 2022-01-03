@@ -10,6 +10,7 @@ class DogObj {
     var ageString: String = ""
     var breed: String = ""
     var gender: String = ""
+    var imageUrl : String = ""
 
     // TODO add imageURL
     constructor(uid: String, name: String, ageValue: String, ageString: String, breed:String, gender: String)
