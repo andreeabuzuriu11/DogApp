@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.views.base
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -16,6 +17,7 @@ abstract class BaseActivity<out T : BaseViewModel>(vmClass: Class<T>) : AppCompa
 
     override fun onCreate(savedInstanceState: Bundle?) {
         lifecycle.addObserver(mViewModel)
+        setActivityForResultLauncher()
         super.onCreate(savedInstanceState)
 
     }
@@ -28,6 +30,15 @@ abstract class BaseActivity<out T : BaseViewModel>(vmClass: Class<T>) : AppCompa
         } catch (e: Exception) {
             Log.d("Error", e.message.toString() + " err")
         }
+    }
+
+    private fun setActivityForResultLauncher()
+    {
+        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            mViewModel.onActivityForResult(result)
+        }
+
+        mViewModel.setupActivityForResultLauncher(resultLauncher)
     }
 }
 

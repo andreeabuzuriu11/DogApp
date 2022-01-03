@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
 import com.buzuriu.dogapp.enums.GenderEnum
+import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.AlertBuilderSettings
 import com.buzuriu.dogapp.models.BreedObj
@@ -34,6 +35,7 @@ class AddDogViewModel : BaseViewModel() {
 
     var spinnerEntries = listOf(AgeEnum.MONTHS.toString(), AgeEnum.YEARS.toString())
 
+    var dogBitmapImage = MutableLiveData<Bitmap>()
     var name = MutableLiveData("")
     var breed = MutableLiveData("")
     var ageValue = MutableLiveData("")
@@ -63,7 +65,30 @@ class AddDogViewModel : BaseViewModel() {
 
     fun takeImage()
     {
+        viewModelScope.launch(Dispatchers.Main) {
 
+            val hasPermission = askCameraPermission().await()
+            if (!hasPermission) {
+                dialogService.showSnackbar(R.string.err_camera_permission_needed)
+                return@launch
+            }
+
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            viewModelScope.launch(Dispatchers.Main) {
+
+                activityResultService?.launchCurrentActivityResultLauncher(
+                    cameraIntent,
+                    object : IGetActivityForResultListener {
+                        override fun activityForResult(activityResult: ActivityResult) {
+                            if (activityResult.resultCode == Activity.RESULT_OK)
+                            {
+                                val imageBitmap = activityResult.data?.extras?.get("data") as Bitmap
+                                dogBitmapImage.value = imageBitmap;
+                            }
+                        }
+                    })
+            }
+        }
     }
 
     fun uploadPictureFromGallery()

@@ -1,7 +1,10 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.Manifest
+import android.content.Intent
 import android.util.Log
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.*
 import com.buzuriu.dogapp.services.*
 import com.google.android.gms.tasks.Task
@@ -26,6 +29,7 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     protected val sharedPreferenceService: ISharedPreferencesService by inject()
     protected val alertBuilderService: IAlertBuilderService by inject()
     protected val permissionService: IPermissionService by inject()
+    protected val activityResultService: IActivityResultService by inject()
 
     protected val currentUser get() = firebaseAuthService.getCurrentUser()
     protected val isSignedIn get() = currentUser != null
@@ -57,6 +61,23 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     open fun onDestroy() {
         Log.d("Lifecycle",this.javaClass.name + " onDestroy")
+    }
+
+    fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        permissionService.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    fun setupActivityForResultLauncher(resultLauncher: ActivityResultLauncher<Intent>) {
+        activityResultService.setupActivityForResultLauncher(resultLauncher)
+    }
+
+    fun onActivityForResult(activityResult: ActivityResult)
+    {
+        activityResultService.onActivityForResult(activityResult)
     }
 
     protected fun ShowLoadingView(isVisible : Boolean)

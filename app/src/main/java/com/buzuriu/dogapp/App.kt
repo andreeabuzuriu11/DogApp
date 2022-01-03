@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp
 
 import android.app.Application
+import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.services.*
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -21,6 +22,7 @@ class App : Application() {
         single<ISharedPreferencesService> { SharedPreferencesService(get()) }
         single<IAlertBuilderService> { AlertBuilderService(get())}
         single<IPermissionService> { PermissionService(get())}
+        single<IActivityResultService> { ActivityResultService()}
     }
 
     private val activityService: ICurrentActivityService by inject()
