@@ -18,7 +18,7 @@ interface INavigationService {
         activityClass: Class<T>,
         finishCurrentActivity: Boolean = false,
         parameterName: String? = null,
-        parameterValue: String? = null,
+        parameterValue: String? = null
     )
 
     fun closeCurrentActivity()
