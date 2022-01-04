@@ -3,7 +3,9 @@ package com.buzuriu.dogapp.viewModels.auth
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
+import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.ForgotPasswordActivity
@@ -73,4 +75,15 @@ class LoginViewModel : BaseViewModel() {
 
         return true
     }
+
+/*    private fun prepareForMain()
+    {
+        viewModelScope.launch {
+            databaseService.fetchUserDogs(currentUser!!.uid, object: IGetUserDogListListener {
+                override fun getDogList(dogList: ArrayList<DogObj>) {
+                    dataExchangeService.put()
+                }
+            })
+        }
+    }*/
 }
