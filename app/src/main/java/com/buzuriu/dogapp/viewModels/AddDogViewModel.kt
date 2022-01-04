@@ -48,7 +48,7 @@ class AddDogViewModel : BaseViewModel() {
     var currentGender: GenderEnum? = null
     var currentGenderString:String? = null
 
-    lateinit var dogPlaceHolder : MutableLiveData<Drawable>
+    var dogPlaceHolder : MutableLiveData<Drawable>
     var dogImageUrl = MutableLiveData<String>()
 
     init{
@@ -67,7 +67,7 @@ class AddDogViewModel : BaseViewModel() {
         alertBuilderService.showAlertDialog(alertBuilderSettings)
     }
 
-    fun takeImage()
+    private fun takeImage()
     {
         viewModelScope.launch(Dispatchers.Main) {
 
@@ -80,7 +80,7 @@ class AddDogViewModel : BaseViewModel() {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             viewModelScope.launch(Dispatchers.Main) {
 
-                activityResultService?.launchCurrentActivityResultLauncher(
+                activityResultService.launchCurrentActivityResultLauncher(
                     cameraIntent,
                     object : IGetActivityForResultListener {
                         override fun activityForResult(activityResult: ActivityResult) {
@@ -95,7 +95,7 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
-    fun uploadPictureFromGallery()
+    private fun uploadPictureFromGallery()
     {
         viewModelScope.launch(Dispatchers.Main) {
 
@@ -108,7 +108,7 @@ class AddDogViewModel : BaseViewModel() {
                 Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             viewModelScope.launch(Dispatchers.Main) {
 
-                activityResultService?.launchCurrentActivityResultLauncher(
+                activityResultService.launchCurrentActivityResultLauncher(
                     intent,
                     object : IGetActivityForResultListener {
                         @SuppressLint("NewApi")
@@ -146,15 +146,6 @@ class AddDogViewModel : BaseViewModel() {
     {
         if(!areFieldsCompleted()) return
 
-        Log.d("info name=", name.value.toString())
-        Log.d("info ageValue=", ageValue.value.toString())
-        Log.d("info ageString=", ageString.value.toString())
-        Log.d("info breed=", breed.value.toString())
-        Log.d("info GenderString=", currentGenderString.toString())
-
-        //TODO add dog image
-
-
         val uid = StringUtils.getRandomUID()
         val dog = DogObj(
             uid,
@@ -187,8 +178,8 @@ class AddDogViewModel : BaseViewModel() {
                             navigationService.closeCurrentActivity()
 
                         }
-                    } else {
-
+                    } else
+                    {
                         viewModelScope.launch(Dispatchers.Main) {
                             if (!exception?.message.isNullOrEmpty())
                                 dialogService.showSnackbar(exception!!.message!!)
@@ -198,7 +189,6 @@ class AddDogViewModel : BaseViewModel() {
                     }
 
                     ShowLoadingView(false)
-
                 }
             })
         }
