@@ -20,6 +20,14 @@ class SelectBreedViewModel : BaseViewModel(){
     init {
         initBreedsList()
 
+        // add in method
+        var breedName = dataExchangeService.get<String>(this::class.qualifiedName!!)
+        if(!breedName.isNullOrEmpty())
+        {
+            var breed = breedsList.find { x -> x.breedName == breedName }
+            selectBreed(breed!!)
+
+        }
     }
 
     private fun initBreedsList() {
@@ -43,8 +51,7 @@ class SelectBreedViewModel : BaseViewModel(){
     }
 
     fun selectBreed(breedObj: BreedObj) {
-
-        unselectPreviousCountry()
+        unselectPreviousBreed()
         breedObj.isSelected = true
         selectedBreed = breedObj
 
@@ -52,7 +59,7 @@ class SelectBreedViewModel : BaseViewModel(){
         breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))
     }
 
-    private fun unselectPreviousCountry() {
+    private fun unselectPreviousBreed() {
         for (breed in breedsList) {
             if (breed.isSelected!!) {
                 breed.isSelected = false

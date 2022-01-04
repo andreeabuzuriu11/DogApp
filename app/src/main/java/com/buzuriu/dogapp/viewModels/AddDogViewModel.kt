@@ -202,6 +202,8 @@ class AddDogViewModel : BaseViewModel() {
             OverlayActivity.fragmentClassNameParam,
             SelectBreedFragment::class.qualifiedName
         )
+        if(!breed.value.isNullOrEmpty())
+            dataExchangeService.put(SelectBreedViewModel::class.qualifiedName!!, breed.value.toString())
     }
 
     private fun areFieldsCompleted() :Boolean {
