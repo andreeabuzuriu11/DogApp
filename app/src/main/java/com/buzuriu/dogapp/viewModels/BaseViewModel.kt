@@ -32,6 +32,7 @@ open class BaseViewModel : ViewModel(), KoinComponent, LifecycleObserver {
     protected val permissionService: IPermissionService by inject()
     protected val activityResultService: IActivityResultService by inject()
     protected val storageService: IStorageService by inject()
+    protected val localDatabaseService: ILocalDatabaseService by inject()
 
     protected val currentUser get() = firebaseAuthService.getCurrentUser()
     protected val isSignedIn get() = currentUser != null

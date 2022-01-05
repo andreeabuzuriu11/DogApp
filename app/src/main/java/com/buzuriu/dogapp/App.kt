@@ -24,6 +24,7 @@ class App : Application() {
         single<IPermissionService> { PermissionService(get())}
         single<IActivityResultService> { ActivityResultService()}
         single<IStorageService>{StorageService()}
+        single<ILocalDatabaseService> {LocalDatabaseService()}
     }
 
     private val activityService: ICurrentActivityService by inject()
