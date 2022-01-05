@@ -76,14 +76,4 @@ class LoginViewModel : BaseViewModel() {
         return true
     }
 
-/*    private fun prepareForMain()
-    {
-        viewModelScope.launch {
-            databaseService.fetchUserDogs(currentUser!!.uid, object: IGetUserDogListListener {
-                override fun getDogList(dogList: ArrayList<DogObj>) {
-                    dataExchangeService.put()
-                }
-            })
-        }
-    }*/
 }

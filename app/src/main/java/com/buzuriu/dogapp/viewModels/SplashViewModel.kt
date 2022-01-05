@@ -1,6 +1,8 @@
 package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.listeners.IGetUserDogListListener
+import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -22,14 +24,26 @@ class SplashViewModel : BaseViewModel() {
         {
             viewModelScope.launch(Dispatchers.IO) {
                 delay(1000)
+                prepareForMain()
                 navigationService.navigateToActivity(MainActivity::class.java, true)
-            }        }
+            }
+        }
         else {
-
             viewModelScope.launch(Dispatchers.IO) {
                 delay(1000)
                 navigationService.navigateToActivity(RegisterActivity::class.java, true)
             }
+        }
+    }
+
+    private fun prepareForMain()
+    {
+        viewModelScope.launch {
+            databaseService.fetchUserDogs(currentUser!!.uid, object: IGetUserDogListListener {
+                override fun getDogList(dogList: ArrayList<DogObj>) {
+                    localDatabaseService.add("localDogsList", dogList)
+                }
+            })
         }
     }
 }
