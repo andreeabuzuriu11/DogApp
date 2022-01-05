@@ -34,7 +34,7 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/dogProfileImage">
+                    android:layout_below="@+id/relativeLayout1">
 
                     <EditText
                         android:id="@+id/add_name"
@@ -60,8 +60,8 @@
                             android:id="@+id/add_breed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:onClick="@{()->viewModel.selectBreed()}"
                             android:layout_alignParentRight="true"
+                            android:onClick="@{()->viewModel.selectBreed()}"
                             android:text="Select" />
 
 
@@ -127,27 +127,42 @@
 
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:id="@+id/relativeLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/addPetTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="ADD PET"
-                    android:textSize="20dp" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    cb_bitmap="@{viewModel.dogBitmapImage}"
-                    cb_imageUrl="@{viewModel.dogImageUrl}"
-                    cb_placeholder="@{viewModel.dogPlaceHolder}"
-                    android:id="@+id/dogProfileImage"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:layout_below="@+id/addPetTextView"
-                    android:layout_centerInParent="true"
-                    android:onClick="@{()->viewModel.takePicture()}"
-                    android:src="@drawable/dog_image" />
+                    <TextView
+                        android:id="@+id/addPetTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="Profile Picture"
+                        android:textSize="20dp" />
 
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/dogProfileImage"
+                        cb_bitmap="@{viewModel.dogBitmapImage}"
+                        cb_imageUrl="@{viewModel.dogImageUrl}"
+                        cb_placeholder="@{viewModel.dogPlaceHolder}"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:layout_below="@+id/addPetTextView"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_dog_svgrepo_com" />
+
+                    <ImageView
+                        android="@+id/dogProfileImage"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_alignLeft="@+id/dogProfileImage"
+                        android:layout_alignBottom="@id/dogProfileImage"
+                        android:layout_marginLeft="100dp"
+                        android:onClick="@{()->viewModel.takePicture()}"
+                        android:src="@drawable/ic_baseline_image_search_24" />
+
+                </RelativeLayout>
 
             </RelativeLayout>
 

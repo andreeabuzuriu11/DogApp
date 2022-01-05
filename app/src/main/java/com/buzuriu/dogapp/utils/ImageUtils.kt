@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream
 object ImageUtils {
 
     fun getDogPlaceholder(): Int {
-        return R.drawable.dog_image
+        return R.drawable.ic_dog_svgrepo_com
     }
 
     fun getCompressedImage(image: Bitmap): ByteArray {
