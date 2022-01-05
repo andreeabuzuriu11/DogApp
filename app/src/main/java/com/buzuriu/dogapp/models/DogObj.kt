@@ -14,7 +14,6 @@ class DogObj {
 
     constructor()
 
-    // TODO add imageURL
     constructor(uid: String, name: String, ageValue: String, ageString: String, breed:String, gender: String)
     {
         this.uid = uid

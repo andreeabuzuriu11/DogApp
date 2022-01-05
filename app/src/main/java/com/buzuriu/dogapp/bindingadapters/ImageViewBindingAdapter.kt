@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.utils.ImageUtils
 import com.squareup.picasso.Picasso
 
 object ImageViewBindingAdapter {
@@ -21,6 +23,21 @@ object ImageViewBindingAdapter {
         } else {
             Picasso.get()
                 .load(imageUrl)
+                .placeholder(placeHolder)
+                .error(placeHolder)
+                .into(this)
+        }
+    }
+
+    @BindingAdapter("cb_dogImg")
+    @JvmStatic
+    fun ImageView.imageUrl(dog : DogObj) {
+        var placeHolder = ImageUtils.getDogPlaceholder()
+        if (dog.imageUrl.isNullOrEmpty()) {
+            this.setImageResource(placeHolder)
+        } else {
+            Picasso.get()
+                .load(dog.imageUrl)
                 .placeholder(placeHolder)
                 .error(placeHolder)
                 .into(this)

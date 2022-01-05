@@ -16,16 +16,9 @@ class DashboardViewModel : BaseViewModel() {
     var dogAdapter : DogAdapter?
 
     init {
-/*        dogList.add(DogObj("1","Rex","4", "MONTHS", "Husky", "male"))
-        dogList.add(DogObj("2","Max","5", "YEARS", "Bichon", "male"))
-        dogList.add(DogObj("3","Lorelei","3", "YEARS", "Husky", "female"))
-        dogList.add(DogObj("4","Rex","4", "YEARS", "Husky","female"))
-        dogList.add(DogObj("5","Rex","4", "YEARS", "Husky", "male"))
-        dogList.add(DogObj("6","Rex","4", "YEARS", "Husky", "female"))
-        dogList.add(DogObj("7","Max","5", "MONTHS", "Bichon", "female"))
-        dogList.add(DogObj("8","Lorelei","3", "YEARS", "Husky", "male"))*/
-
         dogAdapter = DogAdapter(dogsList, ::selectedDog)
+
+        dogAdapter!!.notifyDataSetChanged()
 
         viewModelScope.launch {
             databaseService.fetchUserDogs(currentUser!!.uid, object: IGetUserDogListListener {
@@ -38,8 +31,6 @@ class DashboardViewModel : BaseViewModel() {
                 }
             })
         }
-
-
 
     }
     private fun selectedDog(dogObj: DogObj)
