@@ -27,7 +27,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_marginTop="20dp"
@@ -54,15 +54,15 @@
                             android:layout_height="wrap_content"
                             android:text="@={viewModel.breed}"
                             android:textSize="18dp"
-                            android:hint="Breed" />
+                            android:hint="@string/breedHint" />
 
                         <Button
                             android:id="@+id/add_breed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:onClick="@{()->viewModel.selectBreed()}"
-                            android:text="Select" />
+                            android:text="@string/selectButton" />
 
 
                     </RelativeLayout>
@@ -138,7 +138,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:text="Profile Picture"
+                        android:text="@string/profile_picture_string"
                         android:textSize="20dp" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
@@ -153,12 +153,11 @@
                         android:src="@drawable/ic_dog_svgrepo_com" />
 
                     <ImageView
-                        android="@+id/dogProfileImage"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
-                        android:layout_alignLeft="@+id/dogProfileImage"
+                        android:layout_alignStart="@+id/dogProfileImage"
                         android:layout_alignBottom="@id/dogProfileImage"
-                        android:layout_marginLeft="100dp"
+                        android:layout_marginStart="100dp"
                         android:onClick="@{()->viewModel.takePicture()}"
                         android:src="@drawable/ic_baseline_image_search_24" />
 

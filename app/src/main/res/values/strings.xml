@@ -41,5 +41,8 @@
     <string name="info_added">Info has been added successfully </string>
     <string name="select_breed">Select Breed</string>
     <string name="man_walking_dog_content_description">Man walking dog image</string>
+    <string name="breedHint">Breed</string>
+    <string name="selectButton">Select</string>
+    <string name="profile_picture_string">Profile Picture</string>
 
 </resources>
