@@ -173,6 +173,8 @@ class AddDogViewModel : BaseViewModel() {
                     if (successful) {
                         viewModelScope.launch(Dispatchers.Main) {
                             dataExchangeService.put(DashboardViewModel::class.java.name, true)
+                            //Todo add to local dog list
+                            addDogInLocalList(dog)
                             dialogService.showSnackbar(R.string.added_success_message)
                             delay(2000)
                             navigationService.closeCurrentActivity()
@@ -192,6 +194,19 @@ class AddDogViewModel : BaseViewModel() {
                 }
             })
         }
+    }
+
+    fun addDogInLocalList(dog: DogObj)
+    {
+        var dogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+
+        var auxList = dogsList
+        auxList?.add(dog)
+
+        if (auxList != null) {
+            localDatabaseService.add("localDogsList", auxList)
+        }
+
     }
 
     fun selectBreed()

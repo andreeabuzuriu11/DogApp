@@ -16,20 +16,35 @@ abstract class BaseActivity<out T : BaseViewModel>(vmClass: Class<T>) : AppCompa
     protected var activitySubtitleResourceId: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        lifecycle.addObserver(mViewModel)
+        mViewModel.onCreate()
         setActivityForResultLauncher()
         super.onCreate(savedInstanceState)
-
     }
 
+    override fun onResume() {
+        mViewModel.onResume()
+        super.onResume()
+    }
+
+    override fun onStart() {
+        mViewModel.onStart()
+        super.onStart()
+    }
+
+    override fun onPause() {
+        mViewModel.onPause()
+        super.onPause()
+    }
+
+    override fun onStop() {
+        mViewModel.onStop()
+        super.onStop()
+    }
+
+
     override fun onDestroy() {
-        //TODO error again
-        try {
-            lifecycle.removeObserver(mViewModel)
-            super.onDestroy()
-        } catch (e: Exception) {
-            Log.d("Error", e.message.toString() + " err")
-        }
+        mViewModel.onDestroy()
+        super.onDestroy()
     }
 
     private fun setActivityForResultLauncher()
@@ -44,7 +59,6 @@ abstract class BaseActivity<out T : BaseViewModel>(vmClass: Class<T>) : AppCompa
 
 abstract class BaseBoundActivity<out T : BaseViewModel, in K : ViewDataBinding>(vmClass: Class<T>) :
     BaseActivity<T>(vmClass) {
-
 
     protected abstract val layoutId: Int
 

@@ -27,22 +27,37 @@ abstract class BaseFragment<out T : BaseViewModel>(vmClass: Class<T>) : Fragment
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        mViewModel.onCreate()
 
         val root = inflater.inflate(layoutId, container, false)
         layoutInflated(root)
 
-        lifecycle.addObserver(mViewModel)
-
         return root
     }
 
-    override fun onDestroy() {
-        try {
 
-            lifecycle.removeObserver(mViewModel)
-        } catch (e: Exception) {
-            e.message?.let { Log.d("onDestroyError", it) }
-        }
+    override fun onStart() {
+        mViewModel.onStart()
+        super.onStart()
+    }
+
+    override fun onResume() {
+        mViewModel.onResume()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        mViewModel.onPause()
+        super.onPause()
+    }
+
+    override fun onStop() {
+        mViewModel.onStop()
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        mViewModel.onDestroy()
         super.onDestroy()
     }
 }
