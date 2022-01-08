@@ -1,6 +1,5 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -8,11 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
-import android.widget.RadioGroup
 import androidx.activity.result.ActivityResult
-import androidx.compose.ui.input.key.Key.Companion.D
-import androidx.constraintlayout.helper.widget.MotionPlaceholder
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -28,13 +23,10 @@ import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel
-import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import kotlin.coroutines.suspendCoroutine
 
 class AddDogViewModel : BaseViewModel() {
 
@@ -47,6 +39,8 @@ class AddDogViewModel : BaseViewModel() {
     var ageString = MutableLiveData("")
     var currentGender: GenderEnum? = null
     var currentGenderString:String? = null
+
+    var buttonText =  MutableLiveData<String>("add")
 
     var dogPlaceHolder : MutableLiveData<Drawable>
     var dogImageUrl = MutableLiveData<String>()
@@ -173,7 +167,6 @@ class AddDogViewModel : BaseViewModel() {
                     if (successful) {
                         viewModelScope.launch(Dispatchers.Main) {
                             dataExchangeService.put(DashboardViewModel::class.java.name, true)
-                            //Todo add to local dog list
                             addDogInLocalList(dog)
                             dialogService.showSnackbar(R.string.added_success_message)
                             delay(2000)

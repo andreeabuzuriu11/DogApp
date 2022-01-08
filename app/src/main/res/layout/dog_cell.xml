@@ -7,6 +7,10 @@
         <variable
             name="dog"
             type="com.buzuriu.dogapp.models.DogObj" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel" />
     </data>
     <LinearLayout
         android:id="@+id/dog_cell"
@@ -64,6 +68,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="@{()->viewModel.editDog()}"
                     android:background="@drawable/circle"
                     android:backgroundTint="@color/white"
                     android:src="@drawable/ic_baseline_edit_24"
@@ -72,10 +79,13 @@
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
                     android:layout_margin="5dp"
+                    android:focusable="true"
                     android:background="@drawable/circle"
                     android:backgroundTint="@color/red_delete"
                     android:src="@drawable/ic_baseline_delete_24"
+                    android:onClick="@{()->viewModel.deleteDog()}"
                     android:tintMode="src_in"
                     android:text="Delete"
                     app:tint="@color/white" />

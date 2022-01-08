@@ -1,10 +1,12 @@
 package com.buzuriu.dogapp.views.main.ui.dashboard
 
-import android.util.Log
+import android.telecom.Call
 import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.viewModels.DogDetailViewModel
 import com.buzuriu.dogapp.views.AddDogActivity
+import com.buzuriu.dogapp.views.DogDetailActivity
 
 
 class DashboardViewModel : BaseViewModel() {
@@ -13,7 +15,7 @@ class DashboardViewModel : BaseViewModel() {
     var dogAdapter : DogAdapter?
 
     init {
-        var dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+        val dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
         if (dogsFromLocalDB != null) {
             dogsList.addAll(dogsFromLocalDB)
         }
@@ -31,7 +33,6 @@ class DashboardViewModel : BaseViewModel() {
             dogsList.clear()
 
             if (dogsFromLocalDB != null) {
-                Log.d("andreed", "List was refreshed")
                 dogsList.addAll(dogsFromLocalDB)
                 dogAdapter!!.notifyDataSetChanged()
             }
@@ -39,14 +40,26 @@ class DashboardViewModel : BaseViewModel() {
 
     }
 
-    private fun selectedDog(dogObj: DogObj)
+    fun editDog()
+    {
+        navigationService.navigateToActivity(AddDogActivity::class.java, false)
+    }
+
+    fun deleteDog()
     {
 
     }
 
+    private fun selectedDog(dogObj: DogObj)
+    {
+        //TODO navigatetoDetailActivity
+        dataExchangeService.put(DogDetailViewModel::class.java.name, dogObj)
+        navigationService.navigateToActivity(DogDetailActivity::class.java, false)
+    }
+
     fun addDog()
     {
-        navigationService.navigateToActivity(AddDogActivity::class.java, false);
+        navigationService.navigateToActivity(AddDogActivity::class.java, false)
     }
 
 

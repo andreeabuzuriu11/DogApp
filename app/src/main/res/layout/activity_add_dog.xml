@@ -196,7 +196,7 @@
             android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_button"
             android:onClick="@{()->viewModel.addDog()}"
-            android:text="@string/add_button_text"
+            android:text="@{viewModel.buttonText}"
             android:textColor="@color/white" />
 
     </RelativeLayout>
