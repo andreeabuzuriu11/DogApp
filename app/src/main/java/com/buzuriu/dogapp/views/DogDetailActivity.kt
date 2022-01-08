@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.views
 
 import android.os.Bundle
+import android.view.Menu
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityDogDetailBinding
 import com.buzuriu.dogapp.viewModels.DogDetailViewModel
@@ -16,6 +17,12 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_edit, menu)
+        return true
     }
 
 }
