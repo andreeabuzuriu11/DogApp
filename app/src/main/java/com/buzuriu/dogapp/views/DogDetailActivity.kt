@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.views
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityDogDetailBinding
 import com.buzuriu.dogapp.viewModels.DogDetailViewModel
@@ -25,4 +26,18 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here.
+        val id: Int = item.getItemId()
+        if (id == R.id.edit) {
+            mViewModel.editDog()
+            return true
+        }
+        if(id == R.id.delete)
+        {
+            mViewModel.deleteDog()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }

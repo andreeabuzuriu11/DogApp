@@ -38,15 +38,42 @@ class AddDogViewModel : BaseViewModel() {
     var ageValue = MutableLiveData("")
     var ageString = MutableLiveData("")
     var currentGender: GenderEnum? = null
-    var currentGenderString:String? = null
+    var currentGenderString: String? = null
 
-    var buttonText =  MutableLiveData<String>("add")
+    var buttonText = MutableLiveData<String>("add")
 
-    var dogPlaceHolder : MutableLiveData<Drawable>
+    var dogPlaceHolder: MutableLiveData<Drawable>
     var dogImageUrl = MutableLiveData<String>()
 
-    init{
+    var isFemaleGenderSelected = MutableLiveData<Boolean>()
+
+    init {
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
+    }
+
+    override fun onResume() {
+        val value = dataExchangeService.get<Any>(this::class.qualifiedName!!)
+        if (value is BreedObj) {
+            breed.value = value.breedName
+        }
+
+        var dog: DogObj? = null
+        if (value is DogObj) {
+            dog = value
+        }
+
+        if (dog != null) {
+            name.value = dog.name
+            ageValue.value = dog.ageValue
+            ageString.value = dog.ageString
+            // convertGenderFromStringToEnum(value.gender)
+            dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
+            dogImageUrl.value = dog.imageUrl
+            breed.value = dog.breed
+
+            isFemaleGenderSelected.value = dog.gender == "female"
+        }
+
     }
 
     fun takePicture() {
@@ -61,8 +88,7 @@ class AddDogViewModel : BaseViewModel() {
         alertBuilderService.showAlertDialog(alertBuilderSettings)
     }
 
-    private fun takeImage()
-    {
+    private fun takeImage() {
         viewModelScope.launch(Dispatchers.Main) {
 
             val hasPermission = askCameraPermission().await()
@@ -78,8 +104,7 @@ class AddDogViewModel : BaseViewModel() {
                     cameraIntent,
                     object : IGetActivityForResultListener {
                         override fun activityForResult(activityResult: ActivityResult) {
-                            if (activityResult.resultCode == Activity.RESULT_OK)
-                            {
+                            if (activityResult.resultCode == Activity.RESULT_OK) {
                                 val imageBitmap = activityResult.data?.extras?.get("data") as Bitmap
                                 dogBitmapImage.value = imageBitmap;
                             }
@@ -89,8 +114,7 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
-    private fun uploadPictureFromGallery()
-    {
+    private fun uploadPictureFromGallery() {
         viewModelScope.launch(Dispatchers.Main) {
 
             val hasReadExternalPermission = askReadExternalPermission().await()
@@ -107,10 +131,11 @@ class AddDogViewModel : BaseViewModel() {
                     object : IGetActivityForResultListener {
                         @SuppressLint("NewApi")
                         override fun activityForResult(activityResult: ActivityResult) {
-                            if (activityResult.resultCode == Activity.RESULT_OK)
-                            {
+
+                            if (activityResult.resultCode == Activity.RESULT_OK) {
                                 val imageUri = activityResult.data?.data as Uri
-                                dogBitmapImage.value = ImageUtils.getBitmap(activityService.activity!!,imageUri)
+                                dogBitmapImage.value =
+                                    ImageUtils.getBitmap(activityService.activity!!, imageUri)
                             }
                         }
                     })
@@ -118,27 +143,22 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
-    override fun onResume()
-    {
-        val selectedBreed = dataExchangeService.get<BreedObj>(this::class.qualifiedName!!)
-        if (selectedBreed!=null)
-        {
-            breed.value = selectedBreed.breedName
+    fun convertGenderFromStringToEnum(genderString: String) {
+        if (genderString == "male") {
+            currentGender = GenderEnum.MALE
         }
-
+        if (genderString == "female")
+            currentGender = GenderEnum.FEMALE
     }
 
-    fun setGenderType(gender : GenderEnum)
-    {
-        if(gender == GenderEnum.MALE)
-            currentGenderString = "male"
-        else
-            currentGenderString = "female"
-    }
 
-    fun addDog()
-    {
-        if(!areFieldsCompleted()) return
+    fun addDog() {
+        if (!areFieldsCompleted()) return
+
+        currentGenderString = if (isFemaleGenderSelected.value!!) {
+            "female"
+        } else
+            "male"
 
         val uid = StringUtils.getRandomUID()
         val dog = DogObj(
@@ -147,16 +167,16 @@ class AddDogViewModel : BaseViewModel() {
             ageValue.value!!,
             ageString.value!!,
             breed.value!!,
-            currentGenderString!!)
+            currentGenderString!!
+        )
 
         val currentUserUid = currentUser?.uid
-        if(currentUserUid.isNullOrEmpty()) return
+        if (currentUserUid.isNullOrEmpty()) return
 
         ShowLoadingView(true)
 
         viewModelScope.launch(Dispatchers.IO) {
-            if(dogBitmapImage.value!=null)
-            {
+            if (dogBitmapImage.value != null) {
                 val compressedImage = ImageUtils.getCompressedImage(dogBitmapImage.value!!)
                 dog.imageUrl = storageService.uploadImageToDatabase(uid, compressedImage)
             }
@@ -173,8 +193,7 @@ class AddDogViewModel : BaseViewModel() {
                             navigationService.closeCurrentActivity()
 
                         }
-                    } else
-                    {
+                    } else {
                         viewModelScope.launch(Dispatchers.Main) {
                             if (!exception?.message.isNullOrEmpty())
                                 dialogService.showSnackbar(exception!!.message!!)
@@ -189,8 +208,7 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
-    fun addDogInLocalList(dog: DogObj)
-    {
+    fun addDogInLocalList(dog: DogObj) {
         var dogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
 
         var auxList = dogsList
@@ -202,35 +220,37 @@ class AddDogViewModel : BaseViewModel() {
 
     }
 
-    fun selectBreed()
-    {
+    fun selectBreed() {
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
             OverlayActivity.fragmentClassNameParam,
             SelectBreedFragment::class.qualifiedName
         )
-        if(!breed.value.isNullOrEmpty())
-            dataExchangeService.put(SelectBreedViewModel::class.qualifiedName!!, breed.value.toString())
+        if (!breed.value.isNullOrEmpty())
+            dataExchangeService.put(
+                SelectBreedViewModel::class.qualifiedName!!,
+                breed.value.toString()
+            )
     }
 
-    private fun areFieldsCompleted() :Boolean {
-        if(name.value.isNullOrEmpty()) {
+    private fun areFieldsCompleted(): Boolean {
+        if (name.value.isNullOrEmpty()) {
             dialogService.showSnackbar("Please add a name")
             return false
         }
-        if(breed.value.isNullOrEmpty()) {
+        if (breed.value.isNullOrEmpty()) {
             dialogService.showSnackbar("Please add a breed")
             return false
         }
-        if(ageValue.value.isNullOrEmpty()) {
+        if (ageValue.value.isNullOrEmpty()) {
             dialogService.showSnackbar("Please add an age")
             return false
         }
-        if(currentGenderString.isNullOrEmpty()) {
+        /*if (currentGenderString.isNullOrEmpty()) {
             dialogService.showSnackbar("Please select a gender")
             return false
-        }
+        }*/
 
         return true
     }

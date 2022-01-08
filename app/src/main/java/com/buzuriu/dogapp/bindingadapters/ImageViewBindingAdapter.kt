@@ -18,7 +18,7 @@ object ImageViewBindingAdapter {
     @BindingAdapter("cb_imageUrl", "cb_placeholder", requireAll = true)
     @JvmStatic
     fun ImageView.imageUrl(imageUrl: String?, placeHolder: Drawable) {
-        if (imageUrl == null) {
+        if (imageUrl == null || imageUrl == "") {
             this.setImageDrawable(placeHolder)
         } else {
             Picasso.get()

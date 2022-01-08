@@ -100,6 +100,7 @@
                         />
                     <RadioGroup
                         android:layout_width="match_parent"
+
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
@@ -108,8 +109,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/male_gender"
                             android:id="@+id/maleRadioId"
-                            android:checked="@{viewModel.currentGender.equals(GenderEnum.MALE)}"
-                            android:onClick="@{()->viewModel.setGenderType(GenderEnum.MALE)}"
+                            android:checked="@={!viewModel.isFemaleGenderSelected}"
 
                             />
                         <RadioButton
@@ -118,8 +118,7 @@
                             android:text="@string/female_gender"
                             android:textAlignment="textEnd"
                             android:id="@+id/femaleRadioId"
-                            android:checked="@{viewModel.currentGender.equals(GenderEnum.FEMALE)}"
-                            android:onClick="@{()->viewModel.setGenderType(GenderEnum.FEMALE)}"
+                            android:checked="@={viewModel.isFemaleGenderSelected}"
                             />
                     </RadioGroup>
 
