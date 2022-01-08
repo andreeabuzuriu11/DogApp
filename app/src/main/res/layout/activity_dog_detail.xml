@@ -37,6 +37,7 @@
                     <TextView
                         android:padding="10dp"
                         android:id="@+id/dog_name"
+                        android:text="@{viewModel.dog.name}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/name_hint"
@@ -44,23 +45,36 @@
 
                     <TextView
                         android:padding="10dp"
+                        android:text="@{viewModel.dog.breed}"
                         android:id="@+id/dog_breed"
                         android:layout_width="230dp"
                         android:layout_height="wrap_content"
                         android:hint="@string/breedHint"
                         android:textSize="20sp" />
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
                     <TextView
                         android:padding="10dp"
+                        android:text="@{viewModel.dog.ageValue}"
                         android:id="@+id/dog_age"
-                        android:layout_width="100dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="@string/age_hint"
                         android:textSize="20sp" />
-
+                    <TextView
+                        android:padding="10dp"
+                        android:text="@{viewModel.dog.ageString}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/age_hint"
+                        android:textSize="20sp" />
+                    </LinearLayout>
 
                     <TextView
                         android:padding="10dp"
+                        android:text="@{viewModel.dog.gender}"
                         android:id="@+id/dog_gender"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -86,6 +100,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
+                        cb_dogImg="@{viewModel.dog}"
                         android:layout_width="200dp"
                         android:layout_height="200dp"
                         android:layout_below="@+id/addPetTextView"
