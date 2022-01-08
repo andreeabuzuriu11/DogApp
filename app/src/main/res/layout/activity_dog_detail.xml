@@ -18,9 +18,9 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="@dimen/activity_vertical_margin">
 
             <RelativeLayout
@@ -34,52 +34,131 @@
                     android:layout_marginTop="30dp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:padding="10dp"
-                        android:id="@+id/dog_name"
-                        android:text="@{viewModel.dog.name}"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="@string/name_hint"
-                        android:textSize="20sp" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:padding="10dp"
-                        android:text="@{viewModel.dog.breed}"
-                        android:id="@+id/dog_breed"
-                        android:layout_width="230dp"
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Name"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dog_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/name_hint"
+                            android:padding="10dp"
+                            android:text="@{viewModel.dog.name}"
+                            android:textSize="20sp" />
+
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="@string/breedHint"
-                        android:textSize="20sp" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Breed"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dog_breed"
+                            android:layout_width="230dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/breedHint"
+                            android:padding="10dp"
+                            android:text="@{viewModel.dog.breed}"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/black" />
+
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
-                    <TextView
-                        android:padding="10dp"
-                        android:text="@{viewModel.dog.ageValue}"
-                        android:id="@+id/dog_age"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/age_hint"
-                        android:textSize="20sp" />
-                    <TextView
-                        android:padding="10dp"
-                        android:text="@{viewModel.dog.ageString}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/age_hint"
-                        android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/age_hint"
+                            android:padding="10dp"
+                            android:text="Age"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dog_age"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="@{viewModel.dog.ageValue}"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/age_hint"
+                            android:padding="10dp"
+                            android:text="@{viewModel.dog.ageString}"
+                            android:textSize="20sp" />
                     </LinearLayout>
 
-                    <TextView
-                        android:padding="10dp"
-                        android:text="@{viewModel.dog.gender}"
-                        android:id="@+id/dog_gender"
+                    <View
                         android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="@string/gender_hint"
-                        android:textSize="20sp" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Gender"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/dog_gender"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/gender_hint"
+                            android:padding="10dp"
+                            android:text="@{viewModel.dog.gender}"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/black" />
 
 
                 </LinearLayout>
@@ -89,14 +168,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-
                     <TextView
                         android:id="@+id/addPetTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:text="@string/profile_picture_string"
-                        android:textSize="20dp" />
+                        android:text="@string/dog_details"
+                        android:layout_margin="5dp"
+                        android:textSize="30dp" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
@@ -104,6 +183,7 @@
                         android:layout_width="200dp"
                         android:layout_height="200dp"
                         android:layout_below="@+id/addPetTextView"
+
                         android:layout_centerInParent="true"
                         android:src="@drawable/ic_dog_svgrepo_com" />
 

@@ -44,5 +44,6 @@
     <string name="breedHint">Breed</string>
     <string name="selectButton">Select</string>
     <string name="profile_picture_string">Profile Picture</string>
+    <string name="dog_details">Details</string>
 
 </resources>
