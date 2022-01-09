@@ -47,6 +47,8 @@ class AddDogViewModel : BaseViewModel() {
     var dogPlaceHolder: MutableLiveData<Drawable>
     var dogImageUrl = MutableLiveData<String>()
 
+    var isEdit:Boolean = false
+
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
 
     init {
@@ -62,6 +64,7 @@ class AddDogViewModel : BaseViewModel() {
         }
 
         if (dog != null) {
+            isEdit = true
             name.value = dog.name
             ageValue.value = dog.ageValue
             ageString.value = dog.ageString
@@ -191,7 +194,15 @@ class AddDogViewModel : BaseViewModel() {
                         viewModelScope.launch(Dispatchers.Main) {
                             dataExchangeService.put(DashboardViewModel::class.java.name, true)
                             addOrEditDogToData(dog)
-                            dialogService.showSnackbar(R.string.added_success_message)
+                            if(!isEdit)
+                            {
+                                dialogService.showSnackbar(R.string.added_success_message)
+                            }
+                            else
+                            {
+                                dialogService.showSnackbar(R.string.edited_success_message)
+                            }
+
                             delay(2000)
                             navigationService.closeCurrentActivity()
 
