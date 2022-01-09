@@ -40,15 +40,6 @@ class DashboardViewModel : BaseViewModel() {
 
     }
 
-    fun editDog()
-    {
-        navigationService.navigateToActivity(AddDogActivity::class.java, false)
-    }
-
-    fun deleteDog()
-    {
-
-    }
 
     private fun selectedDog(dogObj: DogObj)
     {
