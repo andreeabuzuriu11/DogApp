@@ -3,9 +3,12 @@ package com.buzuriu.dogapp.viewModels
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
+import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.views.AddDogActivity
+import kotlinx.coroutines.Dispatchers
+import java.lang.Exception
 
 class DogDetailViewModel : BaseViewModel() {
 
@@ -36,6 +39,17 @@ class DogDetailViewModel : BaseViewModel() {
 
     fun deleteDog()
     {
+        dialogService.showAlertDialog("Delete dog?", "Are you sure you want to delete ${dog.value!!.name}? This action cannot be undone.", "Yes, delete it", object :
+            IClickListener {
+            override fun clicked() {
+                deleteDogFromDatabase()
+            }
+        })
+    }
+
+    fun deleteDogFromDatabase()
+    {
+
 
     }
 
