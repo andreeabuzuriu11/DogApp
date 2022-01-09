@@ -16,6 +16,9 @@ interface IDatabaseService {
     suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener)
     suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
     suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener)
+    suspend fun deleteDog(userUid: String,
+                           motoUid: String,
+                           onCompleteListener: IOnCompleteListener)
 }
 
 class DatabaseService : IDatabaseService {
@@ -69,6 +72,19 @@ class DatabaseService : IDatabaseService {
             dogListListener.getDogList(dogList)
         }
             .addOnFailureListener { throw it }
+    }
+
+    override suspend fun deleteDog(
+        userUid: String,
+        dogUid: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        firestore.collection(userInfoCollection)
+            .document(userUid)
+            .collection(dogInfoCollection)
+            .document(dogUid).delete()
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
     }
 
 }

@@ -1,24 +1,22 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.listeners.IClickListener
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.views.AddDogActivity
+import com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 class DogDetailViewModel : BaseViewModel() {
 
     var dog = MutableLiveData<DogObj>()
-/*    var dogPlaceHolder : MutableLiveData<Drawable>*/
 
     init {
-        /*dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())*/
         dog.value = dataExchangeService.get<DogObj>(this::class.java.name)!!
-
     }
 
     override fun onResume()
@@ -43,19 +41,25 @@ class DogDetailViewModel : BaseViewModel() {
             IClickListener {
             override fun clicked() {
                 deleteDogFromDatabase()
+                dataExchangeService.put(DashboardViewModel::class.java.name, true) // is refresh list needed
             }
         })
     }
 
     fun deleteDogFromDatabase()
     {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseService.deleteDog(currentUser!!.uid, dog.value!!.uid, object :
+            IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                    val allDogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+                    allDogsList!!.remove(dog.value!!)
 
-
+                    localDatabaseService.add("localDogsList", allDogsList)
+                    navigationService.closeCurrentActivity()
+                }
+            })
+        }
     }
-
-/*    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun getDogPlaceHolder(): Drawable? {
-        return activityService.activity!!.getDrawable(ImageUtils.getDogPlaceholder())
-    }*/
 
 }
