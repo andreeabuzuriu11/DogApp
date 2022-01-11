@@ -118,7 +118,7 @@ class RegisterViewModel : BaseAuthViewModel() {
             dialogService.showSnackbar("Name field is mandatory")
             return false
         }
-        if(!StringUtils.isLetters(name.value!!))
+        if(!StringUtils.isLetters(name.value!!) && !name.value!!.contains(' '))
         {
             dialogService.showSnackbar("Name cannot contain digits")
             return false

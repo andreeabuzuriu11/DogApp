@@ -7,12 +7,13 @@ import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.DogDetailViewModel
 import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.DogDetailActivity
+import com.buzuriu.dogapp.views.auth.LoginActivity
 
 
 class DashboardViewModel : BaseViewModel() {
 
-    var dogsList : ArrayList<DogObj> = ArrayList()
-    var dogAdapter : DogAdapter?
+    var dogsList: ArrayList<DogObj> = ArrayList()
+    var dogAdapter: DogAdapter?
 
     init {
         val dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
@@ -26,10 +27,10 @@ class DashboardViewModel : BaseViewModel() {
 
     override fun onResume() {
         super.onResume()
-        var isRefreshListNeeded : Boolean? = dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
+        var isRefreshListNeeded: Boolean? =
+            dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
         var dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
-        if(isRefreshListNeeded!=null && isRefreshListNeeded)
-        {
+        if (isRefreshListNeeded != null && isRefreshListNeeded) {
             dogsList.clear()
 
             if (dogsFromLocalDB != null) {
@@ -41,17 +42,21 @@ class DashboardViewModel : BaseViewModel() {
     }
 
 
-    private fun selectedDog(dogObj: DogObj)
-    {
+    private fun selectedDog(dogObj: DogObj) {
         //TODO navigatetoDetailActivity
         dataExchangeService.put(DogDetailViewModel::class.java.name, dogObj)
         navigationService.navigateToActivity(DogDetailActivity::class.java, false)
     }
 
-    fun addDog()
-    {
+    fun addDog() {
         navigationService.navigateToActivity(AddDogActivity::class.java, false)
     }
 
+    fun logout()
+    {
+        firebaseAuthService.logout()
+        localDatabaseService.clear()
+        navigationService.navigateToActivity(LoginActivity::class.java, true)
+    }
 
 }

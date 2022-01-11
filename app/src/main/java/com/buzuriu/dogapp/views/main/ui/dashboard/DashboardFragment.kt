@@ -7,6 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentDashboardBinding
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
+import android.view.Menu
+
+import android.view.MenuInflater
+import android.view.MenuItem
+
 
 class DashboardFragment : BaseBoundFragment<DashboardViewModel, FragmentDashboardBinding>(DashboardViewModel::class.java) {
 
@@ -21,12 +26,26 @@ class DashboardFragment : BaseBoundFragment<DashboardViewModel, FragmentDashboar
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setHasOptionsMenu(true)
     }
     private fun setupRecyclerView()
     {
         val recyclerView = currentBinding.dogsList
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.dogAdapter
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_main, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        if (id == R.id.action_logout) {
+            mViewModel.logout()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

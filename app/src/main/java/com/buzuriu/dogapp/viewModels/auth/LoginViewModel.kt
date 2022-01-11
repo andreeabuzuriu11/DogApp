@@ -36,6 +36,7 @@ class LoginViewModel : BaseViewModel() {
                         ShowLoadingView(false)
 
                         if (successful) {
+                            prepareForMain()
                             navigationService.navigateToActivity(MainActivity::class.java, true)
                         } else {
                             if (!exception?.message.isNullOrEmpty())
@@ -74,6 +75,17 @@ class LoginViewModel : BaseViewModel() {
         }
 
         return true
+    }
+
+    private fun prepareForMain()
+    {
+        viewModelScope.launch {
+            databaseService.fetchUserDogs(currentUser!!.uid, object: IGetUserDogListListener {
+                override fun getDogList(dogList: ArrayList<DogObj>) {
+                    localDatabaseService.add("localDogsList", dogList)
+                }
+            })
+        }
     }
 
 }

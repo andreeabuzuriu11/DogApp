@@ -21,6 +21,8 @@ interface IFirebaseAuthService {
     )
 
     suspend fun resetPassword(email:String, onCompleteListener: IOnCompleteListener)
+
+    fun logout()
 }
 
 class FirebaseAuthService : IFirebaseAuthService {
@@ -56,5 +58,7 @@ class FirebaseAuthService : IFirebaseAuthService {
         }
     }
 
-
+    override fun logout() {
+        auth.signOut()
+    }
 }
