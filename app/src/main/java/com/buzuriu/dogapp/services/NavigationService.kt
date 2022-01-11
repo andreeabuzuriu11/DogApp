@@ -2,10 +2,6 @@ package com.buzuriu.dogapp.services
 
 import android.app.Activity
 import android.content.Intent
-import android.view.View
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
-import androidx.navigation.findNavController
 
 interface INavigationService {
 
@@ -23,11 +19,6 @@ interface INavigationService {
 
     fun closeCurrentActivity()
 
-    fun navigateToFragment(transitionId: Int, navHostId: Int)
-
-    fun popFragmentBackStack(navHostId: Int)
-
-    fun closeCurrentActivityAfterTransition()
 
 }
 
@@ -100,34 +91,4 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
         }
     }
 
-    override fun navigateToFragment(transitionId: Int, navHostId: Int) {
-        val activity: Activity? = currentActivityService.activity
-
-        if (activity != null) {
-            val navController = activity.findNavController(navHostId)
-            navController.navigate(transitionId)
-        } else {
-            throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")
-        }
-    }
-
-    override fun popFragmentBackStack(navHostId: Int) {
-        val activity: Activity? = currentActivityService.activity
-
-        if (activity != null) {
-            val navController = activity.findNavController(navHostId)
-            navController.popBackStack()
-        } else {
-            throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")
-        }
-    }
-
-    override fun closeCurrentActivityAfterTransition() {
-        val activity: Activity? = currentActivityService.activity
-        if (activity != null) {
-            activity.finishAfterTransition()
-        } else {
-            throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")
-        }
-    }
 }

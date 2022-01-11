@@ -1,8 +1,5 @@
 package com.buzuriu.dogapp.models
 
-import com.buzuriu.dogapp.enums.AgeEnum
-import com.buzuriu.dogapp.enums.GenderEnum
-
 class DogObj {
     var uid: String = ""
     var name: String = ""
