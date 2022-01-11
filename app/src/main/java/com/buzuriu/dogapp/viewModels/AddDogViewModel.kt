@@ -11,9 +11,7 @@ import androidx.activity.result.ActivityResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.databinding.DogCellBinding
 import com.buzuriu.dogapp.enums.AgeEnum
-import com.buzuriu.dogapp.enums.GenderEnum
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.AlertBuilderSettings
@@ -21,7 +19,6 @@ import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.StringUtils
-import com.buzuriu.dogapp.views.DogDetailActivity
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel

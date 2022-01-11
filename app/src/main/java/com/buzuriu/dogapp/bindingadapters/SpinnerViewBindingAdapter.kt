@@ -55,7 +55,7 @@ object SpinnerViewBindingAdapter {
 
     @JvmStatic
     @InverseBindingAdapter(attribute = "cb_selectedValue")
-    fun Spinner.getSelectedValue(): Any? {
-        return this.selectedItem
+    fun Spinner.getSelectedValue(): String? {
+        return this.selectedItem as String
     }
 }
