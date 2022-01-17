@@ -17,7 +17,7 @@ interface IDatabaseService {
     suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
     suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener)
     suspend fun deleteDog(userUid: String,
-                           motoUid: String,
+                           dogUid: String,
                            onCompleteListener: IOnCompleteListener)
 }
 
