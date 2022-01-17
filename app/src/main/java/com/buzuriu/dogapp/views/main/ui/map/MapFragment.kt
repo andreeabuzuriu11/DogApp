@@ -33,7 +33,9 @@ class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewM
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId)
         {
-            R.id.show_on_map -> Log.d("MapFragment", "Show on map")
+            R.id.show_on_map -> {
+                mViewModel.showMap()
+                Log.d("MapFragment", "Show on map")}
             R.id.filter_list -> Log.d("MapFragment", "Filter list")
             R.id.search -> Log.d("MapFragment", "Search in list")
         }

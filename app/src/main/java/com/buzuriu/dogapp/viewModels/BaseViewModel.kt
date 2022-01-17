@@ -133,4 +133,27 @@ open class BaseViewModel : ViewModel(), KoinComponent {
             }
         })
     }
+
+    protected suspend fun askLocationPermission():Task<Boolean> {
+        return Tasks.forResult(suspendCoroutine<Boolean> {
+            viewModelScope.launch(Dispatchers.Main) {
+                val permissionsResult = permissionService.requestPermissionStatusAsync(
+                    listOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                ).await()
+                var grantedCounter = 0
+                for (result in permissionsResult) {
+                    if (result.permissionStatus == PermissionStatus.Granted) {
+                        grantedCounter++
+                    }
+                }
+
+                if (grantedCounter == permissionsResult.size) {
+                    it.resumeWith(Result.success(true))
+                } else {
+                    it.resumeWith(Result.success(false))
+                }
+            }
+        })
+    }
 }
