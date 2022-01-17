@@ -1,14 +1,13 @@
-package com.buzuriu.dogapp.views.main.ui.home
+package com.buzuriu.dogapp.views.main.ui.map
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 
-class HomeViewModel : BaseViewModel() {
+class MapViewModel : BaseViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+        value = "This is map Fragment"
     }
     val text: LiveData<String> = _text
 }
