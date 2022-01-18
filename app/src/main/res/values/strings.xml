@@ -47,5 +47,10 @@
     <string name="profile_picture_string">Profile Picture</string>
     <string name="dog_details">Details</string>
     <string name="logout">Logout</string>
+    <string name="new_meeting">New meeting</string>
+    <string name="add_a_description">Add a description</string>
+    <string name="pick_a_date">Pick a date</string>
+    <string name="pick_a_time">Pick a time</string>
+    <string name="add_button">Add</string>
 
 </resources>

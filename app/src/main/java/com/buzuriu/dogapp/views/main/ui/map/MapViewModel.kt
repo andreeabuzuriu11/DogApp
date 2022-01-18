@@ -1,16 +1,11 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
-import android.app.Activity
-import android.content.Intent
-import android.graphics.Bitmap
-import android.provider.MediaStore
-import androidx.activity.result.ActivityResult
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.views.AddDogActivity
+import com.buzuriu.dogapp.views.AddMeetingActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -31,9 +26,13 @@ class MapViewModel : BaseViewModel() {
                 return@launch
             }
             else {
-                dialogService.showSnackbar("Location is permitted")
+
             }
         }
+    }
 
+    fun addMeeting()
+    {
+        navigationService.navigateToActivity(AddMeetingActivity::class.java, false)
     }
 }
