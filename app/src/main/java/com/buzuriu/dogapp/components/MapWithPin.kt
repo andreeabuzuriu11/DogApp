@@ -39,6 +39,8 @@ class MapWithPin : FrameLayout, OnMapReadyCallback, DefaultLifecycleObserver {
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
+        mMap!!.isMyLocationEnabled = true
+        mMap!!.uiSettings.isMyLocationButtonEnabled = true
 
         locationManager =
             context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -60,7 +62,6 @@ class MapWithPin : FrameLayout, OnMapReadyCallback, DefaultLifecycleObserver {
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-
         parent.requestDisallowInterceptTouchEvent(true)
         return super.dispatchTouchEvent(ev)
     }
