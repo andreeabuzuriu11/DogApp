@@ -52,5 +52,8 @@
     <string name="pick_a_date">Pick a date</string>
     <string name="pick_a_time">Pick a time</string>
     <string name="add_button">Add</string>
+    <string name="pick_a_location">Pick a location</string>
+    <string name="add_a_new_meeting">Add a new meeting</string>
+    <string name="pin_for_location">pin for location</string>
 
 </resources>

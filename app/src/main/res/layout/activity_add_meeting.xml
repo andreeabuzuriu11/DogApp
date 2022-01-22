@@ -29,38 +29,24 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/relativeLayout1">
+                    android:layout_below="@+id/relativeLayout1"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+
 
                     <EditText
                         android:id="@+id/add_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/add_a_description"
-                        />
+                        android:hint="@string/add_a_description" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/pick_a_date"
-                        />
-                    <DatePicker
-                        android:id="@+id/date_picker"
-                        android:layout_width="match_parent"
-                        android:datePickerMode="spinner"
-                        android:calendarViewShown="false"
-                        android:layout_weight="4"
-                        android:layout_height="0dp"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pick_a_time"
-                        />
+                        android:text="@string/pick_a_time" />
                     <TimePicker
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -68,6 +54,29 @@
 
                         />
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pick_a_date" />
+
+                    <DatePicker
+                        android:id="@+id/date_picker"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="4"
+                        android:calendarViewShown="false"
+                        android:datePickerMode="spinner" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/pick_a_location" />
+
+
+                    <com.buzuriu.dogapp.components.MapWithPin
+                        android:id="@+id/map_with_pin"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp" />
 
 
                 </LinearLayout>
@@ -124,12 +133,12 @@
         <Button
             android:id="@+id/addButton"
             android:layout_width="match_parent"
-            android:text="@string/add_button"
             android:layout_height="@dimen/button_height"
             android:layout_alignParentBottom="true"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="30dp"
             android:background="@drawable/rounded_button"
+            android:text="@string/add_button"
             android:textColor="@color/white" />
 
     </RelativeLayout>

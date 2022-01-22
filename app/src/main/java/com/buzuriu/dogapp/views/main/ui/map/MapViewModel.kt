@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.viewModels.BaseViewModel
-import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.AddMeetingActivity
+import com.buzuriu.dogapp.views.SelectBreedFragment
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -25,14 +26,21 @@ class MapViewModel : BaseViewModel() {
                 dialogService.showSnackbar("Location permission needed")
                 return@launch
             }
-            else {
-
-            }
         }
     }
 
     fun addMeeting()
     {
-        navigationService.navigateToActivity(AddMeetingActivity::class.java, false)
+        viewModelScope.launch(Dispatchers.Main) {
+            val hasPermission = askLocationPermission().await()
+            if (!hasPermission) {
+                dialogService.showSnackbar("Location permission needed to add a meeting!")
+                return@launch
+            }
+            else {
+                navigationService.navigateToActivity(AddMeetingActivity::class.java, false)
+            }
+        }
     }
+
 }
