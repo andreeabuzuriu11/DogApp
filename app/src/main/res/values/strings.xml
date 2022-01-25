@@ -58,5 +58,8 @@
     <string name="dog">Dog</string>
     <string name="join">Join</string>
     <string name="pick_a_dog">Pick a dog</string>
+    <string name="select_dog">Select Dog</string>
+    <string name="start_typing_a_dog_name">Start typing a dog name</string>
+    <string name="start_typing_a_breed_name">Start typing a breed name</string>
 
 </resources>

@@ -2,7 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import android.widget.TimePicker
 import androidx.lifecycle.MutableLiveData
-import com.buzuriu.dogapp.views.SelectBreedFragment
+import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 
 class AddMeetingViewModel : BaseViewModel() {
@@ -11,15 +11,15 @@ class AddMeetingViewModel : BaseViewModel() {
     var dog = MutableLiveData("")
 
     fun selectDog() {
-       /* navigationService.showOverlay(
+        navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
             OverlayActivity.fragmentClassNameParam,
             SelectDogFragment::class.qualifiedName
         )
-        if (!dog.value.isNullOrEmpty())
+       /* if (!dog.value.isNullOrEmpty())
             dataExchangeService.put(
-                SelectBreedViewModel::class.qualifiedName!!,
+                SelectDogViewModel::class.qualifiedName!!,
                 dog.value.toString()
             )*/
     }
