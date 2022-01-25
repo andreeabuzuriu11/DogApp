@@ -8,10 +8,11 @@ class DogObj {
     var breed: String = ""
     var gender: String = ""
     var imageUrl : String = ""
+    var isSelected: Boolean? = false
 
     constructor()
 
-    constructor(uid: String, name: String, ageValue: String, ageString: String, breed:String, gender: String)
+    constructor(uid: String, name: String, ageValue: String, ageString: String, breed:String, gender: String, isSelected: Boolean?=null)
     {
         this.uid = uid
         this.name = name
@@ -19,6 +20,10 @@ class DogObj {
         this.ageString = ageString
         this.breed = breed
         this.gender = gender
+        if(isSelected!=null)
+        {
+            this.isSelected = isSelected
+        }
     }
 
 }

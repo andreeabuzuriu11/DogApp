@@ -44,7 +44,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/breed_list"
+            android:id="@+id/dog_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/select_dog_edit_text"
