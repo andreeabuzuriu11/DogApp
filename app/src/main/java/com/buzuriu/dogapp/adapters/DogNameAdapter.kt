@@ -43,4 +43,9 @@ class DogNameAdapter(var dogsList : ArrayList<DogObj>,
     override fun getItemCount(): Int {
         return dogsList.size
     }
+
+    fun filterList(auxList: ArrayList<DogObj>) {
+        dogsList = auxList
+        notifyDataSetChanged()
+    }
 }
