@@ -105,10 +105,10 @@
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="60dp"
-                            android:hint="Dog name"
-                            android:text="@={viewModel.dogName}"
-                            android:textSize="18dp" />
+                            android:layout_marginStart="60dp"
+                            android:hint="@string/dog"
+                            android:text="@={viewModel.dog.name}"
+                            android:textSize="18sp" />
 
 
                     </RelativeLayout>
@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="@string/new_meeting"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
 
 

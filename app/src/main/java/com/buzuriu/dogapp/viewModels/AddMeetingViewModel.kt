@@ -14,7 +14,6 @@ import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 class AddMeetingViewModel : BaseViewModel() {
 
     val timePicker : MutableLiveData<TimePicker>? = null
-    var dogName = MutableLiveData("")
     var dog = MutableLiveData<DogObj>()
     var dogPlaceHolder: MutableLiveData<Drawable>
 
@@ -29,17 +28,16 @@ class AddMeetingViewModel : BaseViewModel() {
             OverlayActivity.fragmentClassNameParam,
             SelectDogFragment::class.qualifiedName
         )
-        if (!dogName.value.isNullOrEmpty())
+        if (!dog.value?.name.isNullOrEmpty())
             dataExchangeService.put(
                 SelectDogViewModel::class.qualifiedName!!,
-                dogName.value.toString()
+                dog.value?.name.toString()
             )
     }
 
     override fun onResume() {
         val selectedDog = dataExchangeService.get<DogObj>(this::class.qualifiedName!!)
         if (selectedDog != null) {
-            dogName.value = selectedDog.name
             dog.value = selectedDog!!
         }
     }
