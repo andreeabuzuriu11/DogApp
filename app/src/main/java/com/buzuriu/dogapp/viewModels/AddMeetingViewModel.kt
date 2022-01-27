@@ -24,6 +24,7 @@ class AddMeetingViewModel : BaseViewModel() {
     init {
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
         datePickerCalendar.value = Calendar.getInstance()
+        timePickerCalendar.value = Calendar.getInstance()
     }
 
     fun selectDog() {
@@ -45,6 +46,8 @@ class AddMeetingViewModel : BaseViewModel() {
         val year = datePickerCalendar.value!!.get(Calendar.YEAR)
         val month = datePickerCalendar.value!!.get(Calendar.MONTH)
         val day = datePickerCalendar.value!!.get(Calendar.DAY_OF_MONTH)
+        val hour = timePickerCalendar.value!!.get(Calendar.HOUR_OF_DAY)
+        val minute = timePickerCalendar.value!!.get(Calendar.MINUTE)
     }
 
     fun createMeeting()

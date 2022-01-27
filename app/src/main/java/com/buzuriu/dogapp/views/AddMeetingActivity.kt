@@ -24,6 +24,7 @@ class AddMeetingActivity :
     override fun setupDataBinding(binding: ActivityAddMeetingBinding) {
         binding.viewModel = mViewModel
         restrictDatePicker()
+        set24HourFormat()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -48,6 +49,12 @@ class AddMeetingActivity :
     {
         var datePicker : DatePicker = this.findViewById(R.id.date_picker)
         datePicker.minDate = System.currentTimeMillis() - 1000
+    }
+
+    private fun set24HourFormat()
+    {
+        var timePicker : TimePicker = this.findViewById(R.id.timePicker)
+        timePicker.setIs24HourView(true)
     }
 
 
