@@ -2,12 +2,15 @@ package com.buzuriu.dogapp.views
 
 import android.os.Build
 import android.os.Bundle
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.components.MapWithPin
 import com.buzuriu.dogapp.databinding.ActivityAddMeetingBinding
 import com.buzuriu.dogapp.viewModels.AddMeetingViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
+import java.sql.Time
 
 class AddMeetingActivity :
     BaseBoundActivity<AddMeetingViewModel, ActivityAddMeetingBinding>(AddMeetingViewModel::class.java)  {
@@ -20,6 +23,7 @@ class AddMeetingActivity :
 
     override fun setupDataBinding(binding: ActivityAddMeetingBinding) {
         binding.viewModel = mViewModel
+        restrictDatePicker()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -38,6 +42,12 @@ class AddMeetingActivity :
         mapView!!.getMapAsync()
         lifecycle.addObserver(mapView!!)
 
+    }
+
+    private fun restrictDatePicker()
+    {
+        var datePicker : DatePicker = this.findViewById(R.id.date_picker)
+        datePicker.setMinDate(System.currentTimeMillis() - 1000)
     }
 
 

@@ -33,6 +33,7 @@ SelectDogViewModel::class.java)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initSearchByNameEditText()
         setupRecyclerView()
     }
 
