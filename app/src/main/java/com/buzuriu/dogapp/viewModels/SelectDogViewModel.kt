@@ -14,17 +14,21 @@ class SelectDogViewModel : BaseViewModel() {
     private var selectedDog: DogObj? = null
 
     init {
-        var dogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
-        dogNameAdapter = DogNameAdapter(dogsList!!, this)
+        initDogs()
 
-        var dogName = dataExchangeService.get<String>(this::class.qualifiedName!!)
+        val dogName = dataExchangeService.get<String>(this::class.qualifiedName!!)
         if (dogName!=null)
         {
-            var dog = dogsList.find { x -> x.name == dogName}
+            val dog = dogsList.find { x -> x.name == dogName}
             selectDog(dog!!)
         }
     }
 
+    private fun initDogs()
+    {
+        dogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!
+        dogNameAdapter = DogNameAdapter(dogsList!!, this)
+    }
 
     fun saveDog()
     {
@@ -43,7 +47,8 @@ class SelectDogViewModel : BaseViewModel() {
         dogObj.isSelected = true
         selectedDog = dogObj
 
-        dogNameAdapter!!.notifyItemChanged(dogNameAdapter!!.dogsList.indexOf(dogObj))
+        dogNameAdapter?.notifyItemChanged(dogNameAdapter?.dogsList!!.indexOf(dogObj))
+
     }
 
     private fun unselectPreviousDog()
@@ -51,7 +56,7 @@ class SelectDogViewModel : BaseViewModel() {
         for (dog in dogsList) {
             if (dog.isSelected!!) {
                 dog.isSelected = false
-                dogNameAdapter?.notifyItemChanged(dogsList.indexOf(dog))
+                dogNameAdapter?.notifyItemChanged(dogNameAdapter?.dogsList!!.indexOf(dog))
                 return
             }
         }
