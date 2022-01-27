@@ -47,7 +47,7 @@ class AddMeetingActivity :
     private fun restrictDatePicker()
     {
         var datePicker : DatePicker = this.findViewById(R.id.date_picker)
-        datePicker.setMinDate(System.currentTimeMillis() - 1000)
+        datePicker.minDate = System.currentTimeMillis() - 1000
     }
 
 

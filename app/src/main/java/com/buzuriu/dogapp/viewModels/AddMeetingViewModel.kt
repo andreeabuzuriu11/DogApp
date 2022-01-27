@@ -11,15 +11,19 @@ import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import java.util.*
 
 class AddMeetingViewModel : BaseViewModel() {
 
     val timePicker : MutableLiveData<TimePicker>? = null
     var dog = MutableLiveData<DogObj>()
     var dogPlaceHolder: MutableLiveData<Drawable>
+    var datePickerCalendar = MutableLiveData<Calendar>()
+    var timePickerCalendar = MutableLiveData<Calendar>()
 
     init {
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
+        datePickerCalendar.value = Calendar.getInstance()
     }
 
     fun selectDog() {
@@ -34,6 +38,19 @@ class AddMeetingViewModel : BaseViewModel() {
                 SelectDogViewModel::class.qualifiedName!!,
                 dog.value?.name.toString()
             )
+    }
+
+    private fun getDateAndTimeOfMeeting()
+    {
+        val year = datePickerCalendar.value!!.get(Calendar.YEAR)
+        val month = datePickerCalendar.value!!.get(Calendar.MONTH)
+        val day = datePickerCalendar.value!!.get(Calendar.DAY_OF_MONTH)
+    }
+
+    fun createMeeting()
+    {
+        getDateAndTimeOfMeeting()
+
     }
 
     override fun onResume() {

@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.services
 import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.UserInfo
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -10,11 +11,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
+import java.util.*
+import kotlin.collections.ArrayList
 
 interface IDatabaseService {
     val fireAuth: FirebaseAuth
     suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener)
     suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
+    suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj)
     suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener)
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
@@ -25,6 +29,7 @@ class DatabaseService : IDatabaseService {
     override val fireAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val userInfoCollection = "UserInfo"
     private val dogInfoCollection = "Dog"
+    private val meetingsCollection = "Meeting"
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     override suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener) {
         firestore.collection(userInfoCollection)
@@ -44,6 +49,13 @@ class DatabaseService : IDatabaseService {
             .collection(dogInfoCollection)
             .document(dog.uid).set(dog)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj) {
+        firestore.collection(meetingsCollection)
+            .document(meetingUid)
+            .set(meetingObj)
             .await()
     }
 
