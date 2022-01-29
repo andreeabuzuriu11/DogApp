@@ -11,15 +11,16 @@ import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
 class AddMeetingViewModel : BaseViewModel() {
 
-    val timePicker : MutableLiveData<TimePicker>? = null
     var dog = MutableLiveData<DogObj>()
     var dogPlaceHolder: MutableLiveData<Drawable>
     var datePickerCalendar = MutableLiveData<Calendar>()
     var timePickerCalendar = MutableLiveData<Calendar>()
+    var position = MutableLiveData<LatLng>()
 
     init {
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
@@ -50,10 +51,16 @@ class AddMeetingViewModel : BaseViewModel() {
         val minute = timePickerCalendar.value!!.get(Calendar.MINUTE)
     }
 
+    private fun getCoordinate()
+    {
+        val long = position.value!!.longitude
+        val lat = position.value!!.latitude
+    }
+
     fun createMeeting()
     {
         getDateAndTimeOfMeeting()
-
+        getCoordinate()
     }
 
     override fun onResume() {

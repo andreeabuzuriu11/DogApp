@@ -74,6 +74,7 @@
                     <com.buzuriu.dogapp.components.MapWithPin
                         android:id="@+id/map_with_pin"
                         android:layout_width="match_parent"
+                        cb_getPosition = "@={viewModel.position}"
                         android:layout_height="300dp" />
 
                     <TextView

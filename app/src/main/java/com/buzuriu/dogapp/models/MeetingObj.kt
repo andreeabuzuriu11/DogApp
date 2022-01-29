@@ -6,14 +6,15 @@ class MeetingObj {
     var date: Long? = null
     var location: GeoPoint? = null
     var dogUid : String? = null
-    var uid: String? = null
+    var userUid : String? = null
 
     constructor()
 
-    constructor(date:Long, location: GeoPoint, dogUid : String)
+    constructor(date:Long, location: GeoPoint, dogUid : String, userUid: String)
     {
         this.date = date
         this.location = location
         this.dogUid = dogUid
+        this.userUid = userUid
     }
 }
