@@ -3,6 +3,9 @@ package com.buzuriu.dogapp.views.main.ui.map
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.adapters.DogAdapter
+import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.AddMeetingActivity
 import com.buzuriu.dogapp.views.SelectBreedFragment
@@ -17,6 +20,15 @@ class MapViewModel : BaseViewModel() {
         value = "This is map Fragment"
     }
     val text: LiveData<String> = _text
+    var meetingsList = ArrayList<MeetingObj>()
+
+    init {
+        val meetingFromLocalDB = localDatabaseService.get<ArrayList<MeetingObj>>("localMeetings")
+        if (meetingFromLocalDB != null) {
+            meetingsList.addAll(meetingFromLocalDB)
+        }
+
+    }
 
     fun showMap() {
         viewModelScope.launch(Dispatchers.Main) {

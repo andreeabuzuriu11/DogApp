@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.services
 
+import com.buzuriu.dogapp.listeners.IGetMeetingListListener
 import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
@@ -20,6 +21,7 @@ interface IDatabaseService {
     suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
     suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj, onCompleteListener: IOnCompleteListener)
     suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener)
+    suspend fun fetchAllMeetings(meetingListListener : IGetMeetingListListener)
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
                            onCompleteListener: IOnCompleteListener)
@@ -87,6 +89,30 @@ class DatabaseService : IDatabaseService {
             }
 
             dogListListener.getDogList(dogList)
+        }
+            .addOnFailureListener { throw it }
+    }
+
+    override suspend fun fetchAllMeetings(meetingListListener: IGetMeetingListListener) {
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val query = firestore.collection(meetingsCollection)
+            .get()
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+            val meetingsList = ArrayList<MeetingObj>()
+            for (meetingDocSnapshot in it) {
+                for (querySnapshot in meetingDocSnapshot) {
+                    val meeting = querySnapshot.toObject(MeetingObj::class.java)
+                    meetingsList.add(meeting)
+                }
+            }
+
+            meetingListListener.getMeetingList(meetingsList)
         }
             .addOnFailureListener { throw it }
     }
