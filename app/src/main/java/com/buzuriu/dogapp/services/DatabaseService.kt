@@ -18,7 +18,7 @@ interface IDatabaseService {
     val fireAuth: FirebaseAuth
     suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener)
     suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
-    suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj)
+    suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj, onCompleteListener: IOnCompleteListener)
     suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener)
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
@@ -52,10 +52,15 @@ class DatabaseService : IDatabaseService {
             .await()
     }
 
-    override suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj) {
+    override suspend fun storeMeetingInfo(
+        meetingUid: String,
+        meetingObj: MeetingObj,
+        onCompleteListener: IOnCompleteListener
+    ) {
         firestore.collection(meetingsCollection)
             .document(meetingUid)
             .set(meetingObj)
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
 

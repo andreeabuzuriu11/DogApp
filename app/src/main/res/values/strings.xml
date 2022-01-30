@@ -15,6 +15,7 @@
     <string name="save_button_text">Save</string>
     <string name="added_success_message">Dog added successfully!</string>
     <string name="edited_success_message">Dog edited successfully!</string>
+    <string name="added_success_message_meeting">Meeting added successfully!</string>
     <string name="login_button_text">Log in</string>
     <string name="add_button_text">Add</string>
     <string name="reset_password_button">Reset password</string>
