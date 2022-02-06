@@ -10,6 +10,7 @@ import android.provider.MediaStore
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
@@ -165,7 +166,8 @@ class AddDogViewModel : BaseViewModel() {
             ageValue.value!!,
             ageString.value!!,
             breed.value!!,
-            currentGenderString!!
+            currentGenderString!!,
+            currentUser!!.uid
         )
 
         val currentUserUid = currentUser?.uid
@@ -184,38 +186,61 @@ class AddDogViewModel : BaseViewModel() {
                 dog.imageUrl = storageService.uploadImageToDatabase(uid, compressedImage)
             }
 
-            databaseService.storeDogInfo(currentUserUid, dog, object : IOnCompleteListener {
-                override fun onComplete(successful: Boolean, exception: Exception?) {
+            viewModelScope.launch(Dispatchers.IO)
+            {
+                databaseService.storeDogUidToUser(
+                    currentUserUid,
+                    dog.uid,
+                    object : IOnCompleteListener {
+                        override fun onComplete(
+                            successful: Boolean,
+                            exception: java.lang.Exception?
+                        ) {
+                            if (successful) {
+                                viewModelScope.launch(Dispatchers.IO) {
+                                    databaseService.storeDogInfo(
+                                        currentUserUid,
+                                        dog,
+                                        object : IOnCompleteListener {
+                                            override fun onComplete(
+                                                successful: Boolean,
+                                                exception: Exception?
+                                            ) {
 
-                    if (successful) {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            dataExchangeService.put(DashboardViewModel::class.java.name, true)
-                            addOrEditDogToData(dog)
-                            if(!isEdit)
-                            {
-                                dialogService.showSnackbar(R.string.added_success_message)
+                                                if (successful) {
+                                                    viewModelScope.launch(Dispatchers.Main) {
+                                                        dataExchangeService.put(
+                                                            DashboardViewModel::class.java.name,
+                                                            true
+                                                        )
+                                                        addOrEditDogToData(dog)
+                                                        if (!isEdit) {
+                                                            dialogService.showSnackbar(R.string.added_success_message)
+                                                        } else {
+                                                            dialogService.showSnackbar(R.string.edited_success_message)
+                                                        }
+
+                                                        delay(2000)
+                                                        navigationService.closeCurrentActivity()
+
+                                                    }
+                                                } else {
+                                                    viewModelScope.launch(Dispatchers.Main) {
+                                                        if (!exception?.message.isNullOrEmpty())
+                                                            dialogService.showSnackbar(exception!!.message!!)
+                                                        else dialogService.showSnackbar(R.string.unknown_error)
+                                                        delay(2000)
+                                                    }
+                                                }
+
+                                                ShowLoadingView(false)
+                                            }
+                                        })
+                                }
                             }
-                            else
-                            {
-                                dialogService.showSnackbar(R.string.edited_success_message)
-                            }
-
-                            delay(2000)
-                            navigationService.closeCurrentActivity()
-
                         }
-                    } else {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            if (!exception?.message.isNullOrEmpty())
-                                dialogService.showSnackbar(exception!!.message!!)
-                            else dialogService.showSnackbar(R.string.unknown_error)
-                            delay(2000)
-                        }
-                    }
-
-                    ShowLoadingView(false)
-                }
-            })
+                    })
+            }
         }
     }
 

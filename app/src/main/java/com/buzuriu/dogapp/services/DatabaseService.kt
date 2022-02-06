@@ -1,8 +1,7 @@
 package com.buzuriu.dogapp.services
 
-import com.buzuriu.dogapp.listeners.IGetMeetingListListener
-import com.buzuriu.dogapp.listeners.IGetUserDogListListener
-import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import android.util.Log
+import com.buzuriu.dogapp.listeners.*
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.UserInfo
@@ -11,15 +10,20 @@ import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
-import java.util.*
+import java.lang.Exception
 import kotlin.collections.ArrayList
 
 interface IDatabaseService {
     val fireAuth: FirebaseAuth
     suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener)
     suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
+    suspend fun storeDogUidToUser(userUid: String, dogUid: String, onCompleteListener: IOnCompleteListener)
     suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj, onCompleteListener: IOnCompleteListener)
+    suspend fun fetchDogByUid(dogUid: String):DogObj?
+    suspend fun fetchUserByUid(userUid: String):UserInfo?
+    suspend fun fetchUserDogsByUserUid(userUid: String, dogListListener: IGetUserDogListListener)
     suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener)
     suspend fun fetchAllMeetings(meetingListListener : IGetMeetingListListener)
     suspend fun deleteDog(userUid: String,
@@ -41,14 +45,38 @@ class DatabaseService : IDatabaseService {
             .await()
     }
 
+    override suspend fun storeDogUidToUser(userUid: String, dogUid: String, onCompleteListener: IOnCompleteListener)
+    {
+/*        firestore.collection(userInfoCollection)
+            .document(userUid)
+            .collection(dogInfoCollection)
+            .document(dogUid)
+            .set(dogUid)
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()*/
+        firestore.collection(userInfoCollection)
+            .document(userUid)
+            .collection(dogInfoCollection)
+            .document(dogUid)
+            .set({
+                userUid
+            })
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
     override suspend fun storeDogInfo(
         userUid: String,
         dog: DogObj,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(userInfoCollection)
+       /* firestore.collection(userInfoCollection)
             .document(userUid)
             .collection(dogInfoCollection)
+            .document(dog.uid).set(dog)
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()*/
+        firestore.collection(dogInfoCollection)
             .document(dog.uid).set(dog)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
@@ -66,13 +94,81 @@ class DatabaseService : IDatabaseService {
             .await()
     }
 
-    override suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener) {
+     override suspend fun fetchDogByUid(dogUid: String): DogObj? {
+        var dogObj: DogObj? = null
+        val documentSnapshot =
+            firestore.collection(dogInfoCollection)
+                .document(dogUid)
+                .get()
+                .await()
 
+        if (documentSnapshot != null) {
+            try {
+                dogObj = documentSnapshot.toObject(DogObj::class.java)
+            } catch (e: Exception) {
+                Log.d("Error", e.message.toString())
+            }
+        }
+
+        return dogObj
+    }
+
+    override suspend fun fetchUserByUid(userUid: String): UserInfo? {
+        var userInfo: UserInfo? = null
+        val documentSnapshot =
+            firestore.collection(userInfoCollection)
+                .document(userUid)
+                .get()
+                .await()
+
+        if (documentSnapshot != null) {
+            try {
+                userInfo = documentSnapshot.toObject(UserInfo::class.java)
+            } catch (e: Exception) {
+                Log.d("Error", e.message.toString())
+            }
+        }
+
+        return userInfo
+    }
+
+    override suspend fun fetchUserDogsByUserUid(
+        userUid: String,
+        dogListListener: IGetUserDogListListener
+    ) {
         val queryList = ArrayList<Task<QuerySnapshot>>()
-        val query = firestore.collection(userInfoCollection)
-            .document(userUid)
-            .collection(dogInfoCollection)
+        val query = firestore.collection(dogInfoCollection)
+            .whereEqualTo("owner", userUid)
             .get()
+
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+            val dogList = ArrayList<DogObj>()
+            for (dogDocSnapshot in it) {
+                for (querySnapshot in dogDocSnapshot) {
+                    val dog = querySnapshot.toObject(DogObj::class.java)
+                    dogList.add(dog)
+                }
+            }
+
+            dogListListener.getDogList(dogList)
+        }
+            .addOnFailureListener { throw it }
+
+
+    }
+
+    override suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener) {
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val query = firestore.collection(dogInfoCollection)
+            .whereEqualTo("owner", userUid)
+            .get()
+
 
         queryList.add(query)
 
