@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.models.DogObj
@@ -21,16 +22,15 @@ class SplashViewModel : BaseViewModel() {
         // auth = Firebase.auth
         // auth.signInAnonymously()
         // val t = auth.currentUser
-        if(Firebase.auth.currentUser!=null)
-        {
+        if (Firebase.auth.currentUser != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 delay(1000)
                 async {
                     prepareForMain()
                     navigationService.navigateToActivity(MainActivity::class.java, true)
-                }}
-        }
-        else {
+                }
+            }
+        } else {
             viewModelScope.launch(Dispatchers.IO) {
                 delay(1000)
                 navigationService.navigateToActivity(RegisterActivity::class.java, true)
@@ -38,62 +38,27 @@ class SplashViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun  prepareForMain()
-    {
-/*        var dog : DogObj? =  null
-        var user : UserInfo? = null
+    private suspend fun prepareForMain() {
+        val userDogs = databaseService.fetchUserDogs(currentUser!!.uid)
+        if (userDogs != null) {
+            localDatabaseService.add("localDogsList", userDogs)
+        }
+        var user:UserInfo? = null
+        var dog:DogObj? = null
 
-            var z = databaseService.fetchUserByUid(firebaseAuthService.getCurrentUser()!!.uid)
+        val allMeetings = databaseService.fetchAllMeetings()
+        if (allMeetings != null) {
+            localDatabaseService.add("localMeetings", allMeetings)
+        }
+        if (allMeetings != null) {
+            for (meeting in allMeetings)
+            {
+                user = databaseService.fetchUserByUid(meeting.userUid!!)
+                dog = databaseService.fetchDogByUid(meeting.dogUid!!)
+                Log.d("dogapp", user.toString())
+                Log.d("dogapp",dog.toString())
 
-            var g=z;
-            return
-            databaseSe*/
-        databaseService.fetchUserDogs(currentUser!!.uid, object: IGetUserDogListListener {
-                override fun getDogList(dogList: ArrayList<DogObj>) {
-                    localDatabaseService.add("localDogsList", dogList)
-
-
-
-
-
-
-
-
-
-
-                    viewModelScope.launch {
-                        /*databaseService.fetchAllMeetings(object : IGetMeetingListListener {
-                            override fun getMeetingList(meetingList: ArrayList<MeetingObj>) {
-                                localDatabaseService.add("localMeetings", meetingList)
-                                for (meeting in meetingList)
-                                {
-                                    viewModelScope.launch {
-                                        user =  databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener
-                                        {
-                                            override fun onComplete(
-                                                successful: Boolean,
-                                                exception: Exception?
-                                            ) {
-                                                Log.d("andreea", user.toString())
-                                            }
-                                        })
-                                    }
-                                    viewModelScope.launch {
-                                        dog = databaseService.fetchDogByUid(meeting.dogUid!!, object : IOnCompleteListener
-                                        {
-                                            override fun onComplete(
-                                                successful: Boolean,
-                                                exception: Exception?
-                                            ) {
-                                                Log.d("andreea", dog.toString())
-                                            }
-                                        })
-                                    }
-                                }
-                            }
-                        })*/
-                    }
-                }
-            })
+            }
+        }
     }
 }

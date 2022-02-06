@@ -21,11 +21,10 @@ interface IDatabaseService {
     suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
     suspend fun storeDogUidToUser(userUid: String, dogUid: String, onCompleteListener: IOnCompleteListener)
     suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj, onCompleteListener: IOnCompleteListener)
-    suspend fun fetchDogByUid(dogUid: String):DogObj?
-    suspend fun fetchUserByUid(userUid: String):UserInfo?
-    suspend fun fetchUserDogsByUserUid(userUid: String, dogListListener: IGetUserDogListListener)
-    suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener)
-    suspend fun fetchAllMeetings(meetingListListener : IGetMeetingListListener)
+    suspend fun fetchDogByUid(dogUid: String) : DogObj?
+    suspend fun fetchUserByUid(userUid: String) : UserInfo?
+    suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj>?
+    suspend fun fetchAllMeetings() : ArrayList <MeetingObj>?
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
                            onCompleteListener: IOnCompleteListener)
@@ -132,10 +131,8 @@ class DatabaseService : IDatabaseService {
         return userInfo
     }
 
-    override suspend fun fetchUserDogsByUserUid(
-        userUid: String,
-        dogListListener: IGetUserDogListListener
-    ) {
+    override suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj> {
+        val dogList = ArrayList<DogObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(dogInfoCollection)
             .whereEqualTo("owner", userUid)
@@ -148,48 +145,19 @@ class DatabaseService : IDatabaseService {
             Tasks.whenAllSuccess<QuerySnapshot>(queryList)
 
         allTasks.addOnSuccessListener {
-            val dogList = ArrayList<DogObj>()
+
             for (dogDocSnapshot in it) {
                 for (querySnapshot in dogDocSnapshot) {
                     val dog = querySnapshot.toObject(DogObj::class.java)
                     dogList.add(dog)
                 }
             }
-
-            dogListListener.getDogList(dogList)
         }
-            .addOnFailureListener { throw it }
-
-
+        return dogList
     }
 
-    override suspend fun fetchUserDogs(userUid: String, dogListListener: IGetUserDogListListener) {
-        val queryList = ArrayList<Task<QuerySnapshot>>()
-        val query = firestore.collection(dogInfoCollection)
-            .whereEqualTo("owner", userUid)
-            .get()
-
-
-        queryList.add(query)
-
-        val allTasks =
-            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
-
-        allTasks.addOnSuccessListener {
-            val dogList = ArrayList<DogObj>()
-            for (dogDocSnapshot in it) {
-                for (querySnapshot in dogDocSnapshot) {
-                    val dog = querySnapshot.toObject(DogObj::class.java)
-                    dogList.add(dog)
-                }
-            }
-
-            dogListListener.getDogList(dogList)
-        }
-            .addOnFailureListener { throw it }
-    }
-
-    override suspend fun fetchAllMeetings(meetingListListener: IGetMeetingListListener) {
+    override suspend fun fetchAllMeetings() : ArrayList<MeetingObj> {
+        val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
             .get()
@@ -200,17 +168,16 @@ class DatabaseService : IDatabaseService {
             Tasks.whenAllSuccess<QuerySnapshot>(queryList)
 
         allTasks.addOnSuccessListener {
-            val meetingsList = ArrayList<MeetingObj>()
+
             for (meetingDocSnapshot in it) {
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
                     meetingsList.add(meeting)
                 }
             }
-
-            meetingListListener.getMeetingList(meetingsList)
         }
             .addOnFailureListener { throw it }
+        return meetingsList
     }
 
     override suspend fun deleteDog(

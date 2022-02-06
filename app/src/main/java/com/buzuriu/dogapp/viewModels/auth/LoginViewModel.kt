@@ -14,6 +14,8 @@ import com.buzuriu.dogapp.views.auth.ForgotPasswordActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class LoginViewModel : BaseViewModel() {
@@ -38,8 +40,16 @@ class LoginViewModel : BaseViewModel() {
                         ShowLoadingView(false)
 
                         if (successful) {
-                            prepareForMain()
-                            navigationService.navigateToActivity(MainActivity::class.java, true)
+                            viewModelScope.launch(Dispatchers.IO) {
+                                delay(1000)
+                                async {
+                                    prepareForMain()
+                                    navigationService.navigateToActivity(
+                                        MainActivity::class.java,
+                                        true
+                                    )
+                                }
+                            }
                         } else {
                             if (!exception?.message.isNullOrEmpty())
                                 dialogService.showSnackbar(exception!!.message!!)
@@ -79,21 +89,11 @@ class LoginViewModel : BaseViewModel() {
         return true
     }
 
-    private fun prepareForMain()
+    private suspend fun prepareForMain()
     {
-        viewModelScope.launch {
-            databaseService.fetchUserDogs(currentUser!!.uid, object: IGetUserDogListListener {
-                override fun getDogList(dogList: ArrayList<DogObj>) {
-                    localDatabaseService.add("localDogsList", dogList)
-                    viewModelScope.launch {
-                        databaseService.fetchAllMeetings(object : IGetMeetingListListener {
-                            override fun getMeetingList(meetingList: ArrayList<MeetingObj>) {
-                                localDatabaseService.add("localMeetings", meetingList)
-                            }
-                        })
-                    }
-                }
-            })
+        val userDogs = databaseService.fetchUserDogs(currentUser!!.uid)
+        if (userDogs != null) {
+            localDatabaseService.add("localDogsList", userDogs)
         }
     }
 
