@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.viewModels.auth
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -8,6 +9,7 @@ import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.ForgotPasswordActivity
@@ -94,6 +96,23 @@ class LoginViewModel : BaseViewModel() {
         val userDogs = databaseService.fetchUserDogs(currentUser!!.uid)
         if (userDogs != null) {
             localDatabaseService.add("localDogsList", userDogs)
+        }
+        var user: UserInfo? = null
+        var dog:DogObj? = null
+
+        val allMeetings = databaseService.fetchAllMeetings()
+        if (allMeetings != null) {
+            localDatabaseService.add("localMeetings", allMeetings)
+        }
+        if (allMeetings != null) {
+            for (meeting in allMeetings)
+            {
+                user = databaseService.fetchUserByUid(meeting.userUid!!)
+                dog = databaseService.fetchDogByUid(meeting.dogUid!!)
+                Log.d("dogapp", user.toString())
+                Log.d("dogapp",dog.toString())
+
+            }
         }
     }
 
