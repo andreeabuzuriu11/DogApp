@@ -55,9 +55,6 @@ class SplashViewModel : BaseViewModel() {
             {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
-                Log.d("dogapp", user.toString())
-                Log.d("dogapp",dog.toString())
-
             }
         }
     }
