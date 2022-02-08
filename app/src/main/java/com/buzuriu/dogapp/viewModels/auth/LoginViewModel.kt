@@ -92,32 +92,28 @@ class LoginViewModel : BaseViewModel() {
         return true
     }
 
-    private suspend fun prepareForMain()
-    {
+    private suspend fun prepareForMain() {
         val userDogs = databaseService.fetchUserDogs(currentUser!!.uid)
         if (userDogs != null) {
             localDatabaseService.add("localDogsList", userDogs)
         }
-        var user: UserInfo? = null
-        var dog:DogObj? = null
+        var user: UserInfo?
+        var dog: DogObj?
+        val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
+        var allMeetings: ArrayList<MeetingObj>? = null
 
-        val allMeetings = databaseService.fetchAllMeetings()
-/*        if (allMeetings != null) {
-            localDatabaseService.add("localMeetings", allMeetings)
-        }*/
-        var allmeets = ArrayList<MyCustomMeetingObj>()
+        allMeetings = databaseService.fetchAllMeetings()
+
         if (allMeetings != null) {
-            for (meeting in allMeetings)
-            {
+            for (meeting in allMeetings) {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                var meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
-                allmeets.add(meetingObj)
+                val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
+                allCustomMeetings.add(meetingObj)
             }
-        }
-        if(allmeets != null) {
-            localDatabaseService.add("localMeetings", allmeets)
+
+            localDatabaseService.add("localMeetings", allCustomMeetings)
         }
     }
 
