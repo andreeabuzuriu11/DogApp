@@ -177,6 +177,9 @@ class DatabaseService : IDatabaseService {
             }
         }
             .addOnFailureListener { throw it }
+
+        allTasks.await()
+
         return meetingsList
     }
 

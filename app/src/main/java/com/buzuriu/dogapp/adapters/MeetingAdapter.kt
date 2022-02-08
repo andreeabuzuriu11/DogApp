@@ -8,9 +8,10 @@ import com.buzuriu.dogapp.databinding.DogNameCellBinding
 import com.buzuriu.dogapp.databinding.MeetingCellBinding
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import kotlin.reflect.KFunction1
 
-class MeetingAdapter(var meetingList : ArrayList<MeetingObj>, var selectedMeeting: KFunction1<MeetingObj, Unit>) :
+class MeetingAdapter(var meetingList : ArrayList<MyCustomMeetingObj>, var selectedMeeting: KFunction1<MyCustomMeetingObj, Unit>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -32,7 +33,7 @@ class MeetingAdapter(var meetingList : ArrayList<MeetingObj>, var selectedMeetin
 
     inner class MeetingViewHolder(var applicationBinding: MeetingCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
-        fun bind(meeting : MeetingObj)
+        fun bind(meeting : MyCustomMeetingObj)
         {
             applicationBinding.meeting = meeting
             applicationBinding.meetingCell.setOnClickListener {

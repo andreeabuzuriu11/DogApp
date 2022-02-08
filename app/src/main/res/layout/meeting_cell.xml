@@ -5,7 +5,7 @@
     <data>
         <variable
             name="meeting"
-            type="com.buzuriu.dogapp.models.MeetingObj" />
+            type="com.buzuriu.dogapp.models.MyCustomMeetingObj" />
         <variable
             name="viewModel"
             type="com.buzuriu.dogapp.views.main.ui.map.MapViewModel" />

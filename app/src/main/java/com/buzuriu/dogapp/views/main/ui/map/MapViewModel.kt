@@ -7,6 +7,7 @@ import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.DogDetailViewModel
 import com.buzuriu.dogapp.views.AddMeetingActivity
@@ -23,11 +24,11 @@ class MapViewModel : BaseViewModel() {
         value = "This is map Fragment"
     }
     val text: LiveData<String> = _text
-    var meetingsList = ArrayList<MeetingObj>()
+    var meetingsList = ArrayList<MyCustomMeetingObj>()
     var meetingAdapter : MeetingAdapter?
 
     init{
-        val meetingFromLocalDB = localDatabaseService.get<ArrayList<MeetingObj>>("localMeetings")
+        val meetingFromLocalDB = localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetings")
         if (meetingFromLocalDB != null) {
             meetingsList.addAll(meetingFromLocalDB)
         }
@@ -41,7 +42,7 @@ class MapViewModel : BaseViewModel() {
 
     }
 
-    private fun selectedMeeting(meetingObj: MeetingObj) {
+    private fun selectedMeeting(myCustomMeetingObj: MyCustomMeetingObj) {
         //TODO navigate to proper activity
 
     }

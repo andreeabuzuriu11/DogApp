@@ -9,6 +9,7 @@ import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
@@ -101,15 +102,22 @@ class LoginViewModel : BaseViewModel() {
         var dog:DogObj? = null
 
         val allMeetings = databaseService.fetchAllMeetings()
-        if (allMeetings != null) {
+/*        if (allMeetings != null) {
             localDatabaseService.add("localMeetings", allMeetings)
-        }
+        }*/
+        var allmeets = ArrayList<MyCustomMeetingObj>()
         if (allMeetings != null) {
             for (meeting in allMeetings)
             {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
+
+                var meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
+                allmeets.add(meetingObj)
             }
+        }
+        if(allmeets != null) {
+            localDatabaseService.add("localMeetings", allmeets)
         }
     }
 

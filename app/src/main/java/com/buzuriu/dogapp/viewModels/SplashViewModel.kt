@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
@@ -43,19 +45,32 @@ class SplashViewModel : BaseViewModel() {
         if (userDogs != null) {
             localDatabaseService.add("localDogsList", userDogs)
         }
-        var user:UserInfo? = null
-        var dog:DogObj? = null
+        var user: UserInfo? = null
+        var dog: DogObj? = null
+        var allmeets = ArrayList<MyCustomMeetingObj>()
+        var allMeetings: ArrayList<MeetingObj>? = null;
 
-        val allMeetings = databaseService.fetchAllMeetings()
+        allMeetings = databaseService.fetchAllMeetings()
+        Log.d("andreea meeting size=", allMeetings?.size.toString())
+
         if (allMeetings != null) {
-            localDatabaseService.add("localMeetings", allMeetings)
-        }
-        if (allMeetings != null) {
-            for (meeting in allMeetings)
-            {
+            for (meeting in allMeetings!!) {
+
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
+
+                Log.d("andreea meeting=", meeting.location.toString())
+                Log.d("andreea user=", user.toString())
+                Log.d("andreea dog=", dog.toString())
+
+                val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
+                allmeets.add(meetingObj)
+
             }
+
+            localDatabaseService.add("localMeetings", allmeets)
+
+
         }
     }
 }
