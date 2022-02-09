@@ -82,7 +82,7 @@
                         android:textAlignment="center"
                         android:layout_gravity="center"
                         android:textSize="26dp"
-                        android:text="Monday, 23 July 2022"
+                        cb_meetingDate = "@{meeting.meetingObj.date}"
                         />
                     <View
                         android:id="@+id/innerLine"
@@ -98,7 +98,7 @@
                         android:textSize="26sp"
 
                         android:layout_height="wrap_content"
-                        android:text="10 AM"/>
+                        cb_meetingTime  = "@{meeting.meetingObj.date}"/>
 
                 </LinearLayout>
 
