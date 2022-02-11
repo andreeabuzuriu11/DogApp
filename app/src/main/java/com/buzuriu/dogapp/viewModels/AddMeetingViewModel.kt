@@ -1,29 +1,23 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
-import android.content.ReceiverCallNotAllowedException
 import android.graphics.drawable.Drawable
-import android.widget.DatePicker
-import android.widget.TimePicker
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
-import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
-import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
-import com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel
+import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.invoke.MethodType
 import java.util.*
 
 class AddMeetingViewModel : BaseViewModel() {
@@ -97,6 +91,9 @@ class AddMeetingViewModel : BaseViewModel() {
                         viewModelScope.launch(Dispatchers.Main) {
                             dialogService.showSnackbar(R.string.added_success_message_meeting)
                             delay(2000)
+                            dataExchangeService.put(MapViewModel::class.java.name,newMeeting)
+                            dataExchangeService.put(MapViewModel::class.java.name, true)
+                            addMeetingToLocalDb(newMeeting)
                             navigationService.closeCurrentActivity()
                         }
                     } else {
@@ -112,10 +109,11 @@ class AddMeetingViewModel : BaseViewModel() {
                 }
             })
         }
-/*
-        val userUid = currentUser!!.uid
-        val dogUid = dog.value!!.uid
-        val dogName = dog.value!!.name*/
+    }
+
+    fun addMeetingToLocalDb(meeting: MeetingObj)
+    {
+        localDatabaseService.add("newMeeting", meeting)
     }
 
     override fun onResume() {
@@ -125,7 +123,7 @@ class AddMeetingViewModel : BaseViewModel() {
         }
     }
 
-    fun isDogSelected() : Boolean
+    private fun isDogSelected() : Boolean
     {
         if(dog.value == null)
         {

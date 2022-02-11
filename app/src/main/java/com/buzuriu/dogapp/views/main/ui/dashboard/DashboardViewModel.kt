@@ -43,7 +43,6 @@ class DashboardViewModel : BaseViewModel() {
 
 
     private fun selectedDog(dogObj: DogObj) {
-        //TODO navigatetoDetailActivity
         dataExchangeService.put(DogDetailViewModel::class.java.name, dogObj)
         navigationService.navigateToActivity(DogDetailActivity::class.java, false)
     }

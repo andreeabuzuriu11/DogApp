@@ -3,11 +3,7 @@ package com.buzuriu.dogapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.buzuriu.dogapp.databinding.DogCellBinding
-import com.buzuriu.dogapp.databinding.DogNameCellBinding
 import com.buzuriu.dogapp.databinding.MeetingCellBinding
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import kotlin.reflect.KFunction1
 
