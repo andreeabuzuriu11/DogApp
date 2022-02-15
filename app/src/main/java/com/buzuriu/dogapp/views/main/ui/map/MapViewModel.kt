@@ -4,24 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.UserInfo
-import com.buzuriu.dogapp.viewModels.AddMeetingViewModel
 import com.buzuriu.dogapp.viewModels.BaseViewModel
-import com.buzuriu.dogapp.viewModels.DogDetailViewModel
+import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.views.AddMeetingActivity
-import com.buzuriu.dogapp.views.DogDetailActivity
-import com.buzuriu.dogapp.views.SelectBreedFragment
-import com.buzuriu.dogapp.views.main.MainActivity
-import com.buzuriu.dogapp.views.main.ui.OverlayActivity
-import com.google.android.gms.tasks.Tasks.await
+import com.buzuriu.dogapp.views.MeetingDetailActivity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -77,7 +69,11 @@ class MapViewModel : BaseViewModel() {
     }
 
     private fun selectedMeeting(myCustomMeetingObj: MyCustomMeetingObj) {
-        //TODO navigate to proper activity
+       /* dataExchangeService.put(MeetingDetailViewModel::class.java.name, dog)
+        dataExchangeService.put(MeetingDetailViewModel::class.java.name, user)*/
+        dataExchangeService.put(MeetingDetailViewModel::class.java.name, myCustomMeetingObj)
+
+        navigationService.navigateToActivity(MeetingDetailActivity::class.java, true)
 
     }
     fun showMap() {

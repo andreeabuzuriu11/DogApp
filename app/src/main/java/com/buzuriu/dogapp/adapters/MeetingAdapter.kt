@@ -4,10 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.MeetingCellBinding
+import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
+import com.buzuriu.dogapp.models.UserInfo
 import kotlin.reflect.KFunction1
+import kotlin.reflect.KFunction3
 
-class MeetingAdapter(var meetingList : ArrayList<MyCustomMeetingObj>, var selectedMeeting: KFunction1<MyCustomMeetingObj, Unit>) :
+class MeetingAdapter(var meetingList: ArrayList<MyCustomMeetingObj>, var selectedMeeting: KFunction1<MyCustomMeetingObj, Unit>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

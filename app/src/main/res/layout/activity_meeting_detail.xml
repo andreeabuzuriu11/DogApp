@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.viewModels.DogDetailViewModel" />
+            type="com.buzuriu.dogapp.viewModels.MeetingDetailViewModel" />
     </data>
 
     <RelativeLayout
@@ -65,7 +65,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/name_hint"
                             android:padding="10dp"
-                            android:text="@{viewModel.dog.name}"
+                            android:text="Name"
                             android:textSize="20sp" />
 
 
@@ -90,7 +90,6 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/breedHint"
                             android:padding="10dp"
-                            android:text="@{viewModel.dog.breed}"
                             android:textSize="20sp" />
                     </LinearLayout>
 
@@ -112,7 +111,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="@{viewModel.dog.ageValue}"
+
                             android:textSize="20sp" />
 
                         <TextView
@@ -121,7 +120,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/age_hint"
                             android:padding="10dp"
-                            android:text="@{viewModel.dog.ageString}"
+
                             android:textSize="20sp" />
                     </LinearLayout>
 
@@ -144,7 +143,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/gender_hint"
                             android:padding="10dp"
-                            android:text="@{viewModel.dog.gender}"
+
                             android:textSize="20sp" />
 
                     </LinearLayout>
@@ -290,7 +289,6 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
-                        cb_dogImg="@{viewModel.dog}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_below="@+id/rating"
