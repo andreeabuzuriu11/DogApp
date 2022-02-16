@@ -65,7 +65,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/name_hint"
                             android:padding="10dp"
-                            android:text="Name"
+                            android:text="@{viewModel.myCustomMeetingObj.dog.name}"
                             android:textSize="20sp" />
 
 
@@ -89,6 +89,7 @@
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
                             android:hint="@string/breedHint"
+                            android:text="@{viewModel.myCustomMeetingObj.dog.breed}"
                             android:padding="10dp"
                             android:textSize="20sp" />
                     </LinearLayout>
@@ -111,7 +112,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-
+                            android:text="@{viewModel.myCustomMeetingObj.dog.ageValue}"
                             android:textSize="20sp" />
 
                         <TextView
@@ -120,7 +121,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/age_hint"
                             android:padding="10dp"
-
+                            android:text="@{viewModel.myCustomMeetingObj.dog.ageString}"
                             android:textSize="20sp" />
                     </LinearLayout>
 
@@ -143,7 +144,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/gender_hint"
                             android:padding="10dp"
-
+                            android:text="@{viewModel.myCustomMeetingObj.dog.gender}"
                             android:textSize="20sp" />
 
                     </LinearLayout>
@@ -178,6 +179,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/name_hint"
+                            android:text="@{viewModel.myCustomMeetingObj.user.name}"
                             android:padding="10dp"
                             android:textSize="20sp" />
 
@@ -235,6 +237,7 @@
                             android:id="@+id/meeting_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            cb_meetingDate="@{viewModel.myCustomMeetingObj.meetingObj.date}"
                             android:hint="Date"
                             android:padding="10dp"
                             android:textSize="20sp" />
@@ -260,14 +263,14 @@
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Time"
+                            android:hint="Time"
+                            cb_meetingTime="@{viewModel.myCustomMeetingObj.meetingObj.date}"
                             android:textSize="20sp" />
                     </LinearLayout>
 
                     <com.buzuriu.dogapp.components.MapWithPin
                         android:id="@+id/map_with_pin"
                         android:layout_width="match_parent"
-
                         android:layout_height="300dp" />
 
 
@@ -293,6 +296,7 @@
                         android:layout_height="100dp"
                         android:layout_below="@+id/rating"
                         android:layout_centerInParent="true"
+                        cb_dogImg="@{viewModel.myCustomMeetingObj.dog}"
                         android:src="@drawable/ic_dog_svgrepo_com" />
 
 

@@ -69,11 +69,8 @@ class MapViewModel : BaseViewModel() {
     }
 
     private fun selectedMeeting(myCustomMeetingObj: MyCustomMeetingObj) {
-       /* dataExchangeService.put(MeetingDetailViewModel::class.java.name, dog)
-        dataExchangeService.put(MeetingDetailViewModel::class.java.name, user)*/
         dataExchangeService.put(MeetingDetailViewModel::class.java.name, myCustomMeetingObj)
-
-        navigationService.navigateToActivity(MeetingDetailActivity::class.java, true)
+        navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
 
     }
     fun showMap() {
