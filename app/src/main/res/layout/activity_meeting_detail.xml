@@ -41,8 +41,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Dog Info"
-                            android:textSize="22dp" />
+                            android:text="@string/dog_info"
+                            android:textSize="22sp" />
 
                     </LinearLayout>
 
@@ -55,7 +55,7 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Name"
+                            android:text="@string/name"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -80,7 +80,7 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Breed"
+                            android:text="@string/breed"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -103,7 +103,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/age_hint"
                             android:padding="10dp"
-                            android:text="Age"
+                            android:text="@string/age"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -134,7 +134,7 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Gender"
+                            android:text="@string/gender"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -156,8 +156,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="User Info"
-                            android:textSize="22dp" />
+                            android:text="@string/user_info"
+                            android:textSize="22sp" />
 
                     </LinearLayout>
 
@@ -170,7 +170,7 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Name"
+                            android:text="@string/name"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -195,7 +195,7 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Gender"
+                            android:text="@string/gender"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -204,7 +204,7 @@
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Gender"
+                            android:text="@string/gender"
                             android:textSize="20sp" />
                     </LinearLayout>
 
@@ -215,8 +215,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Meeting Info"
-                            android:textSize="22dp" />
+                            android:text="@string/meeting_info"
+                            android:textSize="22sp" />
 
                     </LinearLayout>
 
@@ -229,7 +229,7 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Date"
+                            android:text="@string/date"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -238,7 +238,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             cb_meetingDate="@{viewModel.myCustomMeetingObj.meetingObj.date}"
-                            android:hint="Date"
+                            android:hint="@string/date"
                             android:padding="10dp"
                             android:textSize="20sp" />
 
@@ -254,7 +254,7 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:text="Time"
+                            android:text="@string/time"
                             android:textSize="20sp"
                             android:textStyle="bold" />
 
@@ -263,17 +263,16 @@
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
                             android:padding="10dp"
-                            android:hint="Time"
+                            android:hint="@string/time"
                             cb_meetingTime="@{viewModel.myCustomMeetingObj.meetingObj.date}"
                             android:textSize="20sp" />
                     </LinearLayout>
 
-                    <com.buzuriu.dogapp.components.MapWithPin
-                        android:id="@+id/map_with_pin"
+                    <fragment
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:id="@+id/map"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp" />
-
-
+                        android:layout_height="300dp"/>
 
 
 
@@ -288,7 +287,7 @@
                         android:id="@+id/rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"></RatingBar>
+                        android:layout_centerHorizontal="true" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"

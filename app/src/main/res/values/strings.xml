@@ -62,5 +62,14 @@
     <string name="start_typing_a_dog_name">Start typing a dog name</string>
     <string name="start_typing_a_breed_name">Start typing a breed name</string>
     <string name="dog">Dog</string>
+    <string name="time">Time</string>
+    <string name="meeting_info">Meeting Info</string>
+    <string name="gender">Gender</string>
+    <string name="dog_info">Dog Info</string>
+    <string name="name">Name</string>
+    <string name="breed">Breed</string>
+    <string name="age">Age</string>
+    <string name="user_info">User Info</string>
+    <string name="date">Date</string>
 
 </resources>

@@ -1,12 +1,9 @@
 package com.buzuriu.dogapp.bindingadapters
 
-import android.widget.TimePicker
-import androidx.compose.runtime.internal.isLiveLiteralsEnabled
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import com.buzuriu.dogapp.bindingadapters.MapBindingAdapter.setMyPosition
-import com.buzuriu.dogapp.bindingadapters.TimePickerBindingAdapter.setListener
+
 import com.buzuriu.dogapp.components.MapWithPin
 import com.buzuriu.dogapp.listeners.IGetLocationListener
 import com.google.android.gms.maps.model.LatLng
