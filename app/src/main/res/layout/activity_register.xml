@@ -65,6 +65,29 @@
                         android:inputType="textEmailAddress"
                         android:text="@={viewModel.email}" />
 
+                    <RadioGroup
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/maleRadioId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="@={!viewModel.isFemaleGenderSelected}"
+                            android:text="@string/male_gender"
+
+                            />
+
+                        <RadioButton
+                            android:id="@+id/femaleRadioId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="@={viewModel.isFemaleGenderSelected}"
+                            android:text="@string/female_gender"
+                            android:textAlignment="textEnd" />
+                    </RadioGroup>
+
                     <EditText
                         android:id="@+id/edit_password_edit_text"
                         android:layout_width="match_parent"

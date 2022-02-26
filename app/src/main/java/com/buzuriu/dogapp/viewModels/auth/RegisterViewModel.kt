@@ -17,6 +17,8 @@ class RegisterViewModel : BaseAuthViewModel() {
     var name = MutableLiveData<String>()
     var phone = MutableLiveData<String>()
     var passwordRepeat = MutableLiveData<String>()
+    var isFemaleGenderSelected = MutableLiveData<Boolean>()
+    private var currentGenderString: String? = null
 
     fun loginClick()
     {
@@ -27,6 +29,10 @@ class RegisterViewModel : BaseAuthViewModel() {
         if (!fieldsAreCompleted()) return
 
         ShowLoadingView(true)
+        currentGenderString = if (isFemaleGenderSelected.value!!) {
+            "female"
+        } else
+            "male"
         viewModelScope.launch(Dispatchers.IO) {
 
             firebaseAuthService.registerWithEmailAndPassword(email.value!!, password.value!!,
@@ -41,7 +47,8 @@ class RegisterViewModel : BaseAuthViewModel() {
                                 val userInfo = UserInfo(
                                     email.value,
                                     name.value,
-                                    phone.value
+                                    phone.value,
+                                    currentGenderString!!
                                 )
                                 ShowLoadingView(true)
                                 viewModelScope.launch(Dispatchers.IO) {
