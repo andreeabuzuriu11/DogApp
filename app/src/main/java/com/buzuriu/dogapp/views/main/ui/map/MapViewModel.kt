@@ -86,6 +86,12 @@ class MapViewModel : BaseViewModel() {
 
     fun addMeeting()
     {
+        if (!doesUserHaveAtLeastOneDog())
+        {
+            dialogService.showSnackbar("Please add your pet before participating to a meeting")
+            return
+        }
+
         viewModelScope.launch(Dispatchers.Main) {
             val hasPermission = askLocationPermission().await()
             if (!hasPermission) {
@@ -98,4 +104,10 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
+    fun doesUserHaveAtLeastOneDog() : Boolean
+    {
+        if (localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!.size < 1)
+            return false
+        return true
+    }
 }
