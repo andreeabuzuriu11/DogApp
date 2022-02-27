@@ -1,54 +1,50 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.viewModels.SelectBreedViewModel" />
+            type="com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel" />
     </data>
 
     <RelativeLayout
-        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/select_breed_close_image"
+            android:id="@+id/filter_events_exit"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"
             android:onClick="@{()->viewModel.close()}"
-            android:src="@drawable/ic_baseline_close_24"
-            />
+            android:src="@drawable/ic_baseline_close_24" />
 
         <TextView
-            android:id="@+id/select_breed_title"
+            android:id="@+id/text_view_filter_meetings"
+            android:text="@string/filter_meetings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/filter_events_exit"
             android:layout_centerHorizontal="true"
-            android:text="@string/select_breed"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+         />
 
-        <EditText
-            android:id="@+id/select_breed_edit_text"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/text_view_search_meetings"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/select_breed_title"
-            android:layout_marginTop="30dp"
-            android:hint="@string/start_typing_a_breed_name"
-            android:inputType="text" />
-
+            android:layout_below="@id/text_view_filter_meetings"
+            android:layout_marginVertical="@dimen/activity_vertical_margin"
+            android:text="When?"
+            android:textSize="@dimen/normal_size" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/breed_list"
+            android:id="@+id/filter_meetings_by_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/select_breed_edit_text"
-            android:layout_marginTop="16dp" />
+            android:layout_below="@id/text_view_search_meetings" />
 
         <Button
             android:id="@+id/select_breed_save_button"
@@ -57,9 +53,9 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/rounded_button"
-            android:onClick="@{()->viewModel.saveBreed()}"
-            android:text="@string/save_button_text"
+            android:text="@string/search"
             android:textColor="@color/white" />
 
     </RelativeLayout>
+
 </layout>

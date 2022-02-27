@@ -10,9 +10,13 @@ import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.views.AddMeetingActivity
+import com.buzuriu.dogapp.views.FilterMeetingsFragment
 import com.buzuriu.dogapp.views.MeetingDetailActivity
+import com.buzuriu.dogapp.views.SelectBreedFragment
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -82,6 +86,16 @@ class MapViewModel : BaseViewModel() {
                 return@launch
             }
         }
+    }
+
+    fun showFilters()
+    {
+        navigationService.showOverlay(
+            OverlayActivity::class.java,
+            false,
+            OverlayActivity.fragmentClassNameParam,
+            FilterMeetingsFragment::class.qualifiedName
+        )
     }
 
     fun addMeeting()

@@ -47,6 +47,7 @@ class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewM
                 mViewModel.showMap()
                 Log.d("MapFragment", "Show on map")}
             R.id.filter_list -> {
+                mViewModel.showFilters()
                 Log.d("MapFragment", "Filter list")
             }
             R.id.search -> Log.d("MapFragment", "Search in list")

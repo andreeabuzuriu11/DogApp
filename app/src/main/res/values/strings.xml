@@ -71,5 +71,7 @@
     <string name="age">Age</string>
     <string name="user_info">User Info</string>
     <string name="date">Date</string>
+    <string name="filter_meetings">Filter meetings</string>
+    <string name="search">Search</string>
 
 </resources>
