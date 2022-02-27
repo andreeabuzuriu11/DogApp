@@ -42,7 +42,7 @@ class AddDogViewModel : BaseViewModel() {
 
     var buttonText = MutableLiveData<String>("add")
 
-    var dogPlaceHolder: MutableLiveData<Drawable>
+    var dogPlaceHolder = R.drawable.ic_dog_svgrepo_com
     var dogImageUrl = MutableLiveData<String>()
 
     var isEdit:Boolean = false
@@ -50,7 +50,6 @@ class AddDogViewModel : BaseViewModel() {
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
 
     init {
-        dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
         val value = dataExchangeService.get<Any>(this::class.qualifiedName!!)
         if (value is BreedObj) {
             breed.value = value.breedName
@@ -66,7 +65,6 @@ class AddDogViewModel : BaseViewModel() {
             name.value = dog.name
             ageValue.value = dog.ageValue
             ageString.value = dog.ageString
-            dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
             dogImageUrl.value = dog.imageUrl
             breed.value = dog.breed
             isFemaleGenderSelected.value = dog.gender == "female"

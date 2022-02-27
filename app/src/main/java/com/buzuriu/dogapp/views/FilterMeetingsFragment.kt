@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.views
 
 import android.os.Bundle
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
@@ -25,7 +26,7 @@ class FilterMeetingsFragment : BaseBoundFragment<FilterMeetingsViewModel, Fragme
     private fun setupRecyclerView()
     {
         val recyclerView = currentBinding.filterMeetingsByTime
-        recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.layoutManager = GridLayoutManager(activity,3)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.filterAdapter
     }
 
