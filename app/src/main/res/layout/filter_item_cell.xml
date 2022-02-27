@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_cell"
-        android:backgroundTint="@color/dark_green"
+        android:backgroundTint="@{filterItem.isSelected ? @color/dark_green : @color/beige}"
         android:padding="5dp"
         android:layout_margin="3dp">
 
@@ -35,7 +35,7 @@
             android:layout_marginBottom="5dp"
             android:text="@{filterItem.name}"
             android:textAlignment="center"
-            android:textColor="@color/white"
+            android:textColor="@{filterItem.isSelected ? @color/white : @color/black}"
             android:textSize="15dp"
             tools:text="Today" />
 

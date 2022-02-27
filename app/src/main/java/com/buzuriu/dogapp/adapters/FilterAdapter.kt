@@ -34,6 +34,9 @@ class FilterAdapter(var filterList: ArrayList<IFilterObj>,
         fun bind(item : IFilterObj)
         {
             applicationBinding.filterItem = item
+            applicationBinding.filterTypeLayout.setOnClickListener {
+                viewModel?.selectTime(item)
+            }
         }
     }
 

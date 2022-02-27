@@ -35,8 +35,7 @@
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_baseline_check_24"
-            android:visibility="@{breedItem.isSelected ? View.VISIBLE:View.GONE }"
-            />
+            android:visibility="@{breedItem.isSelected ? View.VISIBLE:View.GONE }" />
 
 
     </RelativeLayout>

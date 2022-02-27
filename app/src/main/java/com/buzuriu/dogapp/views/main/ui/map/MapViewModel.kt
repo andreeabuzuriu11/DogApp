@@ -41,8 +41,9 @@ class MapViewModel : BaseViewModel() {
                 meetingsList.addAll(list)
                 meetingAdapter!!.notifyDataSetChanged()
             }
+            }
         }
-    }
+
 
     override fun onResume() {
         super.onResume()
@@ -118,7 +119,7 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
-    fun doesUserHaveAtLeastOneDog() : Boolean
+    private fun doesUserHaveAtLeastOneDog() : Boolean
     {
         if (localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!.size < 1)
             return false
