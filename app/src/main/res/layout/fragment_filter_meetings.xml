@@ -36,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/text_view_filter_meetings"
-            android:layout_marginVertical="@dimen/activity_vertical_margin"
+            android:layout_marginVertical="20dp"
             android:text="When?"
             android:textSize="@dimen/normal_size" />
 

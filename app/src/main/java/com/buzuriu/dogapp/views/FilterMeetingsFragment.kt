@@ -1,5 +1,9 @@
 package com.buzuriu.dogapp.views
 
+import android.os.Bundle
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentFilterMeetingsBinding
 import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
@@ -17,4 +21,17 @@ class FilterMeetingsFragment : BaseBoundFragment<FilterMeetingsViewModel, Fragme
         currentBinding = binding
         binding.viewModel = mViewModel
     }
+
+    private fun setupRecyclerView()
+    {
+        val recyclerView = currentBinding.filterMeetingsByTime
+        recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = mViewModel.filterAdapter
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+    }
+
 }

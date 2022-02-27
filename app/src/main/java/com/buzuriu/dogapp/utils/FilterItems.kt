@@ -1,9 +1,16 @@
 package com.buzuriu.dogapp.utils
 
+import com.buzuriu.dogapp.models.FilterByTimeObj
+import com.buzuriu.dogapp.models.IFilterObj
+
 class FilterItems {
     companion object {
-        var filterByTime = {
-
-        }
+        var filterByTimeItems = arrayListOf<IFilterObj>(
+            FilterByTimeObj("Today", false),
+            FilterByTimeObj("This week", false),
+            FilterByTimeObj("This month", false),
+            FilterByTimeObj("Next week", false),
+            FilterByTimeObj("Next month", false)
+        )
     }
 }

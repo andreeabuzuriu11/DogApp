@@ -1,6 +1,6 @@
 package com.buzuriu.dogapp.models
 
-class FilterObj {
+abstract class IFilterObj {
     var name: String? = null
     var isSelected: Boolean? = null
 

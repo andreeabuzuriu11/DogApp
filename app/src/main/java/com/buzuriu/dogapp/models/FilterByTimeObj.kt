@@ -1,4 +1,10 @@
 package com.buzuriu.dogapp.models
 
-class FilterByTimeObj {
+
+class FilterByTimeObj : IFilterObj {
+
+    constructor(title: String, isSelected: Boolean) :
+            super(title, isSelected) {
+            }
+
 }
