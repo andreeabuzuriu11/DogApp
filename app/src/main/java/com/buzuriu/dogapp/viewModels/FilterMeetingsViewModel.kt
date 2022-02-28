@@ -1,7 +1,6 @@
 package com.buzuriu.dogapp.viewModels
 
 import com.buzuriu.dogapp.adapters.FilterAdapter
-import com.buzuriu.dogapp.models.FilterByTimeObj
 import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
 
@@ -9,10 +8,23 @@ class FilterMeetingsViewModel : BaseViewModel(){
 
     var filterByTimeList =  FilterItems.filterByTimeItems
     var filterAdapter: FilterAdapter? = null
-    private var selectedBreed: IFilterObj? = null
+    private var selectedFilter: IFilterObj? = null
 
     init {
         filterAdapter = FilterAdapter(filterByTimeList, this)
+    }
+
+    fun saveFilter()
+    {
+        unselectPreviousFilters()
+        if (selectedFilter == null)
+        {
+            dialogService.showSnackbar("Please select a filter")
+            return
+        }
+
+        dataExchangeService.put("MapViewModel", selectedFilter!!)
+        navigationService.closeCurrentActivity()
     }
 
     fun close()
@@ -24,12 +36,12 @@ class FilterMeetingsViewModel : BaseViewModel(){
     {
         unselectPreviousFilters()
         filterObj.isSelected = true
-        selectedBreed = filterObj
+        selectedFilter = filterObj
 
         filterAdapter?.notifyItemChanged(filterAdapter?.filterList!!.indexOf(filterObj))
     }
 
-    fun unselectPreviousFilters()
+    private fun unselectPreviousFilters()
     {
         for (filter in filterByTimeList)
             if (filter.isSelected!!)
