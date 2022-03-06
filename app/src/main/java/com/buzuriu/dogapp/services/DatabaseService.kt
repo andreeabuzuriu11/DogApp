@@ -183,13 +183,14 @@ class DatabaseService : IDatabaseService {
         val end = Calendar.getInstance()
 
         start.timeInMillis = System.currentTimeMillis()
+        end.time = Calendar.getInstance().time
+        end[Calendar.HOUR_OF_DAY] = 23
+        end[Calendar.MINUTE] = 59
+        end[Calendar.SECOND] = 59
+        end[Calendar.MILLISECOND] = 999
 
         if (filterType.name == "Today") {
-            end.time = Calendar.getInstance().time
-            end[Calendar.HOUR_OF_DAY] = 23
-            end[Calendar.MINUTE] = 59
-            end[Calendar.SECOND] = 59
-            end[Calendar.MILLISECOND] = 999
+            // all options for today are already selected above
         }
 
         if (filterType.name == "Tomorrow") {
@@ -200,35 +201,19 @@ class DatabaseService : IDatabaseService {
             start[Calendar.SECOND] = 0
             start[Calendar.MILLISECOND] = 0
 
-            end.time = Calendar.getInstance().time
             end.add(Calendar.DATE, 1)
-            end[Calendar.HOUR_OF_DAY] = 23
-            end[Calendar.MINUTE] = 59
-            end[Calendar.SECOND] = 59
-            end[Calendar.MILLISECOND] = 999
         }
 
         if (filterType.name == "This week") {
-            end.time = Calendar.getInstance().time
             var todayAsDayOfWeek = Calendar.DAY_OF_WEEK
             var daysTillSunday = 7 - todayAsDayOfWeek
             end.add(Calendar.DATE, daysTillSunday)
-            end[Calendar.HOUR_OF_DAY] = 23
-            end[Calendar.MINUTE] = 59
-            end[Calendar.SECOND] = 59
-            end[Calendar.MILLISECOND] = 999
         }
 
         if (filterType.name == "This month") {
-            end.time = Calendar.getInstance().time
             end.add(Calendar.MONTH, 1);
             end.set(Calendar.DAY_OF_MONTH, 1);
             end.add(Calendar.DATE, -1);
-            end[Calendar.HOUR_OF_DAY] = 23
-            end[Calendar.MINUTE] = 59
-            end[Calendar.SECOND] = 59
-            end[Calendar.MILLISECOND] = 999
-
         }
 
         if (filterType.name == "Next week") {
@@ -240,14 +225,9 @@ class DatabaseService : IDatabaseService {
             start[Calendar.SECOND] = 0
             start[Calendar.MILLISECOND] = 0
 
-            end.time = Calendar.getInstance().time
             end.timeInMillis = System.currentTimeMillis()
             end.add(Calendar.WEEK_OF_MONTH, 1)
             end[Calendar.DAY_OF_WEEK] = 7
-            end[Calendar.HOUR_OF_DAY] = 23
-            end[Calendar.MINUTE] = 59
-            end[Calendar.SECOND] = 59
-            end[Calendar.MILLISECOND] = 999
         }
 
         if (filterType.name == "Next month") {
@@ -259,15 +239,10 @@ class DatabaseService : IDatabaseService {
             start[Calendar.SECOND] = 0
             start[Calendar.MILLISECOND] = 0
 
-            end.time = Calendar.getInstance().time
             end.timeInMillis = System.currentTimeMillis()
             end.add(Calendar.MONTH, 2);
             end.set(Calendar.DAY_OF_MONTH, 1);
             end.add(Calendar.DATE, -1);
-            end[Calendar.HOUR_OF_DAY] = 23
-            end[Calendar.MINUTE] = 59
-            end[Calendar.SECOND] = 59
-            end[Calendar.MILLISECOND] = 999
         }
 
         val query = firestore.collection(meetingsCollection)

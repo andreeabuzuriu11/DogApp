@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class MapViewModel : BaseViewModel() {
-    
+
     var meetingsList = ArrayList<MyCustomMeetingObj>()
     var meetingAdapter : MeetingAdapter?
     var filtersList = ArrayList<IFilterObj>()
