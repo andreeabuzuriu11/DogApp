@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.viewModels
 import com.buzuriu.dogapp.adapters.FilterAdapter
 import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
+import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 
 class FilterMeetingsViewModel : BaseViewModel(){
 
@@ -16,14 +17,13 @@ class FilterMeetingsViewModel : BaseViewModel(){
 
     fun saveFilter()
     {
-        unselectPreviousFilters()
         if (selectedFilter == null)
         {
             dialogService.showSnackbar("Please select a filter")
             return
         }
 
-        dataExchangeService.put("MapViewModel", selectedFilter!!)
+        dataExchangeService.put(MapViewModel::class.java.name, selectedFilter!!)
         navigationService.closeCurrentActivity()
     }
 

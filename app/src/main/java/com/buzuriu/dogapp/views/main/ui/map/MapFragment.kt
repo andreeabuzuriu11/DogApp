@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
@@ -24,15 +25,23 @@ class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewM
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
+        setupRecyclerViewForMeetings()
+        setupRecyclerViewForSelectedFilters()
         setHasOptionsMenu(true)
     }
 
-    private fun setupRecyclerView()
+    private fun setupRecyclerViewForMeetings()
     {
         val recyclerView = currentBinding.meetingsList
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.meetingAdapter
+    }
+
+    private fun setupRecyclerViewForSelectedFilters()
+    {
+        val recyclerView = currentBinding.selectedFiltersList
+        recyclerView.layoutManager = GridLayoutManager(activity,3) /*LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)*/
+        recyclerView.adapter = mViewModel.filterAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

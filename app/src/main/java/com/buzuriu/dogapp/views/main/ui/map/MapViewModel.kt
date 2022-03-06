@@ -4,11 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.adapters.FilterAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
-import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
@@ -29,9 +27,13 @@ class MapViewModel : BaseViewModel() {
     val text: LiveData<String> = _text
     var meetingsList = ArrayList<MyCustomMeetingObj>()
     var meetingAdapter : MeetingAdapter?
+    var filtersList = ArrayList<IFilterObj>()
+    var filterAdapter: FilterAdapter?
 
     init{
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting)
+        filterAdapter = FilterAdapter(filtersList)
+        filtersList.clear()
 
         viewModelScope.launch(Dispatchers.IO) {
             var list = fetchAllMeetings()
@@ -40,14 +42,25 @@ class MapViewModel : BaseViewModel() {
                 meetingsList.clear()
                 meetingsList.addAll(list)
                 meetingAdapter!!.notifyDataSetChanged()
+                filterAdapter!!.notifyDataSetChanged()
             }
             }
+
+
         }
 
 
     override fun onResume() {
         super.onResume()
 
+        filtersList.clear()
+        val selectedFilterFromFilterMeetingsFragment = dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!)
+        if (selectedFilterFromFilterMeetingsFragment != null)
+        {
+            dialogService.showSnackbar("your selected filter is " + selectedFilterFromFilterMeetingsFragment.name)
+            filtersList.add(selectedFilterFromFilterMeetingsFragment)
+            filterAdapter!!.notifyDataSetChanged()
+        }
     }
 
     private suspend fun fetchAllMeetings() : ArrayList<MyCustomMeetingObj>{
