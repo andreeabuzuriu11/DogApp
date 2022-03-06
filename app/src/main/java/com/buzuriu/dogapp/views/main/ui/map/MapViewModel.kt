@@ -20,11 +20,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class MapViewModel : BaseViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is map Fragment"
-    }
-    val text: LiveData<String> = _text
+    
     var meetingsList = ArrayList<MyCustomMeetingObj>()
     var meetingAdapter : MeetingAdapter?
     var filtersList = ArrayList<IFilterObj>()
@@ -44,22 +40,29 @@ class MapViewModel : BaseViewModel() {
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
             }
-            }
-
-
         }
-
+    }
 
     override fun onResume() {
         super.onResume()
 
-        filtersList.clear()
-        val selectedFilterFromFilterMeetingsFragment = dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!)
+        val selectedFilterFromFilterMeetingsFragment : IFilterObj? = dataExchangeService.get<IFilterObj?>(this::class.qualifiedName!!)
         if (selectedFilterFromFilterMeetingsFragment != null)
         {
+            filtersList.clear()
             dialogService.showSnackbar("your selected filter is " + selectedFilterFromFilterMeetingsFragment.name)
             filtersList.add(selectedFilterFromFilterMeetingsFragment)
             filterAdapter!!.notifyDataSetChanged()
+
+            viewModelScope.launch(Dispatchers.IO) {
+                var list = fetchFilteredMeetings(selectedFilterFromFilterMeetingsFragment)
+
+                viewModelScope.launch(Dispatchers.Main) {
+                    meetingsList.clear()
+                    meetingsList.addAll(list)
+                    meetingAdapter!!.notifyDataSetChanged()
+                }
+            }
         }
     }
 
@@ -70,6 +73,29 @@ class MapViewModel : BaseViewModel() {
         var allMeetings: ArrayList<MeetingObj>? = null
 
         allMeetings = databaseService.fetchAllMeetings()
+
+        if (allMeetings != null) {
+            for (meeting in allMeetings) {
+                user = databaseService.fetchUserByUid(meeting.userUid!!)
+                dog = databaseService.fetchDogByUid(meeting.dogUid!!)
+
+                Log.d("andreea", user.toString())
+                Log.d("andreea", dog.toString())
+                val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
+                allCustomMeetings.add(meetingObj)
+            }
+        }
+
+        return allCustomMeetings
+    }
+
+    private suspend fun fetchFilteredMeetings(timeFilter: IFilterObj) : ArrayList<MyCustomMeetingObj>{
+        var user: UserInfo?
+        var dog: DogObj?
+        val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
+        var allMeetings: ArrayList<MeetingObj>? = null
+
+        allMeetings = databaseService.fetchMeetingsByTime(timeFilter)
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {

@@ -2,17 +2,15 @@ package com.buzuriu.dogapp.services
 
 import android.util.Log
 import com.buzuriu.dogapp.listeners.*
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
+import java.util.*
 import kotlin.collections.ArrayList
 
 interface IDatabaseService {
@@ -25,6 +23,7 @@ interface IDatabaseService {
     suspend fun fetchUserByUid(userUid: String) : UserInfo?
     suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj>?
     suspend fun fetchAllMeetings() : ArrayList <MeetingObj>?
+    suspend fun fetchMeetingsByTime(filterType: IFilterObj) : ArrayList <MeetingObj>?
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
                            onCompleteListener: IOnCompleteListener)
@@ -69,12 +68,6 @@ class DatabaseService : IDatabaseService {
         dog: DogObj,
         onCompleteListener: IOnCompleteListener
     ) {
-       /* firestore.collection(userInfoCollection)
-            .document(userUid)
-            .collection(dogInfoCollection)
-            .document(dog.uid).set(dog)
-            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
-            .await()*/
         firestore.collection(dogInfoCollection)
             .document(dog.uid).set(dog)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
@@ -160,6 +153,126 @@ class DatabaseService : IDatabaseService {
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
+            .get()
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+
+            for (meetingDocSnapshot in it) {
+                for (querySnapshot in meetingDocSnapshot) {
+                    val meeting = querySnapshot.toObject(MeetingObj::class.java)
+                    meetingsList.add(meeting)
+                }
+            }
+        }
+            .addOnFailureListener { throw it }
+
+        allTasks.await()
+
+        return meetingsList
+    }
+
+    override suspend fun fetchMeetingsByTime(filterType: IFilterObj): ArrayList<MeetingObj>? {
+        val meetingsList = ArrayList<MeetingObj>()
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val start = Calendar.getInstance()
+        val end = Calendar.getInstance()
+
+        start.timeInMillis = System.currentTimeMillis()
+
+        if (filterType.name == "Today") {
+            end.time = Calendar.getInstance().time
+            end[Calendar.HOUR_OF_DAY] = 23
+            end[Calendar.MINUTE] = 59
+            end[Calendar.SECOND] = 59
+            end[Calendar.MILLISECOND] = 999
+        }
+
+        if (filterType.name == "Tomorrow") {
+            start.time = Calendar.getInstance().time
+            start.add(Calendar.DATE, 1)
+            start[Calendar.HOUR_OF_DAY] = 0
+            start[Calendar.MINUTE] = 0
+            start[Calendar.SECOND] = 0
+            start[Calendar.MILLISECOND] = 0
+
+            end.time = Calendar.getInstance().time
+            end.add(Calendar.DATE, 1)
+            end[Calendar.HOUR_OF_DAY] = 23
+            end[Calendar.MINUTE] = 59
+            end[Calendar.SECOND] = 59
+            end[Calendar.MILLISECOND] = 999
+        }
+
+        if (filterType.name == "This week") {
+            end.time = Calendar.getInstance().time
+            var todayAsDayOfWeek = Calendar.DAY_OF_WEEK
+            var daysTillSunday = 7 - todayAsDayOfWeek
+            end.add(Calendar.DATE, daysTillSunday)
+            end[Calendar.HOUR_OF_DAY] = 23
+            end[Calendar.MINUTE] = 59
+            end[Calendar.SECOND] = 59
+            end[Calendar.MILLISECOND] = 999
+        }
+
+        if (filterType.name == "This month") {
+            end.time = Calendar.getInstance().time
+            end.add(Calendar.MONTH, 1);
+            end.set(Calendar.DAY_OF_MONTH, 1);
+            end.add(Calendar.DATE, -1);
+            end[Calendar.HOUR_OF_DAY] = 23
+            end[Calendar.MINUTE] = 59
+            end[Calendar.SECOND] = 59
+            end[Calendar.MILLISECOND] = 999
+
+        }
+
+        if (filterType.name == "Next week") {
+            start.time = Calendar.getInstance().time
+            start.add(Calendar.WEEK_OF_MONTH, 1)
+            start[Calendar.DAY_OF_WEEK] = 1
+            start[Calendar.HOUR_OF_DAY] = 0
+            start[Calendar.MINUTE] = 0
+            start[Calendar.SECOND] = 0
+            start[Calendar.MILLISECOND] = 0
+
+            end.time = Calendar.getInstance().time
+            end.timeInMillis = System.currentTimeMillis()
+            end.add(Calendar.WEEK_OF_MONTH, 1)
+            end[Calendar.DAY_OF_WEEK] = 7
+            end[Calendar.HOUR_OF_DAY] = 23
+            end[Calendar.MINUTE] = 59
+            end[Calendar.SECOND] = 59
+            end[Calendar.MILLISECOND] = 999
+        }
+
+        if (filterType.name == "Next month") {
+            start.time = Calendar.getInstance().time
+            start.add(Calendar.MONTH, 1)
+            start[Calendar.DAY_OF_MONTH] = 1
+            start[Calendar.HOUR_OF_DAY] = 0
+            start[Calendar.MINUTE] = 0
+            start[Calendar.SECOND] = 0
+            start[Calendar.MILLISECOND] = 0
+
+            end.time = Calendar.getInstance().time
+            end.timeInMillis = System.currentTimeMillis()
+            end.add(Calendar.MONTH, 2);
+            end.set(Calendar.DAY_OF_MONTH, 1);
+            end.add(Calendar.DATE, -1);
+            end[Calendar.HOUR_OF_DAY] = 23
+            end[Calendar.MINUTE] = 59
+            end[Calendar.SECOND] = 59
+            end[Calendar.MILLISECOND] = 999
+        }
+
+        val query = firestore.collection(meetingsCollection)
+            .whereGreaterThan("date", start.timeInMillis)
+            .whereLessThan("date", end.timeInMillis)
             .get()
 
         queryList.add(query)

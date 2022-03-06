@@ -7,6 +7,7 @@ class FilterItems {
     companion object {
         var filterByTimeItems = arrayListOf<IFilterObj>(
             FilterByTimeObj("Today", false),
+            FilterByTimeObj("Tomorrow", false),
             FilterByTimeObj("This week", false),
             FilterByTimeObj("This month", false),
             FilterByTimeObj("Next week", false),
