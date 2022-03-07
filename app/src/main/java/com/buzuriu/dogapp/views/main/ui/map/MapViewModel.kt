@@ -30,6 +30,7 @@ class MapViewModel : BaseViewModel() {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting)
         filterAdapter = FilterAdapter(filtersList)
         filtersList.clear()
+        dataExchangeService.put(FilterMeetingsViewModel::class.java.name, true)
 
         viewModelScope.launch(Dispatchers.IO) {
             var list = fetchAllMeetings()

@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.viewModels
 
 import com.buzuriu.dogapp.adapters.FilterAdapter
+import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
@@ -13,6 +14,16 @@ class FilterMeetingsViewModel : BaseViewModel(){
 
     init {
         filterAdapter = FilterAdapter(filterByTimeList, this)
+        checkOtherFilterSelectedBefore()
+    }
+
+    fun checkOtherFilterSelectedBefore()
+    {
+        val isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
+        if (isRefreshNeeded!=null && isRefreshNeeded)
+        {
+            unselectPreviousFilters()
+        }
     }
 
     fun saveFilter()
