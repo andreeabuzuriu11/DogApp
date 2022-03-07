@@ -205,6 +205,8 @@ class DatabaseService : IDatabaseService {
         }
 
         if (filterType.name == "This week") {
+            start[Calendar.DAY_OF_WEEK] = 1
+
             var todayAsDayOfWeek = Calendar.DAY_OF_WEEK
             var daysTillSunday = 7 - todayAsDayOfWeek
             end.add(Calendar.DATE, daysTillSunday)
