@@ -91,8 +91,7 @@ class AddMeetingViewModel : BaseViewModel() {
                         viewModelScope.launch(Dispatchers.Main) {
                             dialogService.showSnackbar(R.string.added_success_message_meeting)
                             delay(2000)
-                            dataExchangeService.put(MapViewModel::class.java.name,newMeeting)
-                            dataExchangeService.put(MapViewModel::class.java.name, true)
+                           /* dataExchangeService.put(MapViewModel::class.java.name,newMeeting)*/
                             addMeetingToLocalDb(newMeeting)
                             navigationService.closeCurrentActivity()
                         }

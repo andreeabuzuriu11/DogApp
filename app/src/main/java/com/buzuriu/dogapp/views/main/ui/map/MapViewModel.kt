@@ -18,6 +18,7 @@ import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class MapViewModel : BaseViewModel() {
 
@@ -47,16 +48,19 @@ class MapViewModel : BaseViewModel() {
     override fun onResume() {
         super.onResume()
 
-        val selectedFilterFromFilterMeetingsFragment : IFilterObj? = dataExchangeService.get<IFilterObj?>(this::class.qualifiedName!!)
-        if (selectedFilterFromFilterMeetingsFragment != null)
-        {
+        val item =
+            dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!)
+
+        if (item == null)
+            return
+
             filtersList.clear()
-            dialogService.showSnackbar("your selected filter is " + selectedFilterFromFilterMeetingsFragment.name)
-            filtersList.add(selectedFilterFromFilterMeetingsFragment)
+            dialogService.showSnackbar("your selected filter is " + item.name)
+            filtersList.add(item)
             filterAdapter!!.notifyDataSetChanged()
 
             viewModelScope.launch(Dispatchers.IO) {
-                var list = fetchFilteredMeetings(selectedFilterFromFilterMeetingsFragment)
+                var list = fetchFilteredMeetings(item)
 
                 viewModelScope.launch(Dispatchers.Main) {
                     meetingsList.clear()
@@ -64,7 +68,6 @@ class MapViewModel : BaseViewModel() {
                     meetingAdapter!!.notifyDataSetChanged()
                 }
             }
-        }
     }
 
     private suspend fun fetchAllMeetings() : ArrayList<MyCustomMeetingObj>{
@@ -80,8 +83,6 @@ class MapViewModel : BaseViewModel() {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                Log.d("andreea", user.toString())
-                Log.d("andreea", dog.toString())
                 val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
                 allCustomMeetings.add(meetingObj)
             }
@@ -102,9 +103,7 @@ class MapViewModel : BaseViewModel() {
             for (meeting in allMeetings) {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
-
-                Log.d("andreea", user.toString())
-                Log.d("andreea", dog.toString())
+                
                 val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
                 allCustomMeetings.add(meetingObj)
             }
