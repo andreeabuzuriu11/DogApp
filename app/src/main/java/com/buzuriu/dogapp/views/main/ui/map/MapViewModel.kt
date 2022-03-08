@@ -31,10 +31,26 @@ class MapViewModel : BaseViewModel() {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting)
         filterAdapter = FilterAdapter(filtersList)
         filtersList.clear()
+
         dataExchangeService.put(FilterMeetingsViewModel::class.java.name, true)
 
+        viewModelScope.launch {
+            fetchAllMeetings()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModelScope.launch {
+            fetchMeetingsByFilter()
+        }
+    }
+
+    private suspend fun fetchAllMeetings()
+    {
         viewModelScope.launch(Dispatchers.IO) {
-            var list = fetchAllMeetings()
+            var list = fetchAllMeetingsFromDatabase()
 
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
@@ -45,32 +61,31 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
+    private suspend fun fetchMeetingsByFilter()
+    {
         val item =
             dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!)
 
         if (item == null)
             return
 
-            filtersList.clear()
-            dialogService.showSnackbar("your selected filter is " + item.name)
-            filtersList.add(item)
-            filterAdapter!!.notifyDataSetChanged()
+        filtersList.clear()
+        dialogService.showSnackbar("your selected filter is " + item.name)
+        filtersList.add(item)
+        filterAdapter!!.notifyDataSetChanged()
 
-            viewModelScope.launch(Dispatchers.IO) {
-                var list = fetchFilteredMeetings(item)
+        viewModelScope.launch(Dispatchers.IO) {
+            var list = fetchFilteredMeetingsFromDatabase(item)
 
-                viewModelScope.launch(Dispatchers.Main) {
-                    meetingsList.clear()
-                    meetingsList.addAll(list)
-                    meetingAdapter!!.notifyDataSetChanged()
-                }
+            viewModelScope.launch(Dispatchers.Main) {
+                meetingsList.clear()
+                meetingsList.addAll(list)
+                meetingAdapter!!.notifyDataSetChanged()
             }
+        }
     }
 
-    private suspend fun fetchAllMeetings() : ArrayList<MyCustomMeetingObj>{
+    private suspend fun fetchAllMeetingsFromDatabase() : ArrayList<MyCustomMeetingObj>{
         var user: UserInfo?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
@@ -82,7 +97,7 @@ class MapViewModel : BaseViewModel() {
             for (meeting in allMeetings) {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
-
+                
                 val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
                 allCustomMeetings.add(meetingObj)
             }
@@ -91,7 +106,7 @@ class MapViewModel : BaseViewModel() {
         return allCustomMeetings
     }
 
-    private suspend fun fetchFilteredMeetings(timeFilter: IFilterObj) : ArrayList<MyCustomMeetingObj>{
+    private suspend fun fetchFilteredMeetingsFromDatabase(timeFilter: IFilterObj) : ArrayList<MyCustomMeetingObj>{
         var user: UserInfo?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
@@ -103,7 +118,7 @@ class MapViewModel : BaseViewModel() {
             for (meeting in allMeetings) {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
-                
+
                 val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
                 allCustomMeetings.add(meetingObj)
             }
