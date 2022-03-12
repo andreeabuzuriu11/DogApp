@@ -35,7 +35,7 @@ class FilterAdapter(var filterList: ArrayList<IFilterObj>,
         {
             applicationBinding.filterItem = item
             applicationBinding.filterTypeLayout.setOnClickListener {
-                viewModel?.selectTime(item)
+                viewModel?.checkSelectedFilter(adapterPosition, filterList, this@FilterAdapter)
             }
         }
     }

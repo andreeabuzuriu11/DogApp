@@ -23,7 +23,7 @@ interface IDatabaseService {
     suspend fun fetchUserByUid(userUid: String) : UserInfo?
     suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj>?
     suspend fun fetchAllMeetings() : ArrayList <MeetingObj>?
-    suspend fun fetchMeetingsByTime(filterType: IFilterObj) : ArrayList <MeetingObj>?
+    suspend fun fetchMeetingsByTime(filters: ArrayList<IFilterObj>) : ArrayList <MeetingObj>?
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
                            onCompleteListener: IOnCompleteListener)
@@ -34,6 +34,7 @@ class DatabaseService : IDatabaseService {
     private val userInfoCollection = "UserInfo"
     private val dogInfoCollection = "Dog"
     private val meetingsCollection = "Meeting"
+    private var tasksList = ArrayList<Task<QuerySnapshot>>()
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     override suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener) {
         firestore.collection(userInfoCollection)
@@ -176,9 +177,8 @@ class DatabaseService : IDatabaseService {
         return meetingsList
     }
 
-    override suspend fun fetchMeetingsByTime(filterType: IFilterObj): ArrayList<MeetingObj>? {
-        val meetingsList = ArrayList<MeetingObj>()
-        val queryList = ArrayList<Task<QuerySnapshot>>()
+    private fun setMeetingsTimeQuery(filterType: IFilterObj)
+    {
         val start = Calendar.getInstance()
         val end = Calendar.getInstance()
 
@@ -205,7 +205,10 @@ class DatabaseService : IDatabaseService {
         }
 
         if (filterType.name == "This week") {
-            start[Calendar.DAY_OF_WEEK] = 1
+            start.time = Calendar.getInstance().time
+            start[Calendar.HOUR_OF_DAY] = 0
+            start[Calendar.MINUTE] = 0
+            start[Calendar.SECOND] = 0
 
             var todayAsDayOfWeek = Calendar.DAY_OF_WEEK
             var daysTillSunday = 7 - todayAsDayOfWeek
@@ -252,10 +255,46 @@ class DatabaseService : IDatabaseService {
             .whereLessThan("date", end.timeInMillis)
             .get()
 
-        queryList.add(query)
+        tasksList.add(query)
+    }
+
+
+    private fun setGenderTypeQuery(filterType: IFilterObj)
+    {
+
+        if (filterType.name == "male") {
+            // all options for today are already selected above
+        }
+
+        else if (filterType.name == "female") {
+
+        }
+
+
+
+
+    }
+
+    private fun createFilterQuery(filtersList: ArrayList<IFilterObj>) {
+        filtersList.forEach {
+            when (it) {
+                is FilterByTimeObj -> {
+                    setMeetingsTimeQuery(it)
+                }
+                is FilterByDogGenderObj -> {
+                    setGenderTypeQuery(it)
+                }
+            }
+        }
+    }
+
+    override suspend fun fetchMeetingsByTime(filters: ArrayList<IFilterObj>): ArrayList<MeetingObj>? {
+        val meetingsList = ArrayList<MeetingObj>()
+
+        createFilterQuery(filters)
 
         val allTasks =
-            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+            Tasks.whenAllSuccess<QuerySnapshot>(tasksList)
 
         allTasks.addOnSuccessListener {
 
@@ -266,6 +305,9 @@ class DatabaseService : IDatabaseService {
                 }
             }
         }
+            .addOnSuccessListener {
+                tasksList.clear()
+            }
             .addOnFailureListener { throw it }
 
         allTasks.await()

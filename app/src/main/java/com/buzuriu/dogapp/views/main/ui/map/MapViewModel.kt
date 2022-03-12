@@ -1,8 +1,5 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
@@ -13,12 +10,10 @@ import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.views.AddMeetingActivity
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
 import com.buzuriu.dogapp.views.MeetingDetailActivity
-import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 class MapViewModel : BaseViewModel() {
 
@@ -63,19 +58,26 @@ class MapViewModel : BaseViewModel() {
 
     private suspend fun fetchMeetingsByFilter()
     {
-        val item =
-            dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!)
+        val filterList =
+            dataExchangeService.get<ArrayList<IFilterObj>>(this::class.qualifiedName!!)
 
-        if (item == null)
+        if (filterList == null)
             return
 
+        if (filterList.size == 0)
+            return
+
+
+
         filtersList.clear()
-        dialogService.showSnackbar("your selected filter is " + item.name)
-        filtersList.add(item)
+        dialogService.showSnackbar("your selected filter is " + filterList[0].name)
+        if (filterList != null) {
+            filtersList.addAll(filterList)
+        }
         filterAdapter!!.notifyDataSetChanged()
 
         viewModelScope.launch(Dispatchers.IO) {
-            var list = fetchFilteredMeetingsFromDatabase(item)
+            var list = fetchFilteredMeetingsFromDatabase(filtersList)
 
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
@@ -106,13 +108,13 @@ class MapViewModel : BaseViewModel() {
         return allCustomMeetings
     }
 
-    private suspend fun fetchFilteredMeetingsFromDatabase(timeFilter: IFilterObj) : ArrayList<MyCustomMeetingObj>{
+    private suspend fun fetchFilteredMeetingsFromDatabase(filters: ArrayList<IFilterObj>) : ArrayList<MyCustomMeetingObj>{
         var user: UserInfo?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
         var allMeetings: ArrayList<MeetingObj>? = null
 
-        allMeetings = databaseService.fetchMeetingsByTime(timeFilter)
+        allMeetings = databaseService.fetchMeetingsByTime(filters)
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
