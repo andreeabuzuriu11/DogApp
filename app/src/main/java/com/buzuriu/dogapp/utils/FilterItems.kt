@@ -15,8 +15,8 @@ class FilterItems {
             FilterByTimeObj("Next month", false)
         )
         var filterByDogGenderItems = arrayListOf<IFilterObj>(
-            FilterByDogGenderObj("Male", false),
-            FilterByDogGenderObj("Female", false)
+            FilterByDogGenderObj("male", false),
+            FilterByDogGenderObj("female", false)
         )
     }
 }

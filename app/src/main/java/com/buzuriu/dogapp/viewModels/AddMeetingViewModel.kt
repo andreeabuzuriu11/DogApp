@@ -81,7 +81,8 @@ class AddMeetingViewModel : BaseViewModel() {
 
         ShowLoadingView(true)
 
-        val newMeeting = MeetingObj(meetingUid, meetingInUtc.timeInMillis, location, dog.value!!.uid, currentUser!!.uid)
+        val newMeeting = MeetingObj(meetingUid, meetingInUtc.timeInMillis, location, dog.value!!.uid, currentUser!!.uid,
+            dog.value!!.gender, dog.value!!.breed)
         viewModelScope.launch(Dispatchers.IO) {
 
             databaseService.storeMeetingInfo(meetingUid, newMeeting, object : IOnCompleteListener {
@@ -91,8 +92,6 @@ class AddMeetingViewModel : BaseViewModel() {
                         viewModelScope.launch(Dispatchers.Main) {
                             dialogService.showSnackbar(R.string.added_success_message_meeting)
                             delay(2000)
-                           /* dataExchangeService.put(MapViewModel::class.java.name,newMeeting)*/
-                            addMeetingToLocalDb(newMeeting)
                             navigationService.closeCurrentActivity()
                         }
                     } else {

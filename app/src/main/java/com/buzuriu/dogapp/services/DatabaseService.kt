@@ -3,10 +3,12 @@ package com.buzuriu.dogapp.services
 import android.util.Log
 import com.buzuriu.dogapp.listeners.*
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
@@ -23,7 +25,7 @@ interface IDatabaseService {
     suspend fun fetchUserByUid(userUid: String) : UserInfo?
     suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj>?
     suspend fun fetchAllMeetings() : ArrayList <MeetingObj>?
-    suspend fun fetchMeetingsByTime(filters: ArrayList<IFilterObj>) : ArrayList <MeetingObj>?
+    suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>) : ArrayList <MeetingObj>?
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
                            onCompleteListener: IOnCompleteListener)
@@ -34,6 +36,7 @@ class DatabaseService : IDatabaseService {
     private val userInfoCollection = "UserInfo"
     private val dogInfoCollection = "Dog"
     private val meetingsCollection = "Meeting"
+    private var meetingsQuery: Query? = null
     private var tasksList = ArrayList<Task<QuerySnapshot>>()
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     override suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener) {
@@ -46,13 +49,6 @@ class DatabaseService : IDatabaseService {
 
     override suspend fun storeDogUidToUser(userUid: String, dogUid: String, onCompleteListener: IOnCompleteListener)
     {
-/*        firestore.collection(userInfoCollection)
-            .document(userUid)
-            .collection(dogInfoCollection)
-            .document(dogUid)
-            .set(dogUid)
-            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
-            .await()*/
         firestore.collection(userInfoCollection)
             .document(userUid)
             .collection(dogInfoCollection)
@@ -182,6 +178,8 @@ class DatabaseService : IDatabaseService {
         val start = Calendar.getInstance()
         val end = Calendar.getInstance()
 
+        var query: Task<QuerySnapshot>?
+
         start.timeInMillis = System.currentTimeMillis()
         end.time = Calendar.getInstance().time
         end[Calendar.HOUR_OF_DAY] = 23
@@ -193,7 +191,7 @@ class DatabaseService : IDatabaseService {
             // all options for today are already selected above
         }
 
-        if (filterType.name == "Tomorrow") {
+        else if (filterType.name == "Tomorrow") {
             start.time = Calendar.getInstance().time
             start.add(Calendar.DATE, 1)
             start[Calendar.HOUR_OF_DAY] = 0
@@ -204,7 +202,7 @@ class DatabaseService : IDatabaseService {
             end.add(Calendar.DATE, 1)
         }
 
-        if (filterType.name == "This week") {
+        else if (filterType.name == "This week") {
             start.time = Calendar.getInstance().time
             start[Calendar.HOUR_OF_DAY] = 0
             start[Calendar.MINUTE] = 0
@@ -215,13 +213,13 @@ class DatabaseService : IDatabaseService {
             end.add(Calendar.DATE, daysTillSunday)
         }
 
-        if (filterType.name == "This month") {
+        else if (filterType.name == "This month") {
             end.add(Calendar.MONTH, 1);
             end.set(Calendar.DAY_OF_MONTH, 1);
             end.add(Calendar.DATE, -1);
         }
 
-        if (filterType.name == "Next week") {
+        else if (filterType.name == "Next week") {
             start.time = Calendar.getInstance().time
             start.add(Calendar.WEEK_OF_MONTH, 1)
             start[Calendar.DAY_OF_WEEK] = 1
@@ -235,7 +233,7 @@ class DatabaseService : IDatabaseService {
             end[Calendar.DAY_OF_WEEK] = 7
         }
 
-        if (filterType.name == "Next month") {
+        else if (filterType.name == "Next month") {
             start.time = Calendar.getInstance().time
             start.add(Calendar.MONTH, 1)
             start[Calendar.DAY_OF_MONTH] = 1
@@ -249,8 +247,12 @@ class DatabaseService : IDatabaseService {
             end.set(Calendar.DAY_OF_MONTH, 1);
             end.add(Calendar.DATE, -1);
         }
+        else {
+            query = meetingsQuery!!
+                .whereLessThan("date", System.currentTimeMillis()).get()
+        }
 
-        val query = firestore.collection(meetingsCollection)
+        query = meetingsQuery!!
             .whereGreaterThan("date", start.timeInMillis)
             .whereLessThan("date", end.timeInMillis)
             .get()
@@ -259,20 +261,12 @@ class DatabaseService : IDatabaseService {
     }
 
 
-    private fun setGenderTypeQuery(filterType: IFilterObj)
+    private fun setDogGenderTypeQuery(filterType: IFilterObj)
     {
-
-        if (filterType.name == "male") {
-            // all options for today are already selected above
-        }
-
-        else if (filterType.name == "female") {
-
-        }
-
-
-
-
+        val query = meetingsQuery!!
+            .whereEqualTo("dogGender", filterType.name)
+            .get()
+        tasksList.add(query)
     }
 
     private fun createFilterQuery(filtersList: ArrayList<IFilterObj>) {
@@ -282,14 +276,18 @@ class DatabaseService : IDatabaseService {
                     setMeetingsTimeQuery(it)
                 }
                 is FilterByDogGenderObj -> {
-                    setGenderTypeQuery(it)
+                    setDogGenderTypeQuery(it)
                 }
             }
         }
     }
 
-    override suspend fun fetchMeetingsByTime(filters: ArrayList<IFilterObj>): ArrayList<MeetingObj>? {
+    override suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>): ArrayList<MeetingObj>? {
         val meetingsList = ArrayList<MeetingObj>()
+
+        meetingsQuery =
+            firestore.collection(meetingsCollection)
+                .limit(2)
 
         createFilterQuery(filters)
 
@@ -301,7 +299,13 @@ class DatabaseService : IDatabaseService {
             for (meetingDocSnapshot in it) {
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
-                    meetingsList.add(meeting)
+
+                    if (MeetingUtils.checkFiltersAreAllAccomplished(meeting, filters))
+                    {
+                        if(meetingsList.find { it.uid == meeting.uid }!=null)continue
+                        meetingsList.add(meeting)
+                    }
+
                 }
             }
         }
