@@ -49,14 +49,14 @@ class FilterMeetingsViewModel : BaseViewModel(){
             if (pos == position && !filterList[pos].isSelected!!)
             {
                 filterList[pos].isSelected = true
+                adapter.notifyItemChanged(pos)
             }
             else if (pos != position && filterList[pos].isSelected!!)
             {
                 filterList[pos].isSelected = false
+                adapter.notifyItemChanged(pos)
             }
-            adapter.notifyItemChanged(pos)
         }
-
     }
 
     fun close()
