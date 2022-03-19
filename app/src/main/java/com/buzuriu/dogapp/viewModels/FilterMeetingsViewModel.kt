@@ -13,22 +13,25 @@ class FilterMeetingsViewModel : BaseViewModel(){
 
     var filterByTimeList =  FilterItems.filterByTimeItems
     var filterByDogGenderList = FilterItems.filterByDogGenderItems
+    var filterByUserGenderList = FilterItems.filterByUserGenderItems
     var filterByDogBreedListString : ArrayList<String>?
     var filterByDogBreedList = ArrayList<IFilterObj>()
+
     var filterAdapterTime: FilterAdapter? = null
     var filterAdapterDogGender: FilterAdapter? = null
+    var filterAdapterUserGender: FilterAdapter? = null
     var filterAdapterDogBreed: FilterAdapter? = null
     var breed = MutableLiveData<String>()
 
     init {
         filterAdapterTime = FilterAdapter(filterByTimeList, this)
         filterAdapterDogGender = FilterAdapter(filterByDogGenderList, this)
+        filterAdapterUserGender = FilterAdapter(filterByUserGenderList, this)
         filterByDogBreedListString = localDatabaseService.get<ArrayList<String>>(this::class.qualifiedName!!)
         if (filterByDogBreedListString != null) {
             for (item in filterByDogBreedListString!!) {
                 filterByDogBreedList.add(FilterByDogBreedObj(item, false))
             }
-
         }
         filterAdapterDogBreed = FilterAdapter(filterByDogBreedList, this)
         refreshFilters()
@@ -39,6 +42,8 @@ class FilterMeetingsViewModel : BaseViewModel(){
         for (i in filterByTimeList)
             i.isSelected = false
         for (i in filterByDogGenderList)
+            i.isSelected = false
+        for (i in filterByUserGenderList)
             i.isSelected = false
         for (i in filterByDogBreedList)
             i.isSelected = false
@@ -54,9 +59,13 @@ class FilterMeetingsViewModel : BaseViewModel(){
         for (i in filterByDogGenderList)
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
+        for (i in filterByUserGenderList)
+            if (i.isSelected == true)
+                listOfCheckedFilters.add(i)
         for (i in filterByDogBreedList)
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
+
 
         dataExchangeService.put(MapViewModel::class.java.name, listOfCheckedFilters)
 

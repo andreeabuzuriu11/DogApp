@@ -36,6 +36,10 @@ class FilterMeetingsFragment : BaseBoundFragment<FilterMeetingsViewModel, Fragme
         val recyclerView3 = currentBinding.filterDogsByBreed
         recyclerView3.layoutManager = GridLayoutManager(activity,3)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView3.adapter = mViewModel.filterAdapterDogBreed
+
+        val recyclerView4 = currentBinding.filterUsersByGender
+        recyclerView4.layoutManager = GridLayoutManager(activity,3)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView4.adapter = mViewModel.filterAdapterUserGender
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

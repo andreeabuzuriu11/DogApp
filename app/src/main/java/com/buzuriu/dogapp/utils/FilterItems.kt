@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.utils
 
 import com.buzuriu.dogapp.models.FilterByDogGenderObj
 import com.buzuriu.dogapp.models.FilterByTimeObj
+import com.buzuriu.dogapp.models.FilterByUserGenderObj
 import com.buzuriu.dogapp.models.IFilterObj
 
 class FilterItems {
@@ -17,6 +18,10 @@ class FilterItems {
         var filterByDogGenderItems = arrayListOf<IFilterObj>(
             FilterByDogGenderObj("male", false),
             FilterByDogGenderObj("female", false)
+        )
+        var filterByUserGenderItems = arrayListOf<IFilterObj>(
+            FilterByUserGenderObj("male", false),
+            FilterByUserGenderObj("female", false)
         )
     }
 }
