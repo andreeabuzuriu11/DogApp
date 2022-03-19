@@ -21,17 +21,17 @@ class MapViewModel : BaseViewModel() {
     var meetingAdapter : MeetingAdapter?
     var filtersList = ArrayList<IFilterObj>()
     var filterAdapter: FilterAdapter?
+    var breedsList = ArrayList<String>()
 
     init{
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting)
         filterAdapter = FilterAdapter(filtersList)
         filtersList.clear()
 
-        dataExchangeService.put(FilterMeetingsViewModel::class.java.name, true)
-
         viewModelScope.launch {
             fetchAllMeetings()
         }
+
     }
 
     override fun onResume() {
@@ -42,6 +42,16 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
+    fun getAllDogBreeds()
+    {
+        for (meeting in meetingsList)
+        {
+            if(breedsList.find { it == meeting.dog!!.breed}!=null)continue
+            breedsList.add(meeting.dog!!.breed)
+        }
+        localDatabaseService.add(FilterMeetingsViewModel::class.java.name, breedsList)
+    }
+
     private suspend fun fetchAllMeetings()
     {
         viewModelScope.launch(Dispatchers.IO) {
@@ -50,6 +60,7 @@ class MapViewModel : BaseViewModel() {
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
                 meetingsList.addAll(list)
+                getAllDogBreeds()
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
             }

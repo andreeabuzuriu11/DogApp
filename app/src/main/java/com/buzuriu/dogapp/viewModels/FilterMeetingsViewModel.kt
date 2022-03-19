@@ -1,22 +1,37 @@
 package com.buzuriu.dogapp.viewModels
 
+import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.FilterAdapter
+import com.buzuriu.dogapp.models.FilterByDogBreedObj
 import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
+import com.buzuriu.dogapp.views.SelectBreedFragment
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 
 class FilterMeetingsViewModel : BaseViewModel(){
 
     var filterByTimeList =  FilterItems.filterByTimeItems
     var filterByDogGenderList = FilterItems.filterByDogGenderItems
+    var filterByDogBreedListString : ArrayList<String>?
+    var filterByDogBreedList = ArrayList<IFilterObj>()
     var filterAdapterTime: FilterAdapter? = null
     var filterAdapterDogGender: FilterAdapter? = null
+    var filterAdapterDogBreed: FilterAdapter? = null
+    var breed = MutableLiveData<String>()
 
     init {
         filterAdapterTime = FilterAdapter(filterByTimeList, this)
         filterAdapterDogGender = FilterAdapter(filterByDogGenderList, this)
-        refreshFilters()
+        filterByDogBreedListString = localDatabaseService.get<ArrayList<String>>(this::class.qualifiedName!!)
+        if (filterByDogBreedListString != null) {
+            for (item in filterByDogBreedListString!!) {
+                filterByDogBreedList.add(FilterByDogBreedObj(item, false))
+            }
 
+        }
+        filterAdapterDogBreed = FilterAdapter(filterByDogBreedList, this)
+        refreshFilters()
     }
 
     private fun refreshFilters()
@@ -24,6 +39,8 @@ class FilterMeetingsViewModel : BaseViewModel(){
         for (i in filterByTimeList)
             i.isSelected = false
         for (i in filterByDogGenderList)
+            i.isSelected = false
+        for (i in filterByDogBreedList)
             i.isSelected = false
     }
 
@@ -35,6 +52,9 @@ class FilterMeetingsViewModel : BaseViewModel(){
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
         for (i in filterByDogGenderList)
+            if (i.isSelected == true)
+                listOfCheckedFilters.add(i)
+        for (i in filterByDogBreedList)
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
 
