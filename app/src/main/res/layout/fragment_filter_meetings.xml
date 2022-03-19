@@ -31,20 +31,28 @@
             android:textSize="24sp"
          />
 
-        <TextView
-            android:id="@+id/text_view_search_meetings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_view_filter_meetings"
-            android:layout_marginVertical="20dp"
-            android:text="When?"
-            android:textSize="@dimen/normal_size" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/filter_meetings_by_time"
+        <ScrollView
+            android:layout_marginTop="80dp"
+            android:layout_marginBottom="80dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_view_search_meetings" />
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_view_search_meetings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:text="When?"
+                    android:textSize="@dimen/normal_size" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/filter_meetings_by_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_view_search_meetings" />
 
         <TextView
             android:id="@+id/text_view_search_by_dog_gender"
@@ -55,24 +63,24 @@
             android:text="Dog?"
             android:textSize="@dimen/normal_size" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/filter_dogs_by_gender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_view_search_by_dog_gender"
-            android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/filter_dogs_by_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_view_search_by_dog_gender"
+                    android:orientation="vertical">
 
-        </androidx.recyclerview.widget.RecyclerView>
-
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/filter_dogs_by_breed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/filter_dogs_by_gender"></androidx.recyclerview.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
 
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/filter_dogs_by_breed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/filter_dogs_by_gender"></androidx.recyclerview.widget.RecyclerView>
+
+            </RelativeLayout>
+        </ScrollView>
 
         <Button
             android:id="@+id/select_breed_save_button"
