@@ -45,6 +45,9 @@ class DashboardFragment : BaseBoundFragment<DashboardViewModel, FragmentDashboar
         if (id == R.id.action_logout) {
             mViewModel.logout()
         }
+        if (id == R.id.action_account) {
+            mViewModel.goToAccountDetails()
+        }
         return super.onOptionsItemSelected(item)
     }
 

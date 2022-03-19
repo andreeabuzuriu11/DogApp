@@ -11,7 +11,7 @@ class AddDogActivity : BaseBoundActivity<AddDogViewModel, ActivityAddDogBinding>
         get() = R.layout.activity_add_dog
 
     override fun setupDataBinding(binding: ActivityAddDogBinding) {
-        binding.viewModel = mViewModel;
+        binding.viewModel = mViewModel
     }
 
 }

@@ -3,8 +3,10 @@ package com.buzuriu.dogapp.views.main.ui.dashboard
 import android.telecom.Call
 import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.viewModels.AccountDetailViewModel
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.DogDetailViewModel
+import com.buzuriu.dogapp.views.AccountDetailActivity
 import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.DogDetailActivity
 import com.buzuriu.dogapp.views.auth.LoginActivity
@@ -51,8 +53,12 @@ class DashboardViewModel : BaseViewModel() {
         navigationService.navigateToActivity(AddDogActivity::class.java, false)
     }
 
-    fun logout()
+    fun goToAccountDetails()
     {
+        navigationService.navigateToActivity(AccountDetailActivity::class.java, false)
+    }
+
+    fun logout() {
         firebaseAuthService.logout()
         localDatabaseService.clear()
         navigationService.navigateToActivity(LoginActivity::class.java, true)
