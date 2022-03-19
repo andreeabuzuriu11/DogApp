@@ -1,9 +1,6 @@
 package com.buzuriu.dogapp.utils
 
-import com.buzuriu.dogapp.models.FilterByDogGenderObj
-import com.buzuriu.dogapp.models.FilterByTimeObj
-import com.buzuriu.dogapp.models.IFilterObj
-import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.*
 
 class MeetingUtils {
 
@@ -15,10 +12,11 @@ class MeetingUtils {
         )
                 : Boolean {
             return dogGenderAccepted(meetingObj, filterList) &&
-                    timeTypeAccepted(meetingObj, filterList)
+                    timeTypeAccepted(meetingObj, filterList) &&
+                    breedTypeAccepted(meetingObj, filterList)
         }
 
-        fun dogGenderAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
+        private fun dogGenderAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
             val dogGenderFilter = checkFilterIsType<FilterByDogGenderObj>(filterList)
             if (dogGenderFilter == null)
                 return true
@@ -29,7 +27,7 @@ class MeetingUtils {
             return false
         }
 
-        fun timeTypeAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
+        private fun timeTypeAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
             val timeFilter = checkFilterIsType<FilterByTimeObj>(filterList)
             if (timeFilter == null)
                 return true
@@ -40,8 +38,19 @@ class MeetingUtils {
             return false
         }
 
+        private fun breedTypeAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
+            val breedFilter = checkFilterIsType<FilterByDogBreedObj>(filterList)
+            if (breedFilter == null)
+                return true
 
-        inline fun <reified T>checkFilterIsType(filterList: ArrayList<IFilterObj>): T? {
+            if (meetingObj.dogBreed == breedFilter.name)
+                return true
+
+            return false
+        }
+
+
+        private inline fun <reified T>checkFilterIsType(filterList: ArrayList<IFilterObj>): T? {
             for (filter in filterList) {
                 if (filter is T)
                     return filter

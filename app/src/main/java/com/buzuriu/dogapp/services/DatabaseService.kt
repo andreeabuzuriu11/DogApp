@@ -269,6 +269,14 @@ class DatabaseService : IDatabaseService {
         tasksList.add(query)
     }
 
+    private fun setDogBreedTypeQuery(filterType: IFilterObj)
+    {
+        val query = meetingsQuery!!
+            .whereEqualTo("dogBreed", filterType.name)
+            .get()
+        tasksList.add(query)
+    }
+
     private fun createFilterQuery(filtersList: ArrayList<IFilterObj>) {
         filtersList.forEach {
             when (it) {
@@ -277,6 +285,9 @@ class DatabaseService : IDatabaseService {
                 }
                 is FilterByDogGenderObj -> {
                     setDogGenderTypeQuery(it)
+                }
+                is FilterByDogBreedObj -> {
+                    setDogBreedTypeQuery(it)
                 }
             }
         }
