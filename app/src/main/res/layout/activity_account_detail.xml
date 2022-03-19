@@ -51,6 +51,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/name_hint"
                             android:padding="10dp"
+                            android:text="@{viewModel.user.name}"
                             android:textSize="20sp" />
 
                     </LinearLayout>
@@ -79,6 +80,7 @@
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
                             android:hint="@string/phone"
+                            android:text="@{viewModel.user.phone}"
                             android:padding="10dp"
                             android:textSize="20sp" />
                     </LinearLayout>
@@ -110,6 +112,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/gender_hint"
                             android:padding="10dp"
+                            android:text="@{viewModel.user.gender}"
                             android:textSize="20sp" />
                     </LinearLayout>
 

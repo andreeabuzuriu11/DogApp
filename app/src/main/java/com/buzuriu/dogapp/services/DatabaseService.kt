@@ -298,7 +298,6 @@ class DatabaseService : IDatabaseService {
 
         meetingsQuery =
             firestore.collection(meetingsCollection)
-                .limit(2)
 
         createFilterQuery(filters)
 

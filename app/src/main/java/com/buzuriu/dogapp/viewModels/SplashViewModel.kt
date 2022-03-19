@@ -7,6 +7,7 @@ import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.services.FirebaseAuthService
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import com.google.firebase.auth.ktx.auth
@@ -29,6 +30,7 @@ class SplashViewModel : BaseViewModel() {
                 delay(1000)
                 async {
                     prepareForMain()
+                    getUserAccountInfo()
                     navigationService.navigateToActivity(MainActivity::class.java, true)
                 }
             }
@@ -45,6 +47,7 @@ class SplashViewModel : BaseViewModel() {
         if (userDogs != null) {
             localDatabaseService.add("localDogsList", userDogs)
         }
+
         var user: UserInfo?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
@@ -63,5 +66,11 @@ class SplashViewModel : BaseViewModel() {
 
             localDatabaseService.add("localMeetings", allCustomMeetings)
         }
+    }
+
+    private suspend fun getUserAccountInfo() {
+        val userInfo : UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
+
+        localDatabaseService.add("currentUser", userInfo!!)
     }
 }
