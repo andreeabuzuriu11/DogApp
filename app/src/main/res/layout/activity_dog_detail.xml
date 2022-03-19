@@ -63,7 +63,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginLeft="100dp"
-                        android:background="@color/black" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginLeft="100dp"
-                        android:background="@color/black" />
+                        android:background="@color/light_grey" />
 
 
                     <LinearLayout
@@ -130,7 +130,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginLeft="100dp"
-                        android:background="@color/black" />
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -155,11 +155,6 @@
                             android:textSize="20sp" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="100dp"
-                        android:background="@color/black" />
 
 
                 </LinearLayout>
@@ -174,8 +169,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:text="@string/dog_details"
                         android:layout_margin="5dp"
+                        android:text="@string/dog_details"
                         android:textSize="30dp" />
 
                     <de.hdodenhof.circleimageview.CircleImageView

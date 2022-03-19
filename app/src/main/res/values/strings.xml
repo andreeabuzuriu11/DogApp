@@ -74,5 +74,5 @@
     <string name="filter_meetings">Filter meetings</string>
     <string name="search">Search</string>
     <string name="account">Account</string>
-
+    <string name="phone">Phone</string>
 </resources>
