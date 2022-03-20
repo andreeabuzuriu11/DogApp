@@ -14,8 +14,14 @@
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.buzuriu.dogapp.views.main.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:label="My Dogs"
         tools:layout="@layout/fragment_dashboard" />
+
+    <fragment
+        android:id="@+id/navigation_meetings"
+        android:name="com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsFragment"
+        android:label="My Meetings"
+        tools:layout="@layout/fragment_my_meetings" />
 
     <fragment
         android:id="@+id/navigation_notifications"

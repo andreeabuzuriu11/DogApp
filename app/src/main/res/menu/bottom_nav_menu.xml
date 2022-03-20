@@ -8,8 +8,14 @@
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
+        android:icon="@drawable/my_dog_icon"
+        android:title="My Dogs" />
+
+    <item
+        android:id="@+id/navigation_meetings"
+        android:icon="@drawable/my_meeting_icon"
+        android:title="My Meetings" />
+
 
     <item
         android:id="@+id/navigation_notifications"
