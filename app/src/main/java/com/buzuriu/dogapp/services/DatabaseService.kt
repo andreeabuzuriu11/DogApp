@@ -269,6 +269,14 @@ class DatabaseService : IDatabaseService {
         tasksList.add(query)
     }
 
+    private fun setUserGenderTypeQuery(filterType: IFilterObj)
+    {
+        val query = meetingsQuery!!
+            .whereEqualTo("userGender", filterType.name)
+            .get()
+        tasksList.add(query)
+    }
+
     private fun setDogBreedTypeQuery(filterType: IFilterObj)
     {
         val query = meetingsQuery!!
@@ -286,9 +294,13 @@ class DatabaseService : IDatabaseService {
                 is FilterByDogGenderObj -> {
                     setDogGenderTypeQuery(it)
                 }
+                is FilterByUserGenderObj -> {
+                    setUserGenderTypeQuery(it)
+                }
                 is FilterByDogBreedObj -> {
                     setDogBreedTypeQuery(it)
                 }
+
             }
         }
     }

@@ -12,14 +12,13 @@ class MeetingUtils {
         )
                 : Boolean {
             return dogGenderAccepted(meetingObj, filterList) &&
+                    userGenderAccepted(meetingObj, filterList) &&
                     timeTypeAccepted(meetingObj, filterList) &&
                     breedTypeAccepted(meetingObj, filterList)
         }
 
         private fun dogGenderAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
-            val dogGenderFilter = checkFilterIsType<FilterByDogGenderObj>(filterList)
-            if (dogGenderFilter == null)
-                return true
+            val dogGenderFilter = checkFilterIsType<FilterByDogGenderObj>(filterList) ?: return true
 
             if (meetingObj.dogGender == dogGenderFilter.name)
                 return true
@@ -27,10 +26,17 @@ class MeetingUtils {
             return false
         }
 
-        private fun timeTypeAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
-            val timeFilter = checkFilterIsType<FilterByTimeObj>(filterList)
-            if (timeFilter == null)
+        private fun userGenderAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
+            val userGenderFilter = checkFilterIsType<FilterByUserGenderObj>(filterList) ?: return true
+
+            if (meetingObj.userGender == userGenderFilter.name)
                 return true
+
+            return false
+        }
+
+        private fun timeTypeAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
+            val timeFilter = checkFilterIsType<FilterByTimeObj>(filterList) ?: return true
 
             if (DateUtils.isMeetingHappeningAtThisTime(meetingObj, timeFilter))
                 return true
@@ -39,17 +45,14 @@ class MeetingUtils {
         }
 
         private fun breedTypeAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
-            val breedFilter = checkFilterIsType<FilterByDogBreedObj>(filterList)
-            if (breedFilter == null)
-                return true
+            val breedFilter = checkFilterIsType<FilterByDogBreedObj>(filterList) ?: return true
 
             if (meetingObj.dogBreed == breedFilter.name)
                 return true
 
             return false
         }
-
-
+        
         private inline fun <reified T>checkFilterIsType(filterList: ArrayList<IFilterObj>): T? {
             for (filter in filterList) {
                 if (filter is T)
