@@ -47,6 +47,7 @@ class LoginViewModel : BaseViewModel() {
                                 delay(1000)
                                 async {
                                     prepareForMain()
+                                    getUserAccountInfo()
                                     navigationService.navigateToActivity(
                                         MainActivity::class.java,
                                         true
@@ -115,6 +116,12 @@ class LoginViewModel : BaseViewModel() {
 
             localDatabaseService.add("localMeetings", allCustomMeetings)
         }
+    }
+
+    private suspend fun getUserAccountInfo() {
+        val userInfo : UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
+
+        localDatabaseService.add("currentUser", userInfo!!)
     }
 
 }
