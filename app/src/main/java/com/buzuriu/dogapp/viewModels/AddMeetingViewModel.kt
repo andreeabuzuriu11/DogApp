@@ -8,6 +8,7 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
@@ -77,12 +78,14 @@ class AddMeetingViewModel : BaseViewModel() {
         if(!isDogSelected())
             return
 
+        val userGender = localDatabaseService.get<UserInfo>("currentUser")!!.gender
+
         var meetingUid = StringUtils.getRandomUID()
 
         ShowLoadingView(true)
 
         val newMeeting = MeetingObj(meetingUid, meetingInUtc.timeInMillis, location, dog.value!!.uid, currentUser!!.uid,
-            dog.value!!.gender, dog.value!!.breed)
+            dog.value!!.gender, dog.value!!.breed, userGender!!)
         viewModelScope.launch(Dispatchers.IO) {
 
             databaseService.storeMeetingInfo(meetingUid, newMeeting, object : IOnCompleteListener {

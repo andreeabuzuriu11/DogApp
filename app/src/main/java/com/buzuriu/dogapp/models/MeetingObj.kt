@@ -10,11 +10,12 @@ class MeetingObj {
     var userUid : String? = null
     var dogGender: String? = null
     var dogBreed: String? = null
+    var userGender: String? = null
 
     constructor()
 
     constructor(uid: String, date:Long, location: GeoPoint, dogUid : String, userUid: String,
-                dogGender: String, dogBreed: String)
+                dogGender: String, dogBreed: String, userGender: String)
     {
         this.uid = uid
         this.date = date
@@ -23,5 +24,6 @@ class MeetingObj {
         this.userUid = userUid
         this.dogGender = dogGender
         this.dogBreed = dogBreed
+        this.userGender = userGender
     }
 }
