@@ -18,6 +18,7 @@ import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.AlertBuilderSettings
 import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
@@ -215,6 +216,7 @@ class AddDogViewModel : BaseViewModel() {
                                                         if (!isEdit) {
                                                             dialogService.showSnackbar(R.string.added_success_message)
                                                         } else {
+                                                            changeMeetingInfoRelatedToThisDog(dog.uid)
                                                             dialogService.showSnackbar(R.string.edited_success_message)
                                                         }
 
@@ -255,6 +257,43 @@ class AddDogViewModel : BaseViewModel() {
         }
         dogsList.add(dog)
         localDatabaseService.add("localDogsList", dogsList)
+    }
+
+    fun changeMeetingInfoRelatedToThisDog(dogUid: String)
+    {
+        var meetings = ArrayList<MeetingObj>()
+        viewModelScope.launch(Dispatchers.IO) {
+            meetings = databaseService.fetchDogMeetings(dogUid)!!
+
+            viewModelScope.launch(Dispatchers.Main) {
+                for (meeting in meetings) {
+                    meeting.dogGender = currentGenderString
+                    meeting.dogBreed = breed.value
+
+                    databaseService.storeMeetingInfo(
+                        meeting.uid!!,
+                        meeting,
+                        object : IOnCompleteListener {
+                            override fun onComplete(successful: Boolean, exception: Exception?) {
+
+                                if (successful) {
+                                    viewModelScope.launch(Dispatchers.Main) {
+                                        dialogService.showSnackbar("All meetings have been updated with the new info")
+                                        delay(2000)
+                                    }
+                                } else {
+                                    viewModelScope.launch(Dispatchers.Main) {
+                                        if (!exception?.message.isNullOrEmpty())
+                                            dialogService.showSnackbar(exception!!.message!!)
+                                        else dialogService.showSnackbar(R.string.unknown_error)
+                                        delay(2000)
+                                    }
+                                }
+                            }
+                        })
+                }
+            }
+        }
     }
 
     fun selectBreed() {

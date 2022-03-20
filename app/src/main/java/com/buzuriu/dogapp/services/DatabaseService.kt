@@ -26,6 +26,7 @@ interface IDatabaseService {
     suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj>?
     suspend fun fetchAllMeetings() : ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String) : ArrayList<MeetingObj>?
+    suspend fun fetchDogMeetings(dogUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>) : ArrayList <MeetingObj>?
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
@@ -179,6 +180,34 @@ class DatabaseService : IDatabaseService {
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
             .whereEqualTo("userUid", userUid)
+            .get()
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+
+            for (meetingDocSnapshot in it) {
+                for (querySnapshot in meetingDocSnapshot) {
+                    val meeting = querySnapshot.toObject(MeetingObj::class.java)
+                    meetingsList.add(meeting)
+                }
+            }
+        }
+            .addOnFailureListener { throw it }
+
+        allTasks.await()
+
+        return meetingsList
+    }
+
+    override suspend fun fetchDogMeetings(dogUid: String): ArrayList<MeetingObj>? {
+        val meetingsList = ArrayList<MeetingObj>()
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val query = firestore.collection(meetingsCollection)
+            .whereEqualTo("dogUid", dogUid)
             .get()
 
         queryList.add(query)
