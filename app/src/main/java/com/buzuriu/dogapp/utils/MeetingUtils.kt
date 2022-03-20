@@ -52,7 +52,7 @@ class MeetingUtils {
 
             return false
         }
-        
+
         private inline fun <reified T>checkFilterIsType(filterList: ArrayList<IFilterObj>): T? {
             for (filter in filterList) {
                 if (filter is T)
