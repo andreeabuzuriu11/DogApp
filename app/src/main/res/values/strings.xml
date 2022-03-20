@@ -31,7 +31,8 @@
     <string name="write_email_hint">Email address</string>
     <string name="title_activity_main8">Main8Activity</string>
     <string name="title_map">Map</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_my_dogs">My Dogs</string>
+    <string name="title_my_meetings">My Meetings</string>
     <string name="title_notifications">Notifications</string>
     <string name="email_missing_message">Please add an emai</string>
     <string name="wrong_email_format_message">Please add a valid email</string>

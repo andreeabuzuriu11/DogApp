@@ -6,7 +6,7 @@ import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.views.AddDogActivity
-import com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel
+import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -41,7 +41,7 @@ class DogDetailViewModel : BaseViewModel() {
             IClickListener {
             override fun clicked() {
                 deleteDogFromDatabase()
-                dataExchangeService.put(DashboardViewModel::class.java.name, true) // is refresh list needed
+                dataExchangeService.put(MyDogsViewModel::class.java.name, true) // is refresh list needed
             }
         })
     }

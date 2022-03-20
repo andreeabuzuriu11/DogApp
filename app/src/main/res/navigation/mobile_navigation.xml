@@ -12,15 +12,15 @@
         tools:layout="@layout/fragment_map" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.buzuriu.dogapp.views.main.ui.dashboard.DashboardFragment"
-        android:label="My Dogs"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_dogs"
+        android:name="com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsFragment"
+        android:label="@string/title_my_dogs"
+        tools:layout="@layout/fragment_my_dogs" />
 
     <fragment
         android:id="@+id/navigation_meetings"
         android:name="com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsFragment"
-        android:label="My Meetings"
+        android:label="@string/title_my_meetings"
         tools:layout="@layout/fragment_my_meetings" />
 
     <fragment

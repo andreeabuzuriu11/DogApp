@@ -10,7 +10,6 @@ import android.provider.MediaStore
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
@@ -23,7 +22,7 @@ import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
-import com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel
+import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -209,7 +208,7 @@ class AddDogViewModel : BaseViewModel() {
                                                 if (successful) {
                                                     viewModelScope.launch(Dispatchers.Main) {
                                                         dataExchangeService.put(
-                                                            DashboardViewModel::class.java.name,
+                                                            MyDogsViewModel::class.java.name,
                                                             true
                                                         )
                                                         addOrEditDogToData(dog)
@@ -253,7 +252,7 @@ class AddDogViewModel : BaseViewModel() {
             val oldDog = dogsList.find { it.uid  == dog.uid}
             dogsList.remove(oldDog)
             dataExchangeService.put(DogDetailViewModel::class.java.name, dog!!)
-            dataExchangeService.put(DashboardViewModel::class.java.name, true) // to know the list must be refreshed
+            dataExchangeService.put(MyDogsViewModel::class.java.name, true) // to know the list must be refreshed
         }
         dogsList.add(dog)
         localDatabaseService.add("localDogsList", dogsList)

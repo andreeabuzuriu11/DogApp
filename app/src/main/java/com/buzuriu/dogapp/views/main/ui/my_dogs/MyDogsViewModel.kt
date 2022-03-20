@@ -1,9 +1,7 @@
-package com.buzuriu.dogapp.views.main.ui.dashboard
+package com.buzuriu.dogapp.views.main.ui.my_dogs
 
-import android.telecom.Call
 import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.viewModels.AccountDetailViewModel
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.DogDetailViewModel
 import com.buzuriu.dogapp.views.AccountDetailActivity
@@ -12,7 +10,7 @@ import com.buzuriu.dogapp.views.DogDetailActivity
 import com.buzuriu.dogapp.views.auth.LoginActivity
 
 
-class DashboardViewModel : BaseViewModel() {
+class MyDogsViewModel : BaseViewModel() {
 
     var dogsList: ArrayList<DogObj> = ArrayList()
     var dogAdapter: DogAdapter?

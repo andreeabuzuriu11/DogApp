@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.databinding.FragmentDashboardBinding
 import com.buzuriu.dogapp.databinding.FragmentMapBinding
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 

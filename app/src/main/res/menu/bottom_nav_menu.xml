@@ -7,7 +7,7 @@
         android:title="@string/title_map" />
 
     <item
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_dogs"
         android:icon="@drawable/my_dog_icon"
         android:title="My Dogs" />
 

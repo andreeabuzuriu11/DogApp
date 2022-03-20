@@ -1,24 +1,24 @@
-package com.buzuriu.dogapp.views.main.ui.dashboard
+package com.buzuriu.dogapp.views.main.ui.my_dogs
 
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.databinding.FragmentDashboardBinding
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 import android.view.Menu
 
 import android.view.MenuInflater
 import android.view.MenuItem
+import com.buzuriu.dogapp.databinding.FragmentMyDogsBinding
 
 
-class DashboardFragment : BaseBoundFragment<DashboardViewModel, FragmentDashboardBinding>(DashboardViewModel::class.java) {
+class MyDogsFragment : BaseBoundFragment<MyDogsViewModel, FragmentMyDogsBinding>(MyDogsViewModel::class.java) {
 
-    private lateinit var currentBinding: FragmentDashboardBinding
-    override val layoutId: Int= R.layout.fragment_dashboard
+    private lateinit var currentBinding: FragmentMyDogsBinding
+    override val layoutId: Int= R.layout.fragment_my_dogs
 
-    override fun setupDataBinding(binding: FragmentDashboardBinding) {
+    override fun setupDataBinding(binding: FragmentMyDogsBinding) {
         binding.viewModel = mViewModel
         currentBinding = binding
     }

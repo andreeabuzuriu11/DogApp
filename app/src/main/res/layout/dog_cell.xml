@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.views.main.ui.dashboard.DashboardViewModel" />
+            type="com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel" />
     </data>
     <LinearLayout
         android:id="@+id/dog_cell"
