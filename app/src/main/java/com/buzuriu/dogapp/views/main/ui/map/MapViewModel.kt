@@ -171,31 +171,5 @@ class MapViewModel : BaseViewModel() {
             FilterMeetingsFragment::class.qualifiedName
         )
     }
-
-    fun addMeeting()
-    {
-        if (!doesUserHaveAtLeastOneDog())
-        {
-            dialogService.showSnackbar("Please add your pet before participating to a meeting")
-            return
-        }
-
-        viewModelScope.launch(Dispatchers.Main) {
-            val hasPermission = askLocationPermission().await()
-            if (!hasPermission) {
-                dialogService.showSnackbar("Location permission needed to add a meeting!")
-                return@launch
-            }
-            else {
-                navigationService.navigateToActivity(AddMeetingActivity::class.java, false)
-            }
-        }
-    }
-
-    private fun doesUserHaveAtLeastOneDog() : Boolean
-    {
-        if (localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!.size < 1)
-            return false
-        return true
-    }
+    
 }
