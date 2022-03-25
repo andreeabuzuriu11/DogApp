@@ -7,7 +7,6 @@ import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
-import com.buzuriu.dogapp.views.AddMeetingActivity
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
@@ -84,22 +83,15 @@ class MapViewModel : BaseViewModel() {
     private suspend fun fetchMeetingsByFilter()
     {
         val filterList =
-            dataExchangeService.get<ArrayList<IFilterObj>>(this::class.qualifiedName!!)
-
-        if (filterList == null)
-            return
+            dataExchangeService.get<ArrayList<IFilterObj>>(this::class.qualifiedName!!) ?: return
 
         if (filterList.size == 0)
             return
 
         filtersList.clear()
         dialogService.showSnackbar("your selected filter is " + filterList[0].name)
-        if (filterList != null) {
-            filtersList.addAll(filterList)
-            fetchMeetingsWithFilters(filtersList)
-        }
-        else
-            fetchAllMeetings()
+        filtersList.addAll(filterList)
+        fetchMeetingsWithFilters(filtersList)
         filterAdapter!!.notifyDataSetChanged()
 
     }
@@ -129,9 +121,8 @@ class MapViewModel : BaseViewModel() {
         var user: UserInfo?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
-        var allMeetings: ArrayList<MeetingObj>? = null
 
-        allMeetings = databaseService.fetchMeetingsByFilters(filters)
+        var allMeetings: ArrayList<MeetingObj>? = databaseService.fetchMeetingsByFilters(filters)
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
@@ -142,7 +133,6 @@ class MapViewModel : BaseViewModel() {
                 allCustomMeetings.add(meetingObj)
             }
         }
-
         return allCustomMeetings
     }
 
@@ -151,6 +141,7 @@ class MapViewModel : BaseViewModel() {
         navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
 
     }
+
     fun showMap() {
         viewModelScope.launch(Dispatchers.Main) {
 
@@ -171,5 +162,4 @@ class MapViewModel : BaseViewModel() {
             FilterMeetingsFragment::class.qualifiedName
         )
     }
-    
 }
