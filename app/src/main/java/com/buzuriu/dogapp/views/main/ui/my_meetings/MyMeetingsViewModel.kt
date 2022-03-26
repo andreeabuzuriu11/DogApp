@@ -6,7 +6,9 @@ import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
 import com.buzuriu.dogapp.views.AddMeetingActivity
+import com.buzuriu.dogapp.views.MyMeetingDetailActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -27,7 +29,8 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     private fun selectedMeeting(meeting: MyCustomMeetingObj)
     {
-
+        dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, meeting)
+        navigationService.navigateToActivity(MyMeetingDetailActivity::class.java)
     }
 
     fun addMeeting()

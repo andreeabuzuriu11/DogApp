@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp">
+
+        <LinearLayout
+            android:id="@+id/dog_profile_linear_layout"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/dogProfileImage"
+                cb_dogImg="@{viewModel.myCustomMeetingObj.dog}"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_dog_svgrepo_com" />
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:textAlignment="center"
+                android:padding="10dp"
+                android:text="@{viewModel.myCustomMeetingObj.dog.name}"
+                android:hint="dog_name"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_below="@+id/dog_profile_linear_layout"
+            android:id="@+id/meeting_date_linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/date"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/meeting_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                cb_meetingDate="@{viewModel.myCustomMeetingObj.meetingObj.date}"
+                android:hint="@string/date"
+                android:padding="10dp"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/meeting_time_linear_layout"
+            android:layout_below="@+id/meeting_date_linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/time"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/meeting_time"
+                android:layout_width="230dp"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:hint="@string/time"
+                cb_meetingTime="@{viewModel.myCustomMeetingObj.meetingObj.date}"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <fragment
+            android:layout_below="@+id/meeting_time_linear_layout"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"/>
+
+
+    </RelativeLayout>
+</layout>

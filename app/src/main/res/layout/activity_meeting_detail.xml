@@ -292,11 +292,11 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
+                        cb_dogImg="@{viewModel.myCustomMeetingObj.dog}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_below="@+id/rating"
                         android:layout_centerInParent="true"
-                        cb_dogImg="@{viewModel.myCustomMeetingObj.dog}"
                         android:src="@drawable/ic_dog_svgrepo_com" />
 
 

@@ -122,7 +122,7 @@ class MapViewModel : BaseViewModel() {
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
-        var allMeetings: ArrayList<MeetingObj>? = databaseService.fetchMeetingsByFilters(filters)
+        val allMeetings: ArrayList<MeetingObj>? = databaseService.fetchMeetingsByFilters(filters)
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
@@ -139,7 +139,6 @@ class MapViewModel : BaseViewModel() {
     private fun selectedMeeting(myCustomMeetingObj: MyCustomMeetingObj) {
         dataExchangeService.put(MeetingDetailViewModel::class.java.name, myCustomMeetingObj)
         navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
-
     }
 
     fun showMap() {
