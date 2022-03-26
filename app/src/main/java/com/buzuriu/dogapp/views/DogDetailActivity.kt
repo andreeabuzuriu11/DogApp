@@ -16,10 +16,6 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
         binding.viewModel =  mViewModel
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_edit, menu)

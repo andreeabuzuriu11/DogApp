@@ -1,6 +1,8 @@
 package com.buzuriu.dogapp.views
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityMyMeetingDetailBinding
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
@@ -32,6 +34,26 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
             .commit()
 
         mapFragment.getMapAsync(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_edit, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id: Int = item.getItemId()
+        if (id == R.id.edit) {
+            mViewModel.editMeeting()
+            return true
+        }
+        if(id == R.id.delete)
+        {
+            mViewModel.deleteMeeting()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onMapReady(p0: GoogleMap) {

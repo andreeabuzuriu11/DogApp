@@ -76,4 +76,9 @@
     <string name="search">Search</string>
     <string name="account">Account</string>
     <string name="phone">Phone</string>
+    <string name="change_time">Change time</string>
+    <string name="change_date">Change date</string>
+    <string name="change_location">Change location</string>
+    <string name="change_dog">Change dog</string>
+    <string name="edit">Edit</string>
 </resources>
