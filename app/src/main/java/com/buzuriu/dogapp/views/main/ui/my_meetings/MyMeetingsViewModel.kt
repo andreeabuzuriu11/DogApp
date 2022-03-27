@@ -3,7 +3,6 @@ package com.buzuriu.dogapp.views.main.ui.my_meetings
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.MyMeetingAdapter
 import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
@@ -30,7 +29,7 @@ class MyMeetingsViewModel : BaseViewModel() {
     private fun selectedMeeting(meeting: MyCustomMeetingObj)
     {
         dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, meeting)
-        navigationService.navigateToActivity(MyMeetingDetailActivity::class.java)
+        navigationService.navigateToActivity(MyMeetingDetailActivity::class.java, false)
     }
 
     fun addMeeting()

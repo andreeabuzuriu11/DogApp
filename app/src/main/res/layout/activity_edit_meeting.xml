@@ -36,12 +36,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/change_time" />
+
                     <TimePicker
                         android:id="@+id/timePicker"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:timePickerMode="spinner"
-                        />
+                        cb_getTime="@{viewModel.calendar}"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -54,7 +55,8 @@
                         android:layout_height="0dp"
                         android:layout_weight="4"
                         android:calendarViewShown="false"
-                        android:datePickerMode="spinner" />
+                        android:datePickerMode="spinner"
+                        cb_getDate="@{viewModel.calendar}"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -65,43 +67,8 @@
                     <com.buzuriu.dogapp.components.MapWithPin
                         android:id="@+id/map_with_pin"
                         android:layout_width="match_parent"
+                        cb_getPosition = "@={viewModel.myLatLng}"
                         android:layout_height="300dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/change_dog"
-                        android:layout_marginTop="20dp"/>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/dogImage"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            />
-
-                        <Button
-                            android:id="@+id/add_dog"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:text="@string/selectButton" />
-
-                        <TextView
-                            android:id="@+id/selectDogTextView"
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="60dp"
-                            android:hint="@string/dog"
-                            android:textSize="18sp" />
-
-
-                    </RelativeLayout>
-
 
                 </LinearLayout>
 

@@ -19,6 +19,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
 
     fun editMeeting()
     {
+        dataExchangeService.put(EditMeetingViewModel::class.java.name, myCustomMeetingObj.value!!)
         navigationService.navigateToActivity(EditMeetingActivity::class.java)
     }
 

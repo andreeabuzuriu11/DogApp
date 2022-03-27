@@ -42,7 +42,6 @@ class AddMeetingActivity :
         mapView!!.setMapBundle(mapViewBundle)
         mapView!!.getMapAsync()
         lifecycle.addObserver(mapView!!)
-
     }
 
     private fun restrictDatePicker()
