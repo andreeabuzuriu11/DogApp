@@ -30,7 +30,7 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     override fun onResume()
     {
-        var isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.java.name)
+        val isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.java.name)
         if (isRefreshNeeded != null && isRefreshNeeded == true)
         {
             meetingsList.clear()

@@ -31,6 +31,8 @@ interface IDatabaseService {
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
                            onCompleteListener: IOnCompleteListener)
+    suspend fun deleteMeeting(meetingUid: String,
+                          onCompleteListener: IOnCompleteListener)
 }
 
 class DatabaseService : IDatabaseService {
@@ -175,7 +177,7 @@ class DatabaseService : IDatabaseService {
         return meetingsList
     }
 
-    override suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj>? {
+    override suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
@@ -203,7 +205,7 @@ class DatabaseService : IDatabaseService {
         return meetingsList
     }
 
-    override suspend fun fetchDogMeetings(dogUid: String): ArrayList<MeetingObj>? {
+    override suspend fun fetchDogMeetings(dogUid: String): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
@@ -236,7 +238,7 @@ class DatabaseService : IDatabaseService {
         val start = Calendar.getInstance()
         val end = Calendar.getInstance()
 
-        var query: Task<QuerySnapshot>?
+        val query: Task<QuerySnapshot>?
 
         start.timeInMillis = System.currentTimeMillis()
         end.time = Calendar.getInstance().time
@@ -245,69 +247,62 @@ class DatabaseService : IDatabaseService {
         end[Calendar.SECOND] = 59
         end[Calendar.MILLISECOND] = 999
 
-        if (filterType.name == "Today") {
-            // all options for today are already selected above
-        }
-
-        else if (filterType.name == "Tomorrow") {
-            start.time = Calendar.getInstance().time
-            start.add(Calendar.DATE, 1)
-            start[Calendar.HOUR_OF_DAY] = 0
-            start[Calendar.MINUTE] = 0
-            start[Calendar.SECOND] = 0
-            start[Calendar.MILLISECOND] = 0
-
-            end.add(Calendar.DATE, 1)
-        }
-
-        else if (filterType.name == "This week") {
-            start.time = Calendar.getInstance().time
-            start[Calendar.HOUR_OF_DAY] = 0
-            start[Calendar.MINUTE] = 0
-            start[Calendar.SECOND] = 0
-
-            var todayAsDayOfWeek = Calendar.DAY_OF_WEEK
-            var daysTillSunday = 7 - todayAsDayOfWeek
-            end.add(Calendar.DATE, daysTillSunday)
-        }
-
-        else if (filterType.name == "This month") {
-            end.add(Calendar.MONTH, 1);
-            end.set(Calendar.DAY_OF_MONTH, 1);
-            end.add(Calendar.DATE, -1);
-        }
-
-        else if (filterType.name == "Next week") {
-            start.time = Calendar.getInstance().time
-            start.add(Calendar.WEEK_OF_MONTH, 1)
-            start[Calendar.DAY_OF_WEEK] = 1
-            start[Calendar.HOUR_OF_DAY] = 0
-            start[Calendar.MINUTE] = 0
-            start[Calendar.SECOND] = 0
-            start[Calendar.MILLISECOND] = 0
-
-            end.timeInMillis = System.currentTimeMillis()
-            end.add(Calendar.WEEK_OF_MONTH, 1)
-            end[Calendar.DAY_OF_WEEK] = 7
-        }
-
-        else if (filterType.name == "Next month") {
-            start.time = Calendar.getInstance().time
-            start.add(Calendar.MONTH, 1)
-            start[Calendar.DAY_OF_MONTH] = 1
-            start[Calendar.HOUR_OF_DAY] = 0
-            start[Calendar.MINUTE] = 0
-            start[Calendar.SECOND] = 0
-            start[Calendar.MILLISECOND] = 0
-
-            end.timeInMillis = System.currentTimeMillis()
-            end.add(Calendar.MONTH, 2);
-            end.set(Calendar.DAY_OF_MONTH, 1);
-            end.add(Calendar.DATE, -1);
-        }
-        else {
-            query = meetingsQuery!!
-                .whereLessThan("date", System.currentTimeMillis()).get()
+        when (filterType.name) {
+            "Today" -> {
+                // all options for today are already selected above
+            }
+            "Tomorrow" -> {
+                start.time = Calendar.getInstance().time
+                start.add(Calendar.DATE, 1)
+                start[Calendar.HOUR_OF_DAY] = 0
+                start[Calendar.MINUTE] = 0
+                start[Calendar.SECOND] = 0
+                start[Calendar.MILLISECOND] = 0
+    
+                end.add(Calendar.DATE, 1)
+            }
+            "This week" -> {
+                start.time = Calendar.getInstance().time
+                start[Calendar.HOUR_OF_DAY] = 0
+                start[Calendar.MINUTE] = 0
+                start[Calendar.SECOND] = 0
+    
+                val todayAsDayOfWeek = Calendar.DAY_OF_WEEK
+                val daysTillSunday = 7 - todayAsDayOfWeek
+                end.add(Calendar.DATE, daysTillSunday)
+            }
+            "This month" -> {
+                end.add(Calendar.MONTH, 1)
+                end.set(Calendar.DAY_OF_MONTH, 1)
+                end.add(Calendar.DATE, -1)
+            }
+            "Next week" -> {
+                start.time = Calendar.getInstance().time
+                start.add(Calendar.WEEK_OF_MONTH, 1)
+                start[Calendar.DAY_OF_WEEK] = 1
+                start[Calendar.HOUR_OF_DAY] = 0
+                start[Calendar.MINUTE] = 0
+                start[Calendar.SECOND] = 0
+                start[Calendar.MILLISECOND] = 0
+    
+                end.timeInMillis = System.currentTimeMillis()
+                end.add(Calendar.WEEK_OF_MONTH, 1)
+                end[Calendar.DAY_OF_WEEK] = 7
+            }
+            "Next month" -> {
+                start.time = Calendar.getInstance().time
+                start.add(Calendar.MONTH, 1)
+                start[Calendar.DAY_OF_MONTH] = 1
+                start[Calendar.HOUR_OF_DAY] = 0
+                start[Calendar.MINUTE] = 0
+                start[Calendar.SECOND] = 0
+                start[Calendar.MILLISECOND] = 0
+    
+                end.timeInMillis = System.currentTimeMillis()
+                end.add(Calendar.MONTH, 2)
+                end.set(Calendar.DAY_OF_MONTH, 1)
+                end.add(Calendar.DATE, -1)
+            }
         }
 
         query = meetingsQuery!!
@@ -358,12 +353,11 @@ class DatabaseService : IDatabaseService {
                 is FilterByDogBreedObj -> {
                     setDogBreedTypeQuery(it)
                 }
-
             }
         }
     }
 
-    override suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>): ArrayList<MeetingObj>? {
+    override suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
 
         meetingsQuery =
@@ -374,7 +368,7 @@ class DatabaseService : IDatabaseService {
         val allTasks =
             Tasks.whenAllSuccess<QuerySnapshot>(tasksList)
 
-        allTasks.addOnSuccessListener {
+        allTasks.addOnSuccessListener { it ->
 
             for (meetingDocSnapshot in it) {
                 for (querySnapshot in meetingDocSnapshot) {
@@ -408,6 +402,17 @@ class DatabaseService : IDatabaseService {
             .document(userUid)
             .collection(dogInfoCollection)
             .document(dogUid).delete()
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun deleteMeeting(
+        meetingUid: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        firestore.collection(meetingsCollection)
+            .document(meetingUid)
+            .delete()
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }

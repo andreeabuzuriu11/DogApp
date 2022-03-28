@@ -1,16 +1,17 @@
 package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.listeners.IClickListener
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.utils.MapUtils
-import com.buzuriu.dogapp.views.AddMeetingActivity
 import com.buzuriu.dogapp.views.EditMeetingActivity
-import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 
 class MyMeetingDetailViewModel : BaseViewModel() {
@@ -24,19 +25,18 @@ class MyMeetingDetailViewModel : BaseViewModel() {
 
     override fun onResume()
     {
-        var editedMeeting: MyCustomMeetingObj? =
+        val editedMeeting: MyCustomMeetingObj =
             dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name) ?: return
-        myCustomMeetingObj.value = editedMeeting!!
+        myCustomMeetingObj.value = editedMeeting
         editOldMeeting()
         myLatLng.value = MapUtils.getLatLngFromGeoPoint(editedMeeting.meetingObj?.location!!)
-        dataExchangeService.put(MyMeetingsViewModel::class.java.name!!,true)
-
+        dataExchangeService.put(MyMeetingsViewModel::class.java.name,true)
     }
 
-    fun editOldMeeting()
+    private fun editOldMeeting()
     {
-        var myMeetingsList = localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
-        if (myMeetingsList == null) return
+        val myMeetingsList = localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+            ?: return
         if(myMeetingsList.any { it.meetingObj!!.uid == myCustomMeetingObj.value!!.meetingObj!!.uid})
         {
             val oldMeeting = myMeetingsList.find { it.meetingObj!!.uid  == myCustomMeetingObj.value!!.meetingObj!!.uid}
@@ -54,7 +54,28 @@ class MyMeetingDetailViewModel : BaseViewModel() {
 
     fun deleteMeeting()
     {
-
+        dialogService.showAlertDialog("Delete meeting?", "Are you sure you want to delete meeting with ${myCustomMeetingObj.value!!.dog!!.name}? This action cannot be undone.", "Yes, delete it", object :
+            IClickListener {
+            override fun clicked() {
+                deleteMeetingFromDatabase()
+                dataExchangeService.put(MyMeetingsViewModel::class.java.name, true) // is refresh list needed
+            }
+        })
     }
 
+    fun deleteMeetingFromDatabase()
+    {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseService.deleteMeeting(myCustomMeetingObj.value!!.meetingObj!!.uid!!, object : IOnCompleteListener
+            {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                        val allMyMeetingsList =
+                            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+                        allMyMeetingsList!!.remove<MyCustomMeetingObj>(myCustomMeetingObj.value!!)
+                        localDatabaseService.add("localMeetingsList", allMyMeetingsList)
+                        navigationService.closeCurrentActivity()
+                }
+            })
+        }
+    }
 }

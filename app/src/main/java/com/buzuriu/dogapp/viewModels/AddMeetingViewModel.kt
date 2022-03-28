@@ -8,11 +8,11 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
-import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.GeoPoint
@@ -28,7 +28,7 @@ class AddMeetingViewModel : BaseViewModel() {
     var datePickerCalendar = MutableLiveData<Calendar>()
     var timePickerCalendar = MutableLiveData<Calendar>()
     var position = MutableLiveData<LatLng>()
-    var meetingInUtc = Calendar.getInstance()
+    var meetingInUtc: Calendar = Calendar.getInstance()
     var location = GeoPoint(0.0,0.0)
 
     init {
@@ -80,7 +80,7 @@ class AddMeetingViewModel : BaseViewModel() {
 
         val userGender = localDatabaseService.get<UserInfo>("currentUser")!!.gender
 
-        var meetingUid = StringUtils.getRandomUID()
+        val meetingUid = StringUtils.getRandomUID()
 
         ShowLoadingView(true)
 
@@ -94,6 +94,8 @@ class AddMeetingViewModel : BaseViewModel() {
                     if (successful) {
                         viewModelScope.launch(Dispatchers.Main) {
                             dialogService.showSnackbar(R.string.added_success_message_meeting)
+                            dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, true)
+                            addMeetingToLocalDatabase(newMeeting)
                             delay(2000)
                             navigationService.closeCurrentActivity()
                         }
@@ -112,9 +114,15 @@ class AddMeetingViewModel : BaseViewModel() {
         }
     }
 
-    fun addMeetingToLocalDb(meeting: MeetingObj)
+    private fun addMeetingToLocalDatabase(meetingObj: MeetingObj)
     {
-        localDatabaseService.add("newMeeting", meeting)
+        val user = localDatabaseService.get<UserInfo>("currentUser")!!
+        var myCustomMeetingObj = MyCustomMeetingObj(meetingObj, user, dog.value!!)
+
+        val myMeetingsList = localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+            ?: return
+        myMeetingsList.add(myCustomMeetingObj)
+        localDatabaseService.add("localMeetingsList", myMeetingsList)
     }
 
     override fun onResume() {
