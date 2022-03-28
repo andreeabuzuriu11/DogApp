@@ -91,6 +91,7 @@ class EditMeetingViewModel : BaseViewModel() {
                     {
                         viewModelScope.launch(Dispatchers.Main) {
                             dialogService.showSnackbar("Edited successful")
+                            dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, myCustomMeetingObj!!)
                             delay(2000)
                             navigationService.closeCurrentActivity()
                         }

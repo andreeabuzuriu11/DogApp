@@ -5,9 +5,11 @@ import com.buzuriu.dogapp.adapters.MyMeetingAdapter
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.viewModels.DogDetailViewModel
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
 import com.buzuriu.dogapp.views.AddMeetingActivity
 import com.buzuriu.dogapp.views.MyMeetingDetailActivity
+import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -24,6 +26,20 @@ class MyMeetingsViewModel : BaseViewModel() {
 
         meetingAdapter = MyMeetingAdapter(meetingsList, ::selectedMeeting)
         meetingAdapter!!.notifyDataSetChanged()
+    }
+
+    override fun onResume()
+    {
+        var isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.java.name)
+        if (isRefreshNeeded != null && isRefreshNeeded == true)
+        {
+            meetingsList.clear()
+            val meetingsFromLocalDB = localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+            if (meetingsFromLocalDB != null) {
+                meetingsList.addAll(meetingsFromLocalDB)
+            }
+            meetingAdapter!!.notifyDataSetChanged()
+        }
     }
 
     private fun selectedMeeting(meeting: MyCustomMeetingObj)

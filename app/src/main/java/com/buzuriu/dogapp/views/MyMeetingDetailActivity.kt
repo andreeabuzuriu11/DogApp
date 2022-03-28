@@ -15,7 +15,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, ActivityMyMeetingDetailBinding>(
-    MyMeetingDetailViewModel::class.java), OnMapReadyCallback {
+    MyMeetingDetailViewModel::class.java), OnMapReadyCallback{
 
     override val layoutId: Int
         get() = R.layout.activity_my_meeting_detail
@@ -26,6 +26,18 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val mapFragment = SupportMapFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.map, mapFragment)
+            .commit()
+
+        mapFragment.getMapAsync(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager
