@@ -37,6 +37,9 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <activity
+            android:name=".views.MeetingsOnMapActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.AddMeetingActivity"
             android:exported="false" />
         <activity

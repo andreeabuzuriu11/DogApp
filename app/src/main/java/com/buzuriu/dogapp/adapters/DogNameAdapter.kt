@@ -3,12 +3,8 @@ package com.buzuriu.dogapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.buzuriu.dogapp.databinding.BreedCellBinding
-import com.buzuriu.dogapp.databinding.DogCellBinding
 import com.buzuriu.dogapp.databinding.DogNameCellBinding
-import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.viewModels.SelectBreedViewModel
 import com.buzuriu.dogapp.viewModels.SelectDogViewModel
 
 class DogNameAdapter(var dogsList : ArrayList<DogObj>,

@@ -4,12 +4,16 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
+import com.buzuriu.dogapp.viewModels.MeetingsOnMapViewModel
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
 import com.buzuriu.dogapp.views.MeetingDetailActivity
+import com.buzuriu.dogapp.views.MeetingsOnMapActivity
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -21,6 +25,7 @@ class MapViewModel : BaseViewModel() {
     var filtersList = ArrayList<IFilterObj>()
     var filterAdapter: FilterAdapter?
     var breedsList = ArrayList<String>()
+    var locationPoints = ArrayList<LatLng>()
 
     init{
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting)
@@ -41,7 +46,7 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
-    fun getAllDogBreeds()
+    private fun getAllDogBreeds()
     {
         for (meeting in meetingsList)
         {
@@ -49,6 +54,16 @@ class MapViewModel : BaseViewModel() {
             breedsList.add(meeting.dog!!.breed)
         }
         localDatabaseService.add(FilterMeetingsViewModel::class.java.name, breedsList)
+    }
+
+    fun getAllMeetingsLocation()
+    {
+        for (meeting in meetingsList)
+        {
+            var latLng = MapUtils.getLatLngFromGeoPoint(meeting.meetingObj!!.location!!)
+            locationPoints.add(latLng)
+        }
+        dataExchangeService.put(MeetingsOnMapViewModel::class.java.name, locationPoints)
     }
 
     private suspend fun fetchAllMeetings()
@@ -60,6 +75,7 @@ class MapViewModel : BaseViewModel() {
                 meetingsList.clear()
                 meetingsList.addAll(list)
                 getAllDogBreeds()
+                getAllMeetingsLocation()
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
             }
@@ -149,6 +165,7 @@ class MapViewModel : BaseViewModel() {
                 dialogService.showSnackbar("Location permission needed")
                 return@launch
             }
+            navigationService.navigateToActivity(MeetingsOnMapActivity::class.java)
         }
     }
 

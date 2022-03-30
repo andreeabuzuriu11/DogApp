@@ -89,8 +89,8 @@
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
                             android:hint="@string/breedHint"
-                            android:text="@{viewModel.myCustomMeetingObj.dog.breed}"
                             android:padding="10dp"
+                            android:text="@{viewModel.myCustomMeetingObj.dog.breed}"
                             android:textSize="20sp" />
                     </LinearLayout>
 
@@ -179,8 +179,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/name_hint"
-                            android:text="@{viewModel.myCustomMeetingObj.user.name}"
                             android:padding="10dp"
+                            android:text="@{viewModel.myCustomMeetingObj.user.name}"
                             android:textSize="20sp" />
 
 
@@ -203,8 +203,8 @@
                             android:id="@+id/user_gender"
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
                             android:hint="@string/gender"
+                            android:padding="10dp"
                             android:text="@{viewModel.myCustomMeetingObj.user.gender}"
                             android:textSize="20sp" />
                     </LinearLayout>
@@ -236,9 +236,9 @@
 
                         <TextView
                             android:id="@+id/meeting_date"
+                            cb_meetingDate="@{viewModel.myCustomMeetingObj.meetingObj.date}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            cb_meetingDate="@{viewModel.myCustomMeetingObj.meetingObj.date}"
                             android:hint="@string/date"
                             android:padding="10dp"
                             android:textSize="20sp" />
@@ -261,20 +261,19 @@
 
                         <TextView
                             android:id="@+id/meeting_time"
+                            cb_meetingTime="@{viewModel.myCustomMeetingObj.meetingObj.date}"
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
-                            android:padding="10dp"
                             android:hint="@string/time"
-                            cb_meetingTime="@{viewModel.myCustomMeetingObj.meetingObj.date}"
+                            android:padding="10dp"
                             android:textSize="20sp" />
                     </LinearLayout>
 
                     <fragment
-                        android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:id="@+id/map"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
                         android:layout_width="match_parent"
-                        android:layout_height="300dp"/>
-
+                        android:layout_height="300dp" />
 
 
                 </LinearLayout>

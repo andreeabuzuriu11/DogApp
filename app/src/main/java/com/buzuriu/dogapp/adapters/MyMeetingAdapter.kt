@@ -3,13 +3,9 @@ package com.buzuriu.dogapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.buzuriu.dogapp.databinding.MeetingCellBinding
 import com.buzuriu.dogapp.databinding.MyMeetingCellBinding
-import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.UserInfo
 import kotlin.reflect.KFunction1
-import kotlin.reflect.KFunction3
 
 class MyMeetingAdapter(var myMeetingList: ArrayList<MyCustomMeetingObj>, var mySelectedMeeting: KFunction1<MyCustomMeetingObj, Unit>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(){

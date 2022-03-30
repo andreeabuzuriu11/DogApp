@@ -1,13 +1,11 @@
 package com.buzuriu.dogapp.bindingadapters
 
 import android.os.Build
-import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
-import java.sql.Time
 import java.util.*
 
 object TimePickerBindingAdapter {
