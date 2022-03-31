@@ -27,7 +27,7 @@ class MapViewModel : BaseViewModel() {
     var breedsList = ArrayList<String>()
     var locationPoints = ArrayList<LatLng>()
 
-    init{
+    init {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting)
         filterAdapter = FilterAdapter(filtersList)
         filtersList.clear()
@@ -35,7 +35,6 @@ class MapViewModel : BaseViewModel() {
         viewModelScope.launch {
             fetchAllMeetings()
         }
-
     }
 
     override fun onResume() {
@@ -56,21 +55,22 @@ class MapViewModel : BaseViewModel() {
         localDatabaseService.add(FilterMeetingsViewModel::class.java.name, breedsList)
     }
 
-    fun getAllMeetingsLocation()
+    private fun getAllMeetingsLocation()
     {
         for (meeting in meetingsList)
         {
             var latLng = MapUtils.getLatLngFromGeoPoint(meeting.meetingObj!!.location!!)
             locationPoints.add(latLng)
         }
-        dataExchangeService.put(MeetingsOnMapViewModel::class.java.name, locationPoints)
+        localDatabaseService.add("locationPoints", locationPoints)
     }
 
     private suspend fun fetchAllMeetings()
     {
+        ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             var list = fetchAllMeetingsFromDatabase()
-
+            ShowLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
                 meetingsList.addAll(list)

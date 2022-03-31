@@ -4,10 +4,10 @@ import com.google.android.gms.maps.model.LatLng
 
 class MeetingsOnMapViewModel : BaseViewModel() {
 
-    var locationMeetings  = ArrayList<LatLng>()
+    var locationMeetings : ArrayList<LatLng>? = ArrayList<LatLng>()
 
     init {
-        // locationMeetings = dataExchangeService.get<ArrayList<LatLng>>(this::class.java.name)!!
+        locationMeetings = localDatabaseService.get<ArrayList<LatLng>>("locationPoints")
     }
 
     fun close()

@@ -36,15 +36,13 @@ class MeetingsOnMapActivity : BaseBoundActivity<MeetingsOnMapViewModel, Fragment
     }
 
     override fun onMapReady(p0: GoogleMap) {
-      /*  for (point in mViewModel.locationMeetings)
+        for (point in mViewModel.locationMeetings!!)
         {
             p0.addMarker(
                 MarkerOptions()
                     .position(point)
                     .title("Meeting Point")
             )
-        }*/
-
+        }
     }
-
 }

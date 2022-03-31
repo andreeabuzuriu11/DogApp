@@ -29,5 +29,24 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/selected_filters_list" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_overlay"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="@{viewModel.isLoadingViewVisible ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"
+                android:layout_height="wrap_content">
+            </TextView>
+            <ProgressBar
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
     </RelativeLayout>
 </layout>
