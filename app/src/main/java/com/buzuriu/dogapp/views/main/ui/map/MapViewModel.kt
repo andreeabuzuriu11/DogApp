@@ -8,10 +8,9 @@ import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
-import com.buzuriu.dogapp.viewModels.MeetingsOnMapViewModel
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
 import com.buzuriu.dogapp.views.MeetingDetailActivity
-import com.buzuriu.dogapp.views.MeetingsOnMapActivity
+import com.buzuriu.dogapp.views.MeetingsOnMapFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
@@ -165,7 +164,12 @@ class MapViewModel : BaseViewModel() {
                 dialogService.showSnackbar("Location permission needed")
                 return@launch
             }
-            navigationService.navigateToActivity(MeetingsOnMapActivity::class.java)
+            navigationService.showOverlay(
+                OverlayActivity::class.java,
+                false,
+                OverlayActivity.fragmentClassNameParam,
+                MeetingsOnMapFragment::class.qualifiedName
+            )
         }
     }
 
