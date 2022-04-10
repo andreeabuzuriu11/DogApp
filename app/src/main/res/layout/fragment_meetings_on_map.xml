@@ -41,12 +41,12 @@
             android:layout_width="match_parent"
             android:layout_height="400dp" />
 
-        <SeekBar
-            android:layout_below="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
 
+        <com.buzuriu.dogapp.components.DistanceSeekBar
+            android:id="@+id/my_seek_bar"
+            android:layout_below="@+id/map"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
 
     </RelativeLayout>
 
