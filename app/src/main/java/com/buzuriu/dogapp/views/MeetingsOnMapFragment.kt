@@ -14,6 +14,7 @@ import android.widget.SeekBar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.InverseBindingListener
+import androidx.lifecycle.Observer
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentMeetingsOnMapBinding
 import com.buzuriu.dogapp.services.DialogService
@@ -29,12 +30,13 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, FragmentMeetingsOnMapBinding>(
     MeetingsOnMapViewModel::class.java) , OnMapReadyCallback{
-    
+
     private lateinit var locationListener: LocationListener
     private var locationManager : LocationManager? = null
     private var latitude : Double = 0.0
     private var longitude : Double = 0.0
     private var googleMap : GoogleMap? = null
+    var circle: Circle? = null
 
     override val layoutId: Int
         get() = R.layout.fragment_meetings_on_map
@@ -73,16 +75,21 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
         googleMap!!.uiSettings.isMyLocationButtonEnabled = true
 
         getLocation()
+
+        //set observable
+        try {
+            mViewModel.progress.observe(requireActivity(), Observer {
+                drawCircle(LatLng(latitude, longitude), it.toDouble() * 100)
+            })
+        } catch (e: java.lang.Exception) {
+            Log.d("Error", "Something went wrong: " + e.message)
+        }
     }
 
     private fun getLocation() {
-
         locationListener = LocationListener { location ->
             latitude = location.latitude
             longitude = location.longitude
-
-            Log.i("test", "Latitute: $latitude ; Longitute: $longitude")
-            drawCircle(LatLng(latitude, longitude))
         }
 
         if (context?.let {
@@ -107,7 +114,6 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_ACCESS_FINE_LOCATION) {
             when (grantResults[0]) {
                 PackageManager.PERMISSION_GRANTED -> getLocation()
@@ -120,23 +126,27 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
         private const val PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 100
     }
 
-    private fun drawCircle(point: LatLng) {
+    private fun drawCircle(point: LatLng, radius: Double) {
 
         // Instantiating CircleOptions to draw a circle around the marker
         val circleOptions = CircleOptions()
         // Specifying the center of the circle
         circleOptions.center(point)
         // Radius of the circle
-        circleOptions.radius(3000.0)
+        circleOptions.radius(radius)
         // Border color of the circle
-        circleOptions.strokeColor(Color.RED)
+        circleOptions.strokeColor(0x220000FF)
         // Fill color of the circle
         circleOptions.fillColor(0x220000FF)
         // Border width of the circle
         circleOptions.strokeWidth(2f)
         // Adding the circle to the GoogleMap
+        if (circle != null)
+        {
+            circle!!.remove()
+        }
 
-        googleMap!!.addCircle(circleOptions)
+        circle = googleMap!!.addCircle(circleOptions)
     }
 
 
