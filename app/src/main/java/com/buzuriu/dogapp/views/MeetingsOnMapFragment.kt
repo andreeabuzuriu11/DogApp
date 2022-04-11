@@ -10,8 +10,10 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.SeekBar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.databinding.InverseBindingListener
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentMeetingsOnMapBinding
 import com.buzuriu.dogapp.services.DialogService
@@ -27,8 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, FragmentMeetingsOnMapBinding>(
     MeetingsOnMapViewModel::class.java) , OnMapReadyCallback{
-
-    private var mCircle : Circle? = null
+    
     private lateinit var locationListener: LocationListener
     private var locationManager : LocationManager? = null
     private var latitude : Double = 0.0
@@ -103,8 +104,6 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
             0f,
             locationListener
         )
-
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -137,8 +136,9 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
         circleOptions.strokeWidth(2f)
         // Adding the circle to the GoogleMap
 
-
         googleMap!!.addCircle(circleOptions)
     }
+
+
 
 }
