@@ -11,44 +11,65 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/meetings_on_map_close"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentEnd="true"
-            android:onClick="@{()->viewModel.close()}"
-            android:src="@drawable/ic_baseline_close_24" />
-
-        <TextView
-            android:id="@+id/text_view_meetings_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/meetings_on_map_close"
-            android:layout_centerHorizontal="true"
-            android:text="@string/meetings"
-            android:textSize="24sp" />
-
-        <fragment
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/text_view_meetings_map"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_marginBottom="5dp"
-            android:layout_height="400dp" />
+            android:layout_height="match_parent">
 
 
-        <com.buzuriu.dogapp.components.DistanceSeekBar
-            android:id="@+id/distance_seek_bar"
-            cb_progress="@={viewModel.progress}"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/meetings_on_map_close"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentEnd="true"
+                    android:onClick="@{()->viewModel.close()}"
+                    android:src="@drawable/ic_baseline_close_24" />
+
+                <TextView
+                    android:id="@+id/text_view_meetings_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/meetings_on_map_close"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/filter_meetings"
+                    android:textSize="24sp" />
+
+                <com.buzuriu.dogapp.components.DistanceSeekBar
+                    android:id="@+id/distance_seek_bar"
+                    cb_progress="@={viewModel.progress}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/map" />
+
+
+                <fragment
+                    android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_below="@+id/text_view_meetings_map"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp" />
+            </RelativeLayout>
+
+        </ScrollView>
+
+        <Button
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/map" />
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@drawable/rounded_button"
+            android:text="@string/search"
+            android:textColor="@color/white" />
+
 
     </RelativeLayout>
-
 </layout>

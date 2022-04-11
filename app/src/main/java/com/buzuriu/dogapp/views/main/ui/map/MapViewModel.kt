@@ -117,13 +117,14 @@ class MapViewModel : BaseViewModel() {
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
         var allMeetings: ArrayList<MeetingObj>? = null
 
-        allMeetings = databaseService.fetchAllMeetings()
+        // currentUser uid as parameter, because we have to ignore that user when searching new meetings
+        allMeetings = databaseService.fetchAllOtherMeetings(currentUser!!.uid)
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
-                
+
                 val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
                 allCustomMeetings.add(meetingObj)
             }

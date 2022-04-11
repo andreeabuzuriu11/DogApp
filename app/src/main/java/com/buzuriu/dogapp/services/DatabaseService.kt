@@ -24,7 +24,7 @@ interface IDatabaseService {
     suspend fun fetchDogByUid(dogUid: String) : DogObj?
     suspend fun fetchUserByUid(userUid: String) : UserInfo?
     suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj>?
-    suspend fun fetchAllMeetings() : ArrayList<MeetingObj>?
+    suspend fun fetchAllOtherMeetings(userUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchDogMeetings(dogUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>) : ArrayList <MeetingObj>?
@@ -150,7 +150,7 @@ class DatabaseService : IDatabaseService {
         return dogList
     }
 
-    override suspend fun fetchAllMeetings() : ArrayList<MeetingObj> {
+    override suspend fun fetchAllOtherMeetings(userUid: String) : ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
@@ -166,7 +166,8 @@ class DatabaseService : IDatabaseService {
             for (meetingDocSnapshot in it) {
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
-                    meetingsList.add(meeting)
+                    if (meeting.userUid != userUid)
+                        meetingsList.add(meeting)
                 }
             }
         }
