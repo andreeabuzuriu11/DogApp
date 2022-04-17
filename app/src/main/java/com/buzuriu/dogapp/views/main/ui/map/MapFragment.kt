@@ -52,10 +52,11 @@ class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewM
         when(item.itemId)
         {
             R.id.show_on_map -> {
-                mViewModel.showMap()
-                Log.d("MapFragment", "Show on map")}
+                mViewModel.filterMeetingsByRadiusClicked()
+                Log.d("MapFragment", "Show on map")
+            }
             R.id.filter_list -> {
-                mViewModel.showFilters()
+                mViewModel.filterMeetingsByTypeOrTimeClicked()
                 Log.d("MapFragment", "Filter list")
             }
             R.id.search -> Log.d("MapFragment", "Search in list")

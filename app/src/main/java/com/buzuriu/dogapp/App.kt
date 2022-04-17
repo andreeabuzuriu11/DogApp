@@ -17,7 +17,7 @@ class App : Application() {
         single<IFirebaseAuthService> { FirebaseAuthService() }
         single<INavigationService> { NavigationService(get()) }
         single<IConnectivityService> { ConnectivityService(get())}
-        single<IDatabaseService> { DatabaseService()}
+        single<IDatabaseService> { DatabaseService(get())}
         single<IDataExchangeService> { DataExchangeService() }
         single<ISharedPreferencesService> { SharedPreferencesService(get()) }
         single<IAlertBuilderService> { AlertBuilderService(get())}

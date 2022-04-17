@@ -10,10 +10,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.buzuriu.dogapp.models.SharedPreferences
+import com.buzuriu.dogapp.utils.MapUtils
+import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
+
 
 interface IDatabaseService {
     val fireAuth: FirebaseAuth
@@ -24,10 +29,11 @@ interface IDatabaseService {
     suspend fun fetchDogByUid(dogUid: String) : DogObj?
     suspend fun fetchUserByUid(userUid: String) : UserInfo?
     suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj>?
+    suspend fun fetchMeetings(filtersList: ArrayList<IFilterObj>, userUid : String): ArrayList<MeetingObj>
     suspend fun fetchAllOtherMeetings(userUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchDogMeetings(dogUid: String) : ArrayList<MeetingObj>?
-    suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>) : ArrayList <MeetingObj>?
+    suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>, userUid : String) : ArrayList <MeetingObj>?
     suspend fun deleteDog(userUid: String,
                            dogUid: String,
                            onCompleteListener: IOnCompleteListener)
@@ -35,7 +41,8 @@ interface IDatabaseService {
                           onCompleteListener: IOnCompleteListener)
 }
 
-class DatabaseService : IDatabaseService {
+class DatabaseService(
+    private val sharedPreferencesService: ISharedPreferencesService) : IDatabaseService {
     override val fireAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val userInfoCollection = "UserInfo"
     private val dogInfoCollection = "Dog"
@@ -43,6 +50,7 @@ class DatabaseService : IDatabaseService {
     private var meetingsQuery: Query? = null
     private var tasksList = ArrayList<Task<QuerySnapshot>>()
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+
     override suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener) {
         firestore.collection(userInfoCollection)
             .document(userUid)
@@ -339,6 +347,40 @@ class DatabaseService : IDatabaseService {
         tasksList.add(query)
     }
 
+    private fun setMeetingsDistanceQuery(radiusInKM: Int) {
+        val myCurrentUserLocation =
+            sharedPreferencesService
+                .readFromSharedPref<LatLng>(
+                    SharedPreferences.userLocationKey,
+                    LatLng::class.java
+                )
+        if (myCurrentUserLocation == null) {
+            Log.d("Error", "Current User Location is null in SharedPref")
+        }
+
+        val center = LatLng(
+            myCurrentUserLocation!!.latitude,
+            myCurrentUserLocation.longitude
+        )
+        val greaterPoint = MapUtils.getGreaterPoint(radiusInKM, center)
+        val lesserPoint = MapUtils.getLesserPoint(radiusInKM, center)
+
+        val distanceQuery =
+            meetingsQuery?.whereGreaterThan(
+                "location",
+                GeoPoint(lesserPoint.latitude, lesserPoint.longitude)
+            )!!
+                .whereLessThan(
+                    "location",
+                    GeoPoint(
+                        greaterPoint.latitude,
+                        greaterPoint.longitude
+                    )
+                ).get()
+
+        tasksList.add(distanceQuery)
+    }
+
     private fun createFilterQuery(filtersList: ArrayList<IFilterObj>) {
         filtersList.forEach {
             when (it) {
@@ -354,11 +396,15 @@ class DatabaseService : IDatabaseService {
                 is FilterByDogBreedObj -> {
                     setDogBreedTypeQuery(it)
                 }
+                is FilterByLocationObj ->
+                {
+                    setMeetingsDistanceQuery(it.distance!!)
+                }
             }
         }
     }
 
-    override suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>): ArrayList<MeetingObj> {
+    override suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>, userUid : String): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
 
         meetingsQuery =
@@ -375,9 +421,12 @@ class DatabaseService : IDatabaseService {
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
 
-                    if (MeetingUtils.checkFiltersAreAllAccomplished(meeting, filters))
+                    if (MeetingUtils.checkFiltersAreAllAccomplished(meeting, filters,
+                            sharedPreferencesService.readFromSharedPref<LatLng>(
+                                SharedPreferences.userLocationKey, LatLng::class.java)))
                     {
-                        if(meetingsList.find { it.uid == meeting.uid }!=null)continue
+
+                        if(meetingsList.find { it.uid == meeting.uid }!=null || meeting.userUid == userUid)continue
                         meetingsList.add(meeting)
                     }
 
@@ -390,6 +439,24 @@ class DatabaseService : IDatabaseService {
             .addOnFailureListener { throw it }
 
         allTasks.await()
+
+        return meetingsList
+    }
+
+    override suspend fun fetchMeetings(
+        filtersList: ArrayList<IFilterObj>,
+        userUid : String
+    ): ArrayList<MeetingObj> {
+        val meetingsList: ArrayList<MeetingObj>
+        meetingsList = try {
+            if (filtersList.isNullOrEmpty()) {
+                fetchAllOtherMeetings(userUid)
+            } else {
+                fetchMeetingsByFilters(filtersList, userUid)
+            }
+        } catch (e: Exception) {
+            throw e
+        }
 
         return meetingsList
     }

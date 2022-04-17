@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
@@ -8,6 +9,7 @@ import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
+import com.buzuriu.dogapp.viewModels.MeetingsOnMapViewModel
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.MeetingsOnMapFragment
@@ -25,6 +27,7 @@ class MapViewModel : BaseViewModel() {
     var filterAdapter: FilterAdapter?
     var breedsList = ArrayList<String>()
     var locationPoints = ArrayList<LatLng>()
+    var lastViewModel : String? = null
 
     init {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting)
@@ -39,9 +42,10 @@ class MapViewModel : BaseViewModel() {
     override fun onResume() {
         super.onResume()
 
-        viewModelScope.launch {
-            fetchMeetingsByFilter()
-        }
+        checkRadiusFilter()
+        checkTypeAndTimeFilter()
+
+        lastViewModel = null
     }
 
     private fun getAllDogBreeds()
@@ -92,24 +96,84 @@ class MapViewModel : BaseViewModel() {
                 meetingAdapter!!.notifyDataSetChanged()
             }
         }
-
     }
 
-    private suspend fun fetchMeetingsByFilter()
-    {
-        val filterList =
-            dataExchangeService.get<ArrayList<IFilterObj>>(this::class.qualifiedName!!) ?: return
+    private fun checkTypeAndTimeFilter() {
+        if (lastViewModel.equals(FilterMeetingsViewModel::class.qualifiedName)) {
 
-        if (filterList.size == 0)
-            return
+            val filters =
+                dataExchangeService.get<ArrayList<IFilterObj>>(this::class.qualifiedName!!)
 
-        filtersList.clear()
-        dialogService.showSnackbar("your selected filter is " + filterList[0].name)
-        filtersList.addAll(filterList)
-        fetchMeetingsWithFilters(filtersList)
-        filterAdapter!!.notifyDataSetChanged()
+            Log.d("noi", "filters = $filters")
 
+            if (filters == null) return
+            removeFilterType<FilterByTimeObj>()
+            removeFilterType<FilterByDogBreedObj>()
+            removeFilterType<FilterByDogGenderObj>()
+            removeFilterType<FilterByUserGenderObj>()
+
+            dialogService.showSnackbar("your selected filter is " + filters[0].name)
+            filtersList.addAll(filters)
+            filterAdapter!!.notifyDataSetChanged()
+
+            applyFilters(filtersList)
+        }
     }
+
+    private fun checkRadiusFilter() {
+        if (lastViewModel.equals(MeetingsOnMapViewModel::class.qualifiedName)) {
+
+            val mapFilter =
+                dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!)
+
+            Log.d("noi", "mapFilter = $mapFilter")
+
+            if (mapFilter == null) return
+
+            removeFilterType<FilterByLocationObj>()
+
+            filtersList.add(mapFilter)
+            filterAdapter!!.notifyDataSetChanged()
+
+            dialogService.showSnackbar("your selected filter is " + mapFilter.name)
+            applyFilters(filtersList)
+        }
+    }
+
+    private fun applyFilters(filtersList : ArrayList<IFilterObj>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            fetchMeetingsWithFilters(filtersList)
+        }
+    }
+
+    fun filterMeetingsByTypeOrTimeClicked() {
+        lastViewModel = FilterMeetingsViewModel::class.qualifiedName
+        navigationService.showOverlay(
+            OverlayActivity::class.java,
+            false,
+            OverlayActivity.fragmentClassNameParam,
+            FilterMeetingsFragment::class.qualifiedName
+        )
+    }
+
+    fun filterMeetingsByRadiusClicked() {
+        viewModelScope.launch(Dispatchers.Main) {
+            val hasLocationPermission = askLocationPermission().await()
+            if (hasLocationPermission) {
+
+                lastViewModel = MeetingsOnMapViewModel::class.qualifiedName
+                navigationService.showOverlay(
+                    OverlayActivity::class.java,
+                    false,
+                    OverlayActivity.fragmentClassNameParam,
+                    MeetingsOnMapFragment::class.qualifiedName
+                )
+            } else {
+                dialogService.showSnackbar("Permission for location needed")
+            }
+        }
+    }
+
 
     private suspend fun fetchAllMeetingsFromDatabase() : ArrayList<MyCustomMeetingObj>{
         var user: UserInfo?
@@ -138,7 +202,7 @@ class MapViewModel : BaseViewModel() {
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
-        val allMeetings: ArrayList<MeetingObj>? = databaseService.fetchMeetingsByFilters(filters)
+        val allMeetings: ArrayList<MeetingObj>? = databaseService.fetchMeetingsByFilters(filters, currentUser!!.uid)
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
@@ -157,30 +221,12 @@ class MapViewModel : BaseViewModel() {
         navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
     }
 
-    fun showMap() {
-        viewModelScope.launch(Dispatchers.Main) {
-
-            val hasPermission = askLocationPermission().await()
-            if (!hasPermission) {
-                dialogService.showSnackbar("Location permission needed")
-                return@launch
+    private inline fun <reified T> removeFilterType() {
+        filtersList.forEach {
+            if (it is T) {
+                filtersList.remove(it)
+                return
             }
-            navigationService.showOverlay(
-                OverlayActivity::class.java,
-                false,
-                OverlayActivity.fragmentClassNameParam,
-                MeetingsOnMapFragment::class.qualifiedName
-            )
         }
-    }
-
-    fun showFilters()
-    {
-        navigationService.showOverlay(
-            OverlayActivity::class.java,
-            false,
-            OverlayActivity.fragmentClassNameParam,
-            FilterMeetingsFragment::class.qualifiedName
-        )
     }
 }

@@ -4,20 +4,14 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.SeekBar
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.databinding.InverseBindingListener
 import androidx.lifecycle.Observer
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentMeetingsOnMapBinding
-import com.buzuriu.dogapp.services.DialogService
 import com.buzuriu.dogapp.viewModels.MeetingsOnMapViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 import com.google.android.gms.maps.GoogleMap
@@ -79,7 +73,7 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
         //set observable
         try {
             mViewModel.progress.observe(requireActivity(), Observer {
-                drawCircle(LatLng(latitude, longitude), it.toDouble() * 100)
+                drawCircle(LatLng(latitude, longitude), it.toDouble() * 1000)
             })
         } catch (e: java.lang.Exception) {
             Log.d("Error", "Something went wrong: " + e.message)
@@ -90,6 +84,7 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
         locationListener = LocationListener { location ->
             latitude = location.latitude
             longitude = location.longitude
+            mViewModel.userCoordinates.value = LatLng(latitude, longitude)
         }
 
         if (context?.let {

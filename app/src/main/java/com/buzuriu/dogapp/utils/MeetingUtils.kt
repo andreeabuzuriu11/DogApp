@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.utils
 
 import com.buzuriu.dogapp.models.*
+import com.google.android.gms.maps.model.LatLng
 
 class MeetingUtils {
 
@@ -8,13 +9,15 @@ class MeetingUtils {
 
         fun checkFiltersAreAllAccomplished(
             meetingObj: MeetingObj,
-            filterList: ArrayList<IFilterObj>
+            filterList: ArrayList<IFilterObj>,
+            userLocation: LatLng?
         )
                 : Boolean {
             return dogGenderAccepted(meetingObj, filterList) &&
                     userGenderAccepted(meetingObj, filterList) &&
                     timeTypeAccepted(meetingObj, filterList) &&
-                    breedTypeAccepted(meetingObj, filterList)
+                    breedTypeAccepted(meetingObj, filterList) &&
+                    distanceAccepted(meetingObj, filterList, userLocation)
         }
 
         private fun dogGenderAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
@@ -51,6 +54,28 @@ class MeetingUtils {
                 return true
 
             return false
+        }
+
+        private fun distanceAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>,
+                                     userLocation: LatLng?) : Boolean
+        {
+            if(userLocation==null) return true
+
+            val filterType = checkFilterIsType<FilterByLocationObj>(filterList)
+            if (filterType == null) return true
+
+            val meetingCoords =
+                MapUtils.getLatLng(meetingObj.location!!.latitude, meetingObj.location!!.longitude)
+
+            if (MapUtils.getDistanceBetweenCoords(
+                    userLocation,
+                    meetingCoords) <= (filterType as FilterByLocationObj).distance!!
+            ) {
+                return true
+            }
+
+            return false
+
         }
 
         private inline fun <reified T>checkFilterIsType(filterList: ArrayList<IFilterObj>): T? {

@@ -34,7 +34,6 @@ class FilterMeetingsViewModel : BaseViewModel(){
             }
         }
         filterAdapterDogBreed = FilterAdapter(filterByDogBreedList, this)
-        refreshFilters()
     }
 
     private fun refreshFilters()
