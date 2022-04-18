@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.views.main.ui.map
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAdapter
+import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.MapUtils
@@ -24,14 +25,14 @@ class MapViewModel : BaseViewModel() {
     var meetingsList = ArrayList<MyCustomMeetingObj>()
     var meetingAdapter : MeetingAdapter?
     var filtersList = ArrayList<IFilterObj>()
-    var filterAdapter: FilterAdapter?
+    var filterAdapter: FilterAppliedAdapter?
     var breedsList = ArrayList<String>()
     var locationPoints = ArrayList<LatLng>()
     var lastViewModel : String? = null
 
     init {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting)
-        filterAdapter = FilterAdapter(filtersList)
+        filterAdapter = FilterAppliedAdapter(filtersList, this)
         filtersList.clear()
 
         viewModelScope.launch {
@@ -228,5 +229,24 @@ class MapViewModel : BaseViewModel() {
                 return
             }
         }
+    }
+
+    fun discardFilter(filterType : IFilterObj)
+    {
+        if (filtersList.size == 1) {
+            filtersList.clear()
+
+            viewModelScope.launch {
+                fetchAllMeetings()
+            }
+        }
+        else
+        {
+            filtersList.remove(filterType)
+
+
+            applyFilters(filtersList)
+        }
+        filterAdapter?.notifyDataSetChanged()
     }
 }

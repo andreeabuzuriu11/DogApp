@@ -39,7 +39,7 @@ class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewM
     private fun setupRecyclerViewForSelectedFilters()
     {
         val recyclerView = currentBinding.selectedFiltersList
-        recyclerView.layoutManager = GridLayoutManager(activity,3) /*LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)*/
+        recyclerView.layoutManager = GridLayoutManager(activity,2) /*LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)*/
         recyclerView.adapter = mViewModel.filterAdapter
     }
 
