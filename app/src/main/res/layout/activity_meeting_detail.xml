@@ -68,7 +68,6 @@
                             android:text="@{viewModel.myCustomMeetingObj.dog.name}"
                             android:textSize="20sp" />
 
-
                     </LinearLayout>
 
                     <LinearLayout

@@ -56,6 +56,7 @@
 
                 </LinearLayout>
 
+
                 <LinearLayout
                     android:layout_marginTop="15dp"
                     android:orientation="horizontal"
@@ -84,10 +85,10 @@
                         android:layout_weight="1"
                         android:layout_gravity="center"
                         android:textSize="26sp"
-
                         android:layout_height="wrap_content"
                         cb_meetingTime  = "@{meeting.meetingObj.date}"/>
                 </LinearLayout>
+
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

@@ -25,4 +25,12 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowAnimationStyle">@null</item>
     </style>
+
+    <style name="Button.Red" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@android:color/holo_red_dark</item>
+    </style>
+
+    <style name="Button.Green" parent="ThemeOverlay.AppCompat">
+        <item name="colorAccent">@android:color/holo_green_light</item>
+    </style>
 </resources>

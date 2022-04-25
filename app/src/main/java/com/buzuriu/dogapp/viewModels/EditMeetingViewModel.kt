@@ -16,13 +16,12 @@ import java.lang.Exception
 import java.util.*
 
 class EditMeetingViewModel : BaseViewModel() {
-    var myCustomMeetingObj : MyCustomMeetingObj? = null
+    var myCustomMeetingObj: MyCustomMeetingObj? = null
     var datePickerCalendar = MutableLiveData<Calendar>()
     var timePickerCalendar = MutableLiveData<Calendar>()
     var myLatLng = MutableLiveData<LatLng>()
-    var meetingInUtc = Calendar.getInstance()
-    var location = GeoPoint(0.0,0.0)
-
+    var location = GeoPoint(0.0, 0.0)
+    private var meetingInUtc: Calendar = Calendar.getInstance()
 
     init {
         myCustomMeetingObj = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)!!
@@ -30,8 +29,7 @@ class EditMeetingViewModel : BaseViewModel() {
             initFields()
     }
 
-    private fun getDateAndTimeOfMeeting()
-    {
+    private fun getDateAndTimeOfMeeting() {
         val year = datePickerCalendar.value!!.get(Calendar.YEAR)
         val month = datePickerCalendar.value!!.get(Calendar.MONTH)
         val day = datePickerCalendar.value!!.get(Calendar.DAY_OF_MONTH)
@@ -41,39 +39,33 @@ class EditMeetingViewModel : BaseViewModel() {
         meetingInUtc.set(year, month, day, hour, minute)
     }
 
-    private fun initFields()
-    {
+    private fun initFields() {
         val time: Long? = myCustomMeetingObj!!.meetingObj!!.date!!
         timePickerCalendar.value = longToCalendar(time)!!
         datePickerCalendar.value = longToCalendar(time)!!
         myLatLng.value = MapUtils.getLatLngFromGeoPoint(myCustomMeetingObj!!.meetingObj?.location!!)
     }
 
-    private fun longToCalendar(time : Long?) : Calendar?
-    {
-        var c : Calendar ?= null
-        if (time!=null)
-        {
+    private fun longToCalendar(time: Long?): Calendar? {
+        var c: Calendar? = null
+        if (time != null) {
             c = Calendar.getInstance()
             c.timeInMillis = time
         }
         return c
     }
 
-    private fun getCoordinate()
-    {
+    private fun getCoordinate() {
         val latitude = myLatLng.value!!.latitude
         val longitude = myLatLng.value!!.longitude
 
         location = GeoPoint(latitude, longitude)
     }
 
-
-    fun editMeeting()
-    {
+    fun editMeeting() {
         getCoordinate()
         getDateAndTimeOfMeeting()
-        myCustomMeetingObj!!.meetingObj =  MeetingObj(
+        myCustomMeetingObj!!.meetingObj = MeetingObj(
             myCustomMeetingObj!!.meetingObj?.uid!!,
             meetingInUtc.timeInMillis,
             location,
@@ -81,34 +73,37 @@ class EditMeetingViewModel : BaseViewModel() {
             currentUser!!.uid,
             myCustomMeetingObj!!.dog!!.gender,
             myCustomMeetingObj!!.dog!!.breed,
-            myCustomMeetingObj!!.user!!.gender!!
+            myCustomMeetingObj!!.user!!.gender!!,
+            myCustomMeetingObj!!.meetingObj!!.participants!!
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            databaseService.storeMeetingInfo(myCustomMeetingObj!!.meetingObj?.uid!!, myCustomMeetingObj!!.meetingObj!!, object : IOnCompleteListener {
-                override fun onComplete(successful: Boolean, exception: Exception?) {
-                    if (successful)
-                    {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            dialogService.showSnackbar("Edited successful")
-                            dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, myCustomMeetingObj!!)
-                            delay(2000)
-                            navigationService.closeCurrentActivity()
-                        }
-                    }
-                    else
-                    {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            if (!exception?.message.isNullOrEmpty())
-                                dialogService.showSnackbar(exception!!.message!!)
-                            else dialogService.showSnackbar(R.string.unknown_error)
-                        }
+            databaseService.storeMeetingInfo(
+                myCustomMeetingObj!!.meetingObj?.uid!!,
+                myCustomMeetingObj!!.meetingObj!!,
+                object : IOnCompleteListener {
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+                        if (successful) {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                dialogService.showSnackbar("Edited successful")
+                                dataExchangeService.put(
+                                    MyMeetingDetailViewModel::class.java.name,
+                                    myCustomMeetingObj!!
+                                )
+                                delay(2000)
+                                navigationService.closeCurrentActivity()
+                            }
+                        } else {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                if (!exception?.message.isNullOrEmpty())
+                                    dialogService.showSnackbar(exception!!.message!!)
+                                else dialogService.showSnackbar(R.string.unknown_error)
+                            }
 
+                        }
                     }
-                }
-            })
+                })
 
         }
     }
-
 }

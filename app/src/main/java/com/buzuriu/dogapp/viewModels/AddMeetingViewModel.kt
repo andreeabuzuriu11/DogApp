@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
-import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
@@ -28,8 +25,8 @@ class AddMeetingViewModel : BaseViewModel() {
     var datePickerCalendar = MutableLiveData<Calendar>()
     var timePickerCalendar = MutableLiveData<Calendar>()
     var position = MutableLiveData<LatLng>()
-    var meetingInUtc: Calendar = Calendar.getInstance()
-    var location = GeoPoint(0.0,0.0)
+    private var meetingInUtc: Calendar = Calendar.getInstance()
+    var location = GeoPoint(0.0, 0.0)
 
     init {
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
@@ -51,8 +48,7 @@ class AddMeetingViewModel : BaseViewModel() {
             )
     }
 
-    private fun getDateAndTimeOfMeeting()
-    {
+    private fun getDateAndTimeOfMeeting() {
         val year = datePickerCalendar.value!!.get(Calendar.YEAR)
         val month = datePickerCalendar.value!!.get(Calendar.MONTH)
         val day = datePickerCalendar.value!!.get(Calendar.DAY_OF_MONTH)
@@ -62,20 +58,18 @@ class AddMeetingViewModel : BaseViewModel() {
         meetingInUtc.set(year, month, day, hour, minute)
     }
 
-    private fun getCoordinate()
-    {
+    private fun getCoordinate() {
         val latitude = position.value!!.latitude
         val longitude = position.value!!.longitude
 
         location = GeoPoint(latitude, longitude)
     }
 
-    fun createMeeting()
-    {
+    fun createMeeting() {
         getDateAndTimeOfMeeting()
         getCoordinate()
 
-        if(!isDogSelected())
+        if (!isDogSelected())
             return
 
         val userGender = localDatabaseService.get<UserInfo>("currentUser")!!.gender
@@ -84,8 +78,10 @@ class AddMeetingViewModel : BaseViewModel() {
 
         ShowLoadingView(true)
 
-        val newMeeting = MeetingObj(meetingUid, meetingInUtc.timeInMillis, location, dog.value!!.uid, currentUser!!.uid,
-            dog.value!!.gender, dog.value!!.breed, userGender!!)
+        val newMeeting = MeetingObj(
+            meetingUid, meetingInUtc.timeInMillis, location, dog.value!!.uid, currentUser!!.uid,
+            dog.value!!.gender, dog.value!!.breed, userGender!!, ArrayList<ParticipantObj>()
+        )
         viewModelScope.launch(Dispatchers.IO) {
 
             databaseService.storeMeetingInfo(meetingUid, newMeeting, object : IOnCompleteListener {
@@ -114,13 +110,13 @@ class AddMeetingViewModel : BaseViewModel() {
         }
     }
 
-    private fun addMeetingToLocalDatabase(meetingObj: MeetingObj)
-    {
+    private fun addMeetingToLocalDatabase(meetingObj: MeetingObj) {
         val user = localDatabaseService.get<UserInfo>("currentUser")!!
-        var myCustomMeetingObj = MyCustomMeetingObj(meetingObj, user, dog.value!!)
+        val myCustomMeetingObj = MyCustomMeetingObj(meetingObj, user, dog.value!!)
 
-        val myMeetingsList = localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
-            ?: return
+        val myMeetingsList =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+                ?: return
         myMeetingsList.add(myCustomMeetingObj)
         localDatabaseService.add("localMeetingsList", myMeetingsList)
     }
@@ -132,10 +128,8 @@ class AddMeetingViewModel : BaseViewModel() {
         }
     }
 
-    private fun isDogSelected() : Boolean
-    {
-        if(dog.value == null)
-        {
+    private fun isDogSelected(): Boolean {
+        if (dog.value == null) {
             dialogService.showSnackbar("Please select a dog first!", Snackbar.LENGTH_LONG)
             return false
         }

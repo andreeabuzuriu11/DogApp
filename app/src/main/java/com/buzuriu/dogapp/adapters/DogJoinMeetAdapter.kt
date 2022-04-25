@@ -3,27 +3,28 @@ package com.buzuriu.dogapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.buzuriu.dogapp.databinding.DogNameCellBinding
+import com.buzuriu.dogapp.databinding.DogCellJoinMeetingBinding
 import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.viewModels.SelectDogViewModel
+import com.buzuriu.dogapp.viewModels.SelectDogForJoinMeetViewModel
 
-class DogNameAdapter(
+class DogJoinMeetAdapter(
     var dogsList: ArrayList<DogObj>,
-    private var viewModel: SelectDogViewModel? = null
+    private var viewModel: SelectDogForJoinMeetViewModel? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val applicationBinding =
-            DogNameCellBinding.inflate(layoutInflater, parent, false)
-        return DogNameCellViewHolder(applicationBinding)
+            DogCellJoinMeetingBinding.inflate(layoutInflater, parent, false)
+        return DogJoinMeetCellViewHolder(applicationBinding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val dogObj = dogsList[position]
-        (holder as DogNameAdapter.DogNameCellViewHolder).bind(dogObj)
+        (holder as DogJoinMeetAdapter.DogJoinMeetCellViewHolder).bind(dogObj)
     }
 
-    inner class DogNameCellViewHolder(private var applicationBinding: DogNameCellBinding) :
+    inner class DogJoinMeetCellViewHolder(private var applicationBinding: DogCellJoinMeetingBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(item: DogObj) {
             applicationBinding.dogItem = item
@@ -37,10 +38,5 @@ class DogNameAdapter(
 
     override fun getItemCount(): Int {
         return dogsList.size
-    }
-
-    fun filterList(auxList: ArrayList<DogObj>) {
-        dogsList = auxList
-        notifyDataSetChanged()
     }
 }

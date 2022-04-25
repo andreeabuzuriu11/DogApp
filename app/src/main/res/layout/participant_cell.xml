@@ -1,0 +1,59 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="participant"
+            type="com.buzuriu.dogapp.models.ParticipantObj" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <View
+            android:layout_above="@+id/participant_cell_layout"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey" />
+
+        <RelativeLayout
+            android:id="@+id/participant_cell_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="user name"
+                    android:text="@{participant.userUid}">
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="dog name"
+                    android:text="@{participant.dogUid}">
+                </TextView>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/participant_cell_layout"
+            android:background="@color/light_grey" />
+
+    </RelativeLayout>
+</layout>

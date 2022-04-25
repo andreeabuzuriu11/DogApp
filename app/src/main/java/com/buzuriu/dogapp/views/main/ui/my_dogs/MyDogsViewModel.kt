@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.views.main.ui.my_dogs
 
+import android.annotation.SuppressLint
 import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
@@ -10,9 +11,10 @@ import com.buzuriu.dogapp.views.DogDetailActivity
 import com.buzuriu.dogapp.views.auth.LoginActivity
 
 
+@SuppressLint("NotifyDataSetChanged")
 class MyDogsViewModel : BaseViewModel() {
 
-    var dogsList: ArrayList<DogObj> = ArrayList()
+    private var dogsList: ArrayList<DogObj> = ArrayList()
     var dogAdapter: DogAdapter?
 
     init {
@@ -27,9 +29,9 @@ class MyDogsViewModel : BaseViewModel() {
 
     override fun onResume() {
         super.onResume()
-        var isRefreshListNeeded: Boolean? =
+        val isRefreshListNeeded: Boolean? =
             dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
-        var dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+        val dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
         if (isRefreshListNeeded != null && isRefreshListNeeded) {
             dogsList.clear()
 
@@ -41,7 +43,6 @@ class MyDogsViewModel : BaseViewModel() {
 
     }
 
-
     private fun selectedDog(dogObj: DogObj) {
         dataExchangeService.put(DogDetailViewModel::class.java.name, dogObj)
         navigationService.navigateToActivity(DogDetailActivity::class.java, false)
@@ -51,8 +52,7 @@ class MyDogsViewModel : BaseViewModel() {
         navigationService.navigateToActivity(AddDogActivity::class.java, false)
     }
 
-    fun goToAccountDetails()
-    {
+    fun goToAccountDetails() {
         navigationService.navigateToActivity(AccountDetailActivity::class.java, false)
     }
 

@@ -1,6 +1,6 @@
-package com.buzuriu.dogapp.models;
+package com.buzuriu.dogapp.models
 
-import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.GeoPoint
 
 class MeetingObj {
     var uid: String? = null
@@ -11,11 +11,12 @@ class MeetingObj {
     var dogGender: String? = null
     var dogBreed: String? = null
     var userGender: String? = null
+    var participants: ArrayList<ParticipantObj>? = null
 
     constructor()
 
     constructor(uid: String, date:Long, location: GeoPoint, dogUid : String, userUid: String,
-                dogGender: String, dogBreed: String, userGender: String)
+                dogGender: String, dogBreed: String, userGender: String, participants: ArrayList<ParticipantObj>)
     {
         this.uid = uid
         this.date = date
@@ -25,5 +26,6 @@ class MeetingObj {
         this.dogGender = dogGender
         this.dogBreed = dogBreed
         this.userGender = userGender
+        participants.addAll(participants)
     }
 }

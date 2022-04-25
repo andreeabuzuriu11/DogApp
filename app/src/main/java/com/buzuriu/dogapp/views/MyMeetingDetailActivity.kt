@@ -3,6 +3,8 @@ package com.buzuriu.dogapp.views
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityMyMeetingDetailBinding
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
@@ -27,6 +29,10 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initParticipantList()
+
+        //TODO initMap
+
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager
             .beginTransaction()
@@ -39,6 +45,7 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
     override fun onResume() {
         super.onResume()
 
+        //TODO in method, check if it can be deleted
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager
             .beginTransaction()
@@ -55,7 +62,7 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id: Int = item.getItemId()
+        val id: Int = item.itemId
         if (id == R.id.edit) {
             mViewModel.editMeeting()
             return true
@@ -79,6 +86,13 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
         p0.setMinZoomPreference(10.0f)
         p0.setMaxZoomPreference(14.0f)
         p0.moveCamera(CameraUpdateFactory.newLatLng(coords))
+    }
+
+    private fun initParticipantList()
+    {
+        val partList = findViewById<RecyclerView>(R.id.participants_list)
+        partList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        partList.adapter = mViewModel.participantsAdapter
     }
 
 }

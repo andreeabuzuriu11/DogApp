@@ -5,10 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.MeetingCellBinding
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
+import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 import kotlin.reflect.KFunction1
 
-class MeetingAdapter(var meetingList: ArrayList<MyCustomMeetingObj>, var selectedMeeting: KFunction1<MyCustomMeetingObj, Unit>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class MeetingAdapter(
+    var meetingList: ArrayList<MyCustomMeetingObj>,
+    var selectedMeeting: KFunction1<MyCustomMeetingObj, Unit>,
+    private val viewModel: MapViewModel
+) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val applicationBinding =
@@ -27,13 +33,15 @@ class MeetingAdapter(var meetingList: ArrayList<MyCustomMeetingObj>, var selecte
         return meetingList.size
     }
 
-    inner class MeetingViewHolder(var applicationBinding: MeetingCellBinding) :
+    inner class MeetingViewHolder(private var applicationBinding: MeetingCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
-        fun bind(meeting : MyCustomMeetingObj)
-        {
+        fun bind(meeting: MyCustomMeetingObj) {
             applicationBinding.meeting = meeting
             applicationBinding.meetingCell.setOnClickListener {
                 selectedMeeting(meeting)
+            }
+            applicationBinding.joinButton.setOnClickListener {
+                viewModel.joinMeeting(meeting)
             }
         }
     }
