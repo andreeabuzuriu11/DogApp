@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.services
 import android.util.Log
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.DateUtils
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.maps.model.LatLng
@@ -14,7 +15,9 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
+import java.time.Month
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 interface IDatabaseService {
@@ -368,14 +371,28 @@ class DatabaseService(
                 end.add(Calendar.DATE, 1)
             }
             "This week" -> {
-                start.time = Calendar.getInstance().time
-                start[Calendar.HOUR_OF_DAY] = 0
-                start[Calendar.MINUTE] = 0
-                start[Calendar.SECOND] = 0
+                start.timeInMillis = System.currentTimeMillis()
+                end.timeInMillis = System.currentTimeMillis()
 
-                val todayAsDayOfWeek = Calendar.DAY_OF_WEEK
-                val daysTillSunday = 7 - todayAsDayOfWeek
-                end.add(Calendar.DATE, daysTillSunday)
+                end[Calendar.DAY_OF_WEEK] = Calendar.SUNDAY
+                end[Calendar.HOUR_OF_DAY] = 23
+                end[Calendar.MINUTE] = 59
+                end[Calendar.SECOND] = 59
+                end[Calendar.MILLISECOND] = 999
+
+               // end.add(Calendar.WEEK_OF_YEAR, 1)
+
+               /* val daysTillSunday = Calendar.SUNDAY - Calendar.DAY_OF_WEEK
+
+                end.timeInMillis+= daysTillSunday*7*24*60*60*1000*/
+
+
+                Log.d("MYTAG", "$start")
+                Log.d("MYTAG", "$end")
+
+     /*
+                end.add(Calendar.DAY_OF_WEEK, daysTillSunday)*/
+
             }
             "This month" -> {
                 end.add(Calendar.MONTH, 1)

@@ -30,15 +30,16 @@ class MyMeetingsViewModel : BaseViewModel() {
     }
 
     override fun onResume() {
-        val isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.java.name)
+        val isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
         if (isRefreshNeeded != null && isRefreshNeeded == true) {
             meetingsList.clear()
             val meetingsFromLocalDB =
                 localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+
             if (meetingsFromLocalDB != null) {
                 meetingsList.addAll(meetingsFromLocalDB)
+                meetingAdapter!!.notifyDataSetChanged()
             }
-            meetingAdapter!!.notifyDataSetChanged()
         }
     }
 

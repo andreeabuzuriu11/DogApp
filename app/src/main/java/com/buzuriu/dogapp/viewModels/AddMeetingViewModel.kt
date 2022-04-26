@@ -13,6 +13,7 @@ import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.GeoPoint
@@ -94,7 +95,7 @@ class AddMeetingViewModel : BaseViewModel() {
                     if (successful) {
                         viewModelScope.launch(Dispatchers.Main) {
                             dialogService.showSnackbar(R.string.added_success_message_meeting)
-                            dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, true)
+                            dataExchangeService.put(MyMeetingsViewModel::class.java.name, true)
                             addMeetingToLocalDatabase(newMeeting)
                             delay(2000)
                             navigationService.closeCurrentActivity()
