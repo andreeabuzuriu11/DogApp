@@ -5,7 +5,9 @@ import android.content.Intent
 import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.services.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks

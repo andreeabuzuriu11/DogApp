@@ -3,8 +3,6 @@ package com.buzuriu.dogapp.views
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentFilterMeetingsBinding
 import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel

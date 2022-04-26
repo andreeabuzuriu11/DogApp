@@ -2,14 +2,12 @@ package com.buzuriu.dogapp.views.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityMainBinding
-import com.buzuriu.dogapp.views.main.ui.map.MapFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {

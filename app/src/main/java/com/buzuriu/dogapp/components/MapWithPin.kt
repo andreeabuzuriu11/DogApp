@@ -9,14 +9,14 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
-import android.widget.FrameLayout
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.LatLng
 import android.view.MotionEvent
-import androidx.lifecycle.*
+import android.widget.FrameLayout
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IGetLocationListener
-import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.LatLng
 
 
 class MapWithPin : FrameLayout, OnMapReadyCallback, DefaultLifecycleObserver {

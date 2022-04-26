@@ -1,11 +1,8 @@
 package com.buzuriu.dogapp.viewModels.auth
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.listeners.IGetMeetingListListener
-import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj

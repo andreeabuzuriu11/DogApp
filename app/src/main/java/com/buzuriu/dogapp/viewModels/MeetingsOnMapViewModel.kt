@@ -1,11 +1,9 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.models.FilterByLocationObj
 import com.buzuriu.dogapp.models.SharedPreferences
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
 
 class MeetingsOnMapViewModel : BaseViewModel() {

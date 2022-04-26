@@ -1,7 +1,6 @@
 package com.buzuriu.dogapp
 
 import android.app.Application
-import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.services.*
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext

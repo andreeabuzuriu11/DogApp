@@ -1,13 +1,10 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.buzuriu.dogapp.listeners.IGetUserDogListListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.UserInfo
-import com.buzuriu.dogapp.services.FirebaseAuthService
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import com.google.firebase.auth.ktx.auth

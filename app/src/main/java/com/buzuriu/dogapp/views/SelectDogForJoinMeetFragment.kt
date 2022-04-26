@@ -1,17 +1,12 @@
 package com.buzuriu.dogapp.views
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.databinding.FragmentFilterMeetingsBinding
-import com.buzuriu.dogapp.databinding.FragmentSelectDogBinding
 import com.buzuriu.dogapp.databinding.FragmentSelectDogForMeetingJoinBinding
 import com.buzuriu.dogapp.viewModels.SelectDogForJoinMeetViewModel
-import com.buzuriu.dogapp.viewModels.SelectDogViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
 class SelectDogForJoinMeetFragment : BaseBoundFragment<SelectDogForJoinMeetViewModel, FragmentSelectDogForMeetingJoinBinding>(

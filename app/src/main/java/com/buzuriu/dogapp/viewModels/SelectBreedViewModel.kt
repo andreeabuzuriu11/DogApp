@@ -4,7 +4,6 @@ import com.buzuriu.dogapp.adapters.BreedAdapter
 import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.utils.BreedsFile
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SelectBreedViewModel : BaseViewModel(){
 

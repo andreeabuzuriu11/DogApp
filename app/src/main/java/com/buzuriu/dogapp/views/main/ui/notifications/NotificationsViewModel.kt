@@ -2,7 +2,6 @@ package com.buzuriu.dogapp.views.main.ui.notifications
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 
 class NotificationsViewModel : BaseViewModel() {

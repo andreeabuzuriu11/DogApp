@@ -1,7 +1,5 @@
 package com.buzuriu.dogapp.views.auth
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityLoginBinding
 import com.buzuriu.dogapp.viewModels.auth.LoginViewModel

@@ -3,7 +3,6 @@ package com.buzuriu.dogapp.services
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import java.lang.Exception
 
 interface IFirebaseAuthService {
     fun getCurrentUser() : FirebaseUser?

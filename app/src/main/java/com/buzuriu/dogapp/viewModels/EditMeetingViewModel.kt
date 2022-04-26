@@ -12,7 +12,6 @@ import com.google.firebase.firestore.GeoPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.util.*
 
 class EditMeetingViewModel : BaseViewModel() {

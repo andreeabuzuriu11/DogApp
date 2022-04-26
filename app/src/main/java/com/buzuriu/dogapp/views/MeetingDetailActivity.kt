@@ -1,15 +1,7 @@
 package com.buzuriu.dogapp.views
 
-import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.AttributeSet
-import android.view.View
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.adapters.ParticipantAdapter
 import com.buzuriu.dogapp.databinding.ActivityMeetingDetailBinding
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
@@ -19,7 +11,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.api.Distribution
 
 class MeetingDetailActivity : BaseBoundActivity<MeetingDetailViewModel, ActivityMeetingDetailBinding>(
     MeetingDetailViewModel::class.java), OnMapReadyCallback {

@@ -10,7 +10,6 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentSelectBreedBinding
 import com.buzuriu.dogapp.viewModels.SelectBreedViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
-import org.w3c.dom.Text
 
 class SelectBreedFragment : BaseBoundFragment<SelectBreedViewModel, FragmentSelectBreedBinding>(
     SelectBreedViewModel::class.java

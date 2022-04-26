@@ -1,16 +1,15 @@
 package com.buzuriu.dogapp.views.main.ui.my_dogs
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.views.base.BaseBoundFragment
-import android.view.Menu
-
-import android.view.MenuInflater
-import android.view.MenuItem
 import com.buzuriu.dogapp.databinding.FragmentMyDogsBinding
+import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
 
 class MyDogsFragment : BaseBoundFragment<MyDogsViewModel, FragmentMyDogsBinding>(MyDogsViewModel::class.java) {

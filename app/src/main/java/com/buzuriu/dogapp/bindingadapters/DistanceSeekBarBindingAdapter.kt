@@ -6,8 +6,6 @@ import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.components.DistanceSeekBar
-import kotlin.Boolean
-import kotlin.Int
 
 object DistanceSeekBarBindingAdapter {
 

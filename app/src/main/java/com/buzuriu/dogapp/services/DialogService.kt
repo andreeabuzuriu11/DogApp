@@ -3,10 +3,8 @@ package com.buzuriu.dogapp.services
 import android.app.Activity
 import android.app.AlertDialog
 import android.view.View
-import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.NonCancellable.cancel
 
 interface IDialogService {
     fun showSnackbar(stringId: Int, duration: Int = Snackbar.LENGTH_LONG)

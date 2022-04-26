@@ -5,8 +5,6 @@ import com.buzuriu.dogapp.adapters.FilterAdapter
 import com.buzuriu.dogapp.models.FilterByDogBreedObj
 import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
-import com.buzuriu.dogapp.views.SelectBreedFragment
-import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 
 class FilterMeetingsViewModel : BaseViewModel(){

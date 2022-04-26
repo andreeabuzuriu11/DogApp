@@ -9,7 +9,6 @@ import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class DogDetailViewModel : BaseViewModel() {
 

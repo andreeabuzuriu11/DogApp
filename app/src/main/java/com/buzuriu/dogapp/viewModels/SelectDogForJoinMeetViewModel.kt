@@ -8,7 +8,6 @@ import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.ParticipantObj
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
-import com.google.android.gms.maps.MapView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

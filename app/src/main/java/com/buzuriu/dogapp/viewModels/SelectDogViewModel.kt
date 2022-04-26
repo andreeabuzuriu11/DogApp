@@ -1,11 +1,8 @@
 package com.buzuriu.dogapp.viewModels
 
 import com.buzuriu.dogapp.adapters.DogNameAdapter
-import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.views.AddMeetingActivity
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SelectDogViewModel : BaseViewModel() {
 

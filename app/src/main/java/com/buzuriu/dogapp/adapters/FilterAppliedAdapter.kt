@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.FilterItemAppliedCellBinding
 import com.buzuriu.dogapp.models.IFilterObj
-import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 
 class FilterAppliedAdapter(var filterList: ArrayList<IFilterObj>,

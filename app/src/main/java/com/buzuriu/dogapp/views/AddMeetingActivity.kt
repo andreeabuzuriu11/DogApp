@@ -10,7 +10,6 @@ import com.buzuriu.dogapp.components.MapWithPin
 import com.buzuriu.dogapp.databinding.ActivityAddMeetingBinding
 import com.buzuriu.dogapp.viewModels.AddMeetingViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
-import java.sql.Time
 
 class AddMeetingActivity :
     BaseBoundActivity<AddMeetingViewModel, ActivityAddMeetingBinding>(AddMeetingViewModel::class.java)  {
