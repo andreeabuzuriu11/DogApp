@@ -70,7 +70,7 @@ class MapViewModel : BaseViewModel() {
         filterAdapter?.notifyDataSetChanged()
     }
 
-    fun joinOrUnjoinMeeting(meeting: MyCustomMeetingObj) {
+    fun joinOrLeaveMeeting(meeting: MyCustomMeetingObj) {
         if (meeting.meetingStateEnum == MeetingStateEnum.NOT_JOINED) {
             dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
 
@@ -83,8 +83,8 @@ class MapViewModel : BaseViewModel() {
 
         } else if (meeting.meetingStateEnum == MeetingStateEnum.JOINED) {
             dialogService.showAlertDialog(
-                "Unjoin?",
-                "Are you sure you want to unjoin this meeting with ${meeting.user!!.name}?",
+                "Leave?",
+                "Are you sure you don't want to join this meeting with ${meeting.user!!.name}?",
                 "Yes",
                 object :
                     IClickListener {
@@ -96,7 +96,7 @@ class MapViewModel : BaseViewModel() {
                         if (participantUid != null) {
                             viewModelScope.launch(Dispatchers.IO)
                             {
-                                databaseService.unjoinMeeting(meeting.meetingObj!!.uid!!,
+                                databaseService.leaveMeeting(meeting.meetingObj!!.uid!!,
                                     participantUid,
                                     object : IOnCompleteListener {
                                         override fun onComplete(

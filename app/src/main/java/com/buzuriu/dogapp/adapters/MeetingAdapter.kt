@@ -41,7 +41,7 @@ class MeetingAdapter(
                 selectedMeeting(meeting)
             }
             applicationBinding.joinButton.setOnClickListener {
-                viewModel.joinOrUnjoinMeeting(meeting)
+                viewModel.joinOrLeaveMeeting(meeting)
             }
             applicationBinding.meetingState = meeting.meetingStateEnum
         }

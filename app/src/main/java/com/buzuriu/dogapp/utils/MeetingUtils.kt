@@ -2,6 +2,8 @@ package com.buzuriu.dogapp.utils
 
 import com.buzuriu.dogapp.models.*
 import com.google.android.gms.maps.model.LatLng
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MeetingUtils {
 
@@ -57,6 +59,18 @@ class MeetingUtils {
             return false
         }
 
+        fun isMeetingInThePast(meetingObj: MeetingObj): Boolean {
+            val now = Calendar.getInstance()
+            val meetingCalendar = Calendar.getInstance()
+
+            now.timeInMillis = System.currentTimeMillis()
+            meetingCalendar.timeInMillis = meetingObj.date!!
+
+            if (now.after(meetingCalendar))
+                return true
+            return false
+        }
+
         private fun breedTypeAccepted(
             meetingObj: MeetingObj,
             filterList: ArrayList<IFilterObj>
@@ -75,16 +89,15 @@ class MeetingUtils {
         ): Boolean {
             if (userLocation == null) return true
 
-            val filterType = checkFilterIsType<FilterByLocationObj>(filterList)
-            if (filterType == null) return true
+            val filterType = checkFilterIsType<FilterByLocationObj>(filterList) ?: return true
 
-            val meetingCoords =
+            val meetingCoordinates =
                 MapUtils.getLatLng(meetingObj.location!!.latitude, meetingObj.location!!.longitude)
 
             if (MapUtils.getDistanceBetweenCoords(
                     userLocation,
-                    meetingCoords
-                ) <= (filterType as FilterByLocationObj).distance!!
+                    meetingCoordinates
+                ) <= filterType.distance!!
             ) {
                 return true
             }

@@ -15,7 +15,7 @@ object ButtonBindingAdapter {
     @JvmStatic
     fun Button.setProperTextView(meetingStateEnum: MeetingStateEnum?) {
         if (meetingStateEnum == MeetingStateEnum.JOINED)
-            this.text = "UNJOIN"
+            this.text = "LEAVE"
         else
             this.text = "JOIN"
     }
