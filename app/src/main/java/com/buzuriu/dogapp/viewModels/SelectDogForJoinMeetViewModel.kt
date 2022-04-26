@@ -76,6 +76,7 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
     }
 
     fun close() {
+        unselectPreviousDog()
         navigationService.closeCurrentActivity()
     }
 

@@ -8,8 +8,8 @@ import com.google.android.gms.maps.model.LatLng
 
 class MeetingsOnMapViewModel : BaseViewModel() {
 
-    var locationMeetings: ArrayList<LatLng>? = ArrayList<LatLng>()
-    var progress = MutableLiveData<Int>(0)
+    var locationMeetings: ArrayList<LatLng>? = ArrayList()
+    var progress = MutableLiveData(0)
     var userCoordinates = MutableLiveData<LatLng>()
 
     init {
@@ -17,7 +17,7 @@ class MeetingsOnMapViewModel : BaseViewModel() {
     }
 
     fun search() {
-        var meetingString = progress.value.toString() + " km"
+        val meetingString = progress.value.toString() + " km"
         val mapFilter = FilterByLocationObj(meetingString, progress.value!!, true)
         dataExchangeService.put(MapViewModel::class.qualifiedName!!, mapFilter)
 

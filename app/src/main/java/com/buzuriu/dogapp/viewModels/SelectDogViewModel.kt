@@ -22,7 +22,7 @@ class SelectDogViewModel : BaseViewModel() {
 
     private fun initDogs() {
         dogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!
-        dogNameAdapter = DogNameAdapter(dogsList!!, this)
+        dogNameAdapter = DogNameAdapter(dogsList, this)
     }
 
     fun saveDog() {
@@ -55,6 +55,7 @@ class SelectDogViewModel : BaseViewModel() {
     }
 
     fun close() {
+        unselectPreviousDog()
         navigationService.closeCurrentActivity()
     }
 
@@ -62,10 +63,10 @@ class SelectDogViewModel : BaseViewModel() {
         val auxSearchedDogs = ArrayList<DogObj>()
         if (dogsList.isNotEmpty()) {
             for (item in dogsList) {
-                val mySearchedString = searchedString.toLowerCase(Locale.ROOT)
-                val itemString = item.name?.toLowerCase(Locale.ROOT)
+                val mySearchedString = searchedString.lowercase(Locale.ROOT)
+                val itemString = item.name.lowercase(Locale.ROOT)
 
-                if (itemString!!.contains(mySearchedString) || mySearchedString.isEmpty()) {
+                if (itemString.contains(mySearchedString) || mySearchedString.isEmpty()) {
                     auxSearchedDogs.add(item)
                 }
             }
