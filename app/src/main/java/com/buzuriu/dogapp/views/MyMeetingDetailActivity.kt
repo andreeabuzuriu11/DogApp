@@ -19,6 +19,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, ActivityMyMeetingDetailBinding>(
     MyMeetingDetailViewModel::class.java), OnMapReadyCallback{
 
+    private var mapFragment : SupportMapFragment? = null
+
     override val layoutId: Int
         get() = R.layout.activity_my_meeting_detail
 
@@ -30,29 +32,13 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
         super.onCreate(savedInstanceState)
 
         initParticipantList()
-
-        //TODO initMap
-
-        val mapFragment = SupportMapFragment.newInstance()
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.map, mapFragment)
-            .commit()
-
-        mapFragment.getMapAsync(this)
+        initMap()
     }
 
     override fun onResume() {
         super.onResume()
 
-        //TODO in method, check if it can be deleted
-        val mapFragment = SupportMapFragment.newInstance()
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.map, mapFragment)
-            .commit()
-
-        mapFragment.getMapAsync(this)
+        initMap()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -76,16 +62,16 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        val coords = LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
+        val coordinates = LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
         p0.addMarker(
             MarkerOptions()
-                .position(coords)
+                .position(coordinates)
                 .title("This is the meeting point")
         )
 
         p0.setMinZoomPreference(10.0f)
         p0.setMaxZoomPreference(14.0f)
-        p0.moveCamera(CameraUpdateFactory.newLatLng(coords))
+        p0.moveCamera(CameraUpdateFactory.newLatLng(coordinates))
     }
 
     private fun initParticipantList()
@@ -93,6 +79,17 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
         val partList = findViewById<RecyclerView>(R.id.participants_list)
         partList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         partList.adapter = mViewModel.participantsAdapter
+    }
+
+    private fun initMap()
+    {
+        mapFragment = SupportMapFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.map, mapFragment!!)
+            .commit()
+
+        mapFragment!!.getMapAsync(this)
     }
 
 }

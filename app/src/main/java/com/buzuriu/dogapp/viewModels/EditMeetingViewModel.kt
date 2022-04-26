@@ -74,7 +74,6 @@ class EditMeetingViewModel : BaseViewModel() {
             myCustomMeetingObj!!.dog!!.gender,
             myCustomMeetingObj!!.dog!!.breed,
             myCustomMeetingObj!!.user!!.gender!!,
-            myCustomMeetingObj!!.meetingObj!!.participants!!
         )
 
         viewModelScope.launch(Dispatchers.IO) {

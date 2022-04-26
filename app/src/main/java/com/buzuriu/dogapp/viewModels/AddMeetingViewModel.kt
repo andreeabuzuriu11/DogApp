@@ -80,8 +80,8 @@ class AddMeetingViewModel : BaseViewModel() {
 
         val newMeeting = MeetingObj(
             meetingUid, meetingInUtc.timeInMillis, location, dog.value!!.uid, currentUser!!.uid,
-            dog.value!!.gender, dog.value!!.breed, userGender!!, ArrayList<ParticipantObj>()
-        )
+            dog.value!!.gender, dog.value!!.breed, userGender!!)
+
         viewModelScope.launch(Dispatchers.IO) {
 
             databaseService.storeMeetingInfo(meetingUid, newMeeting, object : IOnCompleteListener {
