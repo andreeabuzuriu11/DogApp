@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tool="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <variable
+            name="meetingState"
+            type="com.buzuriu.dogapp.enums.MeetingStateEnum" />
         <variable
             name="meeting"
             type="com.buzuriu.dogapp.models.MyCustomMeetingObj" />
@@ -21,7 +23,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:padding="10dp"
-            android:background="@drawable/rounded_cell"
+            cb_background="@{meetingState}"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -63,7 +65,6 @@
                         android:layout_gravity="center"
 
                         />
-
 
 
                 </LinearLayout>
@@ -111,7 +112,8 @@
                     android:layout_gravity="center"
                     android:textSize="15dp"
                     android:background="@drawable/rounded_button"
-                    android:text="@string/join"/>
+                    cb_textViewButton="@{meetingState}"
+                    />
             </LinearLayout>
 
 

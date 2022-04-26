@@ -21,7 +21,6 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
         attendedMeeting = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
 
         initDogs()
-
     }
 
     private fun initDogs() {
@@ -52,6 +51,8 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
 
         close()
     }
+
+
 
 
     fun selectDog(dogObj: DogObj) {

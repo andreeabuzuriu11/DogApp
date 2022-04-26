@@ -25,6 +25,7 @@ interface IDatabaseService {
     suspend fun storeDogUidToUser(userUid: String, dogUid: String, onCompleteListener: IOnCompleteListener)
     suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj, onCompleteListener: IOnCompleteListener)
     suspend fun joinMeeting(meetingUid: String, participantUid: String, participantObj: ParticipantObj, onCompleteListener: IOnCompleteListener)
+    suspend fun unjoinMeeting(meetingUid: String, participantUid: String, participantObj: ParticipantObj, onCompleteListener: IOnCompleteListener)
     suspend fun fetchMeetingByUid(meetingUid: String) : MeetingObj?
     suspend fun fetchDogByUid(dogUid: String) : DogObj?
     suspend fun fetchUserByUid(userUid: String) : UserInfo?
@@ -106,6 +107,19 @@ class DatabaseService(
             .collection(meetingParticipants)
             .document(participantUid)
             .set(participantObj)
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun unjoinMeeting(meetingUid: String,
+                                     participantUid: String,
+                                     participantObj: ParticipantObj,
+                                     onCompleteListener: IOnCompleteListener) {
+        firestore.collection(meetingsCollection)
+            .document(meetingUid)
+            .collection(meetingParticipants)
+            .document(participantUid)
+            .delete()
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }

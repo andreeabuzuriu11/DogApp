@@ -9,7 +9,7 @@ import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 import kotlin.reflect.KFunction1
 
 class MeetingAdapter(
-    var meetingList: ArrayList<MyCustomMeetingObj>,
+    private var meetingList: ArrayList<MyCustomMeetingObj>,
     var selectedMeeting: KFunction1<MyCustomMeetingObj, Unit>,
     private val viewModel: MapViewModel
 ) :
@@ -43,6 +43,7 @@ class MeetingAdapter(
             applicationBinding.joinButton.setOnClickListener {
                 viewModel.joinMeeting(meeting)
             }
+            applicationBinding.meetingState = meeting.meetingStateEnum
         }
     }
 }

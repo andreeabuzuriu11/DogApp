@@ -1,10 +1,10 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
+import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.viewModels.*
@@ -20,13 +20,15 @@ import kotlinx.coroutines.tasks.await
 
 class MapViewModel : BaseViewModel() {
 
-    var meetingsList = ArrayList<MyCustomMeetingObj>()
     var meetingAdapter: MeetingAdapter?
-    var filtersList = ArrayList<IFilterObj>()
     var filterAdapter: FilterAppliedAdapter?
-    var breedsList = ArrayList<String>()
-    var locationPoints = ArrayList<LatLng>()
-    var lastViewModel: String? = null
+
+    private var meetingsList = ArrayList<MyCustomMeetingObj>()
+    private var filtersList = ArrayList<IFilterObj>()
+    private var breedsList = ArrayList<String>()
+    private var locationPoints = ArrayList<LatLng>()
+    private var lastViewModel: String? = null
+    private val userJoinedMeetings = ArrayList<MyCustomMeetingObj>()
 
     init {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting, this)
@@ -47,6 +49,32 @@ class MapViewModel : BaseViewModel() {
         lastViewModel = null
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun discardFilter(filterType: IFilterObj) {
+        if (filtersList.size == 1) {
+            filtersList.clear()
+
+            viewModelScope.launch {
+                fetchAllMeetings()
+            }
+        } else {
+            filtersList.remove(filterType)
+            applyFilters(filtersList)
+        }
+        filterAdapter?.notifyDataSetChanged()
+    }
+
+    fun joinMeeting(meeting: MyCustomMeetingObj) {
+        dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
+
+        navigationService.showOverlay(
+            OverlayActivity::class.java,
+            false,
+            OverlayActivity.fragmentClassNameParam,
+            SelectDogForJoinMeetFragment::class.qualifiedName
+        )
+    }
+
     private fun getAllDogBreeds() {
         for (meeting in meetingsList) {
             if (breedsList.find { it == meeting.dog!!.breed } != null) continue
@@ -63,6 +91,41 @@ class MapViewModel : BaseViewModel() {
         localDatabaseService.add("locationPoints", locationPoints)
     }
 
+    private suspend fun getAllMeetingsThatUserJoined(): ArrayList<MyCustomMeetingObj> {
+        var allMeetingsParticipants: ArrayList<ParticipantObj>
+
+        for (meeting in meetingsList) {
+            allMeetingsParticipants =
+                databaseService.fetchAllMeetingParticipants(meeting.meetingObj!!.uid!!)!!
+            for (meet in allMeetingsParticipants)
+                if (meet.userUid == currentUser!!.uid) {
+                    userJoinedMeetings.add(meeting)
+                    changeStateOfMeeting(meeting)
+                }
+        }
+        return userJoinedMeetings
+    }
+
+    private fun changeStateOfMeeting(meeting: MyCustomMeetingObj) {
+        if (hasUserJoinedThisMeeting(meeting)) {
+            changeStateAccordingly(meeting, MeetingStateEnum.JOINED)
+        } else {
+            changeStateAccordingly(meeting, MeetingStateEnum.NOT_JOINED)
+        }
+    }
+
+    private fun changeStateAccordingly(meeting: MyCustomMeetingObj, meetingStateEnum: MeetingStateEnum) {
+        meeting.meetingStateEnum = meetingStateEnum
+    }
+
+    private fun hasUserJoinedThisMeeting(meeting: MyCustomMeetingObj): Boolean {
+        for (userJoinMeeting in userJoinedMeetings)
+            if (meeting.meetingObj!!.uid == userJoinMeeting.meetingObj!!.uid)
+                return true
+        return false
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllMeetings() {
         ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -73,15 +136,17 @@ class MapViewModel : BaseViewModel() {
                 meetingsList.addAll(list)
                 getAllDogBreeds()
                 getAllMeetingsLocation()
+                getAllMeetingsThatUserJoined()
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
             }
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchMeetingsWithFilters(filtersList: ArrayList<IFilterObj>) {
         viewModelScope.launch(Dispatchers.IO) {
-            var list = fetchFilteredMeetingsFromDatabase(filtersList)
+            val list = fetchFilteredMeetingsFromDatabase(filtersList)
 
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
@@ -91,13 +156,14 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun checkTypeAndTimeFilter() {
         if (lastViewModel.equals(FilterMeetingsViewModel::class.qualifiedName)) {
 
             val filters =
                 dataExchangeService.get<ArrayList<IFilterObj>>(this::class.qualifiedName!!)
+                    ?: return
 
-            if (filters == null) return
             removeFilterType<FilterByTimeObj>()
             removeFilterType<FilterByDogBreedObj>()
             removeFilterType<FilterByDogGenderObj>()
@@ -111,13 +177,12 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun checkRadiusFilter() {
         if (lastViewModel.equals(MeetingsOnMapViewModel::class.qualifiedName)) {
 
             val mapFilter =
-                dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!)
-
-            if (mapFilter == null) return
+                dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!) ?: return
 
             removeFilterType<FilterByLocationObj>()
 
@@ -163,14 +228,13 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
-
     private suspend fun fetchAllMeetingsFromDatabase(): ArrayList<MyCustomMeetingObj> {
         var user: UserInfo?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
         // currentUser uid as parameter, because we have to ignore that user when searching new meetings
-        var allMeetings: ArrayList<MeetingObj>? =
+        val allMeetings: ArrayList<MeetingObj>? =
             databaseService.fetchAllOtherMeetings(currentUser!!.uid)
 
         if (allMeetings != null) {
@@ -219,31 +283,5 @@ class MapViewModel : BaseViewModel() {
                 return
             }
         }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun discardFilter(filterType: IFilterObj) {
-        if (filtersList.size == 1) {
-            filtersList.clear()
-
-            viewModelScope.launch {
-                fetchAllMeetings()
-            }
-        } else {
-            filtersList.remove(filterType)
-            applyFilters(filtersList)
-        }
-        filterAdapter?.notifyDataSetChanged()
-    }
-
-    fun joinMeeting(meeting: MyCustomMeetingObj) {
-        dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
-
-        navigationService.showOverlay(
-            OverlayActivity::class.java,
-            false,
-            OverlayActivity.fragmentClassNameParam,
-            SelectDogForJoinMeetFragment::class.qualifiedName
-        )
     }
 }
