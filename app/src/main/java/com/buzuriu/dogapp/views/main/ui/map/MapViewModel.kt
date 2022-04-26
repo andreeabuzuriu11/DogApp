@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
 import com.buzuriu.dogapp.enums.MeetingStateEnum
+import com.buzuriu.dogapp.listeners.IClickListener
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.viewModels.*
@@ -29,6 +31,7 @@ class MapViewModel : BaseViewModel() {
     private var locationPoints = ArrayList<LatLng>()
     private var lastViewModel: String? = null
     private val userJoinedMeetings = ArrayList<MyCustomMeetingObj>()
+    private var mapOfMeetingUidAndCurrentUserAsParticipant : MutableMap<String, String> = mutableMapOf()
 
     init {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting, this)
@@ -45,6 +48,8 @@ class MapViewModel : BaseViewModel() {
 
         checkRadiusFilter()
         checkTypeAndTimeFilter()
+
+        getMeetingChangedDueToJoin()
 
         lastViewModel = null
     }
@@ -64,15 +69,54 @@ class MapViewModel : BaseViewModel() {
         filterAdapter?.notifyDataSetChanged()
     }
 
-    fun joinMeeting(meeting: MyCustomMeetingObj) {
-        dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
+    fun joinOrUnjoinMeeting(meeting: MyCustomMeetingObj) {
+        if (meeting.meetingStateEnum == MeetingStateEnum.NOT_JOINED) {
+            dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
 
-        navigationService.showOverlay(
-            OverlayActivity::class.java,
-            false,
-            OverlayActivity.fragmentClassNameParam,
-            SelectDogForJoinMeetFragment::class.qualifiedName
-        )
+            navigationService.showOverlay(
+                OverlayActivity::class.java,
+                false,
+                OverlayActivity.fragmentClassNameParam,
+                SelectDogForJoinMeetFragment::class.qualifiedName
+            )
+
+        }
+        else if (meeting.meetingStateEnum == MeetingStateEnum.JOINED)
+        {
+            dialogService.showAlertDialog("Unjoin?", "Are you sure you want to unjoin this meeting with ${meeting.user!!.name}?", "Yes", object :
+                IClickListener {
+                override fun clicked() {
+                    meeting.meetingStateEnum = MeetingStateEnum.NOT_JOINED
+                    meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(meeting))
+                    val participantUid = mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid]
+                    if(participantUid!=null) {
+                        viewModelScope.launch(Dispatchers.IO)
+                        {
+                            databaseService.unjoinMeeting(meeting.meetingObj!!.uid!!,
+                                participantUid,
+                                object : IOnCompleteListener {
+                                    override fun onComplete(
+                                        successful: Boolean,
+                                        exception: Exception?
+                                    ) {
+                                        dialogService.showSnackbar("Success")
+                                    }
+                                })
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    private fun getMeetingChangedDueToJoin()
+    {
+        val changedMeeting = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
+        if(changedMeeting != null)
+        {
+            changedMeeting.meetingStateEnum = MeetingStateEnum.JOINED
+            meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(changedMeeting))
+        }
     }
 
     private fun getAllDogBreeds() {
@@ -94,6 +138,7 @@ class MapViewModel : BaseViewModel() {
     private suspend fun getAllMeetingsThatUserJoined(): ArrayList<MyCustomMeetingObj> {
         var allMeetingsParticipants: ArrayList<ParticipantObj>
 
+
         for (meeting in meetingsList) {
             allMeetingsParticipants =
                 databaseService.fetchAllMeetingParticipants(meeting.meetingObj!!.uid!!)!!
@@ -101,6 +146,7 @@ class MapViewModel : BaseViewModel() {
                 if (meet.userUid == currentUser!!.uid) {
                     userJoinedMeetings.add(meeting)
                     changeStateOfMeeting(meeting)
+                    mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid!!] = meet.uid!!
                 }
         }
         return userJoinedMeetings
