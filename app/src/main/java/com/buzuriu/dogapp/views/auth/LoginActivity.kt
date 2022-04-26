@@ -5,7 +5,8 @@ import com.buzuriu.dogapp.databinding.ActivityLoginBinding
 import com.buzuriu.dogapp.viewModels.auth.LoginViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
 
-class LoginActivity : BaseBoundActivity<LoginViewModel, ActivityLoginBinding>(LoginViewModel::class.java) {
+class LoginActivity :
+    BaseBoundActivity<LoginViewModel, ActivityLoginBinding>(LoginViewModel::class.java) {
 
     override val layoutId: Int
         get() = R.layout.activity_login

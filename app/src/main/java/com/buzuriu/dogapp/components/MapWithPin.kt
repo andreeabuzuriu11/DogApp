@@ -68,7 +68,7 @@ class MapWithPin : FrameLayout, OnMapReadyCallback, DefaultLifecycleObserver {
 
     @SuppressLint("MissingPermission")
     fun updateMyLocation() {
-        if (mapPosition==null) {
+        if (mapPosition == null) {
             val locationListener = object : LocationListener {
                 @TargetApi(Build.VERSION_CODES.M)
                 override fun onLocationChanged(p0: Location) {

@@ -69,7 +69,7 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
 
             activity.runOnUiThread(
                 Runnable {
-                        activity.startActivity(intent)
+                    activity.startActivity(intent)
 
                     if (finishCurrentActivity) {
                         activity.finish()

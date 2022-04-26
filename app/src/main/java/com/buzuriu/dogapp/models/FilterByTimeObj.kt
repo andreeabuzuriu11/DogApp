@@ -5,6 +5,6 @@ class FilterByTimeObj : IFilterObj {
 
     constructor(title: String, isSelected: Boolean) :
             super(title, isSelected) {
-            }
+    }
 
 }

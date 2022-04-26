@@ -4,10 +4,9 @@ class BreedObj {
     var breedName: String? = null
     var isSelected: Boolean? = false
 
-    constructor(breedName: String?, isSelected: Boolean?=null) {
+    constructor(breedName: String?, isSelected: Boolean? = null) {
         this.breedName = breedName
-        if(isSelected!=null)
-        {
+        if (isSelected != null) {
             this.isSelected = isSelected
         }
     }

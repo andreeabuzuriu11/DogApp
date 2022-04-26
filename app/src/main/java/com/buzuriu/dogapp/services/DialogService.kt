@@ -9,10 +9,11 @@ import com.google.android.material.snackbar.Snackbar
 interface IDialogService {
     fun showSnackbar(stringId: Int, duration: Int = Snackbar.LENGTH_LONG)
     fun showSnackbar(string: String, duration: Int = Snackbar.LENGTH_LONG)
-    fun showAlertDialog(title: String,
-                        message: String,
-                        buttonText: String,
-                        clickMethod: IClickListener
+    fun showAlertDialog(
+        title: String,
+        message: String,
+        buttonText: String,
+        clickMethod: IClickListener
     )
 }
 

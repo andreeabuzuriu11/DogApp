@@ -12,7 +12,7 @@ import com.buzuriu.dogapp.viewModels.AddMeetingViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
 
 class AddMeetingActivity :
-    BaseBoundActivity<AddMeetingViewModel, ActivityAddMeetingBinding>(AddMeetingViewModel::class.java)  {
+    BaseBoundActivity<AddMeetingViewModel, ActivityAddMeetingBinding>(AddMeetingViewModel::class.java) {
 
 
     override val layoutId: Int = R.layout.activity_add_meeting
@@ -43,15 +43,13 @@ class AddMeetingActivity :
         lifecycle.addObserver(mapView!!)
     }
 
-    private fun restrictDatePicker()
-    {
-        var datePicker : DatePicker = this.findViewById(R.id.date_picker)
+    private fun restrictDatePicker() {
+        var datePicker: DatePicker = this.findViewById(R.id.date_picker)
         datePicker.minDate = System.currentTimeMillis() - 1000
     }
 
-    private fun set24HourFormat()
-    {
-        var timePicker : TimePicker = this.findViewById(R.id.timePicker)
+    private fun set24HourFormat() {
+        var timePicker: TimePicker = this.findViewById(R.id.timePicker)
         timePicker.setIs24HourView(true)
     }
 

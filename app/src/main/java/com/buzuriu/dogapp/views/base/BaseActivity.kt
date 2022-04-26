@@ -1,4 +1,5 @@
 package com.buzuriu.dogapp.views.base
+
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -46,11 +47,11 @@ abstract class BaseActivity<out T : BaseViewModel>(vmClass: Class<T>) : AppCompa
         super.onDestroy()
     }
 
-    private fun setActivityForResultLauncher()
-    {
-        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            mViewModel.onActivityForResult(result)
-        }
+    private fun setActivityForResultLauncher() {
+        val resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                mViewModel.onActivityForResult(result)
+            }
 
         mViewModel.setupActivityForResultLauncher(resultLauncher)
     }

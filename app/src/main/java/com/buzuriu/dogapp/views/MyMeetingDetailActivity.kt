@@ -16,10 +16,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, ActivityMyMeetingDetailBinding>(
-    MyMeetingDetailViewModel::class.java), OnMapReadyCallback{
+class MyMeetingDetailActivity :
+    BaseBoundActivity<MyMeetingDetailViewModel, ActivityMyMeetingDetailBinding>(
+        MyMeetingDetailViewModel::class.java
+    ), OnMapReadyCallback {
 
-    private var mapFragment : SupportMapFragment? = null
+    private var mapFragment: SupportMapFragment? = null
 
     override val layoutId: Int
         get() = R.layout.activity_my_meeting_detail
@@ -53,8 +55,7 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
             mViewModel.editMeeting()
             return true
         }
-        if(id == R.id.delete)
-        {
+        if (id == R.id.delete) {
             mViewModel.deleteMeeting()
             return true
         }
@@ -62,7 +63,8 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        val coordinates = LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
+        val coordinates =
+            LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
         p0.addMarker(
             MarkerOptions()
                 .position(coordinates)
@@ -74,15 +76,13 @@ class MyMeetingDetailActivity : BaseBoundActivity<MyMeetingDetailViewModel, Acti
         p0.moveCamera(CameraUpdateFactory.newLatLng(coordinates))
     }
 
-    private fun initParticipantList()
-    {
+    private fun initParticipantList() {
         val partList = findViewById<RecyclerView>(R.id.participants_list)
         partList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         partList.adapter = mViewModel.participantsAdapter
     }
 
-    private fun initMap()
-    {
+    private fun initMap() {
         mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager
             .beginTransaction()

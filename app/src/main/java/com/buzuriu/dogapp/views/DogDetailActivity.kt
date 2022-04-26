@@ -12,7 +12,7 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
 ) {
     override val layoutId = R.layout.activity_dog_detail
     override fun setupDataBinding(binding: ActivityDogDetailBinding) {
-        binding.viewModel =  mViewModel
+        binding.viewModel = mViewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -28,8 +28,7 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
             mViewModel.editDog()
             return true
         }
-        if(id == R.id.delete)
-        {
+        if (id == R.id.delete) {
             mViewModel.deleteDog()
             return true
         }

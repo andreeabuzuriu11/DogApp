@@ -11,7 +11,7 @@ import com.google.android.gms.tasks.Tasks
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.suspendCoroutine
 
-interface IPermissionService{
+interface IPermissionService {
     suspend fun requestPermissionStatusAsync(permissions: List<String>): Task<List<PermissionResponse>>
 
     //needs to be called by the current activity upon  callback for this service to work properly
@@ -21,6 +21,7 @@ interface IPermissionService{
         grantResults: IntArray
     )
 }
+
 class PermissionService(private val activityService: ICurrentActivityService) : IPermissionService {
 
     private val requestCode: Int = 29
@@ -47,7 +48,7 @@ class PermissionService(private val activityService: ICurrentActivityService) : 
                 }
             }
 
-            if(permissionsStillNeedingGrant.size > 0) {
+            if (permissionsStillNeedingGrant.size > 0) {
                 synchronized(this) {
                     permissionRequests[requestCode] = PermissionRequest(partialResponse, it)
                 }

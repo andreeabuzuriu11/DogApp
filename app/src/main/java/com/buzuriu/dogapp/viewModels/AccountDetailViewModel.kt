@@ -12,19 +12,16 @@ class AccountDetailViewModel : BaseViewModel() {
         user.value = localDatabaseService.get("currentUser")
     }
 
-    override fun onResume()
-    {
+    override fun onResume() {
         super.onResume()
         val editedAccount = dataExchangeService.get<UserInfo>(this::class.java.name)
-        if(editedAccount != null)
-        {
+        if (editedAccount != null) {
             user.value = editedAccount!!
             localDatabaseService.add("currentUser", user.value!!)
         }
     }
 
-    fun editUser()
-    {
+    fun editUser() {
         dataExchangeService.put(EditAccountViewModel::class.java.name, user.value!!)
         navigationService.navigateToActivity(EditAccountActivity::class.java)
     }

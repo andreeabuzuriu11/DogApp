@@ -7,8 +7,8 @@ import com.buzuriu.dogapp.databinding.DogCellBinding
 import com.buzuriu.dogapp.models.DogObj
 import kotlin.reflect.KFunction1
 
-class DogAdapter (var dogList: ArrayList<DogObj>, var selectedDog: KFunction1<DogObj, Unit>) :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DogAdapter(var dogList: ArrayList<DogObj>, var selectedDog: KFunction1<DogObj, Unit>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -29,8 +29,7 @@ class DogAdapter (var dogList: ArrayList<DogObj>, var selectedDog: KFunction1<Do
 
     inner class DogViewHolder(var applicationBinding: DogCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
-        fun bind(dog : DogObj)
-        {
+        fun bind(dog: DogObj) {
             applicationBinding.dog = dog
             applicationBinding.dogCell.setOnClickListener {
                 selectedDog(dog)

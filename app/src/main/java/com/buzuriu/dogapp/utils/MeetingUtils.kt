@@ -20,7 +20,10 @@ class MeetingUtils {
                     distanceAccepted(meetingObj, filterList, userLocation)
         }
 
-        private fun dogGenderAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
+        private fun dogGenderAccepted(
+            meetingObj: MeetingObj,
+            filterList: ArrayList<IFilterObj>
+        ): Boolean {
             val dogGenderFilter = checkFilterIsType<FilterByDogGenderObj>(filterList) ?: return true
 
             if (meetingObj.dogGender == dogGenderFilter.name)
@@ -29,8 +32,12 @@ class MeetingUtils {
             return false
         }
 
-        private fun userGenderAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
-            val userGenderFilter = checkFilterIsType<FilterByUserGenderObj>(filterList) ?: return true
+        private fun userGenderAccepted(
+            meetingObj: MeetingObj,
+            filterList: ArrayList<IFilterObj>
+        ): Boolean {
+            val userGenderFilter =
+                checkFilterIsType<FilterByUserGenderObj>(filterList) ?: return true
 
             if (meetingObj.userGender == userGenderFilter.name)
                 return true
@@ -38,7 +45,10 @@ class MeetingUtils {
             return false
         }
 
-        private fun timeTypeAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
+        private fun timeTypeAccepted(
+            meetingObj: MeetingObj,
+            filterList: ArrayList<IFilterObj>
+        ): Boolean {
             val timeFilter = checkFilterIsType<FilterByTimeObj>(filterList) ?: return true
 
             if (DateUtils.isMeetingHappeningAtThisTime(meetingObj, timeFilter))
@@ -47,7 +57,10 @@ class MeetingUtils {
             return false
         }
 
-        private fun breedTypeAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>): Boolean {
+        private fun breedTypeAccepted(
+            meetingObj: MeetingObj,
+            filterList: ArrayList<IFilterObj>
+        ): Boolean {
             val breedFilter = checkFilterIsType<FilterByDogBreedObj>(filterList) ?: return true
 
             if (meetingObj.dogBreed == breedFilter.name)
@@ -56,10 +69,11 @@ class MeetingUtils {
             return false
         }
 
-        private fun distanceAccepted(meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>,
-                                     userLocation: LatLng?) : Boolean
-        {
-            if(userLocation==null) return true
+        private fun distanceAccepted(
+            meetingObj: MeetingObj, filterList: ArrayList<IFilterObj>,
+            userLocation: LatLng?
+        ): Boolean {
+            if (userLocation == null) return true
 
             val filterType = checkFilterIsType<FilterByLocationObj>(filterList)
             if (filterType == null) return true
@@ -69,7 +83,8 @@ class MeetingUtils {
 
             if (MapUtils.getDistanceBetweenCoords(
                     userLocation,
-                    meetingCoords) <= (filterType as FilterByLocationObj).distance!!
+                    meetingCoords
+                ) <= (filterType as FilterByLocationObj).distance!!
             ) {
                 return true
             }
@@ -78,7 +93,7 @@ class MeetingUtils {
 
         }
 
-        private inline fun <reified T>checkFilterIsType(filterList: ArrayList<IFilterObj>): T? {
+        private inline fun <reified T> checkFilterIsType(filterList: ArrayList<IFilterObj>): T? {
             for (filter in filterList) {
                 if (filter is T)
                     return filter

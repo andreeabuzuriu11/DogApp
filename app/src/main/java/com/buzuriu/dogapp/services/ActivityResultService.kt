@@ -10,14 +10,14 @@ interface IActivityResultService {
 
     fun setupActivityForResultLauncher(resultLauncher: ActivityResultLauncher<Intent>)
     fun launchCurrentActivityResultLauncher(intent: Intent, listener: IGetActivityForResultListener)
-    fun onActivityForResult(activityResult : ActivityResult)
+    fun onActivityForResult(activityResult: ActivityResult)
 
 }
 
 class ActivityResultService() : IActivityResultService {
 
     private var resultLauncher: ActivityResultLauncher<Intent>? = null
-    private var listener : IGetActivityForResultListener? = null
+    private var listener: IGetActivityForResultListener? = null
 
     override fun setupActivityForResultLauncher(resultLauncher: ActivityResultLauncher<Intent>) {
         this.resultLauncher = resultLauncher

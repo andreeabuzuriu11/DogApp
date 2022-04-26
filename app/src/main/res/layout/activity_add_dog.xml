@@ -7,8 +7,6 @@
         <variable
             name="viewModel"
             type="com.buzuriu.dogapp.viewModels.AddDogViewModel" />
-
-        <import type="com.buzuriu.dogapp.enums.GenderEnum" />
     </data>
 
     <RelativeLayout

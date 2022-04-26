@@ -6,8 +6,8 @@ class MeetingObj {
     var uid: String? = null
     var date: Long? = null
     var location: GeoPoint? = null
-    var dogUid : String? = null
-    var userUid : String? = null
+    var dogUid: String? = null
+    var userUid: String? = null
     var dogGender: String? = null
     var dogBreed: String? = null
     var userGender: String? = null
@@ -15,9 +15,10 @@ class MeetingObj {
 
     constructor()
 
-    constructor(uid: String, date:Long, location: GeoPoint, dogUid : String, userUid: String,
-                dogGender: String, dogBreed: String, userGender: String)
-    {
+    constructor(
+        uid: String, date: Long, location: GeoPoint, dogUid: String, userUid: String,
+        dogGender: String, dogBreed: String, userGender: String
+    ) {
         this.uid = uid
         this.date = date
         this.location = location
@@ -28,9 +29,17 @@ class MeetingObj {
         this.userGender = userGender
     }
 
-    constructor(uid: String, date:Long, location: GeoPoint, dogUid : String, userUid: String,
-                dogGender: String, dogBreed: String, userGender: String, participants: ArrayList<ParticipantObj>)
-    {
+    constructor(
+        uid: String,
+        date: Long,
+        location: GeoPoint,
+        dogUid: String,
+        userUid: String,
+        dogGender: String,
+        dogBreed: String,
+        userGender: String,
+        participants: ArrayList<ParticipantObj>
+    ) {
         this.uid = uid
         this.date = date
         this.location = location

@@ -18,38 +18,40 @@ class DogDetailViewModel : BaseViewModel() {
         dog.value = dataExchangeService.get<DogObj>(this::class.java.name)!!
     }
 
-    override fun onResume()
-    {
+    override fun onResume() {
         super.onResume()
         val editedDog = dataExchangeService.get<DogObj>(this::class.java.name)
-        if(editedDog != null)
-        {
+        if (editedDog != null) {
             dog.value = editedDog!!
         }
     }
 
-    fun editDog()
-    {
+    fun editDog() {
         dataExchangeService.put(AddDogViewModel::class.java.name, dog.value!!)
         navigationService.navigateToActivity(AddDogActivity::class.java)
     }
 
-    fun deleteDog()
-    {
-        dialogService.showAlertDialog("Delete dog?", "Are you sure you want to delete ${dog.value!!.name}? This action cannot be undone.", "Yes, delete it", object :
-            IClickListener {
-            override fun clicked() {
-                deleteDogFromDatabase()
-                dataExchangeService.put(MyDogsViewModel::class.java.name, true) // is refresh list needed
-            }
-        })
+    fun deleteDog() {
+        dialogService.showAlertDialog(
+            "Delete dog?",
+            "Are you sure you want to delete ${dog.value!!.name}? This action cannot be undone.",
+            "Yes, delete it",
+            object :
+                IClickListener {
+                override fun clicked() {
+                    deleteDogFromDatabase()
+                    dataExchangeService.put(
+                        MyDogsViewModel::class.java.name,
+                        true
+                    ) // is refresh list needed
+                }
+            })
     }
 
-    fun deleteDogFromDatabase()
-    {
+    fun deleteDogFromDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
             databaseService.deleteDog(currentUser!!.uid, dog.value!!.uid, object :
-            IOnCompleteListener {
+                IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
                     val allDogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
                     allDogsList!!.remove(dog.value!!)

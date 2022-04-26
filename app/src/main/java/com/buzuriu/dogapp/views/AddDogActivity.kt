@@ -5,7 +5,8 @@ import com.buzuriu.dogapp.databinding.ActivityAddDogBinding
 import com.buzuriu.dogapp.viewModels.AddDogViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
 
-class AddDogActivity : BaseBoundActivity<AddDogViewModel, ActivityAddDogBinding>(AddDogViewModel::class.java) {
+class AddDogActivity :
+    BaseBoundActivity<AddDogViewModel, ActivityAddDogBinding>(AddDogViewModel::class.java) {
 
     override val layoutId: Int
         get() = R.layout.activity_add_dog

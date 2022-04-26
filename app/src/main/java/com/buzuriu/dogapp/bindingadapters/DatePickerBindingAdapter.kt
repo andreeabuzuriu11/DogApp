@@ -23,6 +23,7 @@ object DatePickerBindingAdapter {
                 }
             })
     }
+
     @BindingAdapter("cb_getDate")
     @JvmStatic
     fun DatePicker.setMyDate(calendar: Calendar) {
@@ -34,6 +35,7 @@ object DatePickerBindingAdapter {
             )
         }
     }
+
     @InverseBindingAdapter(attribute = "cb_getDate")
     @JvmStatic
     fun DatePicker.getMyDate(): Calendar? {

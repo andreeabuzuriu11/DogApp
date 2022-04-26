@@ -7,14 +7,22 @@ class DogObj {
     var ageString: String = ""
     var breed: String = ""
     var gender: String = ""
-    var imageUrl : String = ""
+    var imageUrl: String = ""
     var owner: String = ""
     var isSelected: Boolean? = false
 
     constructor()
 
-    constructor(uid: String, name: String, ageValue: String, ageString: String, breed:String, gender: String, owner: String, isSelected: Boolean?=null)
-    {
+    constructor(
+        uid: String,
+        name: String,
+        ageValue: String,
+        ageString: String,
+        breed: String,
+        gender: String,
+        owner: String,
+        isSelected: Boolean? = null
+    ) {
         this.uid = uid
         this.name = name
         this.ageValue = ageValue
@@ -22,8 +30,7 @@ class DogObj {
         this.breed = breed
         this.gender = gender
         this.owner = owner
-        if(isSelected!=null)
-        {
+        if (isSelected != null) {
             this.isSelected = isSelected
         }
     }

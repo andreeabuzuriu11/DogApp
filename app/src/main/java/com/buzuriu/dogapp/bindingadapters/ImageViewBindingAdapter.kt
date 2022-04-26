@@ -31,9 +31,9 @@ object ImageViewBindingAdapter {
 
     @BindingAdapter("cb_dogImg")
     @JvmStatic
-    fun ImageView.imageUrl(dog : DogObj) {
-        var placeHolder = ImageUtils.getDogPlaceholder()
-        if (dog.imageUrl.isNullOrEmpty()) {
+    fun ImageView.imageUrl(dog: DogObj) {
+        val placeHolder = ImageUtils.getDogPlaceholder()
+        if (dog.imageUrl.isEmpty()) {
             this.setImageResource(placeHolder)
         } else {
             Picasso.get()

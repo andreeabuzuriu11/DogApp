@@ -4,13 +4,14 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.util.*
 
-interface IStorageService{
+interface IStorageService {
     suspend fun uploadImageToDatabase(
         dogUid: String,
         imageByteArray: ByteArray
-    ):String
+    ): String
 }
-class StorageService :IStorageService{
+
+class StorageService : IStorageService {
 
     private val storage by lazy { FirebaseStorage.getInstance() }
     private val dogImages = "dogImages"

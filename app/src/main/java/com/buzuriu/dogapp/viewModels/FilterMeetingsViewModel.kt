@@ -7,12 +7,12 @@ import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 
-class FilterMeetingsViewModel : BaseViewModel(){
+class FilterMeetingsViewModel : BaseViewModel() {
 
-    var filterByTimeList =  FilterItems.filterByTimeItems
+    var filterByTimeList = FilterItems.filterByTimeItems
     var filterByDogGenderList = FilterItems.filterByDogGenderItems
     var filterByUserGenderList = FilterItems.filterByUserGenderItems
-    var filterByDogBreedListString : ArrayList<String>?
+    var filterByDogBreedListString: ArrayList<String>?
     var filterByDogBreedList = ArrayList<IFilterObj>()
 
     var filterAdapterTime: FilterAdapter? = null
@@ -25,7 +25,8 @@ class FilterMeetingsViewModel : BaseViewModel(){
         filterAdapterTime = FilterAdapter(filterByTimeList, this)
         filterAdapterDogGender = FilterAdapter(filterByDogGenderList, this)
         filterAdapterUserGender = FilterAdapter(filterByUserGenderList, this)
-        filterByDogBreedListString = localDatabaseService.get<ArrayList<String>>(this::class.qualifiedName!!)
+        filterByDogBreedListString =
+            localDatabaseService.get<ArrayList<String>>(this::class.qualifiedName!!)
         if (filterByDogBreedListString != null) {
             for (item in filterByDogBreedListString!!) {
                 filterByDogBreedList.add(FilterByDogBreedObj(item, false))
@@ -34,8 +35,7 @@ class FilterMeetingsViewModel : BaseViewModel(){
         filterAdapterDogBreed = FilterAdapter(filterByDogBreedList, this)
     }
 
-    private fun refreshFilters()
-    {
+    private fun refreshFilters() {
         for (i in filterByTimeList)
             i.isSelected = false
         for (i in filterByDogGenderList)
@@ -46,8 +46,7 @@ class FilterMeetingsViewModel : BaseViewModel(){
             i.isSelected = false
     }
 
-    fun saveFilter()
-    {
+    fun saveFilter() {
         var listOfCheckedFilters = ArrayList<IFilterObj>()
 
         for (i in filterByTimeList)
@@ -68,25 +67,20 @@ class FilterMeetingsViewModel : BaseViewModel(){
 
         navigationService.closeCurrentActivity()
     }
-    fun checkSelectedFilter(position: Int, filterList: List<IFilterObj>, adapter: FilterAdapter)
-    {
-        for (pos in filterList.indices)
-        {
-            if (pos == position && !filterList[pos].isSelected!!)
-            {
+
+    fun checkSelectedFilter(position: Int, filterList: List<IFilterObj>, adapter: FilterAdapter) {
+        for (pos in filterList.indices) {
+            if (pos == position && !filterList[pos].isSelected!!) {
                 filterList[pos].isSelected = true
                 adapter.notifyItemChanged(pos)
-            }
-            else if (pos != position && filterList[pos].isSelected!!)
-            {
+            } else if (pos != position && filterList[pos].isSelected!!) {
                 filterList[pos].isSelected = false
                 adapter.notifyItemChanged(pos)
             }
         }
     }
 
-    fun close()
-    {
+    fun close() {
         navigationService.closeCurrentActivity()
     }
 }

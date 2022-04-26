@@ -15,7 +15,7 @@ import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
 class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewModel::class.java) {
     private lateinit var currentBinding: FragmentMapBinding
-    override val layoutId: Int= R.layout.fragment_map
+    override val layoutId: Int = R.layout.fragment_map
 
     override fun setupDataBinding(binding: FragmentMapBinding) {
         binding.viewModel = mViewModel
@@ -29,17 +29,22 @@ class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewM
         setHasOptionsMenu(true)
     }
 
-    private fun setupRecyclerViewForMeetings()
-    {
+    private fun setupRecyclerViewForMeetings() {
         val recyclerView = currentBinding.meetingsList
-        recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(
+            activity,
+            RecyclerView.VERTICAL,
+            false
+        )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.meetingAdapter
     }
 
-    private fun setupRecyclerViewForSelectedFilters()
-    {
+    private fun setupRecyclerViewForSelectedFilters() {
         val recyclerView = currentBinding.selectedFiltersList
-        recyclerView.layoutManager = GridLayoutManager(activity,2) /*LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)*/
+        recyclerView.layoutManager = GridLayoutManager(
+            activity,
+            2
+        ) /*LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)*/
         recyclerView.adapter = mViewModel.filterAdapter
     }
 
@@ -49,8 +54,7 @@ class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewM
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId)
-        {
+        when (item.itemId) {
             R.id.show_on_map -> {
                 mViewModel.filterMeetingsByRadiusClicked()
                 Log.d("MapFragment", "Show on map")

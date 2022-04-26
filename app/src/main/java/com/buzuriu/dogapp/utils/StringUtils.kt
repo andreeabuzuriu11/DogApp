@@ -3,13 +3,12 @@ package com.buzuriu.dogapp.utils
 import java.util.*
 
 class StringUtils {
-    companion object
-    {
-        fun isEmailValid(email : String): Boolean {
+    companion object {
+        fun isEmailValid(email: String): Boolean {
             return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
         }
 
-        fun getRandomUID():String{
+        fun getRandomUID(): String {
             return UUID.randomUUID().toString()
         }
 

@@ -7,14 +7,13 @@ import kotlin.math.cos
 
 class MapUtils {
 
-    companion object
-    {
-       fun getLatLngFromGeoPoint (geoPoint: GeoPoint) : LatLng
-       {
-           var lat: Double = geoPoint.latitude
-           var long: Double = geoPoint.longitude
-           return LatLng(lat, long)
-       }
+    companion object {
+        fun getLatLngFromGeoPoint(geoPoint: GeoPoint): LatLng {
+            var lat: Double = geoPoint.latitude
+            var long: Double = geoPoint.longitude
+            return LatLng(lat, long)
+        }
+
         private const val metersPerKm = 1000.0
         private const val kmInDegreesLat = 1 / 110.574
         private val kmInDegreeLong = 1 / (111.320) * cos(kmInDegreesLat)
@@ -33,6 +32,7 @@ class MapUtils {
                 centerPoint.longitude - (radiusInKm * kmInDegreeLong)
             )
         }
+
         fun getLatLng(lat: Double, lng: Double): LatLng {
             return LatLng(lat, lng)
         }

@@ -27,8 +27,7 @@ class DistanceSeekBar : RelativeLayout {
     }
 
     @SuppressLint("SetTextI18n")
-    fun setText(value: Int)
-    {
+    fun setText(value: Int) {
         val paint = Paint()
         val bounds = Rect()
 
@@ -40,7 +39,7 @@ class DistanceSeekBar : RelativeLayout {
         //seekBar width
         val width = (seekBar!!.width
                 - seekBar!!.paddingLeft
-                -seekBar!!.paddingRight)
+                - seekBar!!.paddingRight)
 
         val thumbPos =
             seekBar!!.paddingLeft + width * seekBar!!.progress / seekBar!!.max
@@ -50,12 +49,11 @@ class DistanceSeekBar : RelativeLayout {
             thumbPos.toFloat() - stringWidth / 2 + seekBar!!.thumbOffset / 2
     }
 
-    fun getProgress() : Int {
+    fun getProgress(): Int {
         return seekBar!!.progress
     }
 
-    fun setProgress(value : Int)
-    {
+    fun setProgress(value: Int) {
         seekBar!!.progress = value
         setText(value)
     }

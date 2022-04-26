@@ -11,13 +11,10 @@ object DistanceSeekBarBindingAdapter {
 
     @BindingAdapter("cb_progressAttrChanged")
     @JvmStatic
-    fun DistanceSeekBar.setListener(listener: InverseBindingListener?)
-    {
+    fun DistanceSeekBar.setListener(listener: InverseBindingListener?) {
         val seekBar = findViewById<SeekBar>(R.id.my_custom_seekbar)
-        if (listener!=null)
-        {
-            seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener
-            {
+        if (listener != null) {
+            seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,

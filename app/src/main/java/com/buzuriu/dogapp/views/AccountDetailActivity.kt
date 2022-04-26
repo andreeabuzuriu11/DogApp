@@ -7,8 +7,10 @@ import com.buzuriu.dogapp.databinding.ActivityAccountDetailBinding
 import com.buzuriu.dogapp.viewModels.AccountDetailViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
 
-class AccountDetailActivity : BaseBoundActivity<AccountDetailViewModel, ActivityAccountDetailBinding>(
-    AccountDetailViewModel::class.java){
+class AccountDetailActivity :
+    BaseBoundActivity<AccountDetailViewModel, ActivityAccountDetailBinding>(
+        AccountDetailViewModel::class.java
+    ) {
     override val layoutId: Int
         get() = R.layout.activity_account_detail
 
@@ -28,9 +30,8 @@ class AccountDetailActivity : BaseBoundActivity<AccountDetailViewModel, Activity
             mViewModel.editUser()
             return true
         }
-        if(id == R.id.delete)
-        {
-           // mViewModel.deleteUser()
+        if (id == R.id.delete) {
+            // mViewModel.deleteUser()
             return true
         }
         return super.onOptionsItemSelected(item)

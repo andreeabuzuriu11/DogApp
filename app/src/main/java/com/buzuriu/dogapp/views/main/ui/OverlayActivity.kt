@@ -6,7 +6,7 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.viewModels.OverlayViewModel
 import com.buzuriu.dogapp.views.base.BaseActivity
 
-class OverlayActivity : BaseActivity<OverlayViewModel>(OverlayViewModel::class.java)  {
+class OverlayActivity : BaseActivity<OverlayViewModel>(OverlayViewModel::class.java) {
     companion object {
         const val fragmentClassNameParam = "FragmentClassName"
     }

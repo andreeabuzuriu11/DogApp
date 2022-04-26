@@ -15,6 +15,7 @@ class DateUtils {
             calendar.timeInMillis = timeInMillis;
             return simpleDateFormat.format(calendar.time);
         }
+
         @SuppressLint("SimpleDateFormat")
         fun getTimeString(timeInMillis: Long): String {
             val simpleDateFormat = SimpleDateFormat("HH:mm")
@@ -23,8 +24,7 @@ class DateUtils {
             return simpleDateFormat.format(calendar.time);
         }
 
-        fun isMeetingHappeningAtThisTime(meetingObj: MeetingObj, filterType: IFilterObj) : Boolean
-        {
+        fun isMeetingHappeningAtThisTime(meetingObj: MeetingObj, filterType: IFilterObj): Boolean {
             val start = Calendar.getInstance()
             val end = Calendar.getInstance()
             var meetingCalendar = Calendar.getInstance()
@@ -43,8 +43,9 @@ class DateUtils {
             if (filterType.name == "Today") {
                 // all options for today are already selected above
                 if (meetingDate.before(end.time) &&
-                    meetingDate.after(start.time))
-                        return true
+                    meetingDate.after(start.time)
+                )
+                    return true
             }
 
             if (filterType.name == "Tomorrow") {
@@ -58,7 +59,8 @@ class DateUtils {
                 end.add(Calendar.DATE, 1)
 
                 if (meetingDate.before(end.time) &&
-                    meetingDate.after(start.time))
+                    meetingDate.after(start.time)
+                )
                     return true
             }
 
@@ -73,7 +75,8 @@ class DateUtils {
                 end.add(Calendar.DATE, daysTillSunday)
 
                 if (meetingDate.before(end.time) &&
-                    meetingDate.after(start.time))
+                    meetingDate.after(start.time)
+                )
                     return true
             }
 
@@ -83,7 +86,8 @@ class DateUtils {
                 end.add(Calendar.DATE, -1)
 
                 if (meetingDate.before(end.time) &&
-                    meetingDate.after(start.time))
+                    meetingDate.after(start.time)
+                )
                     return true
             }
 
@@ -101,7 +105,8 @@ class DateUtils {
                 end[Calendar.DAY_OF_WEEK] = 7
 
                 if (meetingDate.before(end.time) &&
-                    meetingDate.after(start.time))
+                    meetingDate.after(start.time)
+                )
                     return true
             }
 
@@ -120,7 +125,8 @@ class DateUtils {
                 end.add(Calendar.DATE, -1)
 
                 if (meetingDate.before(end.time) &&
-                    meetingDate.after(start.time))
+                    meetingDate.after(start.time)
+                )
                     return true
             }
             return false

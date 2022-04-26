@@ -8,10 +8,10 @@ import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.viewModels.FilterMeetingsViewModel
 
 
-class FilterAdapter(var filterList: ArrayList<IFilterObj>,
-                    var viewModel: FilterMeetingsViewModel? = null
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
+class FilterAdapter(
+    var filterList: ArrayList<IFilterObj>,
+    var viewModel: FilterMeetingsViewModel? = null
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val applicationBinding = FilterItemCellBinding.inflate(layoutInflater, parent, false)
@@ -31,8 +31,7 @@ class FilterAdapter(var filterList: ArrayList<IFilterObj>,
 
     inner class FilterViewHolder(var applicationBinding: FilterItemCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
-        fun bind(item : IFilterObj)
-        {
+        fun bind(item: IFilterObj) {
             applicationBinding.filterItem = item
             applicationBinding.filterTypeLayout.setOnClickListener {
                 viewModel?.checkSelectedFilter(adapterPosition, filterList, this@FilterAdapter)

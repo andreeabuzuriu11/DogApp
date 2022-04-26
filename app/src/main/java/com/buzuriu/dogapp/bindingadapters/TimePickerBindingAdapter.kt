@@ -21,14 +21,13 @@ object TimePickerBindingAdapter {
             })
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.M)
     @BindingAdapter("cb_getTime")
     @JvmStatic
     fun TimePicker.setMyTime(calendar: Calendar) {
-        if (calendar != null) {
-            this.hour = calendar.get(Calendar.HOUR_OF_DAY)
-            this.minute = calendar.get(Calendar.MINUTE)
-        }
+        this.hour = calendar.get(Calendar.HOUR_OF_DAY)
+        this.minute = calendar.get(Calendar.MINUTE)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

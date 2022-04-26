@@ -7,10 +7,10 @@ import com.buzuriu.dogapp.databinding.BreedCellBinding
 import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.viewModels.SelectBreedViewModel
 
-class BreedAdapter (
-    var breedsList : ArrayList<BreedObj>,
+class BreedAdapter(
+    var breedsList: ArrayList<BreedObj>,
     private var viewModel: SelectBreedViewModel? = null
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount(): Int {
         return breedsList.size
@@ -29,17 +29,16 @@ class BreedAdapter (
     }
 
     inner class BreedCellViewHolder(var applicationBinding: BreedCellBinding) :
-            RecyclerView.ViewHolder(applicationBinding.root) {
-                fun bind(item: BreedObj)
-                {
-                    applicationBinding.breedItem = item
-                    if (viewModel != null) {
-                        applicationBinding.breedCellLayout.setOnClickListener {
-                            viewModel?.selectBreed(item)
-                        }
-                    }
+        RecyclerView.ViewHolder(applicationBinding.root) {
+        fun bind(item: BreedObj) {
+            applicationBinding.breedItem = item
+            if (viewModel != null) {
+                applicationBinding.breedCellLayout.setOnClickListener {
+                    viewModel?.selectBreed(item)
                 }
             }
+        }
+    }
 
     fun filterList(auxList: ArrayList<BreedObj>) {
         breedsList = auxList

@@ -31,23 +31,19 @@ import kotlinx.coroutines.tasks.await
 class AddDogViewModel : BaseViewModel() {
 
     var spinnerEntries = listOf(AgeEnum.MONTHS.toString(), AgeEnum.YEARS.toString())
-
     var dogBitmapImage = MutableLiveData<Bitmap>()
     var name = MutableLiveData("")
     var breed = MutableLiveData("")
     var ageValue = MutableLiveData("")
     var ageString = MutableLiveData("")
-    private var currentGenderString: String? = null
     var currentDogUid: String? = ""
-
     var buttonText = MutableLiveData<String>("add")
-
     var dogPlaceHolder = R.drawable.ic_dog_svgrepo_com
     var dogImageUrl = MutableLiveData<String>()
-
-    var isEdit:Boolean = false
-
+    var isEdit: Boolean = false
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
+
+    private var currentGenderString: String? = null
 
     init {
         val value = dataExchangeService.get<Any>(this::class.qualifiedName!!)
@@ -156,7 +152,7 @@ class AddDogViewModel : BaseViewModel() {
             "male"
 
         var uid = StringUtils.getRandomUID()
-        if(!currentDogUid.isNullOrEmpty()) uid = currentDogUid as String
+        if (!currentDogUid.isNullOrEmpty()) uid = currentDogUid as String
 
         val dog = DogObj(
             uid,
@@ -171,8 +167,7 @@ class AddDogViewModel : BaseViewModel() {
         val currentUserUid = currentUser?.uid
         if (currentUserUid.isNullOrEmpty()) return
 
-        if(!dogImageUrl.value.isNullOrEmpty())
-        {
+        if (!dogImageUrl.value.isNullOrEmpty()) {
             dog.imageUrl = dogImageUrl.value!!
         }
 
@@ -243,23 +238,24 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
-    fun addOrEditDogToData(dog: DogObj)
-    {
-        var dogsList: ArrayList<DogObj>? = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+    fun addOrEditDogToData(dog: DogObj) {
+        var dogsList: ArrayList<DogObj>? =
+            localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
         if (dogsList == null) return
-        if(dogsList.any { it.uid == dog.uid})
-        {
-            val oldDog = dogsList.find { it.uid  == dog.uid}
+        if (dogsList.any { it.uid == dog.uid }) {
+            val oldDog = dogsList.find { it.uid == dog.uid }
             dogsList.remove(oldDog)
             dataExchangeService.put(DogDetailViewModel::class.java.name, dog!!)
-            dataExchangeService.put(MyDogsViewModel::class.java.name, true) // to know the list must be refreshed
+            dataExchangeService.put(
+                MyDogsViewModel::class.java.name,
+                true
+            ) // to know the list must be refreshed
         }
         dogsList.add(dog)
         localDatabaseService.add("localDogsList", dogsList)
     }
 
-    fun changeMeetingInfoRelatedToThisDog(dogUid: String)
-    {
+    fun changeMeetingInfoRelatedToThisDog(dogUid: String) {
         var meetings = ArrayList<MeetingObj>()
         viewModelScope.launch(Dispatchers.IO) {
             meetings = databaseService.fetchDogMeetings(dogUid)!!

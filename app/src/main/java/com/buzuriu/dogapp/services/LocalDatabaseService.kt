@@ -2,7 +2,7 @@ package com.buzuriu.dogapp.services
 
 interface ILocalDatabaseService {
     fun add(key: String, obj: Any)
-    fun <T> get(key:String): T?
+    fun <T> get(key: String): T?
     fun clear()
 }
 

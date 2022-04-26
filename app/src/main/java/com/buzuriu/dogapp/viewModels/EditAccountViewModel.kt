@@ -14,23 +14,21 @@ class EditAccountViewModel : BaseViewModel() {
 
     var user = MutableLiveData<UserInfo>()
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
-    var currentGenderString : String? = null
+    var currentGenderString: String? = null
 
     init {
         user.value = dataExchangeService.get<UserInfo>(this::class.java.name)
         checkUserGender(user.value!!.gender!!)
     }
 
-    private fun checkUserGender(gender: String)
-    {
+    private fun checkUserGender(gender: String) {
         if (gender == "female")
             isFemaleGenderSelected.value = true
         else if (gender == "male")
             isFemaleGenderSelected.value = false
     }
 
-    fun editAccount()
-    {
+    fun editAccount() {
         currentGenderString = if (isFemaleGenderSelected.value!!) {
             "female"
         } else
@@ -70,8 +68,7 @@ class EditAccountViewModel : BaseViewModel() {
         }
     }
 
-    fun changeMeetingInfoRelatedToThisUser()
-    {
+    fun changeMeetingInfoRelatedToThisUser() {
         var meetings = ArrayList<MeetingObj>()
         viewModelScope.launch(Dispatchers.IO) {
             meetings = databaseService.fetchUserMeetings(currentUser!!.uid)!!

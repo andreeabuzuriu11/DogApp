@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 interface IFirebaseAuthService {
-    fun getCurrentUser() : FirebaseUser?
+    fun getCurrentUser(): FirebaseUser?
 
     suspend fun registerWithEmailAndPassword(
         email: String,
@@ -19,7 +19,7 @@ interface IFirebaseAuthService {
         onCompleteListener: IOnCompleteListener
     )
 
-    suspend fun resetPassword(email:String, onCompleteListener: IOnCompleteListener)
+    suspend fun resetPassword(email: String, onCompleteListener: IOnCompleteListener)
 
     fun logout()
 }
@@ -28,8 +28,7 @@ class FirebaseAuthService : IFirebaseAuthService {
 
     private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
-    override fun getCurrentUser() : FirebaseUser?
-    {
+    override fun getCurrentUser(): FirebaseUser? {
         return auth.currentUser
     }
 
@@ -50,8 +49,8 @@ class FirebaseAuthService : IFirebaseAuthService {
     }
 
     override suspend fun registerWithEmailAndPassword(
-        email: String, password: String, onCompleteListener: IOnCompleteListener)
-    {
+        email: String, password: String, onCompleteListener: IOnCompleteListener
+    ) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
             onCompleteListener.onComplete(it.isSuccessful, it.exception)
         }

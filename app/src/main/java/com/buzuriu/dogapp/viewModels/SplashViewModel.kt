@@ -66,7 +66,7 @@ class SplashViewModel : BaseViewModel() {
     }
 
     private suspend fun getUserAccountInfo() {
-        val userInfo : UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
+        val userInfo: UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
 
         localDatabaseService.add("currentUser", userInfo!!)
     }

@@ -22,14 +22,16 @@ import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, FragmentMeetingsOnMapBinding>(
-    MeetingsOnMapViewModel::class.java) , OnMapReadyCallback{
+class MeetingsOnMapFragment :
+    BaseBoundFragment<MeetingsOnMapViewModel, FragmentMeetingsOnMapBinding>(
+        MeetingsOnMapViewModel::class.java
+    ), OnMapReadyCallback {
 
     private lateinit var locationListener: LocationListener
-    private var locationManager : LocationManager? = null
-    private var latitude : Double = 0.0
-    private var longitude : Double = 0.0
-    private var googleMap : GoogleMap? = null
+    private var locationManager: LocationManager? = null
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+    private var googleMap: GoogleMap? = null
     var circle: Circle? = null
 
     override val layoutId: Int
@@ -108,11 +110,16 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
         )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == PERMISSION_REQUEST_ACCESS_FINE_LOCATION) {
             when (grantResults[0]) {
                 PackageManager.PERMISSION_GRANTED -> getLocation()
-                PackageManager.PERMISSION_DENIED -> {}//Tell to user the need of grant permission
+                PackageManager.PERMISSION_DENIED -> {
+                }//Tell to user the need of grant permission
             }
         }
     }
@@ -136,14 +143,12 @@ class MeetingsOnMapFragment : BaseBoundFragment<MeetingsOnMapViewModel, Fragment
         // Border width of the circle
         circleOptions.strokeWidth(2f)
         // Adding the circle to the GoogleMap
-        if (circle != null)
-        {
+        if (circle != null) {
             circle!!.remove()
         }
 
         circle = googleMap!!.addCircle(circleOptions)
     }
-
 
 
 }

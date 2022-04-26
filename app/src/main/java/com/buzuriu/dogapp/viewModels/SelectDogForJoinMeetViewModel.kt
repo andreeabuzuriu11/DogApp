@@ -57,8 +57,6 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
     }
 
 
-
-
     fun selectDog(dogObj: DogObj) {
         unselectPreviousDog()
         dogObj.isSelected = true

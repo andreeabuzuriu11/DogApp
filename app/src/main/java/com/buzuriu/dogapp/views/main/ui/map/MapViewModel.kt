@@ -31,7 +31,8 @@ class MapViewModel : BaseViewModel() {
     private var locationPoints = ArrayList<LatLng>()
     private var lastViewModel: String? = null
     private val userJoinedMeetings = ArrayList<MyCustomMeetingObj>()
-    private var mapOfMeetingUidAndCurrentUserAsParticipant : MutableMap<String, String> = mutableMapOf()
+    private var mapOfMeetingUidAndCurrentUserAsParticipant: MutableMap<String, String> =
+        mutableMapOf()
 
     init {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting, this)
@@ -80,40 +81,41 @@ class MapViewModel : BaseViewModel() {
                 SelectDogForJoinMeetFragment::class.qualifiedName
             )
 
-        }
-        else if (meeting.meetingStateEnum == MeetingStateEnum.JOINED)
-        {
-            dialogService.showAlertDialog("Unjoin?", "Are you sure you want to unjoin this meeting with ${meeting.user!!.name}?", "Yes", object :
-                IClickListener {
-                override fun clicked() {
-                    meeting.meetingStateEnum = MeetingStateEnum.NOT_JOINED
-                    meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(meeting))
-                    val participantUid = mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid]
-                    if(participantUid!=null) {
-                        viewModelScope.launch(Dispatchers.IO)
-                        {
-                            databaseService.unjoinMeeting(meeting.meetingObj!!.uid!!,
-                                participantUid,
-                                object : IOnCompleteListener {
-                                    override fun onComplete(
-                                        successful: Boolean,
-                                        exception: Exception?
-                                    ) {
-                                        dialogService.showSnackbar("Success")
-                                    }
-                                })
+        } else if (meeting.meetingStateEnum == MeetingStateEnum.JOINED) {
+            dialogService.showAlertDialog(
+                "Unjoin?",
+                "Are you sure you want to unjoin this meeting with ${meeting.user!!.name}?",
+                "Yes",
+                object :
+                    IClickListener {
+                    override fun clicked() {
+                        meeting.meetingStateEnum = MeetingStateEnum.NOT_JOINED
+                        meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(meeting))
+                        val participantUid =
+                            mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid]
+                        if (participantUid != null) {
+                            viewModelScope.launch(Dispatchers.IO)
+                            {
+                                databaseService.unjoinMeeting(meeting.meetingObj!!.uid!!,
+                                    participantUid,
+                                    object : IOnCompleteListener {
+                                        override fun onComplete(
+                                            successful: Boolean,
+                                            exception: Exception?
+                                        ) {
+                                            dialogService.showSnackbar("Success")
+                                        }
+                                    })
+                            }
                         }
                     }
-                }
-            })
+                })
         }
     }
 
-    private fun getMeetingChangedDueToJoin()
-    {
+    private fun getMeetingChangedDueToJoin() {
         val changedMeeting = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
-        if(changedMeeting != null)
-        {
+        if (changedMeeting != null) {
             changedMeeting.meetingStateEnum = MeetingStateEnum.JOINED
             meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(changedMeeting))
         }
@@ -146,7 +148,8 @@ class MapViewModel : BaseViewModel() {
                 if (meet.userUid == currentUser!!.uid) {
                     userJoinedMeetings.add(meeting)
                     changeStateOfMeeting(meeting)
-                    mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid!!] = meet.uid!!
+                    mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid!!] =
+                        meet.uid!!
                 }
         }
         return userJoinedMeetings
@@ -160,7 +163,10 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
-    private fun changeStateAccordingly(meeting: MyCustomMeetingObj, meetingStateEnum: MeetingStateEnum) {
+    private fun changeStateAccordingly(
+        meeting: MyCustomMeetingObj,
+        meetingStateEnum: MeetingStateEnum
+    ) {
         meeting.meetingStateEnum = meetingStateEnum
     }
 

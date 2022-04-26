@@ -8,18 +8,21 @@ class MyCustomMeetingObj {
     var dog: DogObj? = null
     var meetingStateEnum = MeetingStateEnum.NOT_JOINED
 
-    constructor(meetingObj: MeetingObj, userInfo: UserInfo, dogObj: DogObj)
-    {
+    constructor(meetingObj: MeetingObj, userInfo: UserInfo, dogObj: DogObj) {
         this.meetingObj = meetingObj
-        this.user= userInfo
+        this.user = userInfo
         this.dog = dogObj
         this.meetingStateEnum = MeetingStateEnum.NOT_JOINED
     }
 
-    constructor(meetingObj: MeetingObj, userInfo: UserInfo, dogObj: DogObj, meetingStateEnum: MeetingStateEnum)
-    {
+    constructor(
+        meetingObj: MeetingObj,
+        userInfo: UserInfo,
+        dogObj: DogObj,
+        meetingStateEnum: MeetingStateEnum
+    ) {
         this.meetingObj = meetingObj
-        this.user= userInfo
+        this.user = userInfo
         this.dog = dogObj
         this.meetingStateEnum = meetingStateEnum
     }

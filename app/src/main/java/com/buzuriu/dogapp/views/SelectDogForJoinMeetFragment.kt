@@ -9,9 +9,10 @@ import com.buzuriu.dogapp.databinding.FragmentSelectDogForMeetingJoinBinding
 import com.buzuriu.dogapp.viewModels.SelectDogForJoinMeetViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
-class SelectDogForJoinMeetFragment : BaseBoundFragment<SelectDogForJoinMeetViewModel, FragmentSelectDogForMeetingJoinBinding>(
-    SelectDogForJoinMeetViewModel::class.java)
-{
+class SelectDogForJoinMeetFragment :
+    BaseBoundFragment<SelectDogForJoinMeetViewModel, FragmentSelectDogForMeetingJoinBinding>(
+        SelectDogForJoinMeetViewModel::class.java
+    ) {
     private lateinit var currentBinding: FragmentSelectDogForMeetingJoinBinding
 
     override val layoutId: Int
@@ -22,8 +23,7 @@ class SelectDogForJoinMeetFragment : BaseBoundFragment<SelectDogForJoinMeetViewM
         binding.viewModel = mViewModel
     }
 
-    private fun setupRecyclerView()
-    {
+    private fun setupRecyclerView() {
         val recyclerView = currentBinding.dogList
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.dogJoinMeetAdapter

@@ -20,31 +20,71 @@ import java.util.*
 interface IDatabaseService {
     val fireAuth: FirebaseAuth
 
-    suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener)
+    suspend fun storeUserInfo(
+        userUid: String,
+        userInfo: UserInfo,
+        onCompleteListener: IOnCompleteListener
+    )
+
     suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
-    suspend fun storeDogUidToUser(userUid: String, dogUid: String, onCompleteListener: IOnCompleteListener)
-    suspend fun storeMeetingInfo(meetingUid: String, meetingObj: MeetingObj, onCompleteListener: IOnCompleteListener)
-    suspend fun joinMeeting(meetingUid: String, participantUid: String, participantObj: ParticipantObj, onCompleteListener: IOnCompleteListener)
-    suspend fun unjoinMeeting(meetingUid: String, participantUid: String, onCompleteListener: IOnCompleteListener)
-    suspend fun fetchMeetingByUid(meetingUid: String) : MeetingObj?
-    suspend fun fetchDogByUid(dogUid: String) : DogObj?
-    suspend fun fetchUserByUid(userUid: String) : UserInfo?
-    suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj>?
-    suspend fun fetchMeetings(filtersList: ArrayList<IFilterObj>, userUid : String): ArrayList<MeetingObj>
-    suspend fun fetchAllMeetingParticipants(meetingUid: String) : ArrayList<ParticipantObj>?
-    suspend fun fetchAllOtherMeetings(userUid: String) : ArrayList<MeetingObj>?
-    suspend fun fetchUserMeetings(userUid: String) : ArrayList<MeetingObj>?
-    suspend fun fetchDogMeetings(dogUid: String) : ArrayList<MeetingObj>?
-    suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>, userUid : String) : ArrayList <MeetingObj>?
-    suspend fun deleteDog(userUid: String,
-                           dogUid: String,
-                           onCompleteListener: IOnCompleteListener)
-    suspend fun deleteMeeting(meetingUid: String,
-                          onCompleteListener: IOnCompleteListener)
+    suspend fun storeDogUidToUser(
+        userUid: String,
+        dogUid: String,
+        onCompleteListener: IOnCompleteListener
+    )
+
+    suspend fun storeMeetingInfo(
+        meetingUid: String,
+        meetingObj: MeetingObj,
+        onCompleteListener: IOnCompleteListener
+    )
+
+    suspend fun joinMeeting(
+        meetingUid: String,
+        participantUid: String,
+        participantObj: ParticipantObj,
+        onCompleteListener: IOnCompleteListener
+    )
+
+    suspend fun unjoinMeeting(
+        meetingUid: String,
+        participantUid: String,
+        onCompleteListener: IOnCompleteListener
+    )
+
+    suspend fun fetchMeetingByUid(meetingUid: String): MeetingObj?
+    suspend fun fetchDogByUid(dogUid: String): DogObj?
+    suspend fun fetchUserByUid(userUid: String): UserInfo?
+    suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj>?
+    suspend fun fetchMeetings(
+        filtersList: ArrayList<IFilterObj>,
+        userUid: String
+    ): ArrayList<MeetingObj>
+
+    suspend fun fetchAllMeetingParticipants(meetingUid: String): ArrayList<ParticipantObj>?
+    suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj>?
+    suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj>?
+    suspend fun fetchDogMeetings(dogUid: String): ArrayList<MeetingObj>?
+    suspend fun fetchMeetingsByFilters(
+        filters: ArrayList<IFilterObj>,
+        userUid: String
+    ): ArrayList<MeetingObj>?
+
+    suspend fun deleteDog(
+        userUid: String,
+        dogUid: String,
+        onCompleteListener: IOnCompleteListener
+    )
+
+    suspend fun deleteMeeting(
+        meetingUid: String,
+        onCompleteListener: IOnCompleteListener
+    )
 }
 
 class DatabaseService(
-    private val sharedPreferencesService: ISharedPreferencesService) : IDatabaseService {
+    private val sharedPreferencesService: ISharedPreferencesService
+) : IDatabaseService {
     override val fireAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val userInfoCollection = "UserInfo"
     private val dogInfoCollection = "Dog"
@@ -54,7 +94,11 @@ class DatabaseService(
     private var tasksList = ArrayList<Task<QuerySnapshot>>()
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    override suspend fun storeUserInfo(userUid: String, userInfo: UserInfo, onCompleteListener: IOnCompleteListener) {
+    override suspend fun storeUserInfo(
+        userUid: String,
+        userInfo: UserInfo,
+        onCompleteListener: IOnCompleteListener
+    ) {
         firestore.collection(userInfoCollection)
             .document(userUid)
             .set(userInfo)
@@ -62,8 +106,11 @@ class DatabaseService(
             .await()
     }
 
-    override suspend fun storeDogUidToUser(userUid: String, dogUid: String, onCompleteListener: IOnCompleteListener)
-    {
+    override suspend fun storeDogUidToUser(
+        userUid: String,
+        dogUid: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
         firestore.collection(userInfoCollection)
             .document(userUid)
             .collection(dogInfoCollection)
@@ -98,10 +145,12 @@ class DatabaseService(
             .await()
     }
 
-    override suspend fun joinMeeting(meetingUid: String,
-                                     participantUid: String,
-                                     participantObj: ParticipantObj,
-                                     onCompleteListener: IOnCompleteListener) {
+    override suspend fun joinMeeting(
+        meetingUid: String,
+        participantUid: String,
+        participantObj: ParticipantObj,
+        onCompleteListener: IOnCompleteListener
+    ) {
         firestore.collection(meetingsCollection)
             .document(meetingUid)
             .collection(meetingParticipants)
@@ -111,9 +160,11 @@ class DatabaseService(
             .await()
     }
 
-    override suspend fun unjoinMeeting(meetingUid: String,
-                                     participantUid: String,
-                                     onCompleteListener: IOnCompleteListener) {
+    override suspend fun unjoinMeeting(
+        meetingUid: String,
+        participantUid: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
         firestore.collection(meetingsCollection)
             .document(meetingUid)
             .collection(meetingParticipants)
@@ -180,7 +231,7 @@ class DatabaseService(
         return userInfo
     }
 
-    override suspend fun fetchUserDogs(userUid: String) : ArrayList<DogObj> {
+    override suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj> {
         val dogList = ArrayList<DogObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(dogInfoCollection)
@@ -205,7 +256,7 @@ class DatabaseService(
         return dogList
     }
 
-    override suspend fun fetchAllOtherMeetings(userUid: String) : ArrayList<MeetingObj> {
+    override suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
@@ -289,8 +340,7 @@ class DatabaseService(
         return meetingsList
     }
 
-    private fun setMeetingsTimeQuery(filterType: IFilterObj)
-    {
+    private fun setMeetingsTimeQuery(filterType: IFilterObj) {
         val start = Calendar.getInstance()
         val end = Calendar.getInstance()
 
@@ -370,24 +420,21 @@ class DatabaseService(
     }
 
 
-    private fun setDogGenderTypeQuery(filterType: IFilterObj)
-    {
+    private fun setDogGenderTypeQuery(filterType: IFilterObj) {
         val query = meetingsQuery!!
             .whereEqualTo("dogGender", filterType.name)
             .get()
         tasksList.add(query)
     }
 
-    private fun setUserGenderTypeQuery(filterType: IFilterObj)
-    {
+    private fun setUserGenderTypeQuery(filterType: IFilterObj) {
         val query = meetingsQuery!!
             .whereEqualTo("userGender", filterType.name)
             .get()
         tasksList.add(query)
     }
 
-    private fun setDogBreedTypeQuery(filterType: IFilterObj)
-    {
+    private fun setDogBreedTypeQuery(filterType: IFilterObj) {
         val query = meetingsQuery!!
             .whereEqualTo("dogBreed", filterType.name)
             .get()
@@ -443,15 +490,17 @@ class DatabaseService(
                 is FilterByDogBreedObj -> {
                     setDogBreedTypeQuery(it)
                 }
-                is FilterByLocationObj ->
-                {
+                is FilterByLocationObj -> {
                     setMeetingsDistanceQuery(it.distance!!)
                 }
             }
         }
     }
 
-    override suspend fun fetchMeetingsByFilters(filters: ArrayList<IFilterObj>, userUid : String): ArrayList<MeetingObj> {
+    override suspend fun fetchMeetingsByFilters(
+        filters: ArrayList<IFilterObj>,
+        userUid: String
+    ): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
 
         meetingsQuery =
@@ -468,12 +517,15 @@ class DatabaseService(
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
 
-                    if (MeetingUtils.checkFiltersAreAllAccomplished(meeting, filters,
+                    if (MeetingUtils.checkFiltersAreAllAccomplished(
+                            meeting, filters,
                             sharedPreferencesService.readFromSharedPref<LatLng>(
-                                SharedPreferences.userLocationKey, LatLng::class.java)))
-                    {
+                                SharedPreferences.userLocationKey, LatLng::class.java
+                            )
+                        )
+                    ) {
 
-                        if(meetingsList.find { it.uid == meeting.uid }!=null || meeting.userUid == userUid)continue
+                        if (meetingsList.find { it.uid == meeting.uid } != null || meeting.userUid == userUid) continue
                         meetingsList.add(meeting)
                     }
 
@@ -492,7 +544,7 @@ class DatabaseService(
 
     override suspend fun fetchMeetings(
         filtersList: ArrayList<IFilterObj>,
-        userUid : String
+        userUid: String
     ): ArrayList<MeetingObj> {
         val meetingsList: ArrayList<MeetingObj> = try {
             if (filtersList.isNullOrEmpty()) {

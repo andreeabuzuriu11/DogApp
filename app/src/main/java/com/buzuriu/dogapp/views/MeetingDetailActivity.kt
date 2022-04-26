@@ -12,12 +12,14 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class MeetingDetailActivity : BaseBoundActivity<MeetingDetailViewModel, ActivityMeetingDetailBinding>(
-    MeetingDetailViewModel::class.java), OnMapReadyCallback {
+class MeetingDetailActivity :
+    BaseBoundActivity<MeetingDetailViewModel, ActivityMeetingDetailBinding>(
+        MeetingDetailViewModel::class.java
+    ), OnMapReadyCallback {
 
     override val layoutId = R.layout.activity_meeting_detail
     override fun setupDataBinding(binding: ActivityMeetingDetailBinding) {
-        binding.viewModel =  mViewModel
+        binding.viewModel = mViewModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +35,8 @@ class MeetingDetailActivity : BaseBoundActivity<MeetingDetailViewModel, Activity
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        val coords = LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
+        val coords =
+            LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
         p0.addMarker(
             MarkerOptions()
                 .position(coords)

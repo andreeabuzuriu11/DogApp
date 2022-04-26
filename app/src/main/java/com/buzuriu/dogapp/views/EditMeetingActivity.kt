@@ -12,9 +12,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class EditMeetingActivity : BaseBoundActivity<EditMeetingViewModel,ActivityEditMeetingBinding>(
-    EditMeetingViewModel::class.java) , OnMapReadyCallback
-{
+class EditMeetingActivity : BaseBoundActivity<EditMeetingViewModel, ActivityEditMeetingBinding>(
+    EditMeetingViewModel::class.java
+), OnMapReadyCallback {
     override val layoutId: Int
         get() = R.layout.activity_edit_meeting
 
@@ -41,7 +41,8 @@ class EditMeetingActivity : BaseBoundActivity<EditMeetingViewModel,ActivityEditM
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        val coords = LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
+        val coords =
+            LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
         p0.addMarker(
             MarkerOptions()
                 .position(coords)

@@ -13,7 +13,7 @@ import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
 class SelectBreedFragment : BaseBoundFragment<SelectBreedViewModel, FragmentSelectBreedBinding>(
     SelectBreedViewModel::class.java
-){
+) {
     private lateinit var currentBinding: FragmentSelectBreedBinding
 
     override val layoutId: Int
@@ -25,10 +25,13 @@ class SelectBreedFragment : BaseBoundFragment<SelectBreedViewModel, FragmentSele
         binding.viewModel = mViewModel
     }
 
-    private fun setupRecyclerView()
-    {
+    private fun setupRecyclerView() {
         val recyclerView = currentBinding.breedList
-        recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(
+            activity,
+            RecyclerView.VERTICAL,
+            false
+        )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.breedAdapter
     }
 
@@ -43,8 +46,10 @@ class SelectBreedFragment : BaseBoundFragment<SelectBreedViewModel, FragmentSele
             override fun afterTextChanged(p0: Editable?) {
 
             }
+
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
+
             override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 mViewModel.searchByName(charSequence.toString())
             }

@@ -12,8 +12,8 @@ import com.buzuriu.dogapp.viewModels.SelectDogViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
 class SelectDogFragment : BaseBoundFragment<SelectDogViewModel, FragmentSelectDogBinding>(
-SelectDogViewModel::class.java)
-{
+    SelectDogViewModel::class.java
+) {
     private lateinit var currentBinding: FragmentSelectDogBinding
 
     override val layoutId: Int
@@ -24,8 +24,7 @@ SelectDogViewModel::class.java)
         binding.viewModel = mViewModel
     }
 
-    private fun setupRecyclerView()
-    {
+    private fun setupRecyclerView() {
         val recyclerView = currentBinding.dogList
         recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.dogNameAdapter
@@ -42,8 +41,10 @@ SelectDogViewModel::class.java)
             override fun afterTextChanged(p0: Editable?) {
 
             }
+
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
+
             override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 mViewModel.searchByName(charSequence.toString())
             }

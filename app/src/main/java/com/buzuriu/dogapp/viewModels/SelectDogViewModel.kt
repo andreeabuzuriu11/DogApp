@@ -14,23 +14,19 @@ class SelectDogViewModel : BaseViewModel() {
         initDogs()
 
         val dogName = dataExchangeService.get<String>(this::class.qualifiedName!!)
-        if (dogName!=null)
-        {
-            val dog = dogsList.find { x -> x.name == dogName}
+        if (dogName != null) {
+            val dog = dogsList.find { x -> x.name == dogName }
             selectDog(dog!!)
         }
     }
 
-    private fun initDogs()
-    {
+    private fun initDogs() {
         dogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!
         dogNameAdapter = DogNameAdapter(dogsList!!, this)
     }
 
-    fun saveDog()
-    {
-        if(selectedDog == null)
-        {
+    fun saveDog() {
+        if (selectedDog == null) {
             dialogService.showSnackbar("Please select a dog")
             return
         }
@@ -48,8 +44,7 @@ class SelectDogViewModel : BaseViewModel() {
 
     }
 
-    private fun unselectPreviousDog()
-    {
+    private fun unselectPreviousDog() {
         for (dog in dogsList) {
             if (dog.isSelected!!) {
                 dog.isSelected = false
@@ -63,17 +58,14 @@ class SelectDogViewModel : BaseViewModel() {
         navigationService.closeCurrentActivity()
     }
 
-    fun searchByName(searchedString : String) {
+    fun searchByName(searchedString: String) {
         val auxSearchedDogs = ArrayList<DogObj>()
-        if (dogsList.isNotEmpty())
-        {
-            for (item in dogsList)
-            {
+        if (dogsList.isNotEmpty()) {
+            for (item in dogsList) {
                 val mySearchedString = searchedString.toLowerCase(Locale.ROOT)
                 val itemString = item.name?.toLowerCase(Locale.ROOT)
 
-                if(itemString!!.contains(mySearchedString) || mySearchedString.isEmpty())
-                {
+                if (itemString!!.contains(mySearchedString) || mySearchedString.isEmpty()) {
                     auxSearchedDogs.add(item)
                 }
             }

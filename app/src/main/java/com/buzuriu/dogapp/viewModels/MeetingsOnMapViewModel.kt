@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng
 
 class MeetingsOnMapViewModel : BaseViewModel() {
 
-    var locationMeetings : ArrayList<LatLng>? = ArrayList<LatLng>()
+    var locationMeetings: ArrayList<LatLng>? = ArrayList<LatLng>()
     var progress = MutableLiveData<Int>(0)
     var userCoordinates = MutableLiveData<LatLng>()
 
@@ -16,21 +16,19 @@ class MeetingsOnMapViewModel : BaseViewModel() {
         locationMeetings = localDatabaseService.get<ArrayList<LatLng>>("locationPoints")
     }
 
-    fun search()
-    {
-        var meetingString =  progress.value.toString() + " km"
+    fun search() {
+        var meetingString = progress.value.toString() + " km"
         val mapFilter = FilterByLocationObj(meetingString, progress.value!!, true)
         dataExchangeService.put(MapViewModel::class.qualifiedName!!, mapFilter)
 
-        val myUserCoords=userCoordinates.value
+        val myUserCoords = userCoordinates.value
         sharedPreferenceService
-            .writeInSharedPref(SharedPreferences.userLocationKey,myUserCoords!!)
+            .writeInSharedPref(SharedPreferences.userLocationKey, myUserCoords!!)
 
         navigationService.closeCurrentActivity()
     }
 
-    fun close()
-    {
+    fun close() {
         navigationService.closeCurrentActivity()
     }
 

@@ -12,10 +12,11 @@ import com.buzuriu.dogapp.databinding.FragmentMyDogsBinding
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
 
-class MyDogsFragment : BaseBoundFragment<MyDogsViewModel, FragmentMyDogsBinding>(MyDogsViewModel::class.java) {
+class MyDogsFragment :
+    BaseBoundFragment<MyDogsViewModel, FragmentMyDogsBinding>(MyDogsViewModel::class.java) {
 
     private lateinit var currentBinding: FragmentMyDogsBinding
-    override val layoutId: Int= R.layout.fragment_my_dogs
+    override val layoutId: Int = R.layout.fragment_my_dogs
 
     override fun setupDataBinding(binding: FragmentMyDogsBinding) {
         binding.viewModel = mViewModel
@@ -27,10 +28,14 @@ class MyDogsFragment : BaseBoundFragment<MyDogsViewModel, FragmentMyDogsBinding>
         setupRecyclerView()
         setHasOptionsMenu(true)
     }
-    private fun setupRecyclerView()
-    {
+
+    private fun setupRecyclerView() {
         val recyclerView = currentBinding.dogsList
-        recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(
+            activity,
+            RecyclerView.VERTICAL,
+            false
+        )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.dogAdapter
     }
 

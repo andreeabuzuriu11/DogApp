@@ -20,13 +20,13 @@ import kotlin.coroutines.suspendCoroutine
 
 open class BaseViewModel : ViewModel(), KoinComponent {
 
-    var isLoadingViewVisible : MutableLiveData<Boolean> = MutableLiveData(false)
+    var isLoadingViewVisible: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    protected val dialogService : IDialogService by inject()
-    protected val firebaseAuthService : IFirebaseAuthService by inject()
-    protected val navigationService : INavigationService by inject()
-    protected val connectivityService : IConnectivityService by inject()
-    protected val databaseService : IDatabaseService by inject()
+    protected val dialogService: IDialogService by inject()
+    protected val firebaseAuthService: IFirebaseAuthService by inject()
+    protected val navigationService: INavigationService by inject()
+    protected val connectivityService: IConnectivityService by inject()
+    protected val databaseService: IDatabaseService by inject()
     protected val dataExchangeService: IDataExchangeService by inject()
     protected val sharedPreferenceService: ISharedPreferencesService by inject()
     protected val alertBuilderService: IAlertBuilderService by inject()
@@ -40,27 +40,27 @@ open class BaseViewModel : ViewModel(), KoinComponent {
     protected val isSignedIn get() = currentUser != null
 
     open fun onCreate() {
-        Log.d("Lifecycle",this.javaClass.name + "onCreate")
+        Log.d("Lifecycle", this.javaClass.name + "onCreate")
     }
 
     open fun onResume() {
-        Log.d("Lifecycle",this.javaClass.name + " onResume")
+        Log.d("Lifecycle", this.javaClass.name + " onResume")
     }
 
     open fun onStart() {
-        Log.d("Lifecycle",this.javaClass.name + " onStart")
+        Log.d("Lifecycle", this.javaClass.name + " onStart")
     }
 
     open fun onPause() {
-        Log.d("Lifecycle",this.javaClass.name + " onPause")
+        Log.d("Lifecycle", this.javaClass.name + " onPause")
     }
 
     open fun onStop() {
-        Log.d("Lifecycle",this.javaClass.name + " onStop")
+        Log.d("Lifecycle", this.javaClass.name + " onStop")
     }
 
     open fun onDestroy() {
-        Log.d("Lifecycle",this.javaClass.name + " onDestroy")
+        Log.d("Lifecycle", this.javaClass.name + " onDestroy")
     }
 
     fun onRequestPermissionsResult(
@@ -75,13 +75,11 @@ open class BaseViewModel : ViewModel(), KoinComponent {
         activityResultService.setupActivityForResultLauncher(resultLauncher)
     }
 
-    fun onActivityForResult(activityResult: ActivityResult)
-    {
+    fun onActivityForResult(activityResult: ActivityResult) {
         activityResultService.onActivityForResult(activityResult)
     }
 
-    protected fun ShowLoadingView(isVisible : Boolean)
-    {
+    protected fun ShowLoadingView(isVisible: Boolean) {
         viewModelScope.launch(Dispatchers.Main)
         {
             isLoadingViewVisible.value = isVisible
@@ -118,7 +116,8 @@ open class BaseViewModel : ViewModel(), KoinComponent {
             viewModelScope.launch(Dispatchers.Main) {
                 val permissionsResult = permissionService.requestPermissionStatusAsync(
                     listOf(
-                        Manifest.permission.CAMERA)
+                        Manifest.permission.CAMERA
+                    )
                 ).await()
                 var grantedCounter = 0
                 for (result in permissionsResult) {
@@ -136,12 +135,13 @@ open class BaseViewModel : ViewModel(), KoinComponent {
         })
     }
 
-    protected suspend fun askLocationPermission():Task<Boolean> {
+    protected suspend fun askLocationPermission(): Task<Boolean> {
         return Tasks.forResult(suspendCoroutine<Boolean> {
             viewModelScope.launch(Dispatchers.Main) {
                 val permissionsResult = permissionService.requestPermissionStatusAsync(
                     listOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION)
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
                 ).await()
                 var grantedCounter = 0
                 for (result in permissionsResult) {

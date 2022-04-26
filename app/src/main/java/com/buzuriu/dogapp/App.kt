@@ -15,15 +15,15 @@ class App : Application() {
         single<IDialogService> { DialogService(get()) }
         single<IFirebaseAuthService> { FirebaseAuthService() }
         single<INavigationService> { NavigationService(get()) }
-        single<IConnectivityService> { ConnectivityService(get())}
-        single<IDatabaseService> { DatabaseService(get())}
+        single<IConnectivityService> { ConnectivityService(get()) }
+        single<IDatabaseService> { DatabaseService(get()) }
         single<IDataExchangeService> { DataExchangeService() }
         single<ISharedPreferencesService> { SharedPreferencesService(get()) }
-        single<IAlertBuilderService> { AlertBuilderService(get())}
-        single<IPermissionService> { PermissionService(get())}
-        single<IActivityResultService> { ActivityResultService()}
-        single<IStorageService>{StorageService()}
-        single<ILocalDatabaseService> {LocalDatabaseService()}
+        single<IAlertBuilderService> { AlertBuilderService(get()) }
+        single<IPermissionService> { PermissionService(get()) }
+        single<IActivityResultService> { ActivityResultService() }
+        single<IStorageService> { StorageService() }
+        single<ILocalDatabaseService> { LocalDatabaseService() }
     }
 
     private val activityService: ICurrentActivityService by inject()
