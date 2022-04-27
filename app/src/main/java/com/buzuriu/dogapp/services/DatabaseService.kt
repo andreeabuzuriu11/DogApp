@@ -380,64 +380,61 @@ class DatabaseService(
                 end[Calendar.SECOND] = 59
                 end[Calendar.MILLISECOND] = 999
 
-                if (Calendar.DAY_OF_MONTH > 24) {
-                    if (Calendar.MONTH == Calendar.JANUARY ||
-                        Calendar.MONTH == Calendar.MARCH ||
-                        Calendar.MONTH == Calendar.MAY ||
-                        Calendar.MONTH == Calendar.JULY ||
-                        Calendar.MONTH == Calendar.AUGUST ||
-                        Calendar.MONTH == Calendar.OCTOBER ||
-                        Calendar.MONTH == Calendar.DECEMBER
-                    ) {
-                        end.timeInMillis = System.currentTimeMillis()
-                        end.add(Calendar.MONTH, 1)
-                        end.add(Calendar.DAY_OF_MONTH, 7 - (31 - Calendar.DAY_OF_MONTH))
-                    } else if (Calendar.MONTH == Calendar.APRIL ||
-                        Calendar.MONTH == Calendar.JUNE ||
-                        Calendar.MONTH == Calendar.SEPTEMBER ||
-                        Calendar.MONTH == Calendar.NOVEMBER
-                    ) {
-                        end.timeInMillis = System.currentTimeMillis()
-                        end.add(Calendar.MONTH, 1)
-                        end.add(Calendar.DAY_OF_MONTH, 7 - (30 - Calendar.DAY_OF_MONTH))
-                    } else if (Calendar.MONTH == Calendar.FEBRUARY) {
-                        end.timeInMillis = System.currentTimeMillis()
-                        end.add(Calendar.MONTH, 1)
-                        end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                when {
+                    Calendar.DAY_OF_MONTH > 24 -> {
+                        when (Calendar.MONTH) {
+                            Calendar.JANUARY, Calendar.MARCH, Calendar.MAY, Calendar.JULY, Calendar.AUGUST, Calendar.OCTOBER, Calendar.DECEMBER -> {
+                                end.timeInMillis = System.currentTimeMillis()
+                                end.add(Calendar.MONTH, 1)
+                                end.add(Calendar.DAY_OF_MONTH, 7 - (31 - Calendar.DAY_OF_MONTH))
+                            }
+                            Calendar.APRIL, Calendar.JUNE, Calendar.SEPTEMBER, Calendar.NOVEMBER -> {
+                                end.timeInMillis = System.currentTimeMillis()
+                                end.add(Calendar.MONTH, 1)
+                                end.add(Calendar.DAY_OF_MONTH, 7 - (30 - Calendar.DAY_OF_MONTH))
+
+                            }
+                            Calendar.FEBRUARY -> {
+                                end.timeInMillis = System.currentTimeMillis()
+                                end.add(Calendar.MONTH, 1)
+                                end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+
+                            }
+                        }
                     }
-                } else if (Calendar.DAY_OF_MONTH == 24) {
-                    if (Calendar.MONTH == Calendar.JANUARY ||
-                        Calendar.MONTH == Calendar.MARCH ||
-                        Calendar.MONTH == Calendar.MAY ||
-                        Calendar.MONTH == Calendar.JULY ||
-                        Calendar.MONTH == Calendar.AUGUST ||
-                        Calendar.MONTH == Calendar.OCTOBER ||
-                        Calendar.MONTH == Calendar.DECEMBER
-                    ) {
-                        end.timeInMillis = System.currentTimeMillis()
-                        end[Calendar.DAY_OF_MONTH] = 31
-                    } else if (Calendar.MONTH == Calendar.APRIL ||
-                        Calendar.MONTH == Calendar.JUNE ||
-                        Calendar.MONTH == Calendar.SEPTEMBER ||
-                        Calendar.MONTH == Calendar.NOVEMBER
-                    ) {
-                        end.timeInMillis = System.currentTimeMillis()
-                        end.add(Calendar.MONTH, 1)
-                        end[Calendar.DAY_OF_MONTH] = 1
-                    } else if (Calendar.MONTH == Calendar.FEBRUARY) {
-                        end.timeInMillis = System.currentTimeMillis()
-                        end.add(Calendar.MONTH, 1)
-                        end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                    Calendar.DAY_OF_MONTH == 24 -> {
+                        when (Calendar.MONTH) {
+                            Calendar.JANUARY, Calendar.MARCH, Calendar.MAY, Calendar.JULY, Calendar.AUGUST, Calendar.OCTOBER, Calendar.DECEMBER -> {
+                                end.timeInMillis = System.currentTimeMillis()
+                                end[Calendar.DAY_OF_MONTH] = 31
+
+                            }
+                            Calendar.APRIL, Calendar.JUNE, Calendar.SEPTEMBER, Calendar.NOVEMBER -> {
+                                end.timeInMillis = System.currentTimeMillis()
+                                end.add(Calendar.MONTH, 1)
+                                end[Calendar.DAY_OF_MONTH] = 1
+
+                            }
+                            Calendar.FEBRUARY -> {
+                                end.timeInMillis = System.currentTimeMillis()
+                                end.add(Calendar.MONTH, 1)
+                                end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                            }
+                        }
                     }
-                } else if (Calendar.DAY_OF_MONTH > 21) {
-                    if (Calendar.MONTH == Calendar.FEBRUARY) {
-                        end.timeInMillis = System.currentTimeMillis()
-                        end.add(Calendar.MONTH, 1)
-                        end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                    Calendar.DAY_OF_MONTH in 22..23 -> {
+                        when (Calendar.MONTH) {
+                            Calendar.FEBRUARY -> {
+                                end.timeInMillis = System.currentTimeMillis()
+                                end.add(Calendar.MONTH, 1)
+                                end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                            }
+                        }
                     }
-                } else {
-                    end.timeInMillis = System.currentTimeMillis()
-                    end.add(Calendar.DAY_OF_MONTH, 7)
+                    Calendar.DAY_OF_MONTH <= 21 -> {
+                        end.timeInMillis = System.currentTimeMillis()
+                        end.add(Calendar.DAY_OF_MONTH, 7)
+                    }
                 }
             }
             "This month" -> {
@@ -471,6 +468,10 @@ class DatabaseService(
                 end.add(Calendar.MONTH, 2)
                 end.set(Calendar.DAY_OF_MONTH, 1)
                 end.add(Calendar.DATE, -1)
+                end[Calendar.HOUR_OF_DAY] = 23
+                end[Calendar.MINUTE] = 59
+                end[Calendar.SECOND] = 59
+                end[Calendar.MILLISECOND] = 999
             }
         }
 
@@ -579,6 +580,8 @@ class DatabaseService(
             for (meetingDocSnapshot in it) {
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
+
+                    Log.d("MEETING", "ACTUAL DATE= ${meeting.date}")
 
                     if (MeetingUtils.checkFiltersAreAllAccomplished(
                             meeting, filters,
