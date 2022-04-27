@@ -9,17 +9,18 @@ import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 
 class FilterMeetingsViewModel : BaseViewModel() {
 
-    var filterByTimeList = FilterItems.filterByTimeItems
-    var filterByDogGenderList = FilterItems.filterByDogGenderItems
-    var filterByUserGenderList = FilterItems.filterByUserGenderItems
-    var filterByDogBreedListString: ArrayList<String>?
-    var filterByDogBreedList = ArrayList<IFilterObj>()
-
     var filterAdapterTime: FilterAdapter? = null
     var filterAdapterDogGender: FilterAdapter? = null
     var filterAdapterUserGender: FilterAdapter? = null
     var filterAdapterDogBreed: FilterAdapter? = null
     var breed = MutableLiveData<String>()
+
+    private var filterByTimeList = FilterItems.filterByTimeItems
+    private var filterByDogGenderList = FilterItems.filterByDogGenderItems
+    private var filterByUserGenderList = FilterItems.filterByUserGenderItems
+    private var filterByDogBreedListString: ArrayList<String>?
+    private var filterByDogBreedList = ArrayList<IFilterObj>()
+
 
     init {
         filterAdapterTime = FilterAdapter(filterByTimeList, this)
@@ -47,7 +48,7 @@ class FilterMeetingsViewModel : BaseViewModel() {
     }
 
     fun saveFilter() {
-        var listOfCheckedFilters = ArrayList<IFilterObj>()
+        val listOfCheckedFilters = ArrayList<IFilterObj>()
 
         for (i in filterByTimeList)
             if (i.isSelected == true)
@@ -61,7 +62,6 @@ class FilterMeetingsViewModel : BaseViewModel() {
         for (i in filterByDogBreedList)
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
-
 
         dataExchangeService.put(MapViewModel::class.java.name, listOfCheckedFilters)
 
@@ -81,6 +81,7 @@ class FilterMeetingsViewModel : BaseViewModel() {
     }
 
     fun close() {
+        refreshFilters()
         navigationService.closeCurrentActivity()
     }
 }

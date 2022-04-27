@@ -158,7 +158,6 @@ class MapViewModel : BaseViewModel() {
     private suspend fun getAllMeetingsThatUserJoined(): ArrayList<MyCustomMeetingObj> {
         var allMeetingsParticipants: ArrayList<ParticipantObj>
 
-
         for (meeting in meetingsList) {
             allMeetingsParticipants =
                 databaseService.fetchAllMeetingParticipants(meeting.meetingObj!!.uid!!)!!
