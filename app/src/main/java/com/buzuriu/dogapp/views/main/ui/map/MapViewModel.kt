@@ -81,6 +81,8 @@ class MapViewModel : BaseViewModel() {
                 SelectDogForJoinMeetFragment::class.qualifiedName
             )
 
+        } else if (hasUserAlreadyJoinedMeeting(meeting)) {
+            return
         } else if (meeting.meetingStateEnum == MeetingStateEnum.JOINED) {
             dialogService.showAlertDialog(
                 "Leave?",
@@ -111,6 +113,17 @@ class MapViewModel : BaseViewModel() {
                     }
                 })
         }
+    }
+
+    private fun hasUserAlreadyJoinedMeeting(meeting: MyCustomMeetingObj): Boolean {
+        var meetingsThatUserAlreadyJoined = ArrayList<MyCustomMeetingObj>()
+        viewModelScope.launch {
+            meetingsThatUserAlreadyJoined = getAllMeetingsThatUserJoined()
+        }
+
+        if (meetingsThatUserAlreadyJoined.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid } != null)
+            return true
+        return false
     }
 
     private fun getMeetingChangedDueToJoin() {
