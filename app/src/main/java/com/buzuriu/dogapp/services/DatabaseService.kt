@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.services
 
 import android.util.Log
+import androidx.compose.ui.platform.ValueElementSequence
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.DateUtils
@@ -374,25 +375,70 @@ class DatabaseService(
                 start.timeInMillis = System.currentTimeMillis()
                 end.timeInMillis = System.currentTimeMillis()
 
-                end[Calendar.DAY_OF_WEEK] = Calendar.SUNDAY
                 end[Calendar.HOUR_OF_DAY] = 23
                 end[Calendar.MINUTE] = 59
                 end[Calendar.SECOND] = 59
                 end[Calendar.MILLISECOND] = 999
 
-               // end.add(Calendar.WEEK_OF_YEAR, 1)
-
-               /* val daysTillSunday = Calendar.SUNDAY - Calendar.DAY_OF_WEEK
-
-                end.timeInMillis+= daysTillSunday*7*24*60*60*1000*/
-
-
-                Log.d("MYTAG", "$start")
-                Log.d("MYTAG", "$end")
-
-     /*
-                end.add(Calendar.DAY_OF_WEEK, daysTillSunday)*/
-
+                if (Calendar.DAY_OF_MONTH > 24) {
+                    if (Calendar.MONTH == Calendar.JANUARY ||
+                        Calendar.MONTH == Calendar.MARCH ||
+                        Calendar.MONTH == Calendar.MAY ||
+                        Calendar.MONTH == Calendar.JULY ||
+                        Calendar.MONTH == Calendar.AUGUST ||
+                        Calendar.MONTH == Calendar.OCTOBER ||
+                        Calendar.MONTH == Calendar.DECEMBER
+                    ) {
+                        end.timeInMillis = System.currentTimeMillis()
+                        end.add(Calendar.MONTH, 1)
+                        end.add(Calendar.DAY_OF_MONTH, 7 - (31 - Calendar.DAY_OF_MONTH))
+                    } else if (Calendar.MONTH == Calendar.APRIL ||
+                        Calendar.MONTH == Calendar.JUNE ||
+                        Calendar.MONTH == Calendar.SEPTEMBER ||
+                        Calendar.MONTH == Calendar.NOVEMBER
+                    ) {
+                        end.timeInMillis = System.currentTimeMillis()
+                        end.add(Calendar.MONTH, 1)
+                        end.add(Calendar.DAY_OF_MONTH, 7 - (30 - Calendar.DAY_OF_MONTH))
+                    } else if (Calendar.MONTH == Calendar.FEBRUARY) {
+                        end.timeInMillis = System.currentTimeMillis()
+                        end.add(Calendar.MONTH, 1)
+                        end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                    }
+                } else if (Calendar.DAY_OF_MONTH == 24) {
+                    if (Calendar.MONTH == Calendar.JANUARY ||
+                        Calendar.MONTH == Calendar.MARCH ||
+                        Calendar.MONTH == Calendar.MAY ||
+                        Calendar.MONTH == Calendar.JULY ||
+                        Calendar.MONTH == Calendar.AUGUST ||
+                        Calendar.MONTH == Calendar.OCTOBER ||
+                        Calendar.MONTH == Calendar.DECEMBER
+                    ) {
+                        end.timeInMillis = System.currentTimeMillis()
+                        end[Calendar.DAY_OF_MONTH] = 31
+                    } else if (Calendar.MONTH == Calendar.APRIL ||
+                        Calendar.MONTH == Calendar.JUNE ||
+                        Calendar.MONTH == Calendar.SEPTEMBER ||
+                        Calendar.MONTH == Calendar.NOVEMBER
+                    ) {
+                        end.timeInMillis = System.currentTimeMillis()
+                        end.add(Calendar.MONTH, 1)
+                        end[Calendar.DAY_OF_MONTH] = 1
+                    } else if (Calendar.MONTH == Calendar.FEBRUARY) {
+                        end.timeInMillis = System.currentTimeMillis()
+                        end.add(Calendar.MONTH, 1)
+                        end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                    }
+                } else if (Calendar.DAY_OF_MONTH > 21) {
+                    if (Calendar.MONTH == Calendar.FEBRUARY) {
+                        end.timeInMillis = System.currentTimeMillis()
+                        end.add(Calendar.MONTH, 1)
+                        end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                    }
+                } else {
+                    end.timeInMillis = System.currentTimeMillis()
+                    end.add(Calendar.DAY_OF_MONTH, 7)
+                }
             }
             "This month" -> {
                 end.add(Calendar.MONTH, 1)
