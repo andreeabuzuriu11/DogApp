@@ -1,13 +1,20 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
+import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class DogDetailViewModel : BaseViewModel() {
@@ -52,15 +59,68 @@ class DogDetailViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             databaseService.deleteDog(currentUser!!.uid, dog.value!!.uid, object :
                 IOnCompleteListener {
+                @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(successful: Boolean, exception: Exception?) {
                     val allDogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
                     allDogsList!!.remove(dog.value!!)
 
                     localDatabaseService.add("localDogsList", allDogsList)
+                    deleteMeetingRelatedToDogFromDatabase(dog.value!!.uid)
+                    deleteMeetingRelatedToDogFromLocalDatabase()
                     navigationService.closeCurrentActivity()
                 }
             })
         }
+    }
+
+    fun deleteMeetingRelatedToDogFromDatabase(dogUid: String) {
+        var meetings: ArrayList<MeetingObj>
+        ArrayList<MeetingObj>()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            meetings = databaseService.fetchDogMeetings(dogUid)!!
+
+            viewModelScope.launch(Dispatchers.Main) {
+                for (meeting in meetings) {
+
+                    databaseService.deleteMeeting(
+                        meeting.uid!!,
+                        object : IOnCompleteListener {
+                            override fun onComplete(successful: Boolean, exception: Exception?) {
+                                if (successful) {
+                                    viewModelScope.launch(Dispatchers.Main) {
+                                        dialogService.showSnackbar("All meetings with this dog have been deleted")
+                                        delay(2000)
+                                    }
+                                } else {
+                                    viewModelScope.launch(Dispatchers.Main) {
+                                        if (!exception?.message.isNullOrEmpty())
+                                            dialogService.showSnackbar(exception!!.message!!)
+                                        else dialogService.showSnackbar(R.string.unknown_error)
+                                        delay(2000)
+                                    }
+                                }
+                            }
+                        })
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun deleteMeetingRelatedToDogFromLocalDatabase()
+    {
+        val meetingsList: ArrayList<MyCustomMeetingObj> =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList") ?: return
+
+        if (meetingsList.any { it.meetingObj!!.dogUid == dog.value!!.uid }) {
+            meetingsList.removeIf { x: MyCustomMeetingObj -> x.meetingObj!!.dogUid == dog.value!!.uid }
+            dataExchangeService.put(
+                MyMeetingsViewModel::class.java.name,
+                true
+            )
+        }
+        localDatabaseService.add("localMeetingsList", meetingsList)
     }
 
 }
