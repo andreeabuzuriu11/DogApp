@@ -1,7 +1,6 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
 import android.annotation.SuppressLint
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
@@ -9,7 +8,6 @@ import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
-import com.buzuriu.dogapp.services.DialogService
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.viewModels.*
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
