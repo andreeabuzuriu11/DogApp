@@ -220,6 +220,7 @@ class MapViewModel : BaseViewModel() {
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
                 meetingsList.addAll(list)
+                getAllMeetingsThatUserJoined()
                 meetingAdapter!!.notifyDataSetChanged()
             }
         }
