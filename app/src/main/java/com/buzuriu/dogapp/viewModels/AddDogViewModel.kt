@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.activity.result.ActivityResult
@@ -14,15 +13,13 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.AgeEnum
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
-import com.buzuriu.dogapp.models.AlertBuilderSettings
-import com.buzuriu.dogapp.models.BreedObj
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
+import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
+import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -36,13 +33,13 @@ class AddDogViewModel : BaseViewModel() {
     var breed = MutableLiveData("")
     var ageValue = MutableLiveData("")
     var ageString = MutableLiveData("")
-    var currentDogUid: String? = ""
-    var buttonText = MutableLiveData<String>("add")
+    var buttonText = MutableLiveData("add")
     var dogPlaceHolder = R.drawable.ic_dog_svgrepo_com
     var dogImageUrl = MutableLiveData<String>()
     var isEdit: Boolean = false
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
-
+    
+    private var currentDogUid: String? = ""
     private var currentGenderString: String? = null
 
     init {
@@ -106,7 +103,7 @@ class AddDogViewModel : BaseViewModel() {
                         override fun activityForResult(activityResult: ActivityResult) {
                             if (activityResult.resultCode == Activity.RESULT_OK) {
                                 val imageBitmap = activityResult.data?.extras?.get("data") as Bitmap
-                                dogBitmapImage.value = imageBitmap;
+                                dogBitmapImage.value = imageBitmap
                             }
                         }
                     })
@@ -210,7 +207,19 @@ class AddDogViewModel : BaseViewModel() {
                                                         if (!isEdit) {
                                                             dialogService.showSnackbar(R.string.added_success_message)
                                                         } else {
-                                                            changeMeetingInfoRelatedToThisDog(dog.uid)
+                                                            val meetingsToChange =
+                                                                changeMeetingInfoRelatedToThisDog(
+                                                                    dog.uid
+                                                                )
+                                                            delay(2000)
+                                                            for (meeting in meetingsToChange)
+                                                                editMyMeeting(
+                                                                    MyCustomMeetingObj(
+                                                                        meeting,
+                                                                        getUserInfo(),
+                                                                        dog
+                                                                    )
+                                                                )
                                                             dialogService.showSnackbar(R.string.edited_success_message)
                                                         }
 
@@ -238,14 +247,18 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
+    fun getUserInfo(): UserInfo {
+        return localDatabaseService.get<UserInfo>("currentUser")!!
+    }
+
+
     fun addOrEditDogToData(dog: DogObj) {
-        var dogsList: ArrayList<DogObj>? =
-            localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
-        if (dogsList == null) return
+        val dogsList: ArrayList<DogObj> =
+            localDatabaseService.get<ArrayList<DogObj>>("localDogsList") ?: return
         if (dogsList.any { it.uid == dog.uid }) {
             val oldDog = dogsList.find { it.uid == dog.uid }
             dogsList.remove(oldDog)
-            dataExchangeService.put(DogDetailViewModel::class.java.name, dog!!)
+            dataExchangeService.put(DogDetailViewModel::class.java.name, dog)
             dataExchangeService.put(
                 MyDogsViewModel::class.java.name,
                 true
@@ -255,13 +268,31 @@ class AddDogViewModel : BaseViewModel() {
         localDatabaseService.add("localDogsList", dogsList)
     }
 
-    fun changeMeetingInfoRelatedToThisDog(dogUid: String) {
-        var meetings = ArrayList<MeetingObj>()
+    fun editMyMeeting(meeting: MyCustomMeetingObj) {
+        val meetingsList: ArrayList<MyCustomMeetingObj> =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList") ?: return
+        if (meetingsList.any { it.meetingObj!!.uid == meeting.meetingObj!!.uid }) {
+            val oldMeeting = meetingsList.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
+            meetingsList.remove(oldMeeting)
+            dataExchangeService.put(
+                MyMeetingsViewModel::class.java.name,
+                true
+            ) // to know the list must be refreshed
+        }
+
+        meetingsList.add(meeting)
+        localDatabaseService.add("localMeetingsList", meetingsList)
+    }
+
+    fun changeMeetingInfoRelatedToThisDog(dogUid: String): ArrayList<MeetingObj> {
+        var meetings: ArrayList<MeetingObj>
+        val allMeetings = ArrayList<MeetingObj>()
         viewModelScope.launch(Dispatchers.IO) {
             meetings = databaseService.fetchDogMeetings(dogUid)!!
 
             viewModelScope.launch(Dispatchers.Main) {
                 for (meeting in meetings) {
+                    allMeetings.add(meeting)
                     meeting.dogGender = currentGenderString
                     meeting.dogBreed = breed.value
 
@@ -289,6 +320,8 @@ class AddDogViewModel : BaseViewModel() {
                 }
             }
         }
+
+        return allMeetings
     }
 
     fun selectBreed() {
@@ -322,8 +355,4 @@ class AddDogViewModel : BaseViewModel() {
         return true
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun getDogPlaceHolder(): Drawable? {
-        return activityService.activity!!.getDrawable(ImageUtils.getDogPlaceholder())
-    }
 }
