@@ -108,9 +108,11 @@ class MyMeetingDetailViewModel : BaseViewModel() {
             for (participant in allParticipantsList) {
                 user = databaseService.fetchUserByUid(participant.userUid!!)
                 dog = databaseService.fetchDogByUid(participant.dogUid!!)
-                val participantObj = ParticipantObj(user!!.name!!, dog!!.name)
+                if (dog != null) {
+                    val participantObj = ParticipantObj(user!!.name!!, dog.name)
+                    allParticipantsNameList.add(participantObj)
+                }
 
-                allParticipantsNameList.add(participantObj)
             }
         }
 

@@ -22,6 +22,16 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
         attendedMeeting = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
 
         initDogs()
+
+        if (doesUserHaveOnlyOneDog())
+            localDatabaseService.get<java.util.ArrayList<DogObj>>("localDogsList")?.get(0)
+                ?.let { selectDog(it) }
+    }
+
+    private fun doesUserHaveOnlyOneDog(): Boolean {
+        if (localDatabaseService.get<java.util.ArrayList<DogObj>>("localDogsList")!!.size == 1)
+            return true
+        return false
     }
 
     private fun initDogs() {
