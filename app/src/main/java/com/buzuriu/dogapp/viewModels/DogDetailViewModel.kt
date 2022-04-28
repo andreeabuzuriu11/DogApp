@@ -57,7 +57,7 @@ class DogDetailViewModel : BaseViewModel() {
 
     fun deleteDogFromDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
-            databaseService.deleteDog(currentUser!!.uid, dog.value!!.uid, object :
+            databaseService.deleteDog(dog.value!!.uid, object :
                 IOnCompleteListener {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(successful: Boolean, exception: Exception?) {

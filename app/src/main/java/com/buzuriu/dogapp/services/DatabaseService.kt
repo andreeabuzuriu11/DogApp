@@ -1,10 +1,8 @@
 package com.buzuriu.dogapp.services
 
 import android.util.Log
-import androidx.compose.ui.platform.ValueElementSequence
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
-import com.buzuriu.dogapp.utils.DateUtils
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.maps.model.LatLng
@@ -16,9 +14,7 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
-import java.time.Month
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 interface IDatabaseService {
@@ -74,8 +70,8 @@ interface IDatabaseService {
         userUid: String
     ): ArrayList<MeetingObj>?
 
+
     suspend fun deleteDog(
-        userUid: String,
         dogUid: String,
         onCompleteListener: IOnCompleteListener
     )
@@ -241,7 +237,6 @@ class DatabaseService(
         val query = firestore.collection(dogInfoCollection)
             .whereEqualTo("owner", userUid)
             .get()
-
 
         queryList.add(query)
 
@@ -655,14 +650,12 @@ class DatabaseService(
     }
 
     override suspend fun deleteDog(
-        userUid: String,
         dogUid: String,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(userInfoCollection)
-            .document(userUid)
-            .collection(dogInfoCollection)
-            .document(dogUid).delete()
+        firestore.collection(dogInfoCollection)
+            .document(dogUid)
+            .delete()
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }

@@ -48,17 +48,18 @@ class SplashViewModel : BaseViewModel() {
         var user: UserInfo?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
-        var userMeetings: ArrayList<MeetingObj>? = null
 
-        userMeetings = databaseService.fetchUserMeetings(currentUser!!.uid)
+        val userMeetings: ArrayList<MeetingObj>? = databaseService.fetchUserMeetings(currentUser!!.uid)
 
         if (userMeetings != null) {
             for (meeting in userMeetings) {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
-                allCustomMeetings.add(meetingObj)
+                if (dog != null) {
+                    val meetingObj = MyCustomMeetingObj(meeting, user!!, dog)
+                    allCustomMeetings.add(meetingObj)
+                }
             }
 
             localDatabaseService.add("localMeetingsList", allCustomMeetings)
