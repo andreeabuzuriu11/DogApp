@@ -63,8 +63,8 @@ class SelectDogViewModel : BaseViewModel() {
         val auxSearchedDogs = ArrayList<DogObj>()
         if (dogsList.isNotEmpty()) {
             for (item in dogsList) {
-                val mySearchedString = searchedString.lowercase(Locale.ROOT)
-                val itemString = item.name.lowercase(Locale.ROOT)
+                val mySearchedString = searchedString.toLowerCase(Locale.ROOT)
+                val itemString = item.name.toLowerCase(Locale.ROOT)
 
                 if (itemString.contains(mySearchedString) || mySearchedString.isEmpty()) {
                     auxSearchedDogs.add(item)

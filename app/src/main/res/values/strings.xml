@@ -86,4 +86,6 @@
     <string name="meetings">Meetings</string>
     <string name="accept">accept</string>
     <string name="decline">decline</string>
+    <string name="you_attend_with">You attend with</string>
+    <string name="change">change</string>
 </resources>

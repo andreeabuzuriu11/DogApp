@@ -46,6 +46,13 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
+    suspend fun updateParticipantDog(
+        meetingUid: String,
+        participantUid: String,
+        newDogUid: String,
+        onCompleteListener: IOnCompleteListener
+    )
+
     suspend fun leaveMeeting(
         meetingUid: String,
         participantUid: String,
@@ -168,6 +175,21 @@ class DatabaseService(
             .collection(meetingParticipants)
             .document(participantUid)
             .set(participantObj)
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun updateParticipantDog(
+        meetingUid: String,
+        participantUid: String,
+        newDogUid: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        firestore.collection(meetingsCollection)
+            .document(meetingUid)
+            .collection(meetingParticipants)
+            .document(participantUid)
+            .update("dogUid", newDogUid)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }

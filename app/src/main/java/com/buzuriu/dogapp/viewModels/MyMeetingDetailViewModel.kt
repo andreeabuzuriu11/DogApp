@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.ParticipantAdapter
@@ -18,10 +19,9 @@ import kotlinx.coroutines.launch
 
 
 class MyMeetingDetailViewModel : BaseViewModel() {
-    var participantsList = ArrayList<ParticipantObj>()
+    private var participantsList = ArrayList<ParticipantObj>()
     var participantsAdapter: ParticipantAdapter? = ParticipantAdapter(participantsList)
     var myCustomMeetingObj = MutableLiveData<MyCustomMeetingObj>()
-
     var myLatLng = MutableLiveData<LatLng>()
 
     init {
@@ -29,7 +29,6 @@ class MyMeetingDetailViewModel : BaseViewModel() {
             dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)!!
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(myCustomMeetingObj.value?.meetingObj?.location!!)
-
 
         viewModelScope.launch {
             fetchAllParticipantsForMeeting()
@@ -83,6 +82,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllParticipantsForMeeting() {
         ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {

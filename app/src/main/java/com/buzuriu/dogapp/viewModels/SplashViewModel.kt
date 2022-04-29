@@ -1,6 +1,5 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
@@ -23,34 +22,21 @@ class SplashViewModel : BaseViewModel() {
         // auth = Firebase.auth
         // auth.signInAnonymously()
         // val t = auth.currentUser
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            if (doesUserExists()) {
-                if (Firebase.auth.currentUser != null) {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        delay(1000)
-                        async {
-                            prepareForMain()
-                            getUserAccountInfo()
-                            navigationService.navigateToActivity(MainActivity::class.java, true)
-                        }
-                    }
-                } else {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        delay(1000)
-                        navigationService.navigateToActivity(RegisterActivity::class.java, true)
-                    }
-                }
-            } else
-            {
-                viewModelScope.launch(Dispatchers.IO) {
-                    delay(1000)
-                    navigationService.navigateToActivity(RegisterActivity::class.java, true)
+        if (Firebase.auth.currentUser != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                delay(1000)
+                async {
+                    prepareForMain()
+                    getUserAccountInfo()
+                    navigationService.navigateToActivity(MainActivity::class.java, true)
                 }
             }
-
+        } else {
+            viewModelScope.launch(Dispatchers.IO) {
+                delay(1000)
+                navigationService.navigateToActivity(RegisterActivity::class.java, true)
+            }
         }
-
 
     }
 
@@ -87,13 +73,4 @@ class SplashViewModel : BaseViewModel() {
         localDatabaseService.add("currentUser", userInfo!!)
     }
 
-    suspend fun doesUserExists() : Boolean
-    {
-        var userFromDatabase : UserInfo? = null
-        userFromDatabase = databaseService.fetchUserByUid(currentUser!!.uid)
-
-        if (userFromDatabase == null)
-            return false
-        return true
-    }
 }

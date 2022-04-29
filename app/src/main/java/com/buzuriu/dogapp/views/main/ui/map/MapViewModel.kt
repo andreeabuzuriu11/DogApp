@@ -1,10 +1,7 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
 import android.annotation.SuppressLint
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
 import com.buzuriu.dogapp.enums.MeetingStateEnum
@@ -20,7 +17,6 @@ import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -82,47 +78,51 @@ class MapViewModel : BaseViewModel() {
             return
         }
 
-        if (meeting.meetingStateEnum == MeetingStateEnum.NOT_JOINED) {
-            dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
+        when {
+            meeting.meetingStateEnum == MeetingStateEnum.NOT_JOINED -> {
+                dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
 
-            navigationService.showOverlay(
-                OverlayActivity::class.java,
-                false,
-                OverlayActivity.fragmentClassNameParam,
-                SelectDogForJoinMeetFragment::class.qualifiedName
-            )
+                navigationService.showOverlay(
+                    OverlayActivity::class.java,
+                    false,
+                    OverlayActivity.fragmentClassNameParam,
+                    SelectDogForJoinMeetFragment::class.qualifiedName
+                )
 
-        } else if (hasUserAlreadyJoinedMeeting(meeting)) {
-            return
-        } else if (meeting.meetingStateEnum == MeetingStateEnum.JOINED) {
-            dialogService.showAlertDialog(
-                "Leave?",
-                "Are you sure you don't want to join this meeting with ${meeting.user!!.name}?",
-                "Yes",
-                object :
-                    IClickListener {
-                    override fun clicked() {
-                        meeting.meetingStateEnum = MeetingStateEnum.NOT_JOINED
-                        meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(meeting))
-                        val participant =
-                            mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid]
-                        if (participant != null) {
-                            viewModelScope.launch(Dispatchers.IO)
-                            {
-                                databaseService.leaveMeeting(meeting.meetingObj!!.uid!!,
-                                    participant.uid!!,
-                                    object : IOnCompleteListener {
-                                        override fun onComplete(
-                                            successful: Boolean,
-                                            exception: Exception?
-                                        ) {
-                                            dialogService.showSnackbar("Success")
-                                        }
-                                    })
+            }
+            hasUserAlreadyJoinedMeeting(meeting) -> {
+                return
+            }
+            meeting.meetingStateEnum == MeetingStateEnum.JOINED -> {
+                dialogService.showAlertDialog(
+                    "Leave?",
+                    "Are you sure you don't want to join this meeting with ${meeting.user!!.name}?",
+                    "Yes",
+                    object :
+                        IClickListener {
+                        override fun clicked() {
+                            meeting.meetingStateEnum = MeetingStateEnum.NOT_JOINED
+                            meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(meeting))
+                            val participant =
+                                mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid]
+                            if (participant != null) {
+                                viewModelScope.launch(Dispatchers.IO)
+                                {
+                                    databaseService.leaveMeeting(meeting.meetingObj!!.uid!!,
+                                        participant.uid!!,
+                                        object : IOnCompleteListener {
+                                            override fun onComplete(
+                                                successful: Boolean,
+                                                exception: Exception?
+                                            ) {
+                                                dialogService.showSnackbar("Success")
+                                            }
+                                        })
+                                }
                             }
                         }
-                    }
-                })
+                    })
+            }
         }
     }
 
@@ -342,8 +342,10 @@ class MapViewModel : BaseViewModel() {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
-                allCustomMeetings.add(meetingObj)
+                if (user!= null && dog != null) {
+                    val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                    allCustomMeetings.add(meetingObj)
+                }
             }
         }
         return allCustomMeetings
