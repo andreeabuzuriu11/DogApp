@@ -31,7 +31,16 @@ class MeetingDetailViewModel : BaseViewModel() {
             MapUtils.getLatLngFromGeoPoint(myCustomMeetingObj.value?.meetingObj?.location!!)
 
         viewModelScope.launch {
-             fetchDogUserAttendsWith()
+            fetchDogUserAttendsWith()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val selectedDog = dataExchangeService.get<DogObj>(this::class.qualifiedName!!)
+        if (selectedDog != null) {
+            myDog.value = selectedDog!!
         }
     }
 
@@ -48,12 +57,9 @@ class MeetingDetailViewModel : BaseViewModel() {
                     isUserAttending.value = true
                     dog = databaseService.fetchDogByUid(participant.dogUid!!)
                     if (dog != null) {
-
                         myDog.value = dog!!
                     }
-                }
-                else
-                {
+                } else {
                     isUserAttending.value = false
                 }
 
@@ -67,8 +73,11 @@ class MeetingDetailViewModel : BaseViewModel() {
         return activityService.activity!!.getDrawable(R.drawable.ic_dog_svgrepo_com)
     }
 
-    fun selectDog() {
-        dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, myCustomMeetingObj.value!!)
+    fun changeDog() {
+        dataExchangeService.put(
+            SelectDogForJoinMeetViewModel::class.java.name,
+            myCustomMeetingObj.value!!
+        )
 
         navigationService.showOverlay(
             OverlayActivity::class.java,
