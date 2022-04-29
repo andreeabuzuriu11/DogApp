@@ -76,8 +76,20 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
+    suspend fun deleteDogRelatedToUser(
+        userUid: String,
+        dogUid: String,
+        onCompleteListener: IOnCompleteListener
+    )
+
     suspend fun deleteMeeting(
         meetingUid: String,
+        onCompleteListener: IOnCompleteListener
+    )
+
+    suspend fun deleteParticipant(
+        meetingUid: String,
+        participantUid: String,
         onCompleteListener: IOnCompleteListener
     )
 }
@@ -660,12 +672,40 @@ class DatabaseService(
             .await()
     }
 
+    override suspend fun deleteDogRelatedToUser(
+        userUid: String,
+        dogUid: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        firestore.collection(userInfoCollection)
+            .document(userUid)
+            .collection(dogInfoCollection)
+            .document(dogUid)
+            .delete()
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
     override suspend fun deleteMeeting(
         meetingUid: String,
         onCompleteListener: IOnCompleteListener
     ) {
         firestore.collection(meetingsCollection)
             .document(meetingUid)
+            .delete()
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun deleteParticipant(
+        meetingUid: String,
+        participantUid: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        firestore.collection(meetingsCollection)
+            .document(meetingUid)
+            .collection(meetingParticipants)
+            .document(participantUid)
             .delete()
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()

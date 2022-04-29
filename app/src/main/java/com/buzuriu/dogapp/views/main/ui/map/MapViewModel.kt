@@ -1,7 +1,10 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
 import com.buzuriu.dogapp.enums.MeetingStateEnum
@@ -17,6 +20,7 @@ import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -31,13 +35,15 @@ class MapViewModel : BaseViewModel() {
     private var locationPoints = ArrayList<LatLng>()
     private var lastViewModel: String? = null
     private val userJoinedMeetings = ArrayList<MyCustomMeetingObj>()
-    private var mapOfMeetingUidAndCurrentUserAsParticipant: MutableMap<String, String> =
+    var mapOfMeetingUidAndCurrentUserAsParticipant: MutableMap<String, ParticipantObj> =
         mutableMapOf()
+
 
     init {
         meetingAdapter = MeetingAdapter(meetingsList, ::selectedMeeting, this)
         filterAdapter = FilterAppliedAdapter(filtersList, this)
         filtersList.clear()
+
 
         viewModelScope.launch {
             fetchAllMeetings()
@@ -72,7 +78,7 @@ class MapViewModel : BaseViewModel() {
 
     fun joinOrLeaveMeeting(meeting: MyCustomMeetingObj) {
         if (!doesUserHaveAtLeastOneDog()) {
-            dialogService.showSnackbar("Please add your pet before participationg to a meeting")
+            dialogService.showSnackbar("Please add your pet before participating to a meeting")
             return
         }
 
@@ -98,13 +104,13 @@ class MapViewModel : BaseViewModel() {
                     override fun clicked() {
                         meeting.meetingStateEnum = MeetingStateEnum.NOT_JOINED
                         meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(meeting))
-                        val participantUid =
+                        val participant =
                             mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid]
-                        if (participantUid != null) {
+                        if (participant != null) {
                             viewModelScope.launch(Dispatchers.IO)
                             {
                                 databaseService.leaveMeeting(meeting.meetingObj!!.uid!!,
-                                    participantUid,
+                                    participant.uid!!,
                                     object : IOnCompleteListener {
                                         override fun onComplete(
                                             successful: Boolean,
@@ -126,8 +132,9 @@ class MapViewModel : BaseViewModel() {
             meetingsThatUserAlreadyJoined = getAllMeetingsThatUserJoined()
         }
 
-        if (meetingsThatUserAlreadyJoined.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid } != null)
+        if (meetingsThatUserAlreadyJoined.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid } != null) {
             return true
+        }
         return false
     }
 
@@ -166,7 +173,7 @@ class MapViewModel : BaseViewModel() {
                     userJoinedMeetings.add(meeting)
                     changeStateOfMeeting(meeting)
                     mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid!!] =
-                        meet.uid!!
+                        meet
                 }
         }
         return userJoinedMeetings
@@ -312,9 +319,10 @@ class MapViewModel : BaseViewModel() {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                val meetingObj = MyCustomMeetingObj(meeting, user!!, dog!!)
-
-                allCustomMeetings.add(meetingObj)
+                if (user != null && dog != null) {
+                    val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                    allCustomMeetings.add(meetingObj)
+                }
             }
         }
 

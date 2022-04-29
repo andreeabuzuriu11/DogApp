@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
+import com.buzuriu.dogapp.models.ParticipantObj
 import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
@@ -47,6 +49,7 @@ class DogDetailViewModel : BaseViewModel() {
                 IClickListener {
                 override fun clicked() {
                     deleteDogFromDatabase()
+                    deleteDogRelatedToUserFromDatabase()
                     dataExchangeService.put(
                         MyDogsViewModel::class.java.name,
                         true
@@ -67,15 +70,75 @@ class DogDetailViewModel : BaseViewModel() {
                     localDatabaseService.add("localDogsList", allDogsList)
                     deleteMeetingRelatedToDogFromDatabase(dog.value!!.uid)
                     deleteMeetingRelatedToDogFromLocalDatabase()
+                    deleteParticipantObjWhereThisDogWasAttending()
                     navigationService.closeCurrentActivity()
                 }
             })
         }
     }
 
+    fun deleteDogRelatedToUserFromDatabase() {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseService.deleteDogRelatedToUser(currentUser!!.uid, dog.value!!.uid, object : IOnCompleteListener {
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                    Log.d("andreea", "dog related to user was deleted")
+                }
+            })
+        }
+    }
+
+    fun deleteParticipantObjWhereThisDogWasAttending()
+    {
+        var meetings: ArrayList<MeetingObj>
+        var participants: ArrayList<ParticipantObj>
+
+        viewModelScope.launch(Dispatchers.IO) {
+            meetings = databaseService.fetchDogMeetings(dog.value!!.uid)!!
+
+            viewModelScope.launch(Dispatchers.Main) {
+                for (meeting in meetings) {
+                    participants = databaseService.fetchAllMeetingParticipants(meeting.uid!!)!!
+
+                    for(participant in participants)
+                    {
+                        if (participant.dogUid == dog.value!!.uid)
+                        {
+                            // this participant should be deleted from database
+                            databaseService.deleteParticipant(meeting.uid!!, participant.uid!!, object : IOnCompleteListener {
+                                override fun onComplete(
+                                    successful: Boolean,
+                                    exception: java.lang.Exception?
+                                ) {
+                                    if (successful) {
+                                        viewModelScope.launch(Dispatchers.Main) {
+                                            dialogService.showSnackbar("This dog is deleted as participant to all meetings he was attending")
+                                            delay(2000)
+                                        }
+                                    } else {
+                                        viewModelScope.launch(Dispatchers.Main) {
+                                            if (!exception?.message.isNullOrEmpty())
+                                                dialogService.showSnackbar(exception!!.message!!)
+                                            else dialogService.showSnackbar(R.string.unknown_error)
+                                            delay(2000)
+                                        }
+                                    }
+
+                                }
+
+
+                            })
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }
+
     fun deleteMeetingRelatedToDogFromDatabase(dogUid: String) {
         var meetings: ArrayList<MeetingObj>
-        ArrayList<MeetingObj>()
 
         viewModelScope.launch(Dispatchers.IO) {
             meetings = databaseService.fetchDogMeetings(dogUid)!!

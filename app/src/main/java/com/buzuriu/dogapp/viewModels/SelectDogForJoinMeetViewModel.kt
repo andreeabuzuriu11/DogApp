@@ -44,9 +44,9 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
             dialogService.showSnackbar("Please select a dog to attend this meeting")
             return
         }
+        val participantObjUid = StringUtils.getRandomUID()
         viewModelScope.launch(Dispatchers.IO)
         {
-            val participantObjUid = StringUtils.getRandomUID()
             databaseService.joinMeeting(attendedMeeting!!.meetingObj!!.uid!!,
                 participantObjUid,
                 ParticipantObj(
