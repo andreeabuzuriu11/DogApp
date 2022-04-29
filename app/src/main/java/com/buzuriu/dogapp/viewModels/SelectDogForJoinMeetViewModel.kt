@@ -1,6 +1,5 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.DogJoinMeetAdapter
@@ -67,6 +66,7 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
                     ),
                     object : IOnCompleteListener {
                         override fun onComplete(successful: Boolean, exception: Exception?) {
+                            addMeetToUserJoinedMeetings(attendedMeeting!!)
                             dialogService.showSnackbar("Success")
                         }
                     })
@@ -75,6 +75,14 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
         dataExchangeService.put(MeetingDetailViewModel::class.java.name, selectedDog.value!!)
         dataExchangeService.put(MapViewModel::class.java.name, attendedMeeting!!)
         close()
+    }
+
+    fun addMeetToUserJoinedMeetings(meetingObj: MyCustomMeetingObj) {
+        val myMeetingsList =
+            localDatabaseService.get<java.util.ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+                ?: return
+        myMeetingsList.add(meetingObj)
+        localDatabaseService.add("meetingsUserJoined", myMeetingsList)
     }
 
     fun selectDog(dogObj: DogObj) {
@@ -118,7 +126,6 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
             databaseService.fetchAllMeetingParticipants(attendedMeeting!!.meetingObj!!.uid!!)!!
         for (participant in participants) {
             if (participant.userUid == currentUser!!.uid) {
-                Log.d("andreea1", "$participant.uid")
                 participantUid = participant.uid
                 return participantUid
             }

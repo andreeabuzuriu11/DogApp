@@ -72,7 +72,7 @@ class EditMeetingViewModel : BaseViewModel() {
             currentUser!!.uid,
             myCustomMeetingObj!!.dog!!.gender,
             myCustomMeetingObj!!.dog!!.breed,
-            myCustomMeetingObj!!.user!!.gender!!,
+            myCustomMeetingObj!!.user!!.gender!!
         )
 
         viewModelScope.launch(Dispatchers.IO) {

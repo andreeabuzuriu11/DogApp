@@ -15,18 +15,39 @@ import kotlinx.coroutines.tasks.await
 
 @SuppressLint("NotifyDataSetChanged")
 class MyMeetingsViewModel : BaseViewModel() {
-    private var meetingsList = ArrayList<MyCustomMeetingObj>()
     var meetingAdapter: MyMeetingAdapter?
+
+    private var meetingsList = ArrayList<MyCustomMeetingObj>()
+
+    private var meetingsICreated = ArrayList<MyCustomMeetingObj>()
+    private var meetingsIJoin = ArrayList<MyCustomMeetingObj>()
+    private var meetingsICreatedText = "Created by me"
+    private var meetingsIJoinText = "Joined"
+
 
     init {
         val meetingsFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+
+        getAllMeetingsThatUserJoined()
+
         if (meetingsFromLocalDB != null) {
             meetingsList.addAll(meetingsFromLocalDB)
         }
 
         meetingAdapter = MyMeetingAdapter(meetingsList, ::selectedMeeting)
         meetingAdapter!!.notifyDataSetChanged()
+    }
+
+
+    private fun getAllMeetingsThatUserJoined() {
+        val joinedMeetingsFromLocalDB =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+        if (joinedMeetingsFromLocalDB != null) {
+            for (meet in joinedMeetingsFromLocalDB) {
+
+            }
+        }
     }
 
     override fun onResume() {
@@ -70,4 +91,5 @@ class MyMeetingsViewModel : BaseViewModel() {
             return false
         return true
     }
+
 }

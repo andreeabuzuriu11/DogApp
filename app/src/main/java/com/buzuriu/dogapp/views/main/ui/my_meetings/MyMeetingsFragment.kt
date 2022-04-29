@@ -34,6 +34,4 @@ class MyMeetingsFragment :
         )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.meetingAdapter
     }
-
-
 }

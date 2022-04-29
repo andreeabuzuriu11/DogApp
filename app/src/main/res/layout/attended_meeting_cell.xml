@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="meetingState"
+            type="com.buzuriu.dogapp.enums.MeetingStateEnum" />
+        <variable
+            name="meeting"
+            type="com.buzuriu.dogapp.models.MyCustomMeetingObj" />
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.views.main.ui.map.MapViewModel" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/dog_cell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="10dp">
+
+        <RelativeLayout
+            android:id="@+id/attended_meeting_cell"
+            cb_background="@{meetingState}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+
+            <LinearLayout
+                android:id="@+id/meeting_cell"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical">
+
+                <RatingBar
+                    android:id="@+id/dogRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:isIndicator="false"
+                    android:numStars="5"
+                    android:rating="3.5" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        cb_dogImg="@{meeting.dog}"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/dog_image">
+                    </de.hdodenhof.circleimageview.CircleImageView>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text='@{ "Joining " + meeting.user.name + " and " + meeting.dog.name + " for a walk!"}'
+                        android:textSize="20sp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:layout_gravity="center"
+                        android:textSize="26dp"
+                        cb_meetingDate = "@{meeting.meetingObj.date}"
+                        />
+                    <View
+                        android:id="@+id/innerLine"
+                        android:layout_width="1dp"
+                        android:layout_height="100dp"
+                        android:background="@color/black" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:textAlignment="center"
+                        android:layout_marginStart="20dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center"
+                        android:textSize="26sp"
+
+                        android:layout_height="wrap_content"
+                        cb_meetingTime  = "@{meeting.meetingObj.date}"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

@@ -115,6 +115,7 @@ class MapViewModel : BaseViewModel() {
                                                 successful: Boolean,
                                                 exception: Exception?
                                             ) {
+                                                removeMeetFromUserJoinedMeetings(meeting)
                                                 dialogService.showSnackbar("Success")
                                             }
                                         })
@@ -124,6 +125,15 @@ class MapViewModel : BaseViewModel() {
                     })
             }
         }
+    }
+
+    fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj) {
+        val allMeetingsThatUserJoinedList =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+        val toBeRemoved =
+            allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
+        allMeetingsThatUserJoinedList!!.remove(toBeRemoved)
+        localDatabaseService.add("meetingsUserJoined", allMeetingsThatUserJoinedList)
     }
 
     private fun hasUserAlreadyJoinedMeeting(meeting: MyCustomMeetingObj): Boolean {
@@ -342,7 +352,7 @@ class MapViewModel : BaseViewModel() {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                if (user!= null && dog != null) {
+                if (user != null && dog != null) {
                     val meetingObj = MyCustomMeetingObj(meeting, user, dog)
                     allCustomMeetings.add(meetingObj)
                 }

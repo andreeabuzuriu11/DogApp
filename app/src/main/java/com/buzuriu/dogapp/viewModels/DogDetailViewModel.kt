@@ -1,7 +1,6 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -79,17 +78,19 @@ class DogDetailViewModel : BaseViewModel() {
 
     fun deleteDogRelatedToUserFromDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
-            databaseService.deleteDogRelatedToUser(currentUser!!.uid, dog.value!!.uid, object : IOnCompleteListener {
-                @RequiresApi(Build.VERSION_CODES.N)
-                override fun onComplete(successful: Boolean, exception: Exception?) {
-                    Log.d("andreea", "dog related to user was deleted")
-                }
-            })
+            databaseService.deleteDogRelatedToUser(
+                currentUser!!.uid,
+                dog.value!!.uid,
+                object : IOnCompleteListener {
+                    @RequiresApi(Build.VERSION_CODES.N)
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+
+                    }
+                })
         }
     }
 
-    fun deleteParticipantObjWhereThisDogWasAttending()
-    {
+    fun deleteParticipantObjWhereThisDogWasAttending() {
         var meetings: ArrayList<MeetingObj>
         var participants: ArrayList<ParticipantObj>
 
@@ -100,34 +101,35 @@ class DogDetailViewModel : BaseViewModel() {
                 for (meeting in meetings) {
                     participants = databaseService.fetchAllMeetingParticipants(meeting.uid!!)!!
 
-                    for(participant in participants)
-                    {
-                        if (participant.dogUid == dog.value!!.uid)
-                        {
+                    for (participant in participants) {
+                        if (participant.dogUid == dog.value!!.uid) {
                             // this participant should be deleted from database
-                            databaseService.deleteParticipant(meeting.uid!!, participant.uid!!, object : IOnCompleteListener {
-                                override fun onComplete(
-                                    successful: Boolean,
-                                    exception: java.lang.Exception?
-                                ) {
-                                    if (successful) {
-                                        viewModelScope.launch(Dispatchers.Main) {
-                                            dialogService.showSnackbar("This dog is deleted as participant to all meetings he was attending")
-                                            delay(2000)
+                            databaseService.deleteParticipant(
+                                meeting.uid!!,
+                                participant.uid!!,
+                                object : IOnCompleteListener {
+                                    override fun onComplete(
+                                        successful: Boolean,
+                                        exception: java.lang.Exception?
+                                    ) {
+                                        if (successful) {
+                                            viewModelScope.launch(Dispatchers.Main) {
+                                                dialogService.showSnackbar("This dog is deleted as participant to all meetings he was attending")
+                                                delay(2000)
+                                            }
+                                        } else {
+                                            viewModelScope.launch(Dispatchers.Main) {
+                                                if (!exception?.message.isNullOrEmpty())
+                                                    dialogService.showSnackbar(exception!!.message!!)
+                                                else dialogService.showSnackbar(R.string.unknown_error)
+                                                delay(2000)
+                                            }
                                         }
-                                    } else {
-                                        viewModelScope.launch(Dispatchers.Main) {
-                                            if (!exception?.message.isNullOrEmpty())
-                                                dialogService.showSnackbar(exception!!.message!!)
-                                            else dialogService.showSnackbar(R.string.unknown_error)
-                                            delay(2000)
-                                        }
+
                                     }
 
-                                }
 
-
-                            })
+                                })
                         }
                     }
 
@@ -171,8 +173,7 @@ class DogDetailViewModel : BaseViewModel() {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun deleteMeetingRelatedToDogFromLocalDatabase()
-    {
+    fun deleteMeetingRelatedToDogFromLocalDatabase() {
         val meetingsList: ArrayList<MyCustomMeetingObj> =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList") ?: return
 
