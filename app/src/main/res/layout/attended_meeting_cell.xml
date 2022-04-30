@@ -10,7 +10,7 @@
             type="com.buzuriu.dogapp.models.MyCustomMeetingObj" />
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.views.main.ui.map.MapViewModel" />
+            type="com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel" />
     </data>
 
     <LinearLayout
@@ -29,7 +29,7 @@
 
 
             <LinearLayout
-                android:id="@+id/meeting_cell"
+                android:id="@+id/joined_meeting_cell"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"

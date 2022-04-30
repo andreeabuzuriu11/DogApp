@@ -1,40 +1,89 @@
 package com.buzuriu.dogapp.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.buzuriu.dogapp.databinding.AttendedMeetingCellBinding
 import com.buzuriu.dogapp.databinding.MyMeetingCellBinding
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
+import com.buzuriu.dogapp.services.FirebaseAuthService
+import com.google.firebase.auth.FirebaseUser
 import kotlin.reflect.KFunction1
 
 class MyMeetingAdapter(
-    var myMeetingList: ArrayList<MyCustomMeetingObj>,
+    private var meetingList: ArrayList<MyCustomMeetingObj>,
     var mySelectedMeeting: KFunction1<MyCustomMeetingObj, Unit>
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        private const val MyMeet = 0
+        private const val JoinedMeet = 1
+    }
+
+    private var firebaseAuthService = FirebaseAuthService()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
         val layoutInflater = LayoutInflater.from(parent.context)
-        val applicationBinding =
-            MyMeetingCellBinding.inflate(layoutInflater, parent, false)
-        return MeetingViewHolder(applicationBinding)
+
+        if (viewType == MyMeet)
+        {
+            val applicationBinding =
+                MyMeetingCellBinding.inflate(layoutInflater, parent, false)
+            return MyMeetingViewHolder(applicationBinding)
+        }
+        else if (viewType == JoinedMeet)
+        {
+            val applicationBinding =
+            AttendedMeetingCellBinding.inflate(layoutInflater, parent, false)
+            return AttendedMeetingViewHolder(applicationBinding)
+        }
+        else throw IllegalArgumentException("Unsupported view type for view holder")
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val meeting = myMeetingList[position]
-        if (holder is MyMeetingAdapter.MeetingViewHolder) {
-            (holder).bind(meeting)
+        val meet = meetingList[position]
+
+        when (holder) {
+            is MyMeetingViewHolder -> holder.bind(meet)
+            is AttendedMeetingViewHolder -> holder.bind(meet)
         }
     }
 
     override fun getItemCount(): Int {
-        return myMeetingList.size
+        return meetingList.size
     }
 
-    inner class MeetingViewHolder(var applicationBinding: MyMeetingCellBinding) :
+    override fun getItemViewType(position: Int): Int {
+        val currentUser: FirebaseUser? = firebaseAuthService.getCurrentUser()
+        val meet = meetingList[position]
+
+        return if (meet.meetingObj!!.userUid == currentUser!!.uid) {
+            MyMeet
+        } else {
+            JoinedMeet
+        }
+    }
+
+
+    inner class MyMeetingViewHolder(var applicationBinding: MyMeetingCellBinding) :
+        RecyclerView.ViewHolder(applicationBinding.root) {
+        fun bind(meeting: MyCustomMeetingObj) {
+            Log.d("andreea1", "this is my meeting: ${meeting.meetingObj!!.uid}")
+            applicationBinding.meeting = meeting
+            applicationBinding.myMeetingCell.setOnClickListener {
+                mySelectedMeeting(meeting)
+            }
+        }
+    }
+
+    inner class AttendedMeetingViewHolder(var applicationBinding: AttendedMeetingCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(meeting: MyCustomMeetingObj) {
             applicationBinding.meeting = meeting
-            applicationBinding.myMeetingCell.setOnClickListener {
+            applicationBinding.attendedMeetingCell.setOnClickListener {
                 mySelectedMeeting(meeting)
             }
         }
