@@ -11,6 +11,7 @@ import com.buzuriu.dogapp.views.base.BaseActivity
 class SplashScreen : BaseActivity<SplashViewModel>(SplashViewModel::class.java) {
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        setContentView(R.layout.activity_splash_screen)
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
@@ -21,7 +22,6 @@ class SplashScreen : BaseActivity<SplashViewModel>(SplashViewModel::class.java) 
             )
         }
 
-        setContentView(R.layout.activity_splash_screen)
         //initUI() TODO lottie
 
         super.onCreate(savedInstanceState)

@@ -26,47 +26,37 @@ class MyMeetingsViewModel : BaseViewModel() {
 
 
     init {
-        val meetingsFromLocalDB =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
-
+        getAllMeetingsThatUserCreated()
         getAllMeetingsThatUserJoined()
-
-        if (meetingsFromLocalDB != null) {
-            meetingsList.addAll(meetingsFromLocalDB)
-        }
+        meetingsList.addAll(meetingsICreated)
+        meetingsList.addAll(meetingsIJoin)
 
         meetingAdapter = MyMeetingAdapter(meetingsList, ::selectedMeeting)
         meetingAdapter!!.notifyDataSetChanged()
     }
 
-
-    private fun getAllMeetingsThatUserJoined() {
-        val joinedMeetingsFromLocalDB =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
-        if (joinedMeetingsFromLocalDB != null) {
-            for (meet in joinedMeetingsFromLocalDB) {
-
-            }
-        }
-    }
-
     override fun onResume() {
         val isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
         if (isRefreshNeeded != null && isRefreshNeeded == true) {
+            // clear meetings list and add them again updated
             meetingsList.clear()
-            val meetingsFromLocalDB =
+            val myMeetingsFromLocalDB =
                 localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
 
-            if (meetingsFromLocalDB != null) {
-                meetingsList.addAll(meetingsFromLocalDB)
-                meetingAdapter!!.notifyDataSetChanged()
+            if (myMeetingsFromLocalDB != null) {
+                meetingsList.addAll(myMeetingsFromLocalDB)
             }
-        }
-    }
 
-    private fun selectedMeeting(meeting: MyCustomMeetingObj) {
-        dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, meeting)
-        navigationService.navigateToActivity(MyMeetingDetailActivity::class.java, false)
+            val joinedMeetingsFromLocalDB =
+                localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+
+            if (joinedMeetingsFromLocalDB != null) {
+                meetingsList.addAll(joinedMeetingsFromLocalDB)
+            }
+
+            meetingAdapter!!.notifyDataSetChanged()
+
+        }
     }
 
     fun addMeeting() {
@@ -86,10 +76,30 @@ class MyMeetingsViewModel : BaseViewModel() {
         }
     }
 
+    private fun getAllMeetingsThatUserCreated() {
+        val meetingsFromLocalDB =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+        if (meetingsFromLocalDB != null) {
+            meetingsICreated.addAll(meetingsFromLocalDB)
+        }
+    }
+
+    private fun getAllMeetingsThatUserJoined() {
+        val meetingsFromLocalDB =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+        if (meetingsFromLocalDB != null) {
+            meetingsIJoin.addAll(meetingsFromLocalDB)
+        }
+    }
+
+    private fun selectedMeeting(meeting: MyCustomMeetingObj) {
+        dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, meeting)
+        navigationService.navigateToActivity(MyMeetingDetailActivity::class.java, false)
+    }
+
     private fun doesUserHaveAtLeastOneDog(): Boolean {
         if (localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!.size < 1)
             return false
         return true
     }
-
 }
