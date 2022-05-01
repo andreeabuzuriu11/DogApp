@@ -2,7 +2,7 @@ package com.buzuriu.dogapp.models
 
 import com.buzuriu.dogapp.enums.MeetingStateEnum
 
-class MyCustomMeetingObj {
+class MyCustomMeetingObj : IMeetingObj{
     var meetingObj: MeetingObj? = null
     var user: UserInfo? = null
     var dog: DogObj? = null

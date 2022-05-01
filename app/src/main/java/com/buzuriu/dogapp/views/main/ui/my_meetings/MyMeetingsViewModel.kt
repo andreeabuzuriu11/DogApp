@@ -8,8 +8,9 @@ import com.buzuriu.dogapp.adapters.MyMeetingAdapter
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.models.IMeetingObj
+import com.buzuriu.dogapp.models.MeetingSectionObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.ParticipantObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
@@ -24,18 +25,20 @@ import kotlinx.coroutines.tasks.await
 class MyMeetingsViewModel : BaseViewModel() {
     var meetingAdapter: MyMeetingAdapter?
 
-    private var meetingsList = ArrayList<MyCustomMeetingObj>()
+    private var meetingsList = ArrayList<IMeetingObj>()
 
     private var meetingsICreated = ArrayList<MyCustomMeetingObj>()
     private var meetingsIJoin = ArrayList<MyCustomMeetingObj>()
     private var meetingsICreatedText = "Created by me"
-    private var meetingsIJoinText = "Joined"
+    private var meetingsIJoinText = "Joined by me"
 
 
     init {
         getAllMeetingsThatUserCreated()
         getAllMeetingsThatUserJoined()
+        meetingsList.add(MeetingSectionObj(meetingsICreatedText))
         meetingsList.addAll(meetingsICreated)
+        meetingsList.add(MeetingSectionObj(meetingsIJoinText))
         meetingsList.addAll(meetingsIJoin)
 
         meetingAdapter = MyMeetingAdapter(meetingsList, ::selectedMeeting, this)
@@ -52,6 +55,7 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     fun refreshList() {
         meetingsList.clear()
+        meetingsList.add(MeetingSectionObj(meetingsICreatedText))
         val myMeetingsFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
 
@@ -59,6 +63,7 @@ class MyMeetingsViewModel : BaseViewModel() {
             meetingsList.addAll(myMeetingsFromLocalDB)
         }
 
+        meetingsList.add(MeetingSectionObj(meetingsIJoinText))
         val joinedMeetingsFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
 
