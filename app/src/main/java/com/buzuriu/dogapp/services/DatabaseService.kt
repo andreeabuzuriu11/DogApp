@@ -70,6 +70,7 @@ interface IDatabaseService {
     ): ArrayList<MeetingObj>
 
     suspend fun fetchAllMeetingParticipants(meetingUid: String): ArrayList<ParticipantObj>?
+    suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String?
     suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchAllOtherPastMeetings(userUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj>?
@@ -711,6 +712,36 @@ class DatabaseService(
         allTasks.await()
 
         return participantsList
+    }
+
+    override suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String? {
+        var participantUid = String()
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val query = firestore.collection(meetingsCollection)
+            .document(meetingUid)
+            .collection(meetingParticipants)
+            .whereEqualTo("userUid", userUid)
+            .get()
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+
+            for (participantsDocSnapshot in it) {
+                for (querySnapshot in participantsDocSnapshot) {
+                    val participantObj = querySnapshot.toObject(ParticipantObj::class.java)
+                    participantUid = participantObj.uid!!
+                }
+            }
+        }
+            .addOnFailureListener { throw it }
+
+        allTasks.await()
+
+        return participantUid
     }
 
     override suspend fun deleteDog(

@@ -2,17 +2,21 @@ package com.buzuriu.dogapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.AttendedMeetingCellBinding
 import com.buzuriu.dogapp.databinding.MyMeetingCellBinding
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.services.FirebaseAuthService
+import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
+import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlin.reflect.KFunction1
 
 class MyMeetingAdapter(
     private var meetingList: ArrayList<MyCustomMeetingObj>,
-    var mySelectedMeeting: KFunction1<MyCustomMeetingObj, Unit>
+    var mySelectedMeeting: KFunction1<MyCustomMeetingObj, Unit>,
+    private val viewModel: MyMeetingsViewModel
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -79,6 +83,9 @@ class MyMeetingAdapter(
             applicationBinding.meeting = meeting
             applicationBinding.attendedMeetingCell.setOnClickListener {
                 mySelectedMeeting(meeting)
+            }
+            applicationBinding.joinButton.setOnClickListener {
+                viewModel.leaveMeeting(meeting)
             }
         }
     }

@@ -1,13 +1,20 @@
 package com.buzuriu.dogapp.views.main.ui.my_meetings
 
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.MyMeetingAdapter
+import com.buzuriu.dogapp.listeners.IClickListener
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
+import com.buzuriu.dogapp.models.ParticipantObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
 import com.buzuriu.dogapp.views.AddMeetingActivity
+import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.MyMeetingDetailActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +38,7 @@ class MyMeetingsViewModel : BaseViewModel() {
         meetingsList.addAll(meetingsICreated)
         meetingsList.addAll(meetingsIJoin)
 
-        meetingAdapter = MyMeetingAdapter(meetingsList, ::selectedMeeting)
+        meetingAdapter = MyMeetingAdapter(meetingsList, ::selectedMeeting, this)
         meetingAdapter!!.notifyDataSetChanged()
     }
 
@@ -39,24 +46,27 @@ class MyMeetingsViewModel : BaseViewModel() {
         val isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
         if (isRefreshNeeded != null && isRefreshNeeded == true) {
             // clear meetings list and add them again updated
-            meetingsList.clear()
-            val myMeetingsFromLocalDB =
-                localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
-
-            if (myMeetingsFromLocalDB != null) {
-                meetingsList.addAll(myMeetingsFromLocalDB)
-            }
-
-            val joinedMeetingsFromLocalDB =
-                localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
-
-            if (joinedMeetingsFromLocalDB != null) {
-                meetingsList.addAll(joinedMeetingsFromLocalDB)
-            }
-
-            meetingAdapter!!.notifyDataSetChanged()
-
+            refreshList()
         }
+    }
+
+    fun refreshList() {
+        meetingsList.clear()
+        val myMeetingsFromLocalDB =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+
+        if (myMeetingsFromLocalDB != null) {
+            meetingsList.addAll(myMeetingsFromLocalDB)
+        }
+
+        val joinedMeetingsFromLocalDB =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+
+        if (joinedMeetingsFromLocalDB != null) {
+            meetingsList.addAll(joinedMeetingsFromLocalDB)
+        }
+
+        meetingAdapter!!.notifyDataSetChanged()
     }
 
     fun addMeeting() {
@@ -93,8 +103,70 @@ class MyMeetingsViewModel : BaseViewModel() {
     }
 
     private fun selectedMeeting(meeting: MyCustomMeetingObj) {
-        dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, meeting)
-        navigationService.navigateToActivity(MyMeetingDetailActivity::class.java, false)
+        if (isMeetingCreatedByMe(meeting)) {
+            dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, meeting)
+            navigationService.navigateToActivity(MyMeetingDetailActivity::class.java, false)
+        } else {
+            dataExchangeService.put(MeetingDetailViewModel::class.java.name, meeting)
+            navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
+        }
+    }
+
+    fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj) {
+        val allMeetingsThatUserJoinedList =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+        val toBeRemoved =
+            allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
+        allMeetingsThatUserJoinedList.remove(toBeRemoved)
+        localDatabaseService.add("meetingsUserJoined", allMeetingsThatUserJoinedList)
+    }
+
+    fun leaveMeeting(meeting: MyCustomMeetingObj) {
+        dialogService.showAlertDialog(
+            "Leave?",
+            "Are you sure you don't want to join this meeting with ${meeting.user!!.name}?",
+            "Yes",
+            object :
+                IClickListener {
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun clicked() {
+                    var participantUid: String
+                    viewModelScope.launch()
+                    {
+                        participantUid = getUserParticipantUid(meeting)!!
+
+                        if (participantUid != "") {
+                            viewModelScope.launch(Dispatchers.IO)
+                            {
+                                databaseService.leaveMeeting(meeting.meetingObj!!.uid!!,
+                                    participantUid,
+                                    object : IOnCompleteListener {
+                                        override fun onComplete(
+                                            successful: Boolean,
+                                            exception: Exception?
+                                        ) {
+                                            removeMeetFromUserJoinedMeetings(meeting)
+                                            refreshList()
+                                            dialogService.showSnackbar("Success")
+                                        }
+                                    })
+                            }
+                        }
+                    }
+                }
+            })
+    }
+
+    suspend fun getUserParticipantUid(meeting: MyCustomMeetingObj): String? {
+
+        return databaseService.fetchUserParticipantUidForMeeting(
+            meeting.meetingObj!!.uid!!,
+            currentUser!!.uid
+        )
+    }
+
+    private fun isMeetingCreatedByMe(meeting: MyCustomMeetingObj): Boolean {
+        return meeting.meetingObj!!.userUid == currentUser!!.uid
     }
 
     private fun doesUserHaveAtLeastOneDog(): Boolean {

@@ -1,7 +1,6 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
@@ -273,7 +272,6 @@ class MapViewModel : BaseViewModel() {
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
-                Log.d("andreea1", "user participated to this meeting: ${meeting.uid}")
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
@@ -284,7 +282,6 @@ class MapViewModel : BaseViewModel() {
             }
         }
 
-        Log.d("andreea2", "${pastMeetingsList.size}")
         return allCustomMeetings
     }
 
