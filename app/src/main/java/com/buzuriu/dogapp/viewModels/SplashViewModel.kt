@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import com.google.firebase.auth.ktx.auth
@@ -93,7 +94,12 @@ class SplashViewModel : BaseViewModel() {
     private suspend fun getUserAccountInfo() {
         val userInfo: UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
 
-        localDatabaseService.add("currentUser", userInfo!!)
+        if (userInfo!=null) {
+            localDatabaseService.add("currentUser", userInfo)
+        }
+        else{
+            navigationService.navigateToActivity(LoginActivity::class.java, true)
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 package com.buzuriu.dogapp.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -28,19 +27,15 @@ class MyMeetingAdapter(
 
         val layoutInflater = LayoutInflater.from(parent.context)
 
-        if (viewType == MyMeet)
-        {
+        return if (viewType == MyMeet) {
             val applicationBinding =
                 MyMeetingCellBinding.inflate(layoutInflater, parent, false)
-            return MyMeetingViewHolder(applicationBinding)
-        }
-        else if (viewType == JoinedMeet)
-        {
+            MyMeetingViewHolder(applicationBinding)
+        } else if (viewType == JoinedMeet) {
             val applicationBinding =
-            AttendedMeetingCellBinding.inflate(layoutInflater, parent, false)
-            return AttendedMeetingViewHolder(applicationBinding)
-        }
-        else throw IllegalArgumentException("Unsupported view type for view holder")
+                AttendedMeetingCellBinding.inflate(layoutInflater, parent, false)
+            AttendedMeetingViewHolder(applicationBinding)
+        } else throw IllegalArgumentException("Unsupported view type for view holder")
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -71,7 +66,6 @@ class MyMeetingAdapter(
     inner class MyMeetingViewHolder(var applicationBinding: MyMeetingCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(meeting: MyCustomMeetingObj) {
-            Log.d("andreea1", "this is my meeting: ${meeting.meetingObj!!.uid}")
             applicationBinding.meeting = meeting
             applicationBinding.myMeetingCell.setOnClickListener {
                 mySelectedMeeting(meeting)

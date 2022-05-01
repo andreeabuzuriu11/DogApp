@@ -88,4 +88,6 @@
     <string name="decline">decline</string>
     <string name="you_attend_with">You attend with</string>
     <string name="change">change</string>
+    <string name="save">save</string>
+    <string name="leave_review">Leave review</string>
 </resources>

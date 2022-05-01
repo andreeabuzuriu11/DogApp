@@ -4,10 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
-import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.ForgotPasswordActivity
@@ -45,6 +42,7 @@ class LoginViewModel : BaseViewModel() {
                                 async {
                                     prepareForMain()
                                     getUserAccountInfo()
+                                    getAllMeetingsThatUserJoined()
                                     navigationService.navigateToActivity(
                                         MainActivity::class.java,
                                         true
@@ -114,6 +112,30 @@ class LoginViewModel : BaseViewModel() {
 
             localDatabaseService.add("localMeetingsList", allCustomMeetings)
         }
+    }
+
+    private suspend fun getAllMeetingsThatUserJoined() {
+        var allMeetingsParticipants: ArrayList<ParticipantObj>
+        val allMeetingsThatUserJoined = ArrayList<MyCustomMeetingObj>()
+        var user: UserInfo?
+        var dog: DogObj?
+        val allOtherMeetings: ArrayList<MeetingObj> = databaseService.fetchAllOtherMeetings(currentUser!!.uid)!!
+
+        for (meeting in allOtherMeetings) {
+            allMeetingsParticipants =
+                databaseService.fetchAllMeetingParticipants(meeting.uid!!)!!
+            for (participant in allMeetingsParticipants)
+                if (participant.userUid == currentUser!!.uid) {
+                    user = databaseService.fetchUserByUid(meeting.userUid!!)
+                    dog = databaseService.fetchDogByUid(meeting.dogUid!!)
+
+                    if (dog != null) {
+                        val meetingObj = MyCustomMeetingObj(meeting, user!!, dog)
+                        allMeetingsThatUserJoined.add(meetingObj)
+                    }
+                }
+        }
+        localDatabaseService.add("meetingsUserJoined", allMeetingsThatUserJoined)
     }
 
     private suspend fun getUserAccountInfo() {

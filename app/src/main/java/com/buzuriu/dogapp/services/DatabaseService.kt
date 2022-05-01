@@ -15,6 +15,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 interface IDatabaseService {
@@ -70,6 +71,7 @@ interface IDatabaseService {
 
     suspend fun fetchAllMeetingParticipants(meetingUid: String): ArrayList<ParticipantObj>?
     suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj>?
+    suspend fun fetchAllOtherPastMeetings(userUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchDogMeetings(dogUid: String): ArrayList<MeetingObj>?
     suspend fun fetchMeetingsByFilters(
@@ -306,6 +308,34 @@ class DatabaseService(
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
                     if (meeting.userUid != userUid && !MeetingUtils.isMeetingInThePast(meeting))
+                        meetingsList.add(meeting)
+                }
+            }
+        }
+            .addOnFailureListener { throw it }
+
+        allTasks.await()
+
+        return meetingsList
+    }
+
+    override suspend fun fetchAllOtherPastMeetings(userUid: String): ArrayList<MeetingObj> {
+        val meetingsList = ArrayList<MeetingObj>()
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val query = firestore.collection(meetingsCollection)
+            .get()
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+
+            for (meetingDocSnapshot in it) {
+                for (querySnapshot in meetingDocSnapshot) {
+                    val meeting = querySnapshot.toObject(MeetingObj::class.java)
+                    if (meeting.userUid != userUid && MeetingUtils.isMeetingInThePast(meeting))
                         meetingsList.add(meeting)
                 }
             }

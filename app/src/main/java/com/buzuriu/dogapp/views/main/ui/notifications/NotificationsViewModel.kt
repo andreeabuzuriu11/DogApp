@@ -1,13 +1,36 @@
 package com.buzuriu.dogapp.views.main.ui.notifications
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
+import com.buzuriu.dogapp.adapters.ReviewNotificationAdapter
+import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 
 class NotificationsViewModel : BaseViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+    var reviewNotifAdapter: ReviewNotificationAdapter?
+
+    private var pastMeetingsList = ArrayList<MyCustomMeetingObj>()
+    private var reviewNotifList: ArrayList<MyCustomMeetingObj> = ArrayList()
+
+
+    init {
+        pastMeetingsList =  localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserJoined")!!
+
+        reviewNotifAdapter = ReviewNotificationAdapter(pastMeetingsList)
+        reviewNotifAdapter!!.notifyDataSetChanged()
+
+        printInfo()
+
     }
-    val text: LiveData<String> = _text
+
+    private fun printInfo()
+    {
+        Log.d("andreea9", "${pastMeetingsList.size}")
+        for (pastMeet in pastMeetingsList)
+        {
+            Log.d("andreea10", "${currentUser!!.email} has join ${pastMeet.user!!.name} and ${pastMeet.dog!!.name}")
+        }
+    }
+
+
 }

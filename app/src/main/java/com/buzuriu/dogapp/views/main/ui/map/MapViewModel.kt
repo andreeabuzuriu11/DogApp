@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
@@ -25,6 +26,7 @@ class MapViewModel : BaseViewModel() {
     var meetingAdapter: MeetingAdapter?
     var filterAdapter: FilterAppliedAdapter?
 
+    private var pastMeetingsList = ArrayList<MyCustomMeetingObj>()
     private var meetingsList = ArrayList<MyCustomMeetingObj>()
     private var filtersList = ArrayList<IFilterObj>()
     private var breedsList = ArrayList<String>()
@@ -40,9 +42,12 @@ class MapViewModel : BaseViewModel() {
         filterAdapter = FilterAppliedAdapter(filtersList, this)
         filtersList.clear()
 
-
         viewModelScope.launch {
             fetchAllMeetings()
+        }
+
+        viewModelScope.launch {
+            fetchAllPastMeetings()
         }
     }
 
@@ -132,7 +137,7 @@ class MapViewModel : BaseViewModel() {
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
         val toBeRemoved =
             allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
-        allMeetingsThatUserJoinedList!!.remove(toBeRemoved)
+        allMeetingsThatUserJoinedList.remove(toBeRemoved)
         localDatabaseService.add("meetingsUserJoined", allMeetingsThatUserJoinedList)
     }
 
@@ -241,6 +246,46 @@ class MapViewModel : BaseViewModel() {
                 meetingAdapter!!.notifyDataSetChanged()
             }
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private suspend fun fetchAllPastMeetings() {
+        ShowLoadingView(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = fetchAllPastMeetingsFromDatabase()
+            ShowLoadingView(false)
+            viewModelScope.launch(Dispatchers.Main) {
+                pastMeetingsList.clear()
+                pastMeetingsList.addAll(list)
+                localDatabaseService.add("pastMeetingsUserJoined", pastMeetingsList)
+            }
+        }
+    }
+
+    private suspend fun fetchAllPastMeetingsFromDatabase(): ArrayList<MyCustomMeetingObj> {
+        var user: UserInfo?
+        var dog: DogObj?
+        val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
+
+        // currentUser uid as parameter, because we have to ignore that user when searching new meetings
+        val allMeetings: ArrayList<MeetingObj>? =
+            databaseService.fetchAllOtherPastMeetings(currentUser!!.uid)
+
+        if (allMeetings != null) {
+            for (meeting in allMeetings) {
+                Log.d("andreea1", "user participated to this meeting: ${meeting.uid}")
+                user = databaseService.fetchUserByUid(meeting.userUid!!)
+                dog = databaseService.fetchDogByUid(meeting.dogUid!!)
+
+                if (user != null && dog != null) {
+                    val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                    allCustomMeetings.add(meetingObj)
+                }
+            }
+        }
+
+        Log.d("andreea2", "${pastMeetingsList.size}")
+        return allCustomMeetings
     }
 
     @SuppressLint("NotifyDataSetChanged")
