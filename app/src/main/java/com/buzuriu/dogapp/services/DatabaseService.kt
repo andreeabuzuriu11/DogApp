@@ -34,6 +34,13 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
+    suspend fun storeReviewToUser(
+        userUid: String,
+        reviewUid: String,
+        reviewObj: ReviewObj,
+        onCompleteListener: IOnCompleteListener
+    )
+
     suspend fun storeMeetingInfo(
         meetingUid: String,
         meetingObj: MeetingObj,
@@ -111,6 +118,7 @@ class DatabaseService(
     private val userInfoCollection = "UserInfo"
     private val dogInfoCollection = "Dog"
     private val meetingsCollection = "Meeting"
+    private val reviewCollection = "Review"
     private val meetingParticipants = "MeetingParticipants"
     private var meetingsQuery: Query? = null
     private var tasksList = ArrayList<Task<QuerySnapshot>>()
@@ -140,6 +148,21 @@ class DatabaseService(
             .set({
                 userUid
             })
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun storeReviewToUser(
+        userUid: String,
+        reviewUid: String,
+        reviewObj: ReviewObj,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        firestore.collection(userInfoCollection)
+            .document(userUid)
+            .collection(reviewCollection)
+            .document(reviewUid)
+            .set(reviewObj)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
@@ -714,7 +737,7 @@ class DatabaseService(
         return participantsList
     }
 
-    override suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String? {
+    override suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String {
         var participantUid = String()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)

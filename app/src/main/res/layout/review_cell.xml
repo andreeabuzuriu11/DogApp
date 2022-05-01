@@ -8,10 +8,10 @@
             type="com.buzuriu.dogapp.models.MyCustomMeetingObj" />
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.views.main.ui.map.MapViewModel" />
+            type="com.buzuriu.dogapp.views.main.ui.notifications.NotificationsViewModel" />
     </data>
     <LinearLayout
-        android:id="@+id/dog_cell"
+        android:id="@+id/review_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -74,17 +74,14 @@
                         />
                 </LinearLayout>
 
-                <RatingBar
-                    android:layout_gravity="center_horizontal"
-                    android:id="@+id/dogRating"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:numStars="5"
-                    android:isIndicator="false"
-                    />
+                <com.buzuriu.dogapp.components.RatingBarWithNumber
+                    android:id="@+id/review_rating_bar"
+                    cb_nr_of_stars="@={viewModel.nrOfStars}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
                 <Button
-                    android:id="@+id/join_button"
+                    android:id="@+id/save_review"
                     android:layout_marginTop="10dp"
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
