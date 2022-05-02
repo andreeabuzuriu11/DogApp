@@ -3,18 +3,12 @@ package com.buzuriu.dogapp.views.main.ui.notifications
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.ReviewNotificationAdapter
-import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.ReviewObj
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.lang.Exception
+import com.buzuriu.dogapp.viewModels.PastMeetingDetailViewModel
+import com.buzuriu.dogapp.views.PastMeetingDetailActivity
 
 @SuppressLint("NotifyDataSetChanged")
 class NotificationsViewModel : BaseViewModel() {
@@ -27,7 +21,7 @@ class NotificationsViewModel : BaseViewModel() {
         pastMeetingsList =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserJoined")!!
 
-        reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, this)
+        reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting)
         reviewNotificationAdapter!!.notifyDataSetChanged()
     }
 
@@ -61,5 +55,12 @@ class NotificationsViewModel : BaseViewModel() {
                 })
         }
         Log.d("andreea7", "${nrOfStars.value}")*/
+    }
+
+    private fun selectedPastMeeting(myCustomMeetingObj: MyCustomMeetingObj)
+    {
+        dataExchangeService.put(PastMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
+        Log.d("andreea", "this is the meeting i am sending: ${myCustomMeetingObj.user!!}")
+        navigationService.navigateToActivity(PastMeetingDetailActivity::class.java, false)
     }
 }
