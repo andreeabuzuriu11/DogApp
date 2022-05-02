@@ -419,8 +419,11 @@ class MapViewModel : BaseViewModel() {
     }
 
     private fun doesUserHaveAtLeastOneDog(): Boolean {
-        if (localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!.size < 1)
-            return false
+        val listOfDogs = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+        if (listOfDogs != null) {
+            if (listOfDogs.size < 1)
+                return false
+        }
         return true
     }
 }

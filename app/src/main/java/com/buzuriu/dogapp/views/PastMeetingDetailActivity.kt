@@ -1,6 +1,8 @@
 package com.buzuriu.dogapp.views
 
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityPastMeetingDetailBinding
 import com.buzuriu.dogapp.viewModels.PastMeetingDetailViewModel
@@ -25,6 +27,8 @@ class PastMeetingDetailActivity : BaseBoundActivity<
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initParticipantList()
+
         val mapFragment = SupportMapFragment.newInstance()
         supportFragmentManager
             .beginTransaction()
@@ -47,4 +51,11 @@ class PastMeetingDetailActivity : BaseBoundActivity<
         p0.setMaxZoomPreference(14.0f)
         p0.moveCamera(CameraUpdateFactory.newLatLng(coords))
     }
+
+    private fun initParticipantList() {
+        val partList = findViewById<RecyclerView>(R.id.participants_list)
+        partList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        partList.adapter = mViewModel.participantsAdapter
+    }
+
 }
