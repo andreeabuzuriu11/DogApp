@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -27,6 +28,8 @@ class PastMeetingDetailViewModel : BaseViewModel() {
     init {
         pastMeeting.value =
             dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)!!
+
+        Log.d("andreea1", "meetingID=${pastMeeting.value!!.meetingObj!!.uid}")
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(pastMeeting.value!!.meetingObj?.location!!)
@@ -61,10 +64,14 @@ class PastMeetingDetailViewModel : BaseViewModel() {
         if (allParticipantsList != null) {
             for (participant in allParticipantsList) {
                 user = databaseService.fetchUserByUid(participant.userUid!!)
-                dog = databaseService.fetchDogByUid(participant.dogUid!!)
-                if (dog != null) {
-                    val participantObj = ParticipantObj(user!!.name!!, dog.name)
-                    allParticipantsNameList.add(participantObj)
+                if (user != null && participant.userUid != currentUser!!.uid) {
+                    // check for user to be different of current user because current user
+                    // will not be displayed here
+                    dog = databaseService.fetchDogByUid(participant.dogUid!!)
+                    if (dog != null) {
+                        val participantObj = ParticipantObj(user.name!!, dog.name)
+                        allParticipantsNameList.add(participantObj)
+                    }
                 }
             }
         }

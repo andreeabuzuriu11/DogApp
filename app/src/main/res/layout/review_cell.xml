@@ -74,12 +74,6 @@
                         />
                 </LinearLayout>
 
-                <com.buzuriu.dogapp.components.RatingBarWithNumber
-                    android:id="@+id/review_rating_bar"
-                    cb_nr_of_stars="@={viewModel.nrOfStars}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
                 <Button
                     android:id="@+id/save_review"
                     android:layout_marginTop="10dp"
@@ -89,7 +83,7 @@
                     android:layout_gravity="center"
                     android:textSize="15sp"
                     android:background="@drawable/rounded_button"
-                    android:text="@string/save"
+                    android:text="@string/review_participants"
                     />
             </LinearLayout>
 

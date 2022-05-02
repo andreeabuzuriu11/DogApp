@@ -60,7 +60,6 @@ class NotificationsViewModel : BaseViewModel() {
     private fun selectedPastMeeting(myCustomMeetingObj: MyCustomMeetingObj)
     {
         dataExchangeService.put(PastMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
-        Log.d("andreea", "this is the meeting i am sending: ${myCustomMeetingObj.user!!}")
         navigationService.navigateToActivity(PastMeetingDetailActivity::class.java, false)
     }
 }
