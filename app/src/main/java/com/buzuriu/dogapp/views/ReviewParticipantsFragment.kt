@@ -9,9 +9,10 @@ import com.buzuriu.dogapp.databinding.FragmentReviewParticipantsBinding
 import com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
-class ReviewParticipantsFragment : BaseBoundFragment<ReviewParticipantsViewModel, FragmentReviewParticipantsBinding>(
-    ReviewParticipantsViewModel::class.java
-) {
+class ReviewParticipantsFragment :
+    BaseBoundFragment<ReviewParticipantsViewModel, FragmentReviewParticipantsBinding>(
+        ReviewParticipantsViewModel::class.java
+    ) {
     private lateinit var currentBinding: FragmentReviewParticipantsBinding
 
     override val layoutId: Int
@@ -28,9 +29,9 @@ class ReviewParticipantsFragment : BaseBoundFragment<ReviewParticipantsViewModel
     }
 
     private fun setupRecyclerView() {
-        val reviewParticipantsList = currentBinding.reviewParticipantList
-        reviewParticipantsList.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        reviewParticipantsList.adapter = mViewModel.ratingUserCellAdapter
+        val participansList = currentBinding.reviewParticipantList
+        participansList.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        participansList.adapter = mViewModel.participantsAdapter
     }
 
 }

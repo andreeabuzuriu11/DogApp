@@ -3,8 +3,8 @@
 
     <data>
         <variable
-            name="user"
-            type="com.buzuriu.dogapp.models.UserInfo" />
+            name="participant"
+            type="com.buzuriu.dogapp.models.ParticipantObj" />
         <variable
             name="review"
             type="com.buzuriu.dogapp.models.ReviewObj" />
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:hint="user name"
                     android:textSize="20dp"
-                    android:text="@{user.name}">
+                    android:text="@{participant.userUid}">
                 </TextView>
 
                 <com.buzuriu.dogapp.components.RatingBarWithNumber

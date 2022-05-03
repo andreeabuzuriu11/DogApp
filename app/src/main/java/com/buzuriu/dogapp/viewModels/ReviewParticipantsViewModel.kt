@@ -1,12 +1,10 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.ParticipantAdapter
 import com.buzuriu.dogapp.adapters.RatingUserCellAdapter
-import com.buzuriu.dogapp.adapters.ReviewNotificationAdapter
 import com.buzuriu.dogapp.models.*
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
@@ -14,9 +12,11 @@ import kotlinx.coroutines.launch
 
 class ReviewParticipantsViewModel : BaseViewModel() {
 
-    var ratingUserCellAdapter : RatingUserCellAdapter?
+    var ratingUserCellAdapter: RatingUserCellAdapter?
     private var participantsList = ArrayList<ParticipantObj>()
     private var reviewList = ArrayList<ReviewObj>()
+    var participantsAdapter: ParticipantAdapter? = ParticipantAdapter(participantsList)
+    var participantsUserName = ArrayList<String>()
 
     //var reviewNotificationAdapter: ReviewNotificationAdapter?
 
@@ -26,15 +26,14 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     init {
         pastMeeting.value = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
         ratingUserCellAdapter = RatingUserCellAdapter(reviewList, ::selectedCell)
-       // reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting, this)
+        // reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting, this)
 
         viewModelScope.launch {
             fetchAllParticipantsForMeeting()
         }
     }
 
-    private fun selectedCell(reviewObj : ReviewObj)
-    {
+    private fun selectedCell(reviewObj: ReviewObj) {
 
     }
 
@@ -51,7 +50,8 @@ class ReviewParticipantsViewModel : BaseViewModel() {
             viewModelScope.launch(Dispatchers.Main) {
                 participantsList.clear()
                 participantsList.addAll(list)
-                //participantsAdapter!!.notifyDataSetChanged()
+                ratingUserCellAdapter!!.notifyDataSetChanged()
+                participantsAdapter!!.notifyDataSetChanged()
             }
         }
     }
@@ -61,9 +61,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         var dog: DogObj?
         val allParticipantsNameList = ArrayList<ParticipantObj>()
 
-        Log.d("andreea", "${pastMeeting.value}")
-
-      /*  val allParticipantsList: ArrayList<ParticipantObj>? =
+        val allParticipantsList: ArrayList<ParticipantObj>? =
             databaseService.fetchAllMeetingParticipants(pastMeeting.value!!.meetingObj!!.uid!!)
 
         if (allParticipantsList != null) {
@@ -79,7 +77,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                     }
                 }
             }
-        }*/
+        }
 
         return allParticipantsNameList
     }

@@ -2,14 +2,17 @@ package com.buzuriu.dogapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.RatingUserCellBinding
 import com.buzuriu.dogapp.models.ReviewObj
+import com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel
+import com.buzuriu.dogapp.views.ReviewParticipantsFragment
 import kotlin.reflect.KFunction1
 
 class RatingUserCellAdapter(
     private var reviewUserList: ArrayList<ReviewObj>,
-    var selectedCell: KFunction1<ReviewObj, Unit>,
+    var selectedCell: KFunction1<ReviewObj, Unit>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

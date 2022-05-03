@@ -1,54 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <import type="android.view.View" />
-
-        <variable
-            name="viewModel"
-            type="com.buzuriu.dogapp.viewModels.SelectBreedViewModel" />
-    </data>
-
     <RelativeLayout
-        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
         android:background="@color/white"
         android:padding="10dp">
-
-        <ImageView
-            android:id="@+id/select_breed_close_image"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentEnd="true"
-            android:onClick="@{()->viewModel.close()}"
-            android:src="@drawable/ic_baseline_close_24"
-            />
-
-        <TextView
-            android:id="@+id/select_breed_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/select_breed"
-            android:textSize="24sp" />
-
-        <EditText
-            android:id="@+id/select_breed_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/select_breed_title"
-            android:layout_marginTop="30dp"
-            android:hint="@string/start_typing_a_breed_name"
-            android:inputType="text" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/breed_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/select_breed_edit_text"
-            android:layout_marginTop="16dp" />
 
         <Button
             android:id="@+id/select_breed_save_button"
@@ -61,5 +19,47 @@
             android:text="@string/save_button_text"
             android:textColor="@color/white" />
 
+        <EditText
+            android:id="@+id/select_breed_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/select_breed_title"
+            android:layout_marginTop="30dp"
+            android:hint="@string/start_typing_a_breed_name"
+            android:inputType="text" />
+
+        <ImageView
+            android:id="@+id/select_breed_close_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:onClick="@{()->viewModel.close()}"
+            android:src="@drawable/ic_baseline_close_24" />
+
+
+        <TextView
+            android:id="@+id/select_breed_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/select_breed"
+            android:textSize="24sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/breed_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/select_breed_edit_text"
+            android:layout_marginTop="16dp" />
+
     </RelativeLayout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.SelectBreedViewModel" />
+    </data>
 </layout>

@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-        <import type="android.view.View" />
-
-        <variable
-            name="viewModel"
-            type="com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel" />
-    </data>
-
     <RelativeLayout
-        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="40dp"
         android:background="@color/white"
         android:padding="10dp">
+
 
         <ImageView
             android:id="@+id/select_breed_close_image"
@@ -22,14 +15,31 @@
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"
             android:onClick="@{()->viewModel.close()}"
-            android:src="@drawable/ic_baseline_close_24"
-            />
+            android:src="@drawable/ic_baseline_close_24" />
+
+        <TextView
+            android:id="@+id/participants_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Participants"
+            android:textSize="24sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/review_participant_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_below="@+id/participants_text_view"
+            android:layout_marginTop="20dp" />
 
     </RelativeLayout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel" />
+    </data>
 </layout>
