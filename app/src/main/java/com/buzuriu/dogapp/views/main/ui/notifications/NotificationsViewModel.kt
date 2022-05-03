@@ -8,7 +8,10 @@ import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.PastMeetingDetailViewModel
+import com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel
 import com.buzuriu.dogapp.views.PastMeetingDetailActivity
+import com.buzuriu.dogapp.views.ReviewParticipantsFragment
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 
 @SuppressLint("NotifyDataSetChanged")
 class NotificationsViewModel : BaseViewModel() {
@@ -21,7 +24,7 @@ class NotificationsViewModel : BaseViewModel() {
         pastMeetingsList =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserJoined")!!
 
-        reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting)
+        reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting, this)
         reviewNotificationAdapter!!.notifyDataSetChanged()
     }
 
@@ -61,5 +64,16 @@ class NotificationsViewModel : BaseViewModel() {
     {
         dataExchangeService.put(PastMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
         navigationService.navigateToActivity(PastMeetingDetailActivity::class.java, false)
+    }
+
+    fun reviewParticipants(myCustomMeetingObj: MyCustomMeetingObj)
+    {
+        dataExchangeService.put(ReviewParticipantsViewModel::class.java.name, myCustomMeetingObj)
+        navigationService.showOverlay(
+            OverlayActivity::class.java,
+            false,
+            OverlayActivity.fragmentClassNameParam,
+            ReviewParticipantsFragment::class.qualifiedName
+        )
     }
 }

@@ -2,14 +2,17 @@ package com.buzuriu.dogapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.ReviewCellBinding
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
+import com.buzuriu.dogapp.views.main.ui.notifications.NotificationsViewModel
 import kotlin.reflect.KFunction1
 
 class ReviewNotificationAdapter(
     private var reviewNotificationList: ArrayList<MyCustomMeetingObj>,
     var selectedPastMeeting: KFunction1<MyCustomMeetingObj, Unit>,
+    var viewModel: NotificationsViewModel
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -38,6 +41,9 @@ class ReviewNotificationAdapter(
             applicationBinding.meeting = meeting
             applicationBinding.meetingCell.setOnClickListener {
                 selectedPastMeeting(meeting)
+            }
+            applicationBinding.reviewParticipantsButton.setOnClickListener{
+                viewModel.reviewParticipants(meeting)
             }
         }
     }

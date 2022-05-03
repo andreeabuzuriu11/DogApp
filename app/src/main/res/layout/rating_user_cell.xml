@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="user"
+            type="com.buzuriu.dogapp.models.UserInfo" />
+        <variable
+            name="review"
+            type="com.buzuriu.dogapp.models.ReviewObj" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.views.main.ui.notifications.NotificationsViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="70dp">
+
+        <View
+            android:layout_above="@+id/participant_cell_layout"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey" />
+
+        <RelativeLayout
+            android:id="@+id/participant_cell_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="user name"
+                    android:textSize="20dp"
+                    android:text="@{user.name}">
+                </TextView>
+
+                <com.buzuriu.dogapp.components.RatingBarWithNumber
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/participant_cell_layout"
+            android:background="@color/light_grey" />
+
+    </RelativeLayout>
+
+</layout>
