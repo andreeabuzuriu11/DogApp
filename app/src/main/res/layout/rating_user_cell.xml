@@ -3,11 +3,8 @@
 
     <data>
         <variable
-            name="participant"
-            type="com.buzuriu.dogapp.models.ParticipantObj" />
-        <variable
-            name="review"
-            type="com.buzuriu.dogapp.models.ReviewObj" />
+            name="userWithReview"
+            type="com.buzuriu.dogapp.models.UserWithReview" />
 
         <variable
             name="viewModel"
@@ -16,7 +13,7 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="70dp">
+        android:layout_height="120dp">
 
         <View
             android:layout_above="@+id/participant_cell_layout"
@@ -33,20 +30,20 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
                 <TextView
-                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:hint="user name"
-                    android:textSize="20dp"
-                    android:text="@{participant.userUid}">
-                </TextView>
+                    android:text="@{userWithReview.userInfo}"
+                    android:textSize="18dp"></TextView>
 
                 <com.buzuriu.dogapp.components.RatingBarWithNumber
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
         </RelativeLayout>

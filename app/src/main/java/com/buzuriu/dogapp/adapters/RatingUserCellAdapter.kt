@@ -6,12 +6,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.RatingUserCellBinding
 import com.buzuriu.dogapp.models.ReviewObj
+import com.buzuriu.dogapp.models.UserWithReview
 import com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel
 import com.buzuriu.dogapp.views.ReviewParticipantsFragment
 import kotlin.reflect.KFunction1
 
 class RatingUserCellAdapter(
-    private var reviewUserList: ArrayList<ReviewObj>,
+    private var reviewUserList: ArrayList<UserWithReview>,
     var selectedCell: KFunction1<ReviewObj, Unit>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -24,9 +25,9 @@ class RatingUserCellAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val reviewUser = reviewUserList[position]
+        val userWithReview = reviewUserList[position]
         if (holder is RatingUserCellAdapter.RatingUserCellViewHolder) {
-            (holder).bind(reviewUser)
+            (holder).bind(userWithReview)
         }
     }
 
@@ -36,8 +37,8 @@ class RatingUserCellAdapter(
 
     inner class RatingUserCellViewHolder(private var applicationBinding: RatingUserCellBinding)
         : RecyclerView.ViewHolder(applicationBinding.root) {
-        fun bind(reviewUser: ReviewObj) {
-            applicationBinding.review = reviewUser
+        fun bind(userWithReview: UserWithReview) {
+            applicationBinding.userWithReview = userWithReview
         }
     }
 

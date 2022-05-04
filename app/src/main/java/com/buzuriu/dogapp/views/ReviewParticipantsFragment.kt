@@ -31,7 +31,7 @@ class ReviewParticipantsFragment :
     private fun setupRecyclerView() {
         val participansList = currentBinding.reviewParticipantList
         participansList.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        participansList.adapter = mViewModel.participantsAdapter
+        participansList.adapter = mViewModel.ratingUserCellAdapter
     }
 
 }
