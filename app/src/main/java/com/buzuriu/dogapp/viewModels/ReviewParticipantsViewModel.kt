@@ -1,11 +1,13 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.RatingUserCellAdapter
 import com.buzuriu.dogapp.models.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,7 +25,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
 
     init {
         pastMeeting.value = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
-        ratingUserCellAdapter = RatingUserCellAdapter(reviewList, ::selectedCell)
+        ratingUserCellAdapter = RatingUserCellAdapter(reviewList, this)
         // reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting, this)
 
         viewModelScope.launch {
@@ -31,8 +33,9 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         }
     }
 
-    private fun selectedCell(reviewObj: ReviewObj) {
-
+    fun saveReviewInDatabase(userWithReview: UserWithReview)
+    {
+        Log.d("andreea", "review for ${userWithReview.userInfo} is ${userWithReview.reviewObj!!.numberOfStars}")
     }
 
     fun close() {
@@ -72,14 +75,13 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                     if (dog != null) {
                         val participantObj = ParticipantObj(user.name!!, dog.name)
                         allParticipantsNameList.add(participantObj)
-                        var userWithReview = UserWithReview(participant.userUid!!, ReviewObj())
+                        var userWithReview = UserWithReview(user.name!!, ReviewObj())
                         userWithReviewList.add(userWithReview)
                     }
                 }
             }
         }
 
-        //return allParticipantsNameList
         return userWithReviewList
     }
 }

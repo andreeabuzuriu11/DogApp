@@ -66,7 +66,7 @@ class NotificationsViewModel : BaseViewModel() {
         navigationService.navigateToActivity(PastMeetingDetailActivity::class.java, false)
     }
 
-    fun reviewParticipants(myCustomMeetingObj: MyCustomMeetingObj)
+    fun openReviewParticipantsFragment(myCustomMeetingObj: MyCustomMeetingObj)
     {
         dataExchangeService.put(ReviewParticipantsViewModel::class.java.name, myCustomMeetingObj)
         navigationService.showOverlay(

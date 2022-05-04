@@ -28,16 +28,17 @@ class RatingBarWithNumber : RelativeLayout {
     }
 
     @SuppressLint("SetTextI18n")
-    fun setText(value: Int) {
+    fun setText(value: Float) {
         numberTextView!!.text = "$value stars"
     }
 
-    fun getNumOfStars(): Int? {
-        return ratingBar!!.numStars
+    fun getNumOfStars(): Float? {
+        return ratingBar!!.rating.toFloat()
     }
 
-    fun setNumStars(value: Int) {
-        ratingBar!!.numStars = value
+    fun setNumStars(value: Float) {
+        ratingBar!!.rating = value
+        ratingBar!!.numStars = value.toInt()
         setText(value)
     }
 

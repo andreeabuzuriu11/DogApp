@@ -9,11 +9,12 @@ import com.buzuriu.dogapp.models.ReviewObj
 import com.buzuriu.dogapp.models.UserWithReview
 import com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel
 import com.buzuriu.dogapp.views.ReviewParticipantsFragment
+import com.buzuriu.dogapp.views.main.ui.notifications.NotificationsViewModel
 import kotlin.reflect.KFunction1
 
 class RatingUserCellAdapter(
     private var reviewUserList: ArrayList<UserWithReview>,
-    var selectedCell: KFunction1<ReviewObj, Unit>
+    var viewModel: ReviewParticipantsViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -39,6 +40,9 @@ class RatingUserCellAdapter(
         : RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(userWithReview: UserWithReview) {
             applicationBinding.userWithReview = userWithReview
+            applicationBinding.editButton.setOnClickListener {
+                viewModel.saveReviewInDatabase(userWithReview)
+            }
         }
     }
 

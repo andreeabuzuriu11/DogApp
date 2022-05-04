@@ -32,14 +32,14 @@ object RatingBarBindingAdapter {
 
     @BindingAdapter("cb_nr_of_stars")
     @JvmStatic
-    fun RatingBarWithNumber.setNumStars(value: Int) {
-        this.setNumStars(value as Int)
+    fun RatingBarWithNumber.setNumStars(value: Float) {
+        this.setNumStars(value as Float)
     }
 
     @InverseBindingAdapter(attribute = "cb_nr_of_stars")
     @JvmStatic
-    fun RatingBarWithNumber.getNumOfStars(): Int? {
-        return this.getNumOfStars()
+    fun RatingBarWithNumber.getNumOfStars(): Float? {
+        return this.getNumOfStars()!!.toFloat()
     }
 }
 

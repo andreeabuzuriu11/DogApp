@@ -13,7 +13,7 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="120dp">
+        android:layout_height="140dp">
 
         <View
             android:layout_above="@+id/participant_cell_layout"
@@ -42,8 +42,20 @@
                     android:textSize="18dp"></TextView>
 
                 <com.buzuriu.dogapp.components.RatingBarWithNumber
+                    android:id="@+id/rating_bar_with_number"
+                    cb_nr_of_stars="@={userWithReview.reviewObj.numberOfStars}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/edit_button"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/rounded_button"
+                    android:text="@string/edit"
+                    android:textColor="@color/white" />
+
 
             </LinearLayout>
         </RelativeLayout>

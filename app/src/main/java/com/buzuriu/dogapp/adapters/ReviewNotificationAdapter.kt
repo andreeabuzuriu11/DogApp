@@ -43,7 +43,7 @@ class ReviewNotificationAdapter(
                 selectedPastMeeting(meeting)
             }
             applicationBinding.reviewParticipantsButton.setOnClickListener{
-                viewModel.reviewParticipants(meeting)
+                viewModel.openReviewParticipantsFragment(meeting)
             }
         }
     }
