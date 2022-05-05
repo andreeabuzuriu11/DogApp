@@ -1,10 +1,12 @@
 package com.buzuriu.dogapp.models
 
 class UserWithReview {
-    var userInfo : String? = null
+    var userUid : String? = null
+    var userInfo : UserInfo? = null
     var reviewObj : ReviewObj? = null
 
-    constructor(userInfo: String, reviewObj: ReviewObj) {
+    constructor(userUid: String, userInfo: UserInfo, reviewObj: ReviewObj) {
+        this.userUid = userUid
         this.userInfo = userInfo
         this.reviewObj = reviewObj
     }

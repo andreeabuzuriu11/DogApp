@@ -61,6 +61,13 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
+    suspend fun updateReview(
+        userUid: String,
+        reviewUid: String,
+        newNumberOfStars: Float,
+        onCompleteListener: IOnCompleteListener
+    )
+
     suspend fun leaveMeeting(
         meetingUid: String,
         participantUid: String,
@@ -71,6 +78,7 @@ interface IDatabaseService {
     suspend fun fetchDogByUid(dogUid: String): DogObj?
     suspend fun fetchUserByUid(userUid: String): UserInfo?
     suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj>?
+    suspend fun fetchUserReviews(userUid: String) : ArrayList<ReviewObj>?
     suspend fun fetchMeetings(
         filtersList: ArrayList<IFilterObj>,
         userUid: String
@@ -167,6 +175,8 @@ class DatabaseService(
             .await()
     }
 
+
+
     override suspend fun storeDogInfo(
         userUid: String,
         dog: DogObj,
@@ -216,6 +226,21 @@ class DatabaseService(
             .collection(meetingParticipants)
             .document(participantUid)
             .update("dogUid", newDogUid)
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun updateReview(
+        userUid: String,
+        reviewUid: String,
+        newNumberOfStars: Float,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        firestore.collection(userInfoCollection)
+            .document(userUid)
+            .collection(reviewCollection)
+            .document(reviewUid)
+            .update("numberOfStars", newNumberOfStars)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
@@ -313,6 +338,31 @@ class DatabaseService(
             }
         }
         return dogList
+    }
+
+    override suspend fun fetchUserReviews(
+        userUid: String
+    ): ArrayList<ReviewObj> {
+        val reviewList = ArrayList<ReviewObj>()
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val query = firestore.collection(reviewCollection)
+            .get()
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+
+            for (dogDocSnapshot in it) {
+                for (querySnapshot in dogDocSnapshot) {
+                    val review = querySnapshot.toObject(ReviewObj::class.java)
+                    reviewList.add(review)
+                }
+            }
+        }
+        return reviewList
     }
 
     override suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj> {

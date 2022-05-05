@@ -40,10 +40,9 @@ class RatingUserCellAdapter(
         : RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(userWithReview: UserWithReview) {
             applicationBinding.userWithReview = userWithReview
-            applicationBinding.editButton.setOnClickListener {
+            applicationBinding.rateIt.setOnClickListener {
                 viewModel.saveReviewInDatabase(userWithReview)
             }
         }
     }
-
 }
