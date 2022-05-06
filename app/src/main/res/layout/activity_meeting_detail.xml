@@ -51,7 +51,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/dog_info"
-                            android:textSize="22sp" />
+                            android:textSize="@dimen/title_size" />
 
                     </LinearLayout>
 
@@ -79,6 +79,12 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -101,6 +107,12 @@
                             android:text="@{viewModel.myCustomMeetingObj.dog.breed}"
                             android:textSize="20sp" />
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -133,6 +145,12 @@
                             android:textSize="20sp" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -154,10 +172,16 @@
                             android:padding="10dp"
                             android:text="@{viewModel.myCustomMeetingObj.dog.gender}"
                             android:textSize="20sp" />
-
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
+                        android:layout_marginTop="30dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
@@ -165,7 +189,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/user_info"
-                            android:textSize="22sp" />
+                            android:textSize="@dimen/title_size" />
 
                     </LinearLayout>
 
@@ -190,9 +214,13 @@
                             android:padding="10dp"
                             android:text="@{viewModel.myCustomMeetingObj.user.name}"
                             android:textSize="20sp" />
-
-
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -217,7 +245,14 @@
                             android:textSize="20sp" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
+                        android:layout_marginTop="30dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
@@ -225,7 +260,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/meeting_info"
-                            android:textSize="22sp" />
+                            android:textSize="@dimen/title_size" />
 
                     </LinearLayout>
 
@@ -252,6 +287,12 @@
                             android:textSize="20sp" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -274,6 +315,12 @@
                             android:padding="10dp"
                             android:textSize="20sp" />
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
 
                     <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/map"
@@ -327,18 +374,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <RatingBar
-                        android:id="@+id/rating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
                         cb_dogImg="@{viewModel.myCustomMeetingObj.dog}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:layout_below="@+id/rating"
                         android:layout_centerInParent="true"
                         android:src="@drawable/ic_dog_svgrepo_com" />
 
