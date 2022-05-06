@@ -28,55 +28,90 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         pastMeeting.value = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
         ratingUserCellAdapter = RatingUserCellAdapter(reviewList, this)
 
-
         // reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting, this)
         viewModelScope.launch {
-            reviewList = fetchAllParticipantsForMeeting()
-        }
-
-        Log.d("andreea9999", "${reviewList.size}")
-
-        viewModelScope.launch {
-            fetchAllReviewsForParticipantsToThisMeeting()
+            fetchAllParticipantsForMeeting()
         }
     }
 
 
+    fun saveReviewInDatabase(userWithReview: UserWithReview) {
+        Log.d(
+            "andreea",
+            "review for ${userWithReview.userInfo} is ${userWithReview.reviewObj!!.numberOfStars}"
+        )
 
-    fun saveReviewInDatabase(userWithReview: UserWithReview)
-    {
-        Log.d("andreea", "review for ${userWithReview.userInfo} is ${userWithReview.reviewObj!!.numberOfStars}")
+        val review = didCurrentUserAlreadyReviewUser(userWithReview.userUid!!)
+        if (review != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                databaseService.updateReview(
+                    review.uid!!,
+                    userWithReview.reviewObj!!.numberOfStars!!,
+                    object : IOnCompleteListener {
+                        override fun onComplete(successful: Boolean, exception: Exception?) {
+                            if (successful) {
+                                viewModelScope.launch(Dispatchers.Main) {
+                                    dialogService.showSnackbar("Review edited successfully")
+                                    //TODO also change in localDatabase
+
+
+                                    delay(2000)
+
+                                }
+                            } else {
+                                viewModelScope.launch(Dispatchers.Main) {
+                                    if (!exception?.message.isNullOrEmpty())
+                                        dialogService.showSnackbar(exception!!.message!!)
+                                    else dialogService.showSnackbar(R.string.unknown_error)
+                                    delay(2000)
+                                }
+                            }
+                        }
+                    })
+            }
+            return
+        }
 
         val reviewUid = StringUtils.getRandomUID()
         userWithReview.reviewObj!!.userIdThatLeftReview = currentUser!!.uid
+        userWithReview.reviewObj!!.userThatReviewIsFor = userWithReview.userUid
         userWithReview.reviewObj!!.uid = reviewUid
 
-         viewModelScope.launch(Dispatchers.IO) {
-             databaseService.storeReviewToUser(
-                 userWithReview.userUid!!,
-                 reviewUid,
-                 userWithReview.reviewObj!!,
-                 object : IOnCompleteListener {
-                     override fun onComplete(successful: Boolean, exception: Exception?) {
-                         if (successful) {
-                             viewModelScope.launch(Dispatchers.Main) {
-                                 dialogService.showSnackbar("Review added successfully")
-                                 delay(2000)
-                             }
-                         }
-                         else
-                         {
-                             viewModelScope.launch(Dispatchers.Main) {
-                                 if (!exception?.message.isNullOrEmpty())
-                                     dialogService.showSnackbar(exception!!.message!!)
-                                 else dialogService.showSnackbar(R.string.unknown_error)
-                                 delay(2000)
-                             }
-                         }
-                     }
-                 })
-         }
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseService.storeReview(
+                reviewUid,
+                userWithReview.reviewObj!!,
+                object : IOnCompleteListener {
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+                        if (successful) {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                dialogService.showSnackbar("Review added successfully")
+                                delay(2000)
+                            }
+                        } else {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                if (!exception?.message.isNullOrEmpty())
+                                    dialogService.showSnackbar(exception!!.message!!)
+                                else dialogService.showSnackbar(R.string.unknown_error)
+                                delay(2000)
+                            }
+                        }
+                    }
+                })
+        }
     }
+
+    private fun didCurrentUserAlreadyReviewUser(userUid: String): ReviewObj? {
+        var review: ReviewObj? = null
+        var listOfReviews =
+            localDatabaseService.get<java.util.ArrayList<ReviewObj>>("reviewsUserLeft")
+        if (listOfReviews != null) {
+            review =
+                listOfReviews.find { it.userIdThatLeftReview == currentUser!!.uid && it.userThatReviewIsFor == userUid }
+        }
+        return review
+    }
+
 
     fun close() {
         navigationService.closeCurrentActivity()
@@ -88,6 +123,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllParticipantsForMeetingFromDatabase()
+            Log.d("andreeaaaaaaaa", "${list.size}")
             ShowLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 reviewList.clear()
@@ -95,29 +131,13 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                 for (item in list)
                 {
                     Log.d("andreea4", "${item.userInfo!!.name} has ${item.reviewObj}")
+
                 }
                 ratingUserCellAdapter!!.notifyDataSetChanged()
             }
         }
         return reviewList
     }
-
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun fetchAllReviewsForParticipantsToThisMeeting() {
-        var numberOfStars : Float? = null
-        Log.d("andreea8", "pe aicisa")
-        Log.d("andreea88888", "${reviewList.size}")
-                for (userReview in reviewList) {
-                    // numberOfStars = databaseService.fetch
-                    Log.d("andreea8", "user name = ${userReview.userInfo!!.name}")
-                    Log.d("andreea8", "user id = ${userReview.userUid}")
-                    Log.d("andreea8", "user id that left review = ${userReview.reviewObj!!.userIdThatLeftReview}")
-                    Log.d("andreea8", "number of stars = ${userReview.reviewObj!!.numberOfStars}")
-                }
-    }
-
-
 
     private suspend fun fetchAllParticipantsForMeetingFromDatabase(): ArrayList<UserWithReview> {
         var user: UserInfo?

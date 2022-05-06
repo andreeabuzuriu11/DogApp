@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
@@ -32,6 +33,7 @@ class MapViewModel : BaseViewModel() {
     private var locationPoints = ArrayList<LatLng>()
     private var lastViewModel: String? = null
     private val userJoinedMeetings = ArrayList<MyCustomMeetingObj>()
+    private var userReviewsForOthers = ArrayList<ReviewObj>()
     var mapOfMeetingUidAndCurrentUserAsParticipant: MutableMap<String, ParticipantObj> =
         mutableMapOf()
 
@@ -48,6 +50,12 @@ class MapViewModel : BaseViewModel() {
         viewModelScope.launch {
             fetchAllPastMeetings()
         }
+
+        viewModelScope.launch {
+            fetchAllReviewsUserLeft()
+        }
+
+
     }
 
     override fun onResume() {
@@ -215,7 +223,7 @@ class MapViewModel : BaseViewModel() {
         return false
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "LongLogTag")
     private suspend fun fetchAllMeetings() {
         ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -227,6 +235,7 @@ class MapViewModel : BaseViewModel() {
                 getAllDogBreeds()
                 getAllMeetingsLocation()
                 getAllMeetingsThatUserJoined()
+                Log.d("andreea", "meetings joined: ${userJoinedMeetings.size}")
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
             }
@@ -243,6 +252,24 @@ class MapViewModel : BaseViewModel() {
                 meetingsList.addAll(list)
                 getAllMeetingsThatUserJoined()
                 meetingAdapter!!.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private suspend fun fetchAllReviewsUserLeft() {
+        ShowLoadingView(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            var list = getAllReviewsThatUserLeft()
+            ShowLoadingView(false)
+            viewModelScope.launch(Dispatchers.Main) {
+                userReviewsForOthers.clear()
+                if (list != null) {
+                    userReviewsForOthers.addAll(list)
+                }
+                localDatabaseService.add("reviewsUserLeft", userReviewsForOthers)
+                Log.d("andreea", "reviews: ${userReviewsForOthers.size}")
+                meetingAdapter!!.notifyDataSetChanged()
+                filterAdapter!!.notifyDataSetChanged()
             }
         }
     }
@@ -283,6 +310,27 @@ class MapViewModel : BaseViewModel() {
         }
 
         return allCustomMeetings
+    }
+
+
+    private suspend fun getAllReviewsThatUserLeft() : ArrayList<ReviewObj> {
+        val allReviewsUserHasLeft = ArrayList<ReviewObj>()
+
+        val list : ArrayList<ReviewObj>? = databaseService.fetchReviewsThatUserLeft(currentUser!!.uid)
+        if (list!=null) {
+            for (review in list) {
+                Log.d("andreea44", "avem un review????")
+                val reviewObj = ReviewObj(
+                    review.uid!!,
+                    review.userIdThatLeftReview!!,
+                    review.userThatReviewIsFor!!,
+                    review.numberOfStars!!
+                )
+                allReviewsUserHasLeft.add(reviewObj)
+            }
+        }
+
+        return allReviewsUserHasLeft
     }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -29,7 +29,6 @@ class PastMeetingDetailViewModel : BaseViewModel() {
         pastMeeting.value =
             dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)!!
 
-        Log.d("andreea1", "meetingID=${pastMeeting.value!!.meetingObj!!.uid}")
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(pastMeeting.value!!.meetingObj?.location!!)

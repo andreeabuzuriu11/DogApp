@@ -34,8 +34,7 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
-    suspend fun storeReviewToUser(
-        userUid: String,
+    suspend fun storeReview(
         reviewUid: String,
         reviewObj: ReviewObj,
         onCompleteListener: IOnCompleteListener
@@ -62,7 +61,6 @@ interface IDatabaseService {
     )
 
     suspend fun updateReview(
-        userUid: String,
         reviewUid: String,
         newNumberOfStars: Float,
         onCompleteListener: IOnCompleteListener
@@ -79,6 +77,7 @@ interface IDatabaseService {
     suspend fun fetchUserByUid(userUid: String): UserInfo?
     suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj>?
     suspend fun fetchUserReviews(userUid: String) : ArrayList<ReviewObj>?
+    suspend fun fetchReviewsThatUserLeft(userUid: String) : ArrayList<ReviewObj>?
     suspend fun fetchMeetings(
         filtersList: ArrayList<IFilterObj>,
         userUid: String
@@ -86,6 +85,7 @@ interface IDatabaseService {
 
     suspend fun fetchAllMeetingParticipants(meetingUid: String): ArrayList<ParticipantObj>?
     suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String?
+    suspend fun fetchReviewUidForUser(userThatLeftReview: String, userThatReviewIsFor: String) : String?
     suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchAllOtherPastMeetings(userUid: String) : ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj>?
@@ -160,15 +160,12 @@ class DatabaseService(
             .await()
     }
 
-    override suspend fun storeReviewToUser(
-        userUid: String,
+    override suspend fun storeReview(
         reviewUid: String,
         reviewObj: ReviewObj,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(userInfoCollection)
-            .document(userUid)
-            .collection(reviewCollection)
+        firestore.collection(reviewCollection)
             .document(reviewUid)
             .set(reviewObj)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
@@ -231,14 +228,11 @@ class DatabaseService(
     }
 
     override suspend fun updateReview(
-        userUid: String,
         reviewUid: String,
         newNumberOfStars: Float,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(userInfoCollection)
-            .document(userUid)
-            .collection(reviewCollection)
+        firestore.collection(reviewCollection)
             .document(reviewUid)
             .update("numberOfStars", newNumberOfStars)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
@@ -337,15 +331,21 @@ class DatabaseService(
                 }
             }
         }
+            .addOnFailureListener { throw it }
+
+        allTasks.await()
+
         return dogList
     }
 
+    //TODO make a function out of these 2
     override suspend fun fetchUserReviews(
         userUid: String
     ): ArrayList<ReviewObj> {
         val reviewList = ArrayList<ReviewObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(reviewCollection)
+            .whereEqualTo("userThatReviewIsFor", userUid)
             .get()
 
         queryList.add(query)
@@ -354,7 +354,6 @@ class DatabaseService(
             Tasks.whenAllSuccess<QuerySnapshot>(queryList)
 
         allTasks.addOnSuccessListener {
-
             for (dogDocSnapshot in it) {
                 for (querySnapshot in dogDocSnapshot) {
                     val review = querySnapshot.toObject(ReviewObj::class.java)
@@ -362,6 +361,41 @@ class DatabaseService(
                 }
             }
         }
+            .addOnFailureListener { throw it }
+
+        allTasks.await()
+
+
+        return reviewList
+    }
+
+    override suspend fun fetchReviewsThatUserLeft(userUid: String): ArrayList<ReviewObj> {
+        var reviewList = ArrayList<ReviewObj>()
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val query = firestore
+            .collection(reviewCollection)
+            .whereEqualTo("userIdThatLeftReview", userUid)
+            .get()
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+            for (dogDocSnapshot in it) {
+                for (querySnapshot in dogDocSnapshot) {
+                    val review = querySnapshot.toObject(ReviewObj::class.java)
+
+                    reviewList.add(review)
+                }
+            }
+        }
+            .addOnFailureListener { throw it }
+
+        allTasks.await()
+
+        Log.d("andreea234", "${reviewList.size}")
         return reviewList
     }
 
@@ -815,6 +849,37 @@ class DatabaseService(
         allTasks.await()
 
         return participantUid
+    }
+
+    override suspend fun fetchReviewUidForUser(
+        userThatLeftReview: String,
+        userThatReviewIsFor: String
+    ): String? {
+        var reviewUid: String? = null
+        val queryList = ArrayList<Task<QuerySnapshot>>()
+        val query = firestore
+            .collection(reviewCollection)
+            .whereEqualTo("userIdThatLeftReview", userThatLeftReview)
+            .whereEqualTo("userThatReviewIsFor", userThatReviewIsFor)
+            .get()
+
+        queryList.add(query)
+
+        val allTasks =
+            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
+
+        allTasks.addOnSuccessListener {
+            for (dogDocSnapshot in it) {
+                for (querySnapshot in dogDocSnapshot) {
+                    reviewUid = querySnapshot.toObject(ReviewObj::class.java).uid!!
+                }
+            }
+        }
+            .addOnFailureListener { throw it }
+
+        allTasks.await()
+
+        return reviewUid
     }
 
     override suspend fun deleteDog(
