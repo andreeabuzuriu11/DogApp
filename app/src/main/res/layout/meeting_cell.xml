@@ -35,15 +35,14 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <RatingBar
-                    android:id="@+id/dogRating"
+                <com.buzuriu.dogapp.components.RatingBarWithNumber
+                    android:id="@+id/userRating"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:numStars="5"
                     android:rating="3.5"
                     android:isIndicator="false"
-                    android:scaleX="0.6"
-                    android:scaleY="0.6"
+                    cb_nr_of_stars="@{meeting.user.rating}"
                     />
 
                 <LinearLayout

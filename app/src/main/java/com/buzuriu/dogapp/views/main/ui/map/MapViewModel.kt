@@ -222,7 +222,6 @@ class MapViewModel : BaseViewModel() {
         return false
     }
 
-    @SuppressLint("NotifyDataSetChanged", "LongLogTag")
     private suspend fun fetchAllMeetings() {
         ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -410,14 +409,43 @@ class MapViewModel : BaseViewModel() {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                if (user != null && dog != null) {
-                    val meetingObj = MyCustomMeetingObj(meeting, user, dog)
-                    allCustomMeetings.add(meetingObj)
+                var reviews = ArrayList<ReviewObj>()
+                reviews = fetchUserReviews(meeting.userUid!!)!!
+                if (reviews != null)
+                {
+                    val meanOfReviews =  getMeanOfReviews(reviews)
+
+                    if (user != null && dog != null) {
+                        user.rating = meanOfReviews
+                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                        allCustomMeetings.add(meetingObj)
+                    }
                 }
+                else
+                {
+                    if (user != null && dog != null) {
+                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                        allCustomMeetings.add(meetingObj)
+                    }
+                }
+
+
             }
         }
 
         return allCustomMeetings
+    }
+
+    private suspend fun fetchUserReviews(userUid: String): ArrayList<ReviewObj>? {
+        return databaseService.fetchUserReviews(userUid)
+    }
+
+    fun getMeanOfReviews(reviews: ArrayList<ReviewObj>): Float {
+        var sum = 0.0f
+        for (review in reviews) {
+            sum += review.numberOfStars!!
+        }
+        return sum / reviews.size
     }
 
     private suspend fun fetchFilteredMeetingsFromDatabase(filters: ArrayList<IFilterObj>): ArrayList<MyCustomMeetingObj> {
