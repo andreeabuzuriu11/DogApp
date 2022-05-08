@@ -8,6 +8,7 @@ import com.buzuriu.dogapp.adapters.MyMeetingAdapter
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.MeetingUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
@@ -24,6 +25,7 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     private var meetingsList = ArrayList<IMeetingObj>()
 
+    private var pastMeetingsICreated = ArrayList<MyCustomMeetingObj>()
     private var meetingsICreated = ArrayList<MyCustomMeetingObj>()
     private var meetingsIJoin = ArrayList<MyCustomMeetingObj>()
     private var meetingsICreatedText = "Created by me"
@@ -115,7 +117,14 @@ class MyMeetingsViewModel : BaseViewModel() {
         val meetingsFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
         if (meetingsFromLocalDB != null) {
-            meetingsICreated.addAll(meetingsFromLocalDB)
+            // check if meeting is older than present
+                for (meet in meetingsFromLocalDB)
+                {
+                    if (!MeetingUtils.isMeetingInThePast(meet.meetingObj!!))
+                        meetingsICreated.add(meet)
+                    else
+                        pastMeetingsICreated.add(meet)
+                }
         }
     }
 
