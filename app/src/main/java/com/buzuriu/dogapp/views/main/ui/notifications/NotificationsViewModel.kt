@@ -1,11 +1,9 @@
 package com.buzuriu.dogapp.views.main.ui.notifications
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.ReviewNotificationAdapter
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.PastMeetingDetailViewModel
 import com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel
@@ -21,8 +19,13 @@ class NotificationsViewModel : BaseViewModel() {
     var nrOfStars = MutableLiveData(0)
 
     init {
-        pastMeetingsList =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserJoined")!!
+        val pastMeetingsListFromLocalDB =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserJoined")
+
+        if (pastMeetingsListFromLocalDB != null)
+        {
+            pastMeetingsList.addAll(pastMeetingsListFromLocalDB)
+        }
 
         reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting, this)
         reviewNotificationAdapter!!.notifyDataSetChanged()

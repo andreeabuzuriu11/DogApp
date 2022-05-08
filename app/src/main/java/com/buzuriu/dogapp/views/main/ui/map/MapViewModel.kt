@@ -411,22 +411,12 @@ class MapViewModel : BaseViewModel() {
 
                 var reviews = ArrayList<ReviewObj>()
                 reviews = fetchUserReviews(meeting.userUid!!)!!
-                if (reviews != null)
-                {
-                    val meanOfReviews =  getMeanOfReviews(reviews)
+                val meanOfReviews =  getMeanOfReviews(reviews)
 
-                    if (user != null && dog != null) {
-                        user.rating = meanOfReviews
-                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
-                        allCustomMeetings.add(meetingObj)
-                    }
-                }
-                else
-                {
-                    if (user != null && dog != null) {
-                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
-                        allCustomMeetings.add(meetingObj)
-                    }
+                if (user != null && dog != null) {
+                    user.rating = meanOfReviews
+                    val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                    allCustomMeetings.add(meetingObj)
                 }
 
 
@@ -440,7 +430,7 @@ class MapViewModel : BaseViewModel() {
         return databaseService.fetchUserReviews(userUid)
     }
 
-    fun getMeanOfReviews(reviews: ArrayList<ReviewObj>): Float {
+    private fun getMeanOfReviews(reviews: ArrayList<ReviewObj>): Float {
         var sum = 0.0f
         for (review in reviews) {
             sum += review.numberOfStars!!
@@ -461,10 +451,26 @@ class MapViewModel : BaseViewModel() {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                if (user != null && dog != null) {
-                    val meetingObj = MyCustomMeetingObj(meeting, user, dog)
-                    allCustomMeetings.add(meetingObj)
+                var reviews = ArrayList<ReviewObj>()
+                reviews = fetchUserReviews(meeting.userUid!!)!!
+                if (reviews != null)
+                {
+                    val meanOfReviews =  getMeanOfReviews(reviews)
+                    user!!.rating = meanOfReviews
+                    if (user != null && dog != null) {
+                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                        allCustomMeetings.add(meetingObj)
+                    }
                 }
+                else
+                {
+                    if (user != null && dog != null) {
+                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                        allCustomMeetings.add(meetingObj)
+                    }
+                }
+
+
             }
         }
         return allCustomMeetings

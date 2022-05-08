@@ -753,7 +753,7 @@ class DatabaseService(
                             sharedPreferencesService.readFromSharedPref<LatLng>(
                                 SharedPreferences.userLocationKey, LatLng::class.java
                             )
-                        )
+                        ) && !MeetingUtils.isMeetingInThePast(meeting)
                     ) {
 
                         if (meetingsList.find { it.uid == meeting.uid } != null || meeting.userUid == userUid) continue
