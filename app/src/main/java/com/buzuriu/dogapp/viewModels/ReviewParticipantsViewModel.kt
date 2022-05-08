@@ -20,7 +20,6 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     private var reviewList = ArrayList<UserWithReview>()
     var ratingUserCellAdapter: RatingUserCellAdapter? = null
 
-
     var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
 
@@ -28,7 +27,6 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         pastMeeting.value = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
         ratingUserCellAdapter = RatingUserCellAdapter(reviewList, this)
 
-        // reviewNotificationAdapter = ReviewNotificationAdapter(pastMeetingsList, ::selectedPastMeeting, this)
         viewModelScope.launch {
             fetchAllParticipantsForMeeting()
         }
@@ -36,11 +34,6 @@ class ReviewParticipantsViewModel : BaseViewModel() {
 
 
     fun saveReviewInDatabase(userWithReview: UserWithReview) {
-        Log.d(
-            "andreea",
-            "review for ${userWithReview.userInfo} is ${userWithReview.reviewObj!!.numberOfStars}"
-        )
-
         val review = didCurrentUserAlreadyReviewUser(userWithReview.userUid!!)
         if (review != null) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -52,9 +45,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                             if (successful) {
                                 viewModelScope.launch(Dispatchers.Main) {
                                     dialogService.showSnackbar("Review edited successfully")
-                                    //TODO also change in localDatabase
-
-
+                                    changeNumberOfStarsInLocalDatabase(userWithReview.userUid!!, userWithReview.reviewObj!!.numberOfStars!!)
                                     delay(2000)
 
                                 }
@@ -101,6 +92,22 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         }
     }
 
+    fun changeNumberOfStarsInLocalDatabase(userUid: String, newNumberOfStars : Float)
+    {
+        var review: ReviewObj? = null
+        var listOfReviews =
+            localDatabaseService.get<java.util.ArrayList<ReviewObj>>("reviewsUserLeft")
+        if (listOfReviews != null) {
+            review =
+                listOfReviews.find { it.userIdThatLeftReview == currentUser!!.uid && it.userThatReviewIsFor == userUid }
+            listOfReviews.remove(review)
+            var newReviewObj : ReviewObj? = null
+            newReviewObj = review
+            newReviewObj!!.numberOfStars = newNumberOfStars
+            listOfReviews.add(newReviewObj)
+        }
+    }
+
     private fun didCurrentUserAlreadyReviewUser(userUid: String): ReviewObj? {
         var review: ReviewObj? = null
         var listOfReviews =
@@ -112,6 +119,18 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         return review
     }
 
+    fun printLocalReviews()
+    {
+        var listOfReviews =
+            localDatabaseService.get<java.util.ArrayList<ReviewObj>>("reviewsUserLeft")
+        if (listOfReviews!=null)
+        {
+            for (review in listOfReviews){
+                Log.d("andreea-review", "${review.userThatReviewIsFor} has ${review.numberOfStars}")
+            }
+        }
+    }
+
 
     fun close() {
         navigationService.closeCurrentActivity()
@@ -119,20 +138,13 @@ class ReviewParticipantsViewModel : BaseViewModel() {
 
     @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllParticipantsForMeeting() : ArrayList<UserWithReview>{
-        Log.d("andreea7", "pe aicisa")
         ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllParticipantsForMeetingFromDatabase()
-            Log.d("andreeaaaaaaaa", "${list.size}")
             ShowLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 reviewList.clear()
                 reviewList.addAll(list)
-                for (item in list)
-                {
-                    Log.d("andreea4", "${item.userInfo!!.name} has ${item.reviewObj}")
-
-                }
                 ratingUserCellAdapter!!.notifyDataSetChanged()
             }
         }

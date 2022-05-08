@@ -83,7 +83,7 @@
                         android:layout_weight="1"
                         android:textAlignment="center"
                         android:layout_gravity="center"
-                        android:textSize="26dp"
+                        android:textSize="@dimen/normal_size"
                         cb_meetingDate = "@{meeting.meetingObj.date}"
                         />
                     <View
@@ -97,7 +97,7 @@
                         android:layout_marginStart="20dp"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:textSize="26sp"
+                        android:textSize="@dimen/normal_size"
 
                         android:layout_height="wrap_content"
                         cb_meetingTime  = "@{meeting.meetingObj.date}"/>
