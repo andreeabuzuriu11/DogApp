@@ -394,8 +394,6 @@ class DatabaseService(
             .addOnFailureListener { throw it }
 
         allTasks.await()
-
-        Log.d("andreea234", "${reviewList.size}")
         return reviewList
     }
 

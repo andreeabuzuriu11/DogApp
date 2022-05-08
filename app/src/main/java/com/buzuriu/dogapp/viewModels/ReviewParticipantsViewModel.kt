@@ -126,7 +126,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         if (listOfReviews!=null)
         {
             for (review in listOfReviews){
-                Log.d("andreea-review", "${review.userThatReviewIsFor} has ${review.numberOfStars}")
+                Log.d("mytag", "${review.userThatReviewIsFor} has ${review.numberOfStars}")
             }
         }
     }

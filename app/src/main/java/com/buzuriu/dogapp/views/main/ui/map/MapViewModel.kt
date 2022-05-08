@@ -235,7 +235,6 @@ class MapViewModel : BaseViewModel() {
                 getAllDogBreeds()
                 getAllMeetingsLocation()
                 getAllMeetingsThatUserJoined()
-                Log.d("andreea", "meetings joined: ${userJoinedMeetings.size}")
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
             }
@@ -267,7 +266,6 @@ class MapViewModel : BaseViewModel() {
                     userReviewsForOthers.addAll(list)
                 }
                 localDatabaseService.add("reviewsUserLeft", userReviewsForOthers)
-                Log.d("andreea", "reviews: ${userReviewsForOthers.size}")
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
             }
@@ -319,7 +317,6 @@ class MapViewModel : BaseViewModel() {
         val list : ArrayList<ReviewObj>? = databaseService.fetchReviewsThatUserLeft(currentUser!!.uid)
         if (list!=null) {
             for (review in list) {
-                Log.d("andreea44", "avem un review????")
                 val reviewObj = ReviewObj(
                     review.uid!!,
                     review.userIdThatLeftReview!!,
@@ -329,7 +326,6 @@ class MapViewModel : BaseViewModel() {
                 allReviewsUserHasLeft.add(reviewObj)
             }
         }
-
         return allReviewsUserHasLeft
     }
 
