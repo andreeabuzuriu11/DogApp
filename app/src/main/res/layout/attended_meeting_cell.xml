@@ -36,14 +36,6 @@
                 android:layout_centerVertical="true"
                 android:orientation="vertical">
 
-                <RatingBar
-                    android:id="@+id/dogRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:isIndicator="false"
-                    android:numStars="5"
-                    android:rating="3.5" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -79,13 +71,13 @@
                         android:layout_weight="1"
                         android:textAlignment="center"
                         android:layout_gravity="center"
-                        android:textSize="26dp"
+                        android:textSize="@dimen/normal_size"
                         cb_meetingDate = "@{meeting.meetingObj.date}"
                         />
                     <View
                         android:id="@+id/innerLine"
                         android:layout_width="1dp"
-                        android:layout_height="100dp"
+                        android:layout_height="50dp"
                         android:background="@color/black" />
                     <TextView
                         android:layout_width="match_parent"
@@ -93,7 +85,7 @@
                         android:layout_marginStart="20dp"
                         android:layout_weight="1"
                         android:layout_gravity="center"
-                        android:textSize="26sp"
+                        android:textSize="@dimen/normal_size"
                         android:layout_height="wrap_content"
                         cb_meetingTime  = "@{meeting.meetingObj.date}"/>
 

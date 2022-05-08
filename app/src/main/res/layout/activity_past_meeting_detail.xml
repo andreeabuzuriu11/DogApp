@@ -75,6 +75,12 @@
 
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -97,6 +103,12 @@
                             android:text="@{viewModel.pastMeeting.dog.breed}"
                             android:textSize="20sp" />
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -129,6 +141,12 @@
                             android:textSize="20sp" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -152,7 +170,14 @@
                             android:textSize="20sp" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
+                        android:layout_marginTop="30dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
@@ -185,9 +210,13 @@
                             android:padding="10dp"
                             android:text="@{viewModel.pastMeeting.user.name}"
                             android:textSize="20sp" />
-
-
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -212,7 +241,14 @@
                             android:textSize="20sp" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
+                        android:layout_marginTop="30dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
@@ -247,6 +283,12 @@
                             android:textSize="20sp" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -269,6 +311,12 @@
                             android:padding="10dp"
                             android:textSize="20sp" />
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
 
                     <androidx.fragment.app.FragmentContainerView
                         android:id="@+id/map"
@@ -295,7 +343,6 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/participants_text_view" />
                     </RelativeLayout>
-
 
                 </LinearLayout>
 

@@ -7,10 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.MyMeetingAdapter
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.IMeetingObj
-import com.buzuriu.dogapp.models.MeetingSectionObj
-import com.buzuriu.dogapp.models.MyCustomMeetingObj
+import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel

@@ -19,7 +19,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     private var reviewList = ArrayList<UserWithReview>()
     var ratingUserCellAdapter: RatingUserCellAdapter? = null
 
-    var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
+    private var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
 
     init {
@@ -108,7 +108,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
 
     private fun didCurrentUserAlreadyReviewUser(userUid: String): ReviewObj? {
         var review: ReviewObj? = null
-        var listOfReviews =
+        val listOfReviews =
             localDatabaseService.get<java.util.ArrayList<ReviewObj>>("reviewsUserLeft")
         if (listOfReviews != null) {
             review =
@@ -158,32 +158,40 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         val allParticipantsList: ArrayList<ParticipantObj> =
             databaseService.fetchAllMeetingParticipants(pastMeeting.value!!.meetingObj!!.uid!!)!!
 
-        if (allParticipantsList != null) {
-            for (participant in allParticipantsList) {
-                user = databaseService.fetchUserByUid(participant.userUid!!)
-                if (user != null && participant.userUid != currentUser!!.uid) {
-                    // check for user to be different of current user because current user
-                    // will not be displayed here
-                    dog = databaseService.fetchDogByUid(participant.dogUid!!)
-                    if (dog != null) {
-                        val participantObj = ParticipantObj(user.name!!, dog.name)
-                        allParticipantsNameList.add(participantObj)
-                        val review = didCurrentUserAlreadyReviewUser(participant.userUid!!)
-                        if (review!= null) {
-                            val userWithReview = UserWithReview(participant.userUid!!, user, review)
-                            userWithReviewList.add(userWithReview)
-                        }
-                        else
-                        {
-                            val userWithReview = UserWithReview(participant.userUid!!, user, ReviewObj())
-                            userWithReviewList.add(userWithReview)
-                        }
+        val creatorMeetingAsParticipant = convertMeetingCreatorToParticipant(pastMeeting.value!!.meetingObj!!.userUid!!, pastMeeting.value!!.dog!!)
+        allParticipantsList.add(creatorMeetingAsParticipant)
 
+        for (participant in allParticipantsList) {
+            user = databaseService.fetchUserByUid(participant.userUid!!)
+            if (user != null && participant.userUid != currentUser!!.uid) {
+                // check for user to be different of current user because current user
+                // will not be displayed here
+                dog = databaseService.fetchDogByUid(participant.dogUid!!)
+                if (dog != null) {
+                    val participantObj = ParticipantObj(user.name!!, dog.name)
+                    allParticipantsNameList.add(participantObj)
+                    val review = didCurrentUserAlreadyReviewUser(participant.userUid!!)
+                    if (review!= null) {
+                        val userWithReview = UserWithReview(participant.userUid!!, user, review)
+                        userWithReviewList.add(userWithReview)
                     }
+                    else
+                    {
+                        val userWithReview = UserWithReview(participant.userUid!!, user, ReviewObj())
+                        userWithReviewList.add(userWithReview)
+                    }
+
                 }
             }
         }
 
         return userWithReviewList
+    }
+
+    fun convertMeetingCreatorToParticipant(
+        meetingCreatorUserUid: String,
+        dog: DogObj
+    ): ParticipantObj {
+        return ParticipantObj(meetingCreatorUserUid, dog.uid)
     }
 }
