@@ -17,7 +17,6 @@
     </LinearLayout>
 
     <data>
-
         <variable
             name="sectionName"
             type="String" />

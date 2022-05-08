@@ -33,10 +33,24 @@ class MyMeetingsViewModel : BaseViewModel() {
     init {
         getAllMeetingsThatUserCreated()
         getAllMeetingsThatUserJoined()
-        meetingsList.add(MeetingSectionObj(meetingsICreatedText))
-        meetingsList.addAll(meetingsICreated)
-        meetingsList.add(MeetingSectionObj(meetingsIJoinText))
-        meetingsList.addAll(meetingsIJoin)
+
+        if (meetingsICreated.size > 0) {
+            meetingsList.add(MeetingSectionObj(meetingsICreatedText))
+            meetingsList.addAll(meetingsICreated)
+        }
+        else
+        {
+            meetingsList.add(MeetingSectionObj("You haven't created any meetings yet"))
+        }
+
+        if (meetingsIJoin.size > 0) {
+            meetingsList.add(MeetingSectionObj(meetingsIJoinText))
+            meetingsList.addAll(meetingsIJoin)
+        }
+        else
+        {
+            meetingsList.add(MeetingSectionObj("You haven't joined any meetings yet"))
+        }
 
         meetingAdapter = MyMeetingAdapter(meetingsList, ::selectedMeeting, this)
         meetingAdapter!!.notifyDataSetChanged()
@@ -52,20 +66,29 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     fun refreshList() {
         meetingsList.clear()
-        meetingsList.add(MeetingSectionObj(meetingsICreatedText))
+
         val myMeetingsFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
 
-        if (myMeetingsFromLocalDB != null) {
+        if (!myMeetingsFromLocalDB.isNullOrEmpty()) {
+            meetingsList.add(MeetingSectionObj(meetingsICreatedText))
             meetingsList.addAll(myMeetingsFromLocalDB)
         }
+        else
+        {
+            meetingsList.add(MeetingSectionObj("You haven't created any meetings yet"))
+        }
 
-        meetingsList.add(MeetingSectionObj(meetingsIJoinText))
         val joinedMeetingsFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
 
-        if (joinedMeetingsFromLocalDB != null) {
+        if (!joinedMeetingsFromLocalDB.isNullOrEmpty()) {
+            meetingsList.add(MeetingSectionObj(meetingsIJoinText))
             meetingsList.addAll(joinedMeetingsFromLocalDB)
+        }
+        else
+        {
+            meetingsList.add(MeetingSectionObj("You haven't joined any meetings yet"))
         }
 
         meetingAdapter!!.notifyDataSetChanged()
@@ -96,7 +119,7 @@ class MyMeetingsViewModel : BaseViewModel() {
         }
     }
 
-    private fun getAllMeetingsThatUserJoined() {
+    private fun getAllMeetingsThatUserJoined()  {
         val meetingsFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
         if (meetingsFromLocalDB != null) {
