@@ -129,7 +129,7 @@
                         android:id="@+id/dogProfileImage"
                         cb_bitmap="@{viewModel.dogBitmapImage}"
                         cb_imageUrl="@{viewModel.dogImageUrl}"
-                        cb_placeholder="@{viewModel.dogPlaceHolder}"
+                        cb_placeholder="@{@drawable/ic_dog_svgrepo_com}"
                         android:layout_width="130dp"
                         android:layout_height="130dp"
                         android:layout_below="@+id/addPetTextView"

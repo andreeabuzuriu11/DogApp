@@ -441,8 +441,8 @@ class DatabaseService(
             for (meetingDocSnapshot in it) {
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
-                    if (meeting.userUid != userUid && MeetingUtils.isMeetingInThePast(meeting))
-                        meetingsList.add(meeting)
+                    //if (meeting.userUid != userUid && MeetingUtils.isMeetingInThePast(meeting))
+                    meetingsList.add(meeting)
                 }
             }
         }

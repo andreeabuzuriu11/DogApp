@@ -1,12 +1,15 @@
 package com.buzuriu.dogapp.views
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.compose.runtime.collection.mutableVectorOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityMyMeetingDetailBinding
+import com.buzuriu.dogapp.utils.MeetingUtils
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -15,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyMeetingDetailActivity :
     BaseBoundActivity<MyMeetingDetailViewModel, ActivityMyMeetingDetailBinding>(
@@ -45,8 +49,12 @@ class MyMeetingDetailActivity :
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_edit, menu)
-        return true
+        return if (mViewModel.isMeetingPast())
+            false
+        else {
+            menuInflater.inflate(R.menu.menu_edit, menu)
+            true
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

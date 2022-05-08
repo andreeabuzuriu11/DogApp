@@ -25,7 +25,6 @@ import java.util.*
 class AddMeetingViewModel : BaseViewModel() {
 
     var dog = MutableLiveData<DogObj>()
-    var dogPlaceHolder: MutableLiveData<Drawable>
     var datePickerCalendar = MutableLiveData<Calendar>()
     var timePickerCalendar = MutableLiveData<Calendar>()
     var position = MutableLiveData<LatLng>()
@@ -33,7 +32,6 @@ class AddMeetingViewModel : BaseViewModel() {
     var location = GeoPoint(0.0, 0.0)
 
     init {
-        dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
         datePickerCalendar.value = Calendar.getInstance()
         timePickerCalendar.value = Calendar.getInstance()
 
@@ -142,11 +140,6 @@ class AddMeetingViewModel : BaseViewModel() {
             return false
         }
         return true
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun getDogPlaceHolder(): Drawable? {
-        return activityService.activity!!.getDrawable(R.drawable.ic_dog_svgrepo_com)
     }
 
     private fun doesUserHaveOnlyOneDog(): Boolean {

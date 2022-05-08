@@ -34,7 +34,6 @@ class AddDogViewModel : BaseViewModel() {
     var ageValue = MutableLiveData("")
     var ageString = MutableLiveData("")
     var buttonText = MutableLiveData("add")
-    var dogPlaceHolder = R.drawable.ic_dog_svgrepo_com
     var dogImageUrl = MutableLiveData<String>()
     var isEdit: Boolean = false
     var isFemaleGenderSelected = MutableLiveData<Boolean>()

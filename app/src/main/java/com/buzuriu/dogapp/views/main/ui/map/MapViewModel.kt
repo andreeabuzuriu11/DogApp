@@ -25,7 +25,8 @@ class MapViewModel : BaseViewModel() {
     var meetingAdapter: MeetingAdapter?
     var filterAdapter: FilterAppliedAdapter?
 
-    private var pastMeetingsList = ArrayList<MyCustomMeetingObj>()
+    private var pastMeetingsListUserCreated = ArrayList<MyCustomMeetingObj>()
+    private var pastMeetingsListUserJoined = ArrayList<MyCustomMeetingObj>()
     private var meetingsList = ArrayList<MyCustomMeetingObj>()
     private var filtersList = ArrayList<IFilterObj>()
     private var breedsList = ArrayList<String>()
@@ -273,9 +274,21 @@ class MapViewModel : BaseViewModel() {
             val list = fetchAllPastMeetingsFromDatabase()
             ShowLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
-                pastMeetingsList.clear()
-                pastMeetingsList.addAll(list)
-                localDatabaseService.add("pastMeetingsUserJoined", pastMeetingsList)
+                pastMeetingsListUserCreated.clear()
+                pastMeetingsListUserJoined.clear()
+                for (item in list)
+                {
+                    if (item.meetingObj!!.userUid == currentUser!!.uid)
+                    {
+                        pastMeetingsListUserCreated.add(item)
+                    }
+                    else
+                    {
+                        pastMeetingsListUserJoined.add(item)
+                    }
+                }
+                localDatabaseService.add("pastMeetingsUserCreated", pastMeetingsListUserCreated)
+                localDatabaseService.add("pastMeetingsUserJoined", pastMeetingsListUserJoined)
             }
         }
     }

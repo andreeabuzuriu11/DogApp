@@ -12,6 +12,7 @@ import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.ParticipantObj
 import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.MapUtils
+import com.buzuriu.dogapp.utils.MeetingUtils
 import com.buzuriu.dogapp.views.EditMeetingActivity
 import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
 import com.google.android.gms.maps.model.LatLng
@@ -136,5 +137,10 @@ class MyMeetingDetailViewModel : BaseViewModel() {
         }
         myMeetingsList.add(myCustomMeetingObj.value!!)
         localDatabaseService.add("localMeetingsList", myMeetingsList)
+    }
+
+    fun isMeetingPast() : Boolean
+    {
+        return (MeetingUtils.isMeetingInThePast(myCustomMeetingObj.value!!.meetingObj!!))
     }
 }

@@ -19,12 +19,9 @@ class MeetingDetailViewModel : BaseViewModel() {
     var myCustomMeetingObj = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
     var myDog = MutableLiveData<DogObj>()
-    var dogPlaceHolder: MutableLiveData<Drawable>
     var isUserAttending = MutableLiveData<Boolean>()
 
     init {
-        dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
-
         myCustomMeetingObj.value =
             dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
         myLatLng.value =
@@ -66,11 +63,6 @@ class MeetingDetailViewModel : BaseViewModel() {
             }
         }
         return myDog.value
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun getDogPlaceHolder(): Drawable? {
-        return activityService.activity!!.getDrawable(R.drawable.ic_dog_svgrepo_com)
     }
 
     fun changeDog() {

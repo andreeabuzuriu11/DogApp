@@ -362,7 +362,7 @@
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/dogImage"
                             cb_imageUrl="@{viewModel.myDog.imageUrl}"
-                            cb_placeholder="@{viewModel.dogPlaceHolder}"
+                            cb_placeholder="@{@drawable/ic_dog_svgrepo_com}"
                             android:layout_width="50dp"
                             android:layout_height="50dp" />
                     </RelativeLayout>
