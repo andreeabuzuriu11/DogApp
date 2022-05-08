@@ -1,7 +1,6 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
 import com.buzuriu.dogapp.adapters.MeetingAdapter
@@ -258,16 +257,12 @@ class MapViewModel : BaseViewModel() {
     private suspend fun fetchAllReviewsUserLeft() {
         ShowLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
-            var list = getAllReviewsThatUserLeft()
+            val list = getAllReviewsThatUserLeft()
             ShowLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 userReviewsForOthers.clear()
-                if (list != null) {
-                    userReviewsForOthers.addAll(list)
-                }
+                userReviewsForOthers.addAll(list)
                 localDatabaseService.add("reviewsUserLeft", userReviewsForOthers)
-                meetingAdapter!!.notifyDataSetChanged()
-                filterAdapter!!.notifyDataSetChanged()
             }
         }
     }

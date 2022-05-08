@@ -6,6 +6,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.buzuriu.dogapp.R
+import com.buzuriu.dogapp.bindingadapters.RatingBarBindingAdapter.setNumStars
 import com.buzuriu.dogapp.components.RatingBarWithNumber
 
 object RatingBarBindingAdapter {
@@ -33,7 +34,7 @@ object RatingBarBindingAdapter {
     @BindingAdapter("cb_nr_of_stars")
     @JvmStatic
     fun RatingBarWithNumber.setNumStars(value: Float) {
-        this.setNumStars(value as Float)
+        this.setText(value as Float)
     }
 
     @InverseBindingAdapter(attribute = "cb_nr_of_stars")
