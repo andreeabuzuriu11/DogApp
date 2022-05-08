@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.views.main.ui.my_meetings
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.MyMeetingAdapter
@@ -68,25 +69,24 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     fun refreshList() {
         meetingsList.clear()
+        meetingsICreated.clear()
+        meetingsIJoin.clear()
 
-        val myMeetingsFromLocalDB =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+        getAllMeetingsThatUserCreated()
+        getAllMeetingsThatUserJoined()
 
-        if (!myMeetingsFromLocalDB.isNullOrEmpty()) {
+        if (meetingsICreated.size > 0) {
             meetingsList.add(MeetingSectionObj(meetingsICreatedText))
-            meetingsList.addAll(myMeetingsFromLocalDB)
+            meetingsList.addAll(meetingsICreated)
         }
         else
         {
             meetingsList.add(MeetingSectionObj("You haven't created any meetings yet"))
         }
 
-        val joinedMeetingsFromLocalDB =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
-
-        if (!joinedMeetingsFromLocalDB.isNullOrEmpty()) {
+        if (meetingsIJoin.size > 0) {
             meetingsList.add(MeetingSectionObj(meetingsIJoinText))
-            meetingsList.addAll(joinedMeetingsFromLocalDB)
+            meetingsList.addAll(meetingsIJoin)
         }
         else
         {
