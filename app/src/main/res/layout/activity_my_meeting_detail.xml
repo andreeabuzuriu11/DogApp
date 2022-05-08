@@ -113,8 +113,10 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/meeting_time_linear_layout"
                     android:layout_marginTop="10dp"
-                    android:text="Participants"
+                    android:text="@{viewModel.displayedText}"
                     android:textSize="18dp" />
+
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/participants_list"

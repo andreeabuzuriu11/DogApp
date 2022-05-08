@@ -24,10 +24,13 @@ class PastMeetingDetailViewModel : BaseViewModel() {
     var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
     var participantsAdapter: ParticipantAdapter? = ParticipantAdapter(participantsList)
+    var displayedText = MutableLiveData<String>("")
 
     init {
         pastMeeting.value =
             dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)!!
+
+        displayedText.value = "There were no other participants besides you and ${pastMeeting.value!!.user!!.name}"
 
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
         myLatLng.value =
@@ -46,6 +49,10 @@ class PastMeetingDetailViewModel : BaseViewModel() {
             ShowLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 participantsList.clear()
+                if (!list.isNullOrEmpty())
+                {
+                    displayedText.value = "Other participants"
+                }
                 participantsList.addAll(list)
                 participantsAdapter!!.notifyDataSetChanged()
             }

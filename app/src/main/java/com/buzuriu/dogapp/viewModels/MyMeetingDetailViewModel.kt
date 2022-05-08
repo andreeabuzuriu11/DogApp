@@ -24,6 +24,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
     var participantsAdapter: ParticipantAdapter? = ParticipantAdapter(participantsList)
     var myCustomMeetingObj = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
+    var displayedText = MutableLiveData<String>("There are no participants yet")
 
     init {
         myCustomMeetingObj.value =
@@ -91,6 +92,10 @@ class MyMeetingDetailViewModel : BaseViewModel() {
             ShowLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 participantsList.clear()
+                if (!list.isNullOrEmpty())
+                {
+                    displayedText.value = "Participants"
+                }
                 participantsList.addAll(list)
                 participantsAdapter!!.notifyDataSetChanged()
             }
