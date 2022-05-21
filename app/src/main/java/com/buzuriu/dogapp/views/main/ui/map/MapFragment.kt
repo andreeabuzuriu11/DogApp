@@ -63,7 +63,6 @@ class MapFragment : BaseBoundFragment<MapViewModel, FragmentMapBinding>(MapViewM
                 mViewModel.filterMeetingsByTypeOrTimeClicked()
                 Log.d("MapFragment", "Filter list")
             }
-            R.id.search -> Log.d("MapFragment", "Search in list")
         }
 
         return super.onOptionsItemSelected(item)
