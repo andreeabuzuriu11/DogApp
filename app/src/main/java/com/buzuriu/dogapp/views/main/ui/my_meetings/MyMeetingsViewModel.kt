@@ -120,10 +120,13 @@ class MyMeetingsViewModel : BaseViewModel() {
             // check if meeting is older than present
                 for (meet in meetingsFromLocalDB)
                 {
-                    if (!MeetingUtils.isMeetingInThePast(meet.meetingObj!!))
+                    if (!MeetingUtils.isMeetingInThePast(meet.meetingObj!!)) {
+                        Log.d("mytag1", "reaches here")
                         meetingsICreated.add(meet)
-                    else
+                    }
+                    else {
                         pastMeetingsICreated.add(meet)
+                    }
                 }
         }
     }

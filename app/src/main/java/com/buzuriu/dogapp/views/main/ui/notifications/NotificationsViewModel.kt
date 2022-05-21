@@ -28,8 +28,8 @@ class NotificationsViewModel : BaseViewModel() {
     var nrOfStars = MutableLiveData(0)
 
     init {
-        getAllMeetingsThatUserCreated()
-        getAllMeetingsThatUserJoined()
+        getAllPastMeetingsThatUserCreated()
+        getAllPastMeetingsThatUserJoined()
 
         if (pastMeetingsUserCreatedList.size > 0) {
             allPastMeetings.add(MeetingSectionObj(meetingsICreatedText))
@@ -46,14 +46,14 @@ class NotificationsViewModel : BaseViewModel() {
         }
         else
         {
-            allPastMeetings.add(MeetingSectionObj("Empty list of past created meetings"))
+            allPastMeetings.add(MeetingSectionObj("Empty list of past joined meetings"))
         }
 
         reviewNotificationAdapter = ReviewNotificationAdapter(allPastMeetings, ::selectedPastMeeting, this)
         reviewNotificationAdapter!!.notifyDataSetChanged()
     }
 
-    private fun getAllMeetingsThatUserCreated() {
+    private fun getAllPastMeetingsThatUserCreated() {
         val pastMeetingsUserCreatedListFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserCreated")
         if (pastMeetingsUserCreatedListFromLocalDB != null) {
@@ -61,7 +61,7 @@ class NotificationsViewModel : BaseViewModel() {
         }
     }
 
-    private fun getAllMeetingsThatUserJoined() {
+    private fun getAllPastMeetingsThatUserJoined() {
         val pastMeetingsUserJoinedListFromLocalDB =
             localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserJoined")
         if (pastMeetingsUserJoinedListFromLocalDB != null) {

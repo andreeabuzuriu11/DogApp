@@ -10,10 +10,7 @@ import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.ForgotPasswordActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class LoginViewModel : BaseViewModel() {
 
@@ -141,7 +138,13 @@ class LoginViewModel : BaseViewModel() {
     private suspend fun getUserAccountInfo() {
         val userInfo : UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
 
-        localDatabaseService.add("currentUser", userInfo!!)
+        if (userInfo!=null)
+            localDatabaseService.add("currentUser", userInfo)
+        else {
+            dialogService.showSnackbar("Error, this user has been deleted!")
+            delay(3000)
+            navigationService.navigateToActivity(RegisterActivity::class.java, true)
+        }
     }
 
 }
