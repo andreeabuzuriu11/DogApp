@@ -29,17 +29,17 @@ class RatingBarWithNumber : RelativeLayout {
 
     @SuppressLint("SetTextI18n")
     fun setText(value: Float) {
-        numberTextView!!.text = "$value stars"
+        if (value.isNaN()) {
+            numberTextView!!.text = "No reviews yet"
+        }
+        else {
+            numberTextView!!.text = "$value stars"
+        }
     }
 
     fun getNumOfStars(): Float? {
         return ratingBar!!.rating.toFloat()
     }
 
-    fun setNumStars(value: Float) {
-        ratingBar!!.rating = value
-        ratingBar!!.numStars = value.toInt()
-        setText(value)
-    }
 
 }
