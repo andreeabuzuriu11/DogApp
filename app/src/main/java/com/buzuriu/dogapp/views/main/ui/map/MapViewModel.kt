@@ -280,11 +280,15 @@ class MapViewModel : BaseViewModel() {
                 {
                     if (item.meetingObj!!.userUid == currentUser!!.uid)
                     {
+                        // if meeting has user uid same id as current, it means that the user created
+                            // that particular meeting
                         pastMeetingsListUserCreated.add(item)
                     }
-                    else
+                    else // we should check that this user id is among the participant ids
                     {
-                        pastMeetingsListUserJoined.add(item)
+                        val allMeetingsUserJoined = getAllMeetingsThatUserJoined()
+                        if (allMeetingsUserJoined.contains(item))
+                            pastMeetingsListUserJoined.add(item)
                     }
                 }
                 localDatabaseService.add("pastMeetingsUserCreated", pastMeetingsListUserCreated)
@@ -519,4 +523,5 @@ class MapViewModel : BaseViewModel() {
         }
         return true
     }
+
 }
