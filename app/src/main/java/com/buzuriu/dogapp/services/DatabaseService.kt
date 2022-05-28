@@ -1,8 +1,11 @@
 package com.buzuriu.dogapp.services
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.DateUtils
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.maps.model.LatLng
@@ -14,7 +17,12 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.tasks.await
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.temporal.TemporalAdjusters
 import java.util.*
+import java.util.Calendar.SATURDAY
 
 
 interface IDatabaseService {
@@ -508,9 +516,10 @@ class DatabaseService(
         return meetingsList
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setMeetingsTimeQuery(filterType: IFilterObj) {
-        val start = Calendar.getInstance()
-        val end = Calendar.getInstance()
+        var start = Calendar.getInstance()
+        var end = Calendar.getInstance()
 
         val query: Task<QuerySnapshot>?
 
@@ -535,71 +544,31 @@ class DatabaseService(
 
                 end.add(Calendar.DATE, 1)
             }
-            "This week" -> {
+            "This Saturday" -> {
                 start.timeInMillis = System.currentTimeMillis()
                 end.timeInMillis = System.currentTimeMillis()
+
+                start[Calendar.HOUR_OF_DAY] = 0
+                start[Calendar.MINUTE] = 0
+                start[Calendar.SECOND] = 0
+                start[Calendar.MILLISECOND] = 0
 
                 end[Calendar.HOUR_OF_DAY] = 23
                 end[Calendar.MINUTE] = 59
                 end[Calendar.SECOND] = 59
                 end[Calendar.MILLISECOND] = 999
 
-                when {
-                    Calendar.DAY_OF_MONTH > 24 -> {
-                        when (Calendar.MONTH) {
-                            Calendar.JANUARY, Calendar.MARCH, Calendar.MAY, Calendar.JULY, Calendar.AUGUST, Calendar.OCTOBER, Calendar.DECEMBER -> {
-                                end.timeInMillis = System.currentTimeMillis()
-                                end.add(Calendar.MONTH, 1)
-                                end.add(Calendar.DAY_OF_MONTH, 7 - (31 - Calendar.DAY_OF_MONTH))
-                            }
-                            Calendar.APRIL, Calendar.JUNE, Calendar.SEPTEMBER, Calendar.NOVEMBER -> {
-                                end.timeInMillis = System.currentTimeMillis()
-                                end.add(Calendar.MONTH, 1)
-                                end.add(Calendar.DAY_OF_MONTH, 7 - (30 - Calendar.DAY_OF_MONTH))
 
-                            }
-                            Calendar.FEBRUARY -> {
-                                end.timeInMillis = System.currentTimeMillis()
-                                end.add(Calendar.MONTH, 1)
-                                end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
+                val localDate: LocalDate = LocalDate.now()
 
-                            }
-                        }
-                    }
-                    Calendar.DAY_OF_MONTH == 24 -> {
-                        when (Calendar.MONTH) {
-                            Calendar.JANUARY, Calendar.MARCH, Calendar.MAY, Calendar.JULY, Calendar.AUGUST, Calendar.OCTOBER, Calendar.DECEMBER -> {
-                                end.timeInMillis = System.currentTimeMillis()
-                                end[Calendar.DAY_OF_MONTH] = 31
+                val startLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SATURDAY.toString())))
+                val endLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SATURDAY.toString())))
 
-                            }
-                            Calendar.APRIL, Calendar.JUNE, Calendar.SEPTEMBER, Calendar.NOVEMBER -> {
-                                end.timeInMillis = System.currentTimeMillis()
-                                end.add(Calendar.MONTH, 1)
-                                end[Calendar.DAY_OF_MONTH] = 1
+                val startLong = startLocalDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+                val endLong = endLocalDate.atTime(23,59,59).atOffset(ZoneOffset.UTC).toInstant().toEpochMilli()
 
-                            }
-                            Calendar.FEBRUARY -> {
-                                end.timeInMillis = System.currentTimeMillis()
-                                end.add(Calendar.MONTH, 1)
-                                end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
-                            }
-                        }
-                    }
-                    Calendar.DAY_OF_MONTH in 22..23 -> {
-                        when (Calendar.MONTH) {
-                            Calendar.FEBRUARY -> {
-                                end.timeInMillis = System.currentTimeMillis()
-                                end.add(Calendar.MONTH, 1)
-                                end.add(Calendar.DAY_OF_MONTH, 7 - (28 - Calendar.DAY_OF_MONTH))
-                            }
-                        }
-                    }
-                    Calendar.DAY_OF_MONTH <= 21 -> {
-                        end.timeInMillis = System.currentTimeMillis()
-                        end.add(Calendar.DAY_OF_MONTH, 7)
-                    }
-                }
+                start = longToCalendar(startLong)!!
+                end = longToCalendar(endLong)!!
             }
             "This month" -> {
                 end.add(Calendar.MONTH, 1)
@@ -658,6 +627,8 @@ class DatabaseService(
             .whereGreaterThan("date", start.timeInMillis)
             .whereLessThan("date", end.timeInMillis)
             .get()
+
+        Log.d("mytag1", "query=$query")
 
         tasksList.add(query)
     }
@@ -718,6 +689,7 @@ class DatabaseService(
         tasksList.add(distanceQuery)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun createFilterQuery(filtersList: ArrayList<IFilterObj>) {
         filtersList.forEach {
             when (it) {
@@ -740,6 +712,7 @@ class DatabaseService(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun fetchMeetingsByFilters(
         filters: ArrayList<IFilterObj>,
         userUid: String
@@ -787,6 +760,7 @@ class DatabaseService(
         return meetingsList
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun fetchMeetings(
         filtersList: ArrayList<IFilterObj>,
         userUid: String
@@ -942,6 +916,15 @@ class DatabaseService(
             .delete()
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
+    }
+
+    private fun longToCalendar(time: Long?): Calendar? {
+        var c: Calendar? = null
+        if (time != null) {
+            c = Calendar.getInstance()
+            c.timeInMillis = time
+        }
+        return c
     }
 
 }
