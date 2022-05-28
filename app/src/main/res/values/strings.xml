@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DogApp</string>
+    <string name="app_name">Walk My Dog</string>
     <!-- Strings used for authentication/login/forgot password -->
     <string name="name_hint">Name</string>
     <string name="breed_hint">Breed</string>

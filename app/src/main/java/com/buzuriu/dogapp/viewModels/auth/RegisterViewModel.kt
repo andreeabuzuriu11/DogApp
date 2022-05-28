@@ -7,6 +7,7 @@ import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.auth.LoginActivity
+import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -63,6 +64,7 @@ class RegisterViewModel : BaseAuthViewModel() {
                                                 if (successful) {
                                                     dialogService.showSnackbar(R.string.info_added)
                                                     viewModelScope.launch(Dispatchers.Main) {
+                                                        getUserAccountInfo()
                                                         delay(1000)
                                                         navigationService.navigateToActivity(MainActivity::class.java, true)
                                                     }
@@ -143,5 +145,17 @@ class RegisterViewModel : BaseAuthViewModel() {
         }
 
         return true
+    }
+
+    private suspend fun getUserAccountInfo() {
+        val userInfo : UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
+
+        if (userInfo!=null)
+            localDatabaseService.add("currentUser", userInfo)
+        else {
+            dialogService.showSnackbar("Error, this user has been deleted!")
+            delay(3000)
+            navigationService.navigateToActivity(RegisterActivity::class.java, true)
+        }
     }
 }

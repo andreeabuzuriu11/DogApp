@@ -349,7 +349,6 @@ class MapViewModel : BaseViewModel() {
             removeFilterType<FilterByDogGenderObj>()
             removeFilterType<FilterByUserGenderObj>()
 
-            dialogService.showSnackbar("your selected filter is " + filters[0].name)
             filtersList.addAll(filters)
             filterAdapter!!.notifyDataSetChanged()
 
@@ -453,7 +452,7 @@ class MapViewModel : BaseViewModel() {
         return databaseService.fetchUserReviews(userUid)
     }
 
-    fun getMeanOfReviews(reviews: ArrayList<ReviewObj>): Float {
+    private fun getMeanOfReviews(reviews: ArrayList<ReviewObj>): Float {
         var sum = 0.0f
         for (review in reviews) {
             sum += review.numberOfStars!!
@@ -474,8 +473,7 @@ class MapViewModel : BaseViewModel() {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                var reviews = ArrayList<ReviewObj>()
-                reviews = fetchUserReviews(meeting.userUid!!)!!
+                val reviews = fetchUserReviews(meeting.userUid!!)
                 if (reviews != null)
                 {
                     val meanOfReviews =  getMeanOfReviews(reviews)
