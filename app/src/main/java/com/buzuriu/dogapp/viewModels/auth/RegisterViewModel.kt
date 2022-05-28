@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.UserInfo
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.auth.LoginActivity
@@ -65,6 +66,7 @@ class RegisterViewModel : BaseAuthViewModel() {
                                                     dialogService.showSnackbar(R.string.info_added)
                                                     viewModelScope.launch(Dispatchers.Main) {
                                                         getUserAccountInfo()
+                                                        localDatabaseService.add("localDogsList", ArrayList<DogObj>())
                                                         delay(1000)
                                                         navigationService.navigateToActivity(MainActivity::class.java, true)
                                                     }
@@ -84,7 +86,6 @@ class RegisterViewModel : BaseAuthViewModel() {
                                 dialogService.showSnackbar(exception!!.message!!)
                             dialogService.showSnackbar(R.string.unknown_error)
                         }
-
                     }
                 })
         }
