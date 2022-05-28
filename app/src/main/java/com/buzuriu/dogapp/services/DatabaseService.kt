@@ -544,7 +544,7 @@ class DatabaseService(
 
                 end.add(Calendar.DATE, 1)
             }
-            "This Saturday" -> {
+            "Next Saturday" -> {
                 start.timeInMillis = System.currentTimeMillis()
                 end.timeInMillis = System.currentTimeMillis()
 
@@ -570,56 +570,31 @@ class DatabaseService(
                 start = longToCalendar(startLong)!!
                 end = longToCalendar(endLong)!!
             }
-            "This month" -> {
-                end.add(Calendar.MONTH, 1)
-                end.set(Calendar.DAY_OF_MONTH, 1)
-                end.add(Calendar.DATE, -1)
-            }
-            "Next week" -> {
-           /*     start.time = Calendar.getInstance().time
-                start.add(Calendar.WEEK_OF_MONTH, 1)
-                start[Calendar.DAY_OF_WEEK] = 1
+            "Next Sunday" -> {
+                start.timeInMillis = System.currentTimeMillis()
+                end.timeInMillis = System.currentTimeMillis()
+
                 start[Calendar.HOUR_OF_DAY] = 0
                 start[Calendar.MINUTE] = 0
                 start[Calendar.SECOND] = 0
                 start[Calendar.MILLISECOND] = 0
 
-                end.timeInMillis = System.currentTimeMillis()
-                end.add(Calendar.WEEK_OF_MONTH, 1)
-                end[Calendar.DAY_OF_WEEK] = 7*/
-                // get this saturday
-                start.time = Calendar.getInstance().time
-                start[Calendar.DAY_OF_WEEK] = 6
-                start[Calendar.HOUR_OF_DAY] = 0
-                start[Calendar.MINUTE] = 0
-                start[Calendar.SECOND] = 0
-                start[Calendar.MILLISECOND] = 0
-
-                end.timeInMillis = System.currentTimeMillis()
-                end.add(Calendar.WEEK_OF_MONTH, 1)
-                end[Calendar.DAY_OF_WEEK] = 7
-                start[Calendar.HOUR_OF_DAY] = 0
-                start[Calendar.MINUTE] = 0
-                start[Calendar.SECOND] = 0
-                start[Calendar.MILLISECOND] = 0
-            }
-            "Next month" -> {
-                start.time = Calendar.getInstance().time
-                start.add(Calendar.MONTH, 1)
-                start[Calendar.DAY_OF_MONTH] = 1
-                start[Calendar.HOUR_OF_DAY] = 0
-                start[Calendar.MINUTE] = 0
-                start[Calendar.SECOND] = 0
-                start[Calendar.MILLISECOND] = 0
-
-                end.timeInMillis = System.currentTimeMillis()
-                end.add(Calendar.MONTH, 2)
-                end.set(Calendar.DAY_OF_MONTH, 1)
-                end.add(Calendar.DATE, -1)
                 end[Calendar.HOUR_OF_DAY] = 23
                 end[Calendar.MINUTE] = 59
                 end[Calendar.SECOND] = 59
                 end[Calendar.MILLISECOND] = 999
+
+
+                val localDate: LocalDate = LocalDate.now()
+
+                val startLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SUNDAY.toString())))
+                val endLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SUNDAY.toString())))
+
+                val startLong = startLocalDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+                val endLong = endLocalDate.atTime(23,59,59).atOffset(ZoneOffset.UTC).toInstant().toEpochMilli()
+
+                start = longToCalendar(startLong)!!
+                end = longToCalendar(endLong)!!
             }
         }
 
