@@ -10,6 +10,7 @@ class FilterItems {
         var filterByTimeItems = arrayListOf<IFilterObj>(
             FilterByTimeObj("Today", false),
             FilterByTimeObj("Tomorrow", false),
+            FilterByTimeObj("Next Friday", false),
             FilterByTimeObj("Next Saturday", false),
             FilterByTimeObj("Next Sunday", false)
         )
