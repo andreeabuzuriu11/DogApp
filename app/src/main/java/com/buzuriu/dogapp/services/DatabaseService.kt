@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
-import com.buzuriu.dogapp.utils.DateUtils
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
@@ -22,7 +22,6 @@ import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.temporal.TemporalAdjusters
 import java.util.*
-import java.util.Calendar.SATURDAY
 
 
 interface IDatabaseService {
@@ -671,19 +670,18 @@ class DatabaseService(
             myCurrentUserLocation!!.latitude,
             myCurrentUserLocation.longitude
         )
-        val greaterPoint = MapUtils.getGreaterPoint(radiusInKM, center)
-        val lesserPoint = MapUtils.getLesserPoint(radiusInKM, center)
+
+        val bounds = MapUtils.getSouthWestAndNorthEastPointsAroundLocation(radiusInKM, center)
 
         val distanceQuery =
             meetingsQuery?.whereGreaterThan(
-                "location",
-                GeoPoint(lesserPoint.latitude, lesserPoint.longitude)
-            )!!
+                "location", GeoPoint(
+                    bounds.first.latitude,
+                    bounds.first.longitude))!!
                 .whereLessThan(
-                    "location",
-                    GeoPoint(
-                        greaterPoint.latitude,
-                        greaterPoint.longitude
+                    "location", GeoPoint(
+                        bounds.second.latitude,
+                        bounds.second.longitude
                     )
                 ).get()
 
@@ -733,8 +731,6 @@ class DatabaseService(
             for (meetingDocSnapshot in it) {
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
-
-                    Log.d("MEETING", "ACTUAL DATE= ${meeting.date}")
 
                     if (MeetingUtils.checkFiltersAreAllAccomplished(
                             meeting, filters,
