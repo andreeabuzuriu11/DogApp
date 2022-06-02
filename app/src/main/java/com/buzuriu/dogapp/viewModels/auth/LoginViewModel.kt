@@ -48,8 +48,8 @@ class LoginViewModel : BaseViewModel() {
                             }
                         } else {
                             if (!exception?.message.isNullOrEmpty())
-                                dialogService.showSnackbar(exception!!.message!!)
-                            else dialogService.showSnackbar(R.string.unknown_error)
+                                snackMessageService.displaySnackBar(exception!!.message!!)
+                            else snackMessageService.displaySnackBar(R.string.unknown_error)
 
                         }
                     }
@@ -63,22 +63,22 @@ class LoginViewModel : BaseViewModel() {
 
     private fun fieldsAreCompleted(): Boolean {
         if (!connectivityService.isInternetAvailable()) {
-            dialogService.showSnackbar(R.string.no_internet_message)
+            snackMessageService.displaySnackBar(R.string.no_internet_message)
             return false
         }
 
         if (email.value.isNullOrEmpty()) {
-            dialogService.showSnackbar(R.string.email_missing_message)
+            snackMessageService.displaySnackBar(R.string.email_missing_message)
             return false
         }
 
         if (!StringUtils.isEmailValid(email.value!!)) {
-            dialogService.showSnackbar(R.string.wrong_email_format_message)
+            snackMessageService.displaySnackBar(R.string.wrong_email_format_message)
             return false
         }
 
         if (password.value.isNullOrEmpty()) {
-            dialogService.showSnackbar(R.string.password_missing_message)
+            snackMessageService.displaySnackBar(R.string.password_missing_message)
             return false
         }
 
@@ -141,7 +141,7 @@ class LoginViewModel : BaseViewModel() {
         if (userInfo!=null)
             localDatabaseService.add("currentUser", userInfo)
         else {
-            dialogService.showSnackbar("Error, this user has been deleted!")
+            snackMessageService.displaySnackBar("Error, this user has been deleted!")
             delay(3000)
             navigationService.navigateToActivity(RegisterActivity::class.java, true)
         }

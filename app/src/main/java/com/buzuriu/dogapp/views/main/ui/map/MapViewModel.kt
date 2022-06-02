@@ -86,7 +86,7 @@ class MapViewModel : BaseViewModel() {
 
     fun joinOrLeaveMeeting(meeting: MyCustomMeetingObj) {
         if (!doesUserHaveAtLeastOneDog()) {
-            dialogService.showSnackbar("Please add your pet before participating to a meeting")
+            snackMessageService.displaySnackBar("Please add your pet before participating to a meeting")
             return
         }
 
@@ -106,7 +106,7 @@ class MapViewModel : BaseViewModel() {
                 return
             }
             meeting.meetingStateEnum == MeetingStateEnum.JOINED -> {
-                dialogService.showAlertDialog(
+                alertMessageService.displayAlertDialog(
                     "Leave?",
                     "Are you sure you don't want to join this meeting with ${meeting.user!!.name}?",
                     "Yes",
@@ -128,7 +128,7 @@ class MapViewModel : BaseViewModel() {
                                                 exception: Exception?
                                             ) {
                                                 removeMeetFromUserJoinedMeetings(meeting)
-                                                dialogService.showSnackbar("Success")
+                                                snackMessageService.displaySnackBar("Success")
                                             }
                                         })
                                 }
@@ -372,7 +372,7 @@ class MapViewModel : BaseViewModel() {
             filtersList.add(mapFilter)
             filterAdapter!!.notifyDataSetChanged()
 
-            dialogService.showSnackbar("your selected filter is " + mapFilter.name)
+            snackMessageService.displaySnackBar("your selected filter is " + mapFilter.name)
             applyFilters(filtersList)
         }
     }
@@ -406,7 +406,7 @@ class MapViewModel : BaseViewModel() {
                     MeetingsOnMapFragment::class.qualifiedName
                 )
             } else {
-                dialogService.showSnackbar("Permission for location needed")
+                snackMessageService.displaySnackBar("Permission for location needed")
             }
         }
     }

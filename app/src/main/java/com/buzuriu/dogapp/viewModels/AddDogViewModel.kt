@@ -81,7 +81,7 @@ class AddDogViewModel : BaseViewModel() {
         methodsMap["Cancel"] = {}
 
         val alertBuilderSettings = AlertBuilderSettings(itemsName, methodsMap)
-        alertBuilderService.showAlertDialog(alertBuilderSettings)
+        alertMessageService.displayAlertDialog(alertBuilderSettings)
     }
 
     private fun takeImage() {
@@ -89,7 +89,7 @@ class AddDogViewModel : BaseViewModel() {
 
             val hasPermission = askCameraPermission().await()
             if (!hasPermission) {
-                dialogService.showSnackbar(R.string.err_camera_permission_needed)
+                snackMessageService.displaySnackBar(R.string.err_camera_permission_needed)
                 return@launch
             }
 
@@ -115,7 +115,7 @@ class AddDogViewModel : BaseViewModel() {
 
             val hasReadExternalPermission = askReadExternalPermission().await()
             if (!hasReadExternalPermission) {
-                dialogService.showSnackbar("Error permission")
+                snackMessageService.displaySnackBar("Error permission")
                 return@launch
             }
             val intent =
@@ -204,7 +204,7 @@ class AddDogViewModel : BaseViewModel() {
                                                         )
                                                         addOrEditDogToData(dog)
                                                         if (!isEdit) {
-                                                            dialogService.showSnackbar(R.string.added_success_message)
+                                                            snackMessageService.displaySnackBar(R.string.added_success_message)
                                                         } else {
                                                             val meetingsToChange =
                                                                 changeMeetingInfoRelatedToThisDog(
@@ -219,7 +219,7 @@ class AddDogViewModel : BaseViewModel() {
                                                                         dog
                                                                     )
                                                                 )
-                                                            dialogService.showSnackbar(R.string.edited_success_message)
+                                                            snackMessageService.displaySnackBar(R.string.edited_success_message)
                                                         }
 
                                                         delay(2000)
@@ -229,8 +229,8 @@ class AddDogViewModel : BaseViewModel() {
                                                 } else {
                                                     viewModelScope.launch(Dispatchers.Main) {
                                                         if (!exception?.message.isNullOrEmpty())
-                                                            dialogService.showSnackbar(exception!!.message!!)
-                                                        else dialogService.showSnackbar(R.string.unknown_error)
+                                                            snackMessageService.displaySnackBar(exception!!.message!!)
+                                                        else snackMessageService.displaySnackBar(R.string.unknown_error)
                                                         delay(2000)
                                                     }
                                                 }
@@ -303,14 +303,14 @@ class AddDogViewModel : BaseViewModel() {
 
                                 if (successful) {
                                     viewModelScope.launch(Dispatchers.Main) {
-                                        dialogService.showSnackbar("All meetings have been updated with the new info")
+                                        snackMessageService.displaySnackBar("All meetings have been updated with the new info")
                                         delay(2000)
                                     }
                                 } else {
                                     viewModelScope.launch(Dispatchers.Main) {
                                         if (!exception?.message.isNullOrEmpty())
-                                            dialogService.showSnackbar(exception!!.message!!)
-                                        else dialogService.showSnackbar(R.string.unknown_error)
+                                            snackMessageService.displaySnackBar(exception!!.message!!)
+                                        else snackMessageService.displaySnackBar(R.string.unknown_error)
                                         delay(2000)
                                     }
                                 }
@@ -339,15 +339,15 @@ class AddDogViewModel : BaseViewModel() {
 
     private fun areFieldsCompleted(): Boolean {
         if (name.value.isNullOrEmpty()) {
-            dialogService.showSnackbar("Please add a name")
+            snackMessageService.displaySnackBar("Please add a name")
             return false
         }
         if (breed.value.isNullOrEmpty()) {
-            dialogService.showSnackbar("Please add a breed")
+            snackMessageService.displaySnackBar("Please add a breed")
             return false
         }
         if (ageValue.value.isNullOrEmpty()) {
-            dialogService.showSnackbar("Please add an age")
+            snackMessageService.displaySnackBar("Please add an age")
             return false
         }
 

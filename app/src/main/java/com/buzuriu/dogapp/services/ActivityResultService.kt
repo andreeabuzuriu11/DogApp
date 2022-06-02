@@ -14,7 +14,7 @@ interface IActivityResultService {
 
 }
 
-class ActivityResultService() : IActivityResultService {
+class ActivityResultService : IActivityResultService {
 
     private var resultLauncher: ActivityResultLauncher<Intent>? = null
     private var listener: IGetActivityForResultListener? = null

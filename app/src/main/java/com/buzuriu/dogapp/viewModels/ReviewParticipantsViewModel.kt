@@ -1,7 +1,6 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -43,7 +42,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                         override fun onComplete(successful: Boolean, exception: Exception?) {
                             if (successful) {
                                 viewModelScope.launch(Dispatchers.Main) {
-                                    dialogService.showSnackbar("Review edited successfully")
+                                    snackMessageService.displaySnackBar("Review edited successfully")
                                     changeNumberOfStarsInLocalDatabase(userWithReview.userUid!!, userWithReview.reviewObj!!.numberOfStars!!)
                                     delay(2000)
 
@@ -51,8 +50,8 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                             } else {
                                 viewModelScope.launch(Dispatchers.Main) {
                                     if (!exception?.message.isNullOrEmpty())
-                                        dialogService.showSnackbar(exception!!.message!!)
-                                    else dialogService.showSnackbar(R.string.unknown_error)
+                                        snackMessageService.displaySnackBar(exception!!.message!!)
+                                    else snackMessageService.displaySnackBar(R.string.unknown_error)
                                     delay(2000)
                                 }
                             }
@@ -75,14 +74,14 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
                         if (successful) {
                             viewModelScope.launch(Dispatchers.Main) {
-                                dialogService.showSnackbar("Review added successfully")
+                                snackMessageService.displaySnackBar("Review added successfully")
                                 delay(2000)
                             }
                         } else {
                             viewModelScope.launch(Dispatchers.Main) {
                                 if (!exception?.message.isNullOrEmpty())
-                                    dialogService.showSnackbar(exception!!.message!!)
-                                else dialogService.showSnackbar(R.string.unknown_error)
+                                    snackMessageService.displaySnackBar(exception!!.message!!)
+                                else snackMessageService.displaySnackBar(R.string.unknown_error)
                                 delay(2000)
                             }
                         }
@@ -116,19 +115,6 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         }
         return review
     }
-
-    fun printLocalReviews()
-    {
-        val listOfReviews =
-            localDatabaseService.get<java.util.ArrayList<ReviewObj>>("reviewsUserLeft")
-        if (listOfReviews!=null)
-        {
-            for (review in listOfReviews){
-                Log.d("mytag", "${review.userThatReviewIsFor} has ${review.numberOfStars}")
-            }
-        }
-    }
-
 
     fun close() {
         navigationService.closeCurrentActivity()
@@ -188,7 +174,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         return userWithReviewList
     }
 
-    fun convertMeetingCreatorToParticipant(
+    private fun convertMeetingCreatorToParticipant(
         meetingCreatorUserUid: String,
         dog: DogObj
     ): ParticipantObj {

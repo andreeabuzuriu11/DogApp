@@ -83,7 +83,7 @@ class EditMeetingViewModel : BaseViewModel() {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
                         if (successful) {
                             viewModelScope.launch(Dispatchers.Main) {
-                                dialogService.showSnackbar("Edited successful")
+                                snackMessageService.displaySnackBar("Edited successful")
                                 dataExchangeService.put(
                                     MyMeetingDetailViewModel::class.java.name,
                                     myCustomMeetingObj!!
@@ -94,8 +94,8 @@ class EditMeetingViewModel : BaseViewModel() {
                         } else {
                             viewModelScope.launch(Dispatchers.Main) {
                                 if (!exception?.message.isNullOrEmpty())
-                                    dialogService.showSnackbar(exception!!.message!!)
-                                else dialogService.showSnackbar(R.string.unknown_error)
+                                    snackMessageService.displaySnackBar(exception!!.message!!)
+                                else snackMessageService.displaySnackBar(R.string.unknown_error)
                             }
 
                         }

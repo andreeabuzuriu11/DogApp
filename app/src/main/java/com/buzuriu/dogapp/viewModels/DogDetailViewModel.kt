@@ -40,7 +40,7 @@ class DogDetailViewModel : BaseViewModel() {
     }
 
     fun deleteDog() {
-        dialogService.showAlertDialog(
+        alertMessageService.displayAlertDialog(
             "Delete dog?",
             "Are you sure you want to delete ${dog.value!!.name}? This action cannot be undone.",
             "Yes, delete it",
@@ -114,14 +114,14 @@ class DogDetailViewModel : BaseViewModel() {
                                     ) {
                                         if (successful) {
                                             viewModelScope.launch(Dispatchers.Main) {
-                                                dialogService.showSnackbar("This dog is deleted as participant to all meetings he was attending")
+                                                snackMessageService.displaySnackBar("This dog is deleted as participant to all meetings he was attending")
                                                 delay(2000)
                                             }
                                         } else {
                                             viewModelScope.launch(Dispatchers.Main) {
                                                 if (!exception?.message.isNullOrEmpty())
-                                                    dialogService.showSnackbar(exception!!.message!!)
-                                                else dialogService.showSnackbar(R.string.unknown_error)
+                                                    snackMessageService.displaySnackBar(exception!!.message!!)
+                                                else snackMessageService.displaySnackBar(R.string.unknown_error)
                                                 delay(2000)
                                             }
                                         }
@@ -154,14 +154,14 @@ class DogDetailViewModel : BaseViewModel() {
                             override fun onComplete(successful: Boolean, exception: Exception?) {
                                 if (successful) {
                                     viewModelScope.launch(Dispatchers.Main) {
-                                        dialogService.showSnackbar("All meetings with this dog have been deleted")
+                                        snackMessageService.displaySnackBar("All meetings with this dog have been deleted")
                                         delay(2000)
                                     }
                                 } else {
                                     viewModelScope.launch(Dispatchers.Main) {
                                         if (!exception?.message.isNullOrEmpty())
-                                            dialogService.showSnackbar(exception!!.message!!)
-                                        else dialogService.showSnackbar(R.string.unknown_error)
+                                            snackMessageService.displaySnackBar(exception!!.message!!)
+                                        else snackMessageService.displaySnackBar(R.string.unknown_error)
                                         delay(2000)
                                     }
                                 }

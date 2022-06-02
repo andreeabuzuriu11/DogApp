@@ -1,7 +1,6 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.ParticipantAdapter
@@ -25,7 +24,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
     var participantsAdapter: ParticipantAdapter? = ParticipantAdapter(participantsList)
     var myCustomMeetingObj = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
-    var displayedText = MutableLiveData<String>("There are no participants yet")
+    var displayedText = MutableLiveData("There are no participants yet")
 
     init {
         myCustomMeetingObj.value =
@@ -53,7 +52,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
     }
 
     fun deleteMeeting() {
-        dialogService.showAlertDialog(
+        alertMessageService.displayAlertDialog(
             "Delete meeting?",
             "Are you sure you want to delete meeting with ${myCustomMeetingObj.value!!.dog!!.name}? This action cannot be undone.",
             "Yes, delete it",

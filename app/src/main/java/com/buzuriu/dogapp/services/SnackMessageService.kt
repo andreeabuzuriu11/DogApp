@@ -6,20 +6,20 @@ import android.view.View
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.google.android.material.snackbar.Snackbar
 
-interface IDialogService {
-    fun showSnackbar(stringId: Int, duration: Int = Snackbar.LENGTH_LONG)
-    fun showSnackbar(string: String, duration: Int = Snackbar.LENGTH_LONG)
-    fun showAlertDialog(
+interface ISnackMessageService {
+    fun displaySnackBar(stringId: Int, duration: Int = Snackbar.LENGTH_LONG)
+    fun displaySnackBar(string: String, duration: Int = Snackbar.LENGTH_LONG)
+   /* fun displayAlertDialog(
         title: String,
         message: String,
         buttonText: String,
         clickMethod: IClickListener
-    )
+    )*/
 }
 
-class DialogService(private val currentActivityService: ICurrentActivityService) : IDialogService {
+class SnackMessageService(private val currentActivityService: ICurrentActivityService) : ISnackMessageService {
 
-    override fun showSnackbar(stringId: Int, duration: Int) {
+    override fun displaySnackBar(stringId: Int, duration: Int) {
         val activity: Activity? = currentActivityService.activity
 
         if (activity != null) {
@@ -28,7 +28,7 @@ class DialogService(private val currentActivityService: ICurrentActivityService)
         }
     }
 
-    override fun showSnackbar(string: String, duration: Int) {
+    override fun displaySnackBar(string: String, duration: Int) {
         val activity: Activity? = currentActivityService.activity
 
         if (activity != null) {
@@ -37,16 +37,14 @@ class DialogService(private val currentActivityService: ICurrentActivityService)
         }
     }
 
-    override fun showAlertDialog(
+    /*override fun displayAlertDialog(
         title: String,
         message: String,
         buttonText: String,
         clickMethod: IClickListener
     ) {
         val builder = AlertDialog.Builder(currentActivityService.activity)
-        builder.setTitle(title)
-        builder.setMessage(message)
-        builder.setPositiveButton(
+        builder.setTitle(title).setMessage(message).setPositiveButton(
             buttonText
         ) { dialogInterface, _ ->
             clickMethod.clicked()
@@ -57,7 +55,6 @@ class DialogService(private val currentActivityService: ICurrentActivityService)
         ) { dialogAlert, _ ->
             dialogAlert?.dismiss()
         }
-
         builder.show()
-    }
+    }*/
 }

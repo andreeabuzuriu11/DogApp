@@ -37,7 +37,7 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
 
     fun saveDog() {
         if (selectedDog.value == null) {
-            dialogService.showSnackbar("Please select a dog to attend this meeting")
+            snackMessageService.displaySnackBar("Please select a dog to attend this meeting")
             return
         } else if (selectedDog.value != null && participantId.value != null) {
             // the user is already participating to this meeting, only with a different dog
@@ -48,7 +48,7 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
                     selectedDog.value!!.uid,
                     object : IOnCompleteListener {
                         override fun onComplete(successful: Boolean, exception: Exception?) {
-                            dialogService.showSnackbar("Changed dog successfully")
+                            snackMessageService.displaySnackBar("Changed dog successfully")
                         }
                     })
             }
@@ -67,7 +67,7 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
                     object : IOnCompleteListener {
                         override fun onComplete(successful: Boolean, exception: Exception?) {
                             addMeetToUserJoinedMeetings(attendedMeeting!!)
-                            dialogService.showSnackbar("Success")
+                            snackMessageService.displaySnackBar("Success")
                         }
                     })
             }

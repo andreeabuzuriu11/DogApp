@@ -63,7 +63,7 @@ class RegisterViewModel : BaseAuthViewModel() {
                                                 ShowLoadingView(false)
 
                                                 if (successful) {
-                                                    dialogService.showSnackbar(R.string.info_added)
+                                                    snackMessageService.displaySnackBar(R.string.info_added)
                                                     viewModelScope.launch(Dispatchers.Main) {
                                                         getUserAccountInfo()
                                                         localDatabaseService.add("localDogsList", ArrayList<DogObj>())
@@ -72,8 +72,8 @@ class RegisterViewModel : BaseAuthViewModel() {
                                                     }
                                                 } else {
                                                     if (!exception?.message.isNullOrEmpty())
-                                                        dialogService.showSnackbar(exception!!.message!!)
-                                                    else dialogService.showSnackbar(R.string.unknown_error)
+                                                        snackMessageService.displaySnackBar(exception!!.message!!)
+                                                    else snackMessageService.displaySnackBar(R.string.unknown_error)
                                                 }
                                             }
                                         })
@@ -83,8 +83,8 @@ class RegisterViewModel : BaseAuthViewModel() {
                         }
                         else {
                             if (!exception?.message.isNullOrEmpty())
-                                dialogService.showSnackbar(exception!!.message!!)
-                            dialogService.showSnackbar(R.string.unknown_error)
+                                snackMessageService.displaySnackBar(exception!!.message!!)
+                            snackMessageService.displaySnackBar(R.string.unknown_error)
                         }
                     }
                 })
@@ -94,54 +94,54 @@ class RegisterViewModel : BaseAuthViewModel() {
     private fun fieldsAreCompleted(): Boolean {
         if(!connectivityService.isInternetAvailable())
         {
-            dialogService.showSnackbar(R.string.no_internet_message)
+            snackMessageService.displaySnackBar(R.string.no_internet_message)
             return false
         }
 
         if (email.value.isNullOrEmpty()) {
-            dialogService.showSnackbar(R.string.email_missing_message)
+            snackMessageService.displaySnackBar(R.string.email_missing_message)
             return false
         }
 
         if (!StringUtils.isEmailValid(email.value!!)) {
-            dialogService.showSnackbar(R.string.wrong_email_format_message)
+            snackMessageService.displaySnackBar(R.string.wrong_email_format_message)
             return false
         }
 
         if (password.value.isNullOrEmpty() || passwordRepeat.value.isNullOrEmpty()) {
-            dialogService.showSnackbar(R.string.password_missing_message)
+            snackMessageService.displaySnackBar(R.string.password_missing_message)
             return false
         }
 
         if (!password.value.equals(passwordRepeat.value)) {
-            dialogService.showSnackbar(R.string.password_does_not_match_message)
+            snackMessageService.displaySnackBar(R.string.password_does_not_match_message)
             return false
         }
 
         if(password.value!!.length < minPasswordLength)
         {
-            dialogService.showSnackbar(R.string.password_short_message)
+            snackMessageService.displaySnackBar(R.string.password_short_message)
             return false
         }
         if(name.value.isNullOrEmpty())
         {
-            dialogService.showSnackbar("Name field is mandatory")
+            snackMessageService.displaySnackBar("Name field is mandatory")
             return false
         }
         if(!StringUtils.isLetters(name.value!!) && !name.value!!.contains(' '))
         {
-            dialogService.showSnackbar("Name cannot contain digits")
+            snackMessageService.displaySnackBar("Name cannot contain digits")
             return false
         }
 
         if(phone.value.isNullOrEmpty())
         {
-            dialogService.showSnackbar("Phone field is mandatory")
+            snackMessageService.displaySnackBar("Phone field is mandatory")
             return false
         }
         if(phone.value!!.length < 10)
         {
-            dialogService.showSnackbar("Phone number cannot be this short")
+            snackMessageService.displaySnackBar("Phone number cannot be this short")
             return false
         }
 
@@ -154,7 +154,7 @@ class RegisterViewModel : BaseAuthViewModel() {
         if (userInfo!=null)
             localDatabaseService.add("currentUser", userInfo)
         else {
-            dialogService.showSnackbar("Error, this user has been deleted!")
+            snackMessageService.displaySnackBar("Error, this user has been deleted!")
             delay(3000)
             navigationService.navigateToActivity(RegisterActivity::class.java, true)
         }

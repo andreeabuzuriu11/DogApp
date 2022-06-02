@@ -1,7 +1,5 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -85,7 +83,7 @@ class AddMeetingViewModel : BaseViewModel() {
 
                     if (successful) {
                         viewModelScope.launch(Dispatchers.Main) {
-                            dialogService.showSnackbar(R.string.added_success_message_meeting)
+                            snackMessageService.displaySnackBar(R.string.added_success_message_meeting)
                             dataExchangeService.put(MyMeetingsViewModel::class.java.name, true)
                             addMeetingToLocalDatabase(newMeeting)
                             delay(2000)
@@ -94,8 +92,8 @@ class AddMeetingViewModel : BaseViewModel() {
                     } else {
                         viewModelScope.launch(Dispatchers.Main) {
                             if (!exception?.message.isNullOrEmpty())
-                                dialogService.showSnackbar(exception!!.message!!)
-                            else dialogService.showSnackbar(R.string.unknown_error)
+                                snackMessageService.displaySnackBar(exception!!.message!!)
+                            else snackMessageService.displaySnackBar(R.string.unknown_error)
                             delay(2000)
                         }
                     }
@@ -136,7 +134,7 @@ class AddMeetingViewModel : BaseViewModel() {
 
     private fun isDogSelected(): Boolean {
         if (dog.value == null) {
-            dialogService.showSnackbar("Please select a dog first!", Snackbar.LENGTH_LONG)
+            snackMessageService.displaySnackBar("Please select a dog first!", Snackbar.LENGTH_LONG)
             return false
         }
         return true

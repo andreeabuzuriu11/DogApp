@@ -22,22 +22,20 @@ open class BaseViewModel : ViewModel(), KoinComponent {
 
     var isLoadingViewVisible: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    protected val dialogService: IDialogService by inject()
+    private val permissionService: IPermissionService by inject()
+    protected val snackMessageService: ISnackMessageService by inject()
     protected val firebaseAuthService: IFirebaseAuthService by inject()
     protected val navigationService: INavigationService by inject()
     protected val connectivityService: IConnectivityService by inject()
     protected val databaseService: IDatabaseService by inject()
     protected val dataExchangeService: IDataExchangeService by inject()
-    protected val sharedPreferenceService: ISharedPreferencesService by inject()
-    protected val alertBuilderService: IAlertBuilderService by inject()
+    protected val alertMessageService: IAlertMessageService by inject()
     protected val activityService: ICurrentActivityService by inject()
-    protected val permissionService: IPermissionService by inject()
     protected val activityResultService: IActivityResultService by inject()
     protected val storageService: IStorageService by inject()
     protected val localDatabaseService: ILocalDatabaseService by inject()
 
     protected val currentUser get() = firebaseAuthService.getCurrentUser()
-    protected val isSignedIn get() = currentUser != null
 
     open fun onCreate() {
         Log.d("Lifecycle", this.javaClass.name + "onCreate")

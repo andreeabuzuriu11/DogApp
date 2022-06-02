@@ -15,11 +15,6 @@ import kotlinx.coroutines.launch
 class SplashViewModel : BaseViewModel() {
 
     init {
-        // Check if authentication might work
-        // var auth: FirebaseAuth
-        // auth = Firebase.auth
-        // auth.signInAnonymously()
-        // val t = auth.currentUser
         if (Firebase.auth.currentUser != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 delay(1000)

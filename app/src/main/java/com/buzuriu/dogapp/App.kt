@@ -12,14 +12,13 @@ class App : Application() {
 
     private val appModule = module {
         single<ICurrentActivityService> { CurrentActivityService() }
-        single<IDialogService> { DialogService(get()) }
+        single<ISnackMessageService> { SnackMessageService(get()) }
         single<IFirebaseAuthService> { FirebaseAuthService() }
         single<INavigationService> { NavigationService(get()) }
         single<IConnectivityService> { ConnectivityService(get()) }
         single<IDatabaseService> { DatabaseService(get()) }
         single<IDataExchangeService> { DataExchangeService() }
-        single<ISharedPreferencesService> { SharedPreferencesService(get()) }
-        single<IAlertBuilderService> { AlertBuilderService(get()) }
+        single<IAlertMessageService> { AlertMessageService(get()) }
         single<IPermissionService> { PermissionService(get()) }
         single<IActivityResultService> { ActivityResultService() }
         single<IStorageService> { StorageService() }

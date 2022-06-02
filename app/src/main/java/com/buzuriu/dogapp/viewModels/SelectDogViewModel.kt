@@ -27,7 +27,7 @@ class SelectDogViewModel : BaseViewModel() {
 
     fun saveDog() {
         if (selectedDog == null) {
-            dialogService.showSnackbar("Please select a dog")
+            snackMessageService.displaySnackBar("Please select a dog")
             return
         }
         dataExchangeService.put(AddMeetingViewModel::class.java.name, selectedDog!!)
@@ -63,8 +63,8 @@ class SelectDogViewModel : BaseViewModel() {
         val auxSearchedDogs = ArrayList<DogObj>()
         if (dogsList.isNotEmpty()) {
             for (item in dogsList) {
-                val mySearchedString = searchedString.toLowerCase(Locale.ROOT)
-                val itemString = item.name.toLowerCase(Locale.ROOT)
+                val mySearchedString = searchedString.lowercase(Locale.ROOT)
+                val itemString = item.name.lowercase(Locale.ROOT)
 
                 if (itemString.contains(mySearchedString) || mySearchedString.isEmpty()) {
                     auxSearchedDogs.add(item)

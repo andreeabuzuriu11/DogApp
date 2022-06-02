@@ -2,7 +2,6 @@ package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.models.FilterByLocationObj
-import com.buzuriu.dogapp.models.SharedPreferences
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 import com.google.android.gms.maps.model.LatLng
 
@@ -22,8 +21,7 @@ class MeetingsOnMapViewModel : BaseViewModel() {
         dataExchangeService.put(MapViewModel::class.qualifiedName!!, mapFilter)
 
         val myUserCoords = userCoordinates.value
-        sharedPreferenceService
-            .writeInSharedPref(SharedPreferences.userLocationKey, myUserCoords!!)
+        localDatabaseService.add("userLocation", myUserCoords!!)
 
         navigationService.closeCurrentActivity()
     }

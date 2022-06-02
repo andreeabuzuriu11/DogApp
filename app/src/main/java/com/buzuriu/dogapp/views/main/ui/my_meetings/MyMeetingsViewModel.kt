@@ -98,14 +98,14 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     fun addMeeting() {
         if (!doesUserHaveAtLeastOneDog()) {
-            dialogService.showSnackbar("Please add your pet before participating to a meeting")
+            snackMessageService.displaySnackBar("Please add your pet before participating to a meeting")
             return
         }
 
         viewModelScope.launch(Dispatchers.Main) {
             val hasPermission = askLocationPermission().await()
             if (!hasPermission) {
-                dialogService.showSnackbar("Location permission needed to add a meeting!")
+                snackMessageService.displaySnackBar("Location permission needed to add a meeting!")
                 return@launch
             } else {
                 navigationService.navigateToActivity(AddMeetingActivity::class.java, false)
@@ -159,7 +159,7 @@ class MyMeetingsViewModel : BaseViewModel() {
     }
 
     fun leaveMeeting(meeting: MyCustomMeetingObj) {
-        dialogService.showAlertDialog(
+        alertMessageService.displayAlertDialog(
             "Leave?",
             "Are you sure you don't want to join this meeting with ${meeting.user!!.name}?",
             "Yes",
@@ -184,7 +184,7 @@ class MyMeetingsViewModel : BaseViewModel() {
                                         ) {
                                             removeMeetFromUserJoinedMeetings(meeting)
                                             refreshList()
-                                            dialogService.showSnackbar("Success")
+                                            snackMessageService.displaySnackBar("Success")
                                         }
                                     })
                             }

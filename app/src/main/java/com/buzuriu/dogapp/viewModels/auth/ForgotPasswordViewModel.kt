@@ -26,14 +26,14 @@ class ForgotPasswordViewModel : BaseViewModel() {
 
                     if (successful) {
                         viewModelScope.launch(Dispatchers.IO){
-                            dialogService.showSnackbar(R.string.forgot_password_message)
+                            snackMessageService.displaySnackBar(R.string.forgot_password_message)
                             delay(1000)
                             navigationService.closeCurrentActivity()
                         }
                     } else {
                         if (!exception?.message.isNullOrEmpty())
-                            dialogService.showSnackbar(exception!!.message!!)
-                        else dialogService.showSnackbar(R.string.unknown_error)
+                            snackMessageService.displaySnackBar(exception!!.message!!)
+                        else snackMessageService.displaySnackBar(R.string.unknown_error)
 
                     }
                 }
@@ -43,12 +43,12 @@ class ForgotPasswordViewModel : BaseViewModel() {
     private fun fieldsAreCompleted(): Boolean {
 
         if (!connectivityService.isInternetAvailable()) {
-            dialogService.showSnackbar(R.string.no_internet_message)
+            snackMessageService.displaySnackBar(R.string.no_internet_message)
             return false
         }
 
         if (email.value.isNullOrEmpty()) {
-            dialogService.showSnackbar(R.string.email_missing_message)
+            snackMessageService.displaySnackBar(R.string.email_missing_message)
             return false
         }
 

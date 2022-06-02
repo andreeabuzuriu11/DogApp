@@ -126,7 +126,7 @@ interface IDatabaseService {
 }
 
 class DatabaseService(
-    private val sharedPreferencesService: ISharedPreferencesService
+    private val localDatabaseService: ILocalDatabaseService
 ) : IDatabaseService {
     override val fireAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
     private val userInfoCollection = "UserInfo"
@@ -656,14 +656,9 @@ class DatabaseService(
     }
 
     private fun setMeetingsDistanceQuery(radiusInKM: Int) {
-        val myCurrentUserLocation =
-            sharedPreferencesService
-                .readFromSharedPref<LatLng>(
-                    SharedPreferences.userLocationKey,
-                    LatLng::class.java
-                )
+        val myCurrentUserLocation = localDatabaseService.get<LatLng>("userLocation")
         if (myCurrentUserLocation == null) {
-            Log.d("Error", "Current User Location is null in SharedPref")
+            Log.d("Error", "Current User Location is null in Local Database")
         }
 
         val center = LatLng(
@@ -734,9 +729,7 @@ class DatabaseService(
 
                     if (MeetingUtils.checkFiltersAreAllAccomplished(
                             meeting, filters,
-                            sharedPreferencesService.readFromSharedPref<LatLng>(
-                                SharedPreferences.userLocationKey, LatLng::class.java
-                            )
+                            localDatabaseService.get<LatLng>("userLocation")
                         ) && !MeetingUtils.isMeetingInThePast(meeting)
                     ) {
 

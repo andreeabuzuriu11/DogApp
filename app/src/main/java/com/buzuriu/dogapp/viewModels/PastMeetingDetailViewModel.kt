@@ -2,7 +2,6 @@ package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -24,7 +23,7 @@ class PastMeetingDetailViewModel : BaseViewModel() {
     var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
     var participantsAdapter: ParticipantAdapter? = ParticipantAdapter(participantsList)
-    var displayedText = MutableLiveData<String>("")
+    var displayedText = MutableLiveData("")
 
     init {
         pastMeeting.value =
