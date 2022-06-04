@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,7 @@ class DogNameAdapter(
         return dogsList.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun filterList(auxList: ArrayList<DogObj>) {
         dogsList = auxList
         notifyDataSetChanged()
