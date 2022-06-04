@@ -21,17 +21,22 @@ import kotlinx.coroutines.launch
 
 
 class MyMeetingDetailViewModel : BaseViewModel() {
+
     private var participantsList = ArrayList<ParticipantObj>()
+    private var oldMeetingString = "There were no participants at your meeting"
+    private var upcomingMeetingString = "There are no participants yet"
     var participantsAdapter: ParticipantAdapter? = ParticipantAdapter(participantsList)
     var myCustomMeetingObj = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
-    var displayedText = MutableLiveData("There are no participants yet")
+    var displayedText = MutableLiveData("")
 
     init {
         myCustomMeetingObj.value =
             exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name)!!
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(myCustomMeetingObj.value?.meetingObj?.location!!)
+
+        setTheRightText()
 
         viewModelScope.launch {
             fetchAllParticipantsForMeeting()
@@ -47,42 +52,11 @@ class MyMeetingDetailViewModel : BaseViewModel() {
         exchangeInfoService.put(MyMeetingsViewModel::class.java.name, true)
     }
 
-    fun editMeeting() {
-        exchangeInfoService.put(EditMeetingViewModel::class.java.name, myCustomMeetingObj.value!!)
-        navigationService.navigateToActivity(EditMeetingActivity::class.java)
-    }
-
-    fun deleteMeeting() {
-        alertMessageService.displayAlertDialog(
-            "Delete meeting?",
-            "Are you sure you want to delete meeting with ${myCustomMeetingObj.value!!.dog!!.name}? This action cannot be undone.",
-            "Yes, delete it",
-            object :
-                IClickListener {
-                override fun clicked() {
-                    deleteMeetingFromDatabase()
-                    exchangeInfoService.put(
-                        MyMeetingsViewModel::class.java.name,
-                        true
-                    ) // is refresh list needed
-                }
-            })
-    }
-
-    fun deleteMeetingFromDatabase() {
-        viewModelScope.launch(Dispatchers.IO) {
-            databaseService.deleteMeeting(
-                myCustomMeetingObj.value!!.meetingObj!!.uid!!,
-                object : IOnCompleteListener {
-                    override fun onComplete(successful: Boolean, exception: Exception?) {
-                        val allMyMeetingsList =
-                            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList)
-                        allMyMeetingsList!!.remove<MyCustomMeetingObj>(myCustomMeetingObj.value!!)
-                        localDatabaseService.add(LocalDBItems.localMeetingsList, allMyMeetingsList)
-                        navigationService.closeCurrentActivity()
-                    }
-                })
-        }
+    private fun setTheRightText() {
+        if (MeetingUtils.isMeetingInThePast(myCustomMeetingObj.value!!.meetingObj!!))
+            displayedText.value = oldMeetingString
+        else
+            displayedText.value = upcomingMeetingString
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -93,8 +67,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
             showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 participantsList.clear()
-                if (!list.isNullOrEmpty())
-                {
+                if (!list.isNullOrEmpty()) {
                     displayedText.value = "Participants"
                 }
                 participantsList.addAll(list)
@@ -139,8 +112,45 @@ class MyMeetingDetailViewModel : BaseViewModel() {
         localDatabaseService.add(LocalDBItems.localMeetingsList, myMeetingsList)
     }
 
-    fun isMeetingPast() : Boolean
-    {
+    fun isMeetingPast(): Boolean {
         return (MeetingUtils.isMeetingInThePast(myCustomMeetingObj.value!!.meetingObj!!))
+    }
+
+    fun editMeeting() {
+        exchangeInfoService.put(EditMeetingViewModel::class.java.name, myCustomMeetingObj.value!!)
+        navigationService.navigateToActivity(EditMeetingActivity::class.java)
+    }
+
+    fun deleteMeeting() {
+        alertMessageService.displayAlertDialog(
+            "Delete meeting?",
+            "Are you sure you want to delete meeting with ${myCustomMeetingObj.value!!.dog!!.name}? This action cannot be undone.",
+            "Yes, delete it",
+            object :
+                IClickListener {
+                override fun clicked() {
+                    deleteMeetingFromDatabase()
+                    exchangeInfoService.put(
+                        MyMeetingsViewModel::class.java.name,
+                        true
+                    ) // is refresh list needed
+                }
+            })
+    }
+
+    fun deleteMeetingFromDatabase() {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseService.deleteMeeting(
+                myCustomMeetingObj.value!!.meetingObj!!.uid!!,
+                object : IOnCompleteListener {
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+                        val allMyMeetingsList =
+                            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList)
+                        allMyMeetingsList!!.remove<MyCustomMeetingObj>(myCustomMeetingObj.value!!)
+                        localDatabaseService.add(LocalDBItems.localMeetingsList, allMyMeetingsList)
+                        navigationService.closeCurrentActivity()
+                    }
+                })
+        }
     }
 }

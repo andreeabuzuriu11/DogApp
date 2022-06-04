@@ -47,17 +47,9 @@ class MapViewModel : BaseViewModel() {
 
         viewModelScope.launch {
             fetchAllMeetings()
-        }
-
-        viewModelScope.launch {
             fetchAllPastMeetings()
-        }
-
-        viewModelScope.launch {
             fetchAllReviewsUserLeft()
         }
-
-
     }
 
     override fun onResume() {
@@ -230,7 +222,7 @@ class MapViewModel : BaseViewModel() {
         showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllMeetingsFromDatabase()
-            showLoadingView(false)
+            //showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
                 meetingsList.addAll(list)
@@ -239,7 +231,9 @@ class MapViewModel : BaseViewModel() {
                 getAllMeetingsThatUserJoined()
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
+
             }
+            //showLoadingView(false)
         }
     }
 
@@ -248,6 +242,7 @@ class MapViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchFilteredMeetingsFromDatabase(filtersList)
 
+           // showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
                 meetingsList.addAll(list)
@@ -258,24 +253,27 @@ class MapViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchAllReviewsUserLeft() {
-        showLoadingView(true)
+        //showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = getAllReviewsThatUserLeft()
-            showLoadingView(false)
+            //showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
+                //showLoadingView(false)
                 userReviewsForOthers.clear()
                 userReviewsForOthers.addAll(list)
                 localDatabaseService.add(LocalDBItems.reviewsUserLeft, userReviewsForOthers)
             }
         }
+
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllPastMeetings() {
-        showLoadingView(true)
+        //showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllPastMeetingsFromDatabase()
-            showLoadingView(false)
+
             viewModelScope.launch(Dispatchers.Main) {
                 pastMeetingsListUserCreated.clear()
                 pastMeetingsListUserJoined.clear()
@@ -304,6 +302,7 @@ class MapViewModel : BaseViewModel() {
                 )
             }
         }
+        //showLoadingView(false)
     }
 
     private suspend fun fetchAllPastMeetingsFromDatabase(): ArrayList<MyCustomMeetingObj> {
@@ -428,7 +427,12 @@ class MapViewModel : BaseViewModel() {
 
         // currentUser uid as parameter, because we have to ignore that user when searching new meetings
         val allMeetings: ArrayList<MeetingObj>? =
-            databaseService.fetchAllOtherMeetings(currentUser!!.uid)
+            databaseService.fetchAllOtherMeetings(currentUser!!.uid, object : IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                    showLoadingView(false)
+
+                }
+            })
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
@@ -447,6 +451,7 @@ class MapViewModel : BaseViewModel() {
 
             }
         }
+        showLoadingView(false)
 
         return allCustomMeetings
     }

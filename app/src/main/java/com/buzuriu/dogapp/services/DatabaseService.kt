@@ -95,7 +95,7 @@ interface IDatabaseService {
     suspend fun fetchAllMeetingParticipants(meetingUid: String): ArrayList<ParticipantObj>?
     suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String?
 
-    suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj>?
+    suspend fun fetchAllOtherMeetings(userUid: String, onCompleteListener: IOnCompleteListener): ArrayList<MeetingObj>?
     suspend fun fetchAllOtherPastMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchAllPastMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj>?
@@ -373,10 +373,11 @@ class DatabaseService(
             .addOnFailureListener { throw it }
 
         allTasks.await()
+
         return reviewList
     }
 
-    override suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj> {
+    override suspend fun fetchAllOtherMeetings(userUid: String, onCompleteListener: IOnCompleteListener): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
@@ -769,7 +770,9 @@ class DatabaseService(
     ): ArrayList<MeetingObj> {
         val meetingsList: ArrayList<MeetingObj> = try {
             if (filtersList.isNullOrEmpty()) {
-                fetchAllOtherMeetings(userUid)
+                fetchAllOtherMeetings(userUid, object : IOnCompleteListener {
+                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+                })
             } else {
                 fetchMeetingsByFilters(filtersList, userUid)
             }

@@ -117,7 +117,9 @@ class LoginViewModel : BaseViewModel() {
         val allMeetingsThatUserJoined = ArrayList<MyCustomMeetingObj>()
         var user: UserObj?
         var dog: DogObj?
-        val allOtherMeetings: ArrayList<MeetingObj> = databaseService.fetchAllOtherMeetings(currentUser!!.uid)!!
+        val allOtherMeetings: ArrayList<MeetingObj> = databaseService.fetchAllOtherMeetings(currentUser!!.uid, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+        })!!
 
         for (meeting in allOtherMeetings) {
             allMeetingsParticipants =
