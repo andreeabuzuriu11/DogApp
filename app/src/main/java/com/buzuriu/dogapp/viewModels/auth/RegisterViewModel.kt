@@ -93,19 +93,57 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
     private fun fieldsAreCompleted(): Boolean {
+        if (!checkInternetConnection())
+            return false
+
+        if (!checkIfFieldsAreFilledOut())
+            return false
+
+        if (!checkEmailIsValid())
+            return false
+
+        if (!checkPasswordIsMatching())
+            return false
+
+        if (!checkNameIsValid())
+            return false
+
+        if (!checkPhoneIsValid())
+            return false
+
+        return true
+    }
+
+    private fun checkNameIsValid() : Boolean {
+        if(!StringUtils.isLetters(name.value!!) && !name.value!!.contains(' '))
+        {
+            snackMessageService.displaySnackBar("Name cannot contain digits")
+            return false
+        }
+        return true
+    }
+
+    private fun checkPhoneIsValid() : Boolean {
+        if(phone.value!!.length < 10)
+        {
+            snackMessageService.displaySnackBar("Phone number cannot be this short")
+            return false
+        }
+        return true
+    }
+
+    private fun checkInternetConnection() : Boolean {
         if(!internetService.isInternetAvailable())
         {
             snackMessageService.displaySnackBar(R.string.no_internet_message)
             return false
         }
+        return true
+    }
 
+    private fun checkIfFieldsAreFilledOut() : Boolean {
         if (email.value.isNullOrEmpty()) {
             snackMessageService.displaySnackBar(R.string.email_missing_message)
-            return false
-        }
-
-        if (!StringUtils.isEmailValid(email.value!!)) {
-            snackMessageService.displaySnackBar(R.string.wrong_email_format_message)
             return false
         }
 
@@ -114,6 +152,21 @@ class RegisterViewModel : BaseAuthViewModel() {
             return false
         }
 
+        if(name.value.isNullOrEmpty())
+        {
+            snackMessageService.displaySnackBar("Name field is mandatory")
+            return false
+        }
+
+        if(phone.value.isNullOrEmpty())
+        {
+            snackMessageService.displaySnackBar("Phone field is mandatory")
+            return false
+        }
+        return true
+    }
+
+    private fun checkPasswordIsMatching() : Boolean {
         if (!password.value.equals(passwordRepeat.value)) {
             snackMessageService.displaySnackBar(R.string.password_does_not_match_message)
             return false
@@ -124,28 +177,14 @@ class RegisterViewModel : BaseAuthViewModel() {
             snackMessageService.displaySnackBar(R.string.password_short_message)
             return false
         }
-        if(name.value.isNullOrEmpty())
-        {
-            snackMessageService.displaySnackBar("Name field is mandatory")
-            return false
-        }
-        if(!StringUtils.isLetters(name.value!!) && !name.value!!.contains(' '))
-        {
-            snackMessageService.displaySnackBar("Name cannot contain digits")
-            return false
-        }
+        return true
+    }
 
-        if(phone.value.isNullOrEmpty())
-        {
-            snackMessageService.displaySnackBar("Phone field is mandatory")
+    private fun checkEmailIsValid() : Boolean {
+        if (!StringUtils.isEmailValid(email.value!!)) {
+            snackMessageService.displaySnackBar(R.string.wrong_email_format_message)
             return false
         }
-        if(phone.value!!.length < 10)
-        {
-            snackMessageService.displaySnackBar("Phone number cannot be this short")
-            return false
-        }
-
         return true
     }
 
