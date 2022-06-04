@@ -127,7 +127,7 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
                     object : IOnCompleteListener {
                         override fun onComplete(successful: Boolean, exception: Exception?) {
                             addMeetToUserJoinedMeetings(attendedMeeting!!)
-                            snackMessageService.displaySnackBar("Success")
+                            snackMessageService.displaySnackBar("Great! ${attendedMeeting!!.user!!.name} will be notified you are joining the walk together with ${selectedDog.value!!.name}")
                         }
                     })
             }

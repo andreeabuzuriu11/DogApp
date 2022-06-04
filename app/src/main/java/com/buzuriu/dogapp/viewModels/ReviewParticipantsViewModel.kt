@@ -19,6 +19,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     private var reviewList = ArrayList<UserWithReview>()
     private var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
 
+    var doesMeetingHaveAnyParticipants = MutableLiveData<Boolean>(false)
     var ratingUserCellAdapter: RatingUserCellAdapter? = null
     var myLatLng = MutableLiveData<LatLng>()
 
@@ -132,6 +133,8 @@ class ReviewParticipantsViewModel : BaseViewModel() {
             viewModelScope.launch(Dispatchers.Main) {
                 reviewList.clear()
                 reviewList.addAll(list)
+                if (list.size > 0)
+                    doesMeetingHaveAnyParticipants.value = true
                 ratingUserCellAdapter!!.notifyDataSetChanged()
             }
         }

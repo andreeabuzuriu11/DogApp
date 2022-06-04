@@ -31,6 +31,17 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/participants_text_view"
             android:layout_marginTop="20dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:text="There were no participants at this meeting"
+            android:textSize="18dp"
+            android:visibility="@{!viewModel.doesMeetingHaveAnyParticipants ? View.VISIBLE : View.GONE}"
+            >
+
+        </TextView>
 
     </RelativeLayout>
 
