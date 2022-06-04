@@ -16,13 +16,13 @@ class ForgotPasswordViewModel : BaseViewModel() {
     fun sendPasswordResetRequest() {
         if(!fieldsAreCompleted())return
 
-        ShowLoadingView(true)
+        showLoadingView(true)
 
         viewModelScope.launch(Dispatchers.IO) {
             firebaseAuthService.resetPassword(email.value!!,  object : IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
 
-                    ShowLoadingView(false)
+                    showLoadingView(false)
 
                     if (successful) {
                         viewModelScope.launch(Dispatchers.IO){
@@ -42,7 +42,7 @@ class ForgotPasswordViewModel : BaseViewModel() {
     }
     private fun fieldsAreCompleted(): Boolean {
 
-        if (!connectivityService.isInternetAvailable()) {
+        if (!internetService.isInternetAvailable()) {
             snackMessageService.displaySnackBar(R.string.no_internet_message)
             return false
         }

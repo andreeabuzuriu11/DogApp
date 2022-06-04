@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.views
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
@@ -8,7 +9,8 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.viewModels.SplashViewModel
 import com.buzuriu.dogapp.views.base.BaseActivity
 
-class SplashScreen : BaseActivity<SplashViewModel>(SplashViewModel::class.java) {
+@SuppressLint("CustomSplashScreen")
+class SplashScreenActivity : BaseActivity<SplashViewModel>(SplashViewModel::class.java) {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         setContentView(R.layout.activity_splash_screen)
@@ -21,8 +23,6 @@ class SplashScreen : BaseActivity<SplashViewModel>(SplashViewModel::class.java) 
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
-
-        //initUI() TODO lottie
 
         super.onCreate(savedInstanceState)
 

@@ -5,7 +5,7 @@ import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.utils.BreedsFile
 import java.util.*
 
-class SelectBreedViewModel : BaseViewModel(){
+class SelectBreedViewModel : BaseViewModel() {
 
     private var breedsList = ArrayList<BreedObj>()
     private var selectedBreed: BreedObj? = null
@@ -13,43 +13,21 @@ class SelectBreedViewModel : BaseViewModel(){
 
     init {
         initBreedsList()
-
-        // add in method
-        var breedName = dataExchangeService.get<String>(this::class.qualifiedName!!)
-        if(!breedName.isNullOrEmpty())
-        {
-            var breed = breedsList.find { x -> x.breedName == breedName }
-            selectBreed(breed!!)
-
-        }
+        getSelectedBreed()
     }
 
     private fun initBreedsList() {
-        for(breedName in BreedsFile.breedsList)
+        for (breedName in BreedsFile.breedsList)
             breedsList.add(BreedObj(breedName))
         breedAdapter = BreedAdapter(breedsList, this)
     }
 
-    fun close() {
-        navigationService.closeCurrentActivity()
-    }
-
-    fun saveBreed() {
-        if(selectedBreed == null)
-        {
-            snackMessageService.displaySnackBar("Please select a breed")
-            return
+    private fun getSelectedBreed() {
+        val breedName = exchangeInfoService.get<String>(this::class.qualifiedName!!)
+        if (!breedName.isNullOrEmpty()) {
+            val breed = breedsList.find { x -> x.breedName == breedName }
+            selectBreed(breed!!)
         }
-        dataExchangeService.put(AddDogViewModel::class.qualifiedName!!, selectedBreed!!)
-        close()
-    }
-
-    fun selectBreed(breedObj: BreedObj) {
-        unselectPreviousBreed()
-        breedObj.isSelected = true
-        selectedBreed = breedObj
-
-        breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))
     }
 
     private fun unselectPreviousBreed() {
@@ -62,17 +40,35 @@ class SelectBreedViewModel : BaseViewModel(){
         }
     }
 
-    fun searchByName(searchedString : String) {
-        val auxSearchedBreeds = ArrayList<BreedObj>()
-        if (breedsList.isNotEmpty())
-        {
-            for (item in breedsList)
-            {
-                val mySearchedString = searchedString.toLowerCase(Locale.ROOT)
-                val itemString = item.breedName?.toLowerCase(Locale.ROOT)
+    fun close() {
+        navigationService.closeCurrentActivity()
+    }
 
-                if(itemString!!.contains(mySearchedString) || mySearchedString.isEmpty())
-                {
+    fun saveBreed() {
+        if (selectedBreed == null) {
+            snackMessageService.displaySnackBar("Please select a breed")
+            return
+        }
+        exchangeInfoService.put(AddDogViewModel::class.qualifiedName!!, selectedBreed!!)
+        close()
+    }
+
+    fun selectBreed(breedObj: BreedObj) {
+        unselectPreviousBreed()
+        breedObj.isSelected = true
+        selectedBreed = breedObj
+
+        breedAdapter?.notifyItemChanged(breedAdapter?.breedsList!!.indexOf(breedObj))
+    }
+
+    fun searchByName(searchedString: String) {
+        val auxSearchedBreeds = ArrayList<BreedObj>()
+        if (breedsList.isNotEmpty()) {
+            for (item in breedsList) {
+                val mySearchedString = searchedString.lowercase(Locale.ROOT)
+                val itemString = item.breedName?.lowercase(Locale.ROOT)
+
+                if (itemString!!.contains(mySearchedString) || mySearchedString.isEmpty()) {
                     auxSearchedBreeds.add(item)
                 }
             }

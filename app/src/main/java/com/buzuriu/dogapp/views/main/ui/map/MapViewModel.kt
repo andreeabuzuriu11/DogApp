@@ -8,6 +8,8 @@ import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.FieldsItems
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.viewModels.*
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
@@ -92,7 +94,7 @@ class MapViewModel : BaseViewModel() {
 
         when {
             meeting.meetingStateEnum == MeetingStateEnum.NOT_JOINED -> {
-                dataExchangeService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
+                exchangeInfoService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
 
                 navigationService.showOverlay(
                     OverlayActivity::class.java,
@@ -141,11 +143,11 @@ class MapViewModel : BaseViewModel() {
 
     fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj) {
         val allMeetingsThatUserJoinedList =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.meetingsUserJoined)
         val toBeRemoved =
             allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
         allMeetingsThatUserJoinedList.remove(toBeRemoved)
-        localDatabaseService.add("meetingsUserJoined", allMeetingsThatUserJoinedList)
+        localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoinedList)
     }
 
     private fun hasUserAlreadyJoinedMeeting(meeting: MyCustomMeetingObj): Boolean {
@@ -161,7 +163,7 @@ class MapViewModel : BaseViewModel() {
     }
 
     private fun getMeetingChangedDueToJoin() {
-        val changedMeeting = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
+        val changedMeeting = exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name)
         if (changedMeeting != null) {
             changedMeeting.meetingStateEnum = MeetingStateEnum.JOINED
             meetingAdapter!!.notifyItemChanged(meetingsList.indexOf(changedMeeting))
@@ -181,7 +183,7 @@ class MapViewModel : BaseViewModel() {
             val latLng = MapUtils.getLatLngFromGeoPoint(meeting.meetingObj!!.location!!)
             locationPoints.add(latLng)
         }
-        localDatabaseService.add("locationPoints", locationPoints)
+        localDatabaseService.add(LocalDBItems.locationPoints, locationPoints)
     }
 
     private suspend fun getAllMeetingsThatUserJoined(): ArrayList<MyCustomMeetingObj> {
@@ -224,10 +226,10 @@ class MapViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchAllMeetings() {
-        ShowLoadingView(true)
+        showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllMeetingsFromDatabase()
-            ShowLoadingView(false)
+            showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
                 meetingsList.addAll(list)
@@ -255,24 +257,24 @@ class MapViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchAllReviewsUserLeft() {
-        ShowLoadingView(true)
+        showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = getAllReviewsThatUserLeft()
-            ShowLoadingView(false)
+            showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 userReviewsForOthers.clear()
                 userReviewsForOthers.addAll(list)
-                localDatabaseService.add("reviewsUserLeft", userReviewsForOthers)
+                localDatabaseService.add(LocalDBItems.reviewsUserLeft, userReviewsForOthers)
             }
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllPastMeetings() {
-        ShowLoadingView(true)
+        showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllPastMeetingsFromDatabase()
-            ShowLoadingView(false)
+            showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 pastMeetingsListUserCreated.clear()
                 pastMeetingsListUserJoined.clear()
@@ -291,14 +293,14 @@ class MapViewModel : BaseViewModel() {
                             pastMeetingsListUserJoined.add(item)
                     }
                 }
-                localDatabaseService.add("pastMeetingsUserCreated", pastMeetingsListUserCreated)
-                localDatabaseService.add("pastMeetingsUserJoined", pastMeetingsListUserJoined)
+                localDatabaseService.add(LocalDBItems.pastMeetingsUserCreated, pastMeetingsListUserCreated)
+                localDatabaseService.add(LocalDBItems.pastMeetingsUserJoined, pastMeetingsListUserJoined)
             }
         }
     }
 
     private suspend fun fetchAllPastMeetingsFromDatabase(): ArrayList<MyCustomMeetingObj> {
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
@@ -325,7 +327,7 @@ class MapViewModel : BaseViewModel() {
     private suspend fun getAllReviewsThatUserLeft() : ArrayList<ReviewObj> {
         val allReviewsUserHasLeft = ArrayList<ReviewObj>()
 
-        val list : ArrayList<ReviewObj>? = databaseService.fetchReviewsThatUserLeft(currentUser!!.uid)
+        val list : ArrayList<ReviewObj>? = databaseService.fetchReviewsFor(FieldsItems.userIdThatLeftReview, currentUser!!.uid)
         if (list!=null) {
             for (review in list) {
                 val reviewObj = ReviewObj(
@@ -345,7 +347,7 @@ class MapViewModel : BaseViewModel() {
         if (lastViewModel.equals(FilterMeetingsViewModel::class.qualifiedName)) {
 
             val filters =
-                dataExchangeService.get<ArrayList<IFilterObj>>(this::class.qualifiedName!!)
+                exchangeInfoService.get<ArrayList<IFilterObj>>(this::class.qualifiedName!!)
                     ?: return
 
             removeFilterType<FilterByTimeObj>()
@@ -365,7 +367,7 @@ class MapViewModel : BaseViewModel() {
         if (lastViewModel.equals(MeetingsOnMapViewModel::class.qualifiedName)) {
 
             val mapFilter =
-                dataExchangeService.get<IFilterObj>(this::class.qualifiedName!!) ?: return
+                exchangeInfoService.get<IFilterObj>(this::class.qualifiedName!!) ?: return
 
             removeFilterType<FilterByLocationObj>()
 
@@ -412,7 +414,7 @@ class MapViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchAllMeetingsFromDatabase(): ArrayList<MyCustomMeetingObj> {
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
@@ -453,7 +455,7 @@ class MapViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchUserReviews(userUid: String): ArrayList<ReviewObj>? {
-        return databaseService.fetchUserReviews(userUid)
+        return databaseService.fetchReviewsFor(FieldsItems.userThatReviewIsFor, userUid)
     }
 
     private fun getMeanOfReviews(reviews: ArrayList<ReviewObj>): Float {
@@ -465,7 +467,7 @@ class MapViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchFilteredMeetingsFromDatabase(filters: ArrayList<IFilterObj>): ArrayList<MyCustomMeetingObj> {
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
@@ -502,7 +504,7 @@ class MapViewModel : BaseViewModel() {
     }
 
     private fun selectedMeeting(myCustomMeetingObj: MyCustomMeetingObj) {
-        dataExchangeService.put(MeetingDetailViewModel::class.java.name, myCustomMeetingObj)
+        exchangeInfoService.put(MeetingDetailViewModel::class.java.name, myCustomMeetingObj)
         navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
     }
 
@@ -516,7 +518,7 @@ class MapViewModel : BaseViewModel() {
     }
 
     private fun doesUserHaveAtLeastOneDog(): Boolean {
-        val listOfDogs = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+        val listOfDogs = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
         if (listOfDogs != null) {
             if (listOfDogs.size < 1)
                 return false

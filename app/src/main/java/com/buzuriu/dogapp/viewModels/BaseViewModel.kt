@@ -1,5 +1,4 @@
 package com.buzuriu.dogapp.viewModels
-
 import android.Manifest
 import android.content.Intent
 import android.util.Log
@@ -23,17 +22,17 @@ open class BaseViewModel : ViewModel(), KoinComponent {
     var isLoadingViewVisible: MutableLiveData<Boolean> = MutableLiveData(false)
 
     private val permissionService: IPermissionService by inject()
-    protected val snackMessageService: ISnackMessageService by inject()
-    protected val firebaseAuthService: IFirebaseAuthService by inject()
-    protected val navigationService: INavigationService by inject()
-    protected val connectivityService: IConnectivityService by inject()
-    protected val databaseService: IDatabaseService by inject()
-    protected val dataExchangeService: IDataExchangeService by inject()
-    protected val alertMessageService: IAlertMessageService by inject()
-    protected val activityService: ICurrentActivityService by inject()
     protected val activityResultService: IActivityResultService by inject()
-    protected val storageService: IStorageService by inject()
+    protected val activityService: ICurrentActivityService by inject()
+    protected val alertMessageService: IAlertMessageService by inject()
+    protected val exchangeInfoService: IExchangeInfoService by inject()
+    protected val databaseService: IDatabaseService by inject()
+    protected val firebaseAuthService: IFirebaseAuthService by inject()
+    protected val internetService: IInternetService by inject()
     protected val localDatabaseService: ILocalDatabaseService by inject()
+    protected val navigationService: INavigationService by inject()
+    protected val snackMessageService: ISnackMessageService by inject()
+    protected val storageService: IStorageService by inject()
 
     protected val currentUser get() = firebaseAuthService.getCurrentUser()
 
@@ -77,7 +76,7 @@ open class BaseViewModel : ViewModel(), KoinComponent {
         activityResultService.onActivityForResult(activityResult)
     }
 
-    protected fun ShowLoadingView(isVisible: Boolean) {
+    protected fun showLoadingView(isVisible: Boolean) {
         viewModelScope.launch(Dispatchers.Main)
         {
             isLoadingViewVisible.value = isVisible

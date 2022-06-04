@@ -9,12 +9,6 @@ import com.google.android.material.snackbar.Snackbar
 interface ISnackMessageService {
     fun displaySnackBar(stringId: Int, duration: Int = Snackbar.LENGTH_LONG)
     fun displaySnackBar(string: String, duration: Int = Snackbar.LENGTH_LONG)
-   /* fun displayAlertDialog(
-        title: String,
-        message: String,
-        buttonText: String,
-        clickMethod: IClickListener
-    )*/
 }
 
 class SnackMessageService(private val currentActivityService: ICurrentActivityService) : ISnackMessageService {
@@ -36,25 +30,4 @@ class SnackMessageService(private val currentActivityService: ICurrentActivitySe
             Snackbar.make(parentLayout, string, duration).show()
         }
     }
-
-    /*override fun displayAlertDialog(
-        title: String,
-        message: String,
-        buttonText: String,
-        clickMethod: IClickListener
-    ) {
-        val builder = AlertDialog.Builder(currentActivityService.activity)
-        builder.setTitle(title).setMessage(message).setPositiveButton(
-            buttonText
-        ) { dialogInterface, _ ->
-            clickMethod.clicked()
-            dialogInterface?.dismiss()
-        }
-        builder.setNegativeButton(
-            "Cancel"
-        ) { dialogAlert, _ ->
-            dialogAlert?.dismiss()
-        }
-        builder.show()
-    }*/
 }

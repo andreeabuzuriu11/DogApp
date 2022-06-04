@@ -9,6 +9,7 @@ import com.buzuriu.dogapp.adapters.MyMeetingAdapter
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
@@ -60,7 +61,7 @@ class MyMeetingsViewModel : BaseViewModel() {
     }
 
     override fun onResume() {
-        val isRefreshNeeded = dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
+        val isRefreshNeeded = exchangeInfoService.get<Boolean>(this::class.qualifiedName!!)
         if (isRefreshNeeded != null && isRefreshNeeded == true) {
             // clear meetings list and add them again updated
             refreshList()
@@ -115,13 +116,12 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     private fun getAllMeetingsThatUserCreated() {
         val meetingsFromLocalDB =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList)
         if (meetingsFromLocalDB != null) {
             // check if meeting is older than present
                 for (meet in meetingsFromLocalDB)
                 {
                     if (!MeetingUtils.isMeetingInThePast(meet.meetingObj!!)) {
-                        Log.d("mytag1", "reaches here")
                         meetingsICreated.add(meet)
                     }
                     else {
@@ -133,7 +133,7 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     private fun getAllMeetingsThatUserJoined()  {
         val meetingsFromLocalDB =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.meetingsUserJoined)
         if (meetingsFromLocalDB != null) {
             meetingsIJoin.addAll(meetingsFromLocalDB)
         }
@@ -141,21 +141,21 @@ class MyMeetingsViewModel : BaseViewModel() {
 
     private fun selectedMeeting(meeting: MyCustomMeetingObj) {
         if (isMeetingCreatedByMe(meeting)) {
-            dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, meeting)
+            exchangeInfoService.put(MyMeetingDetailViewModel::class.java.name, meeting)
             navigationService.navigateToActivity(MyMeetingDetailActivity::class.java, false)
         } else {
-            dataExchangeService.put(MeetingDetailViewModel::class.java.name, meeting)
+            exchangeInfoService.put(MeetingDetailViewModel::class.java.name, meeting)
             navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
         }
     }
 
     fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj) {
         val allMeetingsThatUserJoinedList =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("meetingsUserJoined")
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.meetingsUserJoined)
         val toBeRemoved =
             allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
         allMeetingsThatUserJoinedList.remove(toBeRemoved)
-        localDatabaseService.add("meetingsUserJoined", allMeetingsThatUserJoinedList)
+        localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoinedList)
     }
 
     fun leaveMeeting(meeting: MyCustomMeetingObj) {
@@ -195,7 +195,6 @@ class MyMeetingsViewModel : BaseViewModel() {
     }
 
     suspend fun getUserParticipantUid(meeting: MyCustomMeetingObj): String? {
-
         return databaseService.fetchUserParticipantUidForMeeting(
             meeting.meetingObj!!.uid!!,
             currentUser!!.uid
@@ -207,7 +206,7 @@ class MyMeetingsViewModel : BaseViewModel() {
     }
 
     private fun doesUserHaveAtLeastOneDog(): Boolean {
-        if (localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!.size < 1)
+        if (localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)!!.size < 1)
             return false
         return true
     }

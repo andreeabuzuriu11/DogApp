@@ -2,10 +2,12 @@ package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -37,10 +39,10 @@ class SplashViewModel : BaseViewModel() {
     private suspend fun prepareForMain() {
         val userDogs = databaseService.fetchUserDogs(currentUser!!.uid)
         if (userDogs != null) {
-            localDatabaseService.add("localDogsList", userDogs)
+            localDatabaseService.add(LocalDBItems.localDogsList, userDogs)
         }
 
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
@@ -58,14 +60,14 @@ class SplashViewModel : BaseViewModel() {
                 }
             }
 
-            localDatabaseService.add("localMeetingsList", allCustomMeetings)
+            localDatabaseService.add(LocalDBItems.localMeetingsList, allCustomMeetings)
         }
     }
 
     private suspend fun getAllMeetingsThatUserJoined() {
         var allMeetingsParticipants: ArrayList<ParticipantObj>
         val allMeetingsThatUserJoined = ArrayList<MyCustomMeetingObj>()
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allOtherMeetings: ArrayList<MeetingObj> = databaseService.fetchAllOtherMeetings(currentUser!!.uid)!!
 
@@ -83,14 +85,14 @@ class SplashViewModel : BaseViewModel() {
                     }
                 }
         }
-        localDatabaseService.add("meetingsUserJoined", allMeetingsThatUserJoined)
+        localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoined)
     }
 
     private suspend fun getUserAccountInfo() {
-        val userInfo: UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
+        val userObj: UserObj? = databaseService.fetchUserByUid(currentUser!!.uid)
 
-        if (userInfo!=null) {
-            localDatabaseService.add("currentUser", userInfo)
+        if (userObj!=null) {
+            localDatabaseService.add(LocalDBItems.currentUser, userObj)
         }
         else{
             navigationService.navigateToActivity(LoginActivity::class.java, true)

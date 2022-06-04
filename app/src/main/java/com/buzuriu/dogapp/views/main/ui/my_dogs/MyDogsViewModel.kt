@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.DogDetailViewModel
 import com.buzuriu.dogapp.views.AccountDetailActivity
@@ -20,7 +21,7 @@ class MyDogsViewModel : BaseViewModel() {
     var doesUserHaveAnyDog = MutableLiveData<Boolean>(false)
 
     init {
-        val dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+        val dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
         if (dogsFromLocalDB != null && dogsFromLocalDB.size > 0) {
             dogsList.addAll(dogsFromLocalDB)
             doesUserHaveAnyDog.value = true
@@ -36,8 +37,8 @@ class MyDogsViewModel : BaseViewModel() {
     override fun onResume() {
         super.onResume()
         val isRefreshListNeeded: Boolean? =
-            dataExchangeService.get<Boolean>(this::class.qualifiedName!!)
-        val dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+            exchangeInfoService.get<Boolean>(this::class.qualifiedName!!)
+        val dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
         if (isRefreshListNeeded != null && isRefreshListNeeded) {
             dogsList.clear()
 
@@ -54,7 +55,7 @@ class MyDogsViewModel : BaseViewModel() {
     }
 
     private fun selectedDog(dogObj: DogObj) {
-        dataExchangeService.put(DogDetailViewModel::class.java.name, dogObj)
+        exchangeInfoService.put(DogDetailViewModel::class.java.name, dogObj)
         navigationService.navigateToActivity(DogDetailActivity::class.java, false)
     }
 

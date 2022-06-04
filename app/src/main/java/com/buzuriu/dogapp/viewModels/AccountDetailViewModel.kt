@@ -1,28 +1,29 @@
 package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.MutableLiveData
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.UserObj
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.EditAccountActivity
 
 
 class AccountDetailViewModel : BaseViewModel() {
-    var user = MutableLiveData<UserInfo>()
+    var user = MutableLiveData<UserObj>()
 
     init {
-        user.value = localDatabaseService.get("currentUser")
+        user.value = localDatabaseService.get(LocalDBItems.currentUser)
     }
 
     override fun onResume() {
         super.onResume()
-        val editedAccount = dataExchangeService.get<UserInfo>(this::class.java.name)
+        val editedAccount = exchangeInfoService.get<UserObj>(this::class.java.name)
         if (editedAccount != null) {
             user.value = editedAccount!!
-            localDatabaseService.add("currentUser", user.value!!)
+            localDatabaseService.add(LocalDBItems.currentUser, user.value!!)
         }
     }
 
     fun editUser() {
-        dataExchangeService.put(EditAccountViewModel::class.java.name, user.value!!)
+        exchangeInfoService.put(EditAccountViewModel::class.java.name, user.value!!)
         navigationService.navigateToActivity(EditAccountActivity::class.java)
     }
 }

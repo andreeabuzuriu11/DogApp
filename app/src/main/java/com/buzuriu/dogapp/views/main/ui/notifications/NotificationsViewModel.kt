@@ -6,7 +6,7 @@ import com.buzuriu.dogapp.adapters.ReviewNotificationAdapter
 import com.buzuriu.dogapp.models.IMeetingObj
 import com.buzuriu.dogapp.models.MeetingSectionObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.utils.MeetingUtils
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
 import com.buzuriu.dogapp.viewModels.PastMeetingDetailViewModel
@@ -55,7 +55,7 @@ class NotificationsViewModel : BaseViewModel() {
 
     private fun getAllPastMeetingsThatUserCreated() {
         val pastMeetingsUserCreatedListFromLocalDB =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserCreated")
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.pastMeetingsUserCreated)
         if (pastMeetingsUserCreatedListFromLocalDB != null) {
             pastMeetingsUserCreatedList.addAll(pastMeetingsUserCreatedListFromLocalDB)
         }
@@ -63,7 +63,7 @@ class NotificationsViewModel : BaseViewModel() {
 
     private fun getAllPastMeetingsThatUserJoined() {
         val pastMeetingsUserJoinedListFromLocalDB =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("pastMeetingsUserJoined")
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.pastMeetingsUserJoined)
         if (pastMeetingsUserJoinedListFromLocalDB != null) {
             pastMeetingsUserJoinedList.addAll(pastMeetingsUserJoinedListFromLocalDB)
         }
@@ -74,12 +74,12 @@ class NotificationsViewModel : BaseViewModel() {
     {
         if (isMeetingCreatedByMe(myCustomMeetingObj))
         {
-            dataExchangeService.put(MyMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
+            exchangeInfoService.put(MyMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
             navigationService.navigateToActivity(MyMeetingDetailActivity::class.java, false)
         }
         else
         {
-            dataExchangeService.put(PastMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
+            exchangeInfoService.put(PastMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
             navigationService.navigateToActivity(PastMeetingDetailActivity::class.java, false)
         }
     }
@@ -90,7 +90,7 @@ class NotificationsViewModel : BaseViewModel() {
 
     fun openReviewParticipantsFragment(myCustomMeetingObj: MyCustomMeetingObj)
     {
-        dataExchangeService.put(ReviewParticipantsViewModel::class.java.name, myCustomMeetingObj)
+        exchangeInfoService.put(ReviewParticipantsViewModel::class.java.name, myCustomMeetingObj)
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,

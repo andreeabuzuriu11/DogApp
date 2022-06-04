@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.UserObj
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
@@ -30,7 +31,7 @@ class RegisterViewModel : BaseAuthViewModel() {
     fun registerClick() {
         if (!fieldsAreCompleted()) return
 
-        ShowLoadingView(true)
+        showLoadingView(true)
         currentGenderString = if (isFemaleGenderSelected.value!!) {
             "female"
         } else
@@ -40,33 +41,33 @@ class RegisterViewModel : BaseAuthViewModel() {
             firebaseAuthService.registerWithEmailAndPassword(email.value!!, password.value!!,
                 object : IOnCompleteListener {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
-                        ShowLoadingView(false)
+                        showLoadingView(false)
 
                         if (successful) {
 
                             val user = databaseService.fireAuth.currentUser
                             if (user != null) {
-                                val userInfo = UserInfo(
+                                val userObj = UserObj(
                                     email.value,
                                     name.value,
                                     phone.value,
                                     currentGenderString!!
                                 )
-                                ShowLoadingView(true)
+                                showLoadingView(true)
                                 viewModelScope.launch(Dispatchers.IO) {
 
-                                    databaseService.storeUserInfo(
+                                    databaseService.storeUser(
                                         user.uid,
-                                        userInfo,
+                                        userObj,
                                         object : IOnCompleteListener {
                                             override fun onComplete(successful: Boolean, exception: Exception?) {
-                                                ShowLoadingView(false)
+                                                showLoadingView(false)
 
                                                 if (successful) {
                                                     snackMessageService.displaySnackBar(R.string.info_added)
                                                     viewModelScope.launch(Dispatchers.Main) {
                                                         getUserAccountInfo()
-                                                        localDatabaseService.add("localDogsList", ArrayList<DogObj>())
+                                                        localDatabaseService.add(LocalDBItems.localDogsList, ArrayList<DogObj>())
                                                         delay(1000)
                                                         navigationService.navigateToActivity(MainActivity::class.java, true)
                                                     }
@@ -92,7 +93,7 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
     private fun fieldsAreCompleted(): Boolean {
-        if(!connectivityService.isInternetAvailable())
+        if(!internetService.isInternetAvailable())
         {
             snackMessageService.displaySnackBar(R.string.no_internet_message)
             return false
@@ -149,10 +150,10 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
     private suspend fun getUserAccountInfo() {
-        val userInfo : UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
+        val userObj : UserObj? = databaseService.fetchUserByUid(currentUser!!.uid)
 
-        if (userInfo!=null)
-            localDatabaseService.add("currentUser", userInfo)
+        if (userObj!=null)
+            localDatabaseService.add(LocalDBItems.currentUser, userObj)
         else {
             snackMessageService.displaySnackBar("Error, this user has been deleted!")
             delay(3000)

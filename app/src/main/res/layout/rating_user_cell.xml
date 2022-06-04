@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:hint="user name"
-                    android:text="@{userWithReview.userInfo.name}"
+                    android:text="@{userWithReview.userObj.name}"
                     android:textSize="18dp"></TextView>
 
                 <com.buzuriu.dogapp.components.RatingBarWithNumber

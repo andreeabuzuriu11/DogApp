@@ -9,7 +9,8 @@ import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.ParticipantObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.UserObj
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.buzuriu.dogapp.views.EditMeetingActivity
@@ -28,7 +29,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
 
     init {
         myCustomMeetingObj.value =
-            dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)!!
+            exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name)!!
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(myCustomMeetingObj.value?.meetingObj?.location!!)
 
@@ -39,15 +40,15 @@ class MyMeetingDetailViewModel : BaseViewModel() {
 
     override fun onResume() {
         val editedMeeting: MyCustomMeetingObj =
-            dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name) ?: return
+            exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name) ?: return
         myCustomMeetingObj.value = editedMeeting
         editOldMeeting()
         myLatLng.value = MapUtils.getLatLngFromGeoPoint(editedMeeting.meetingObj?.location!!)
-        dataExchangeService.put(MyMeetingsViewModel::class.java.name, true)
+        exchangeInfoService.put(MyMeetingsViewModel::class.java.name, true)
     }
 
     fun editMeeting() {
-        dataExchangeService.put(EditMeetingViewModel::class.java.name, myCustomMeetingObj.value!!)
+        exchangeInfoService.put(EditMeetingViewModel::class.java.name, myCustomMeetingObj.value!!)
         navigationService.navigateToActivity(EditMeetingActivity::class.java)
     }
 
@@ -60,7 +61,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
                 IClickListener {
                 override fun clicked() {
                     deleteMeetingFromDatabase()
-                    dataExchangeService.put(
+                    exchangeInfoService.put(
                         MyMeetingsViewModel::class.java.name,
                         true
                     ) // is refresh list needed
@@ -75,9 +76,9 @@ class MyMeetingDetailViewModel : BaseViewModel() {
                 object : IOnCompleteListener {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
                         val allMyMeetingsList =
-                            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+                            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList)
                         allMyMeetingsList!!.remove<MyCustomMeetingObj>(myCustomMeetingObj.value!!)
-                        localDatabaseService.add("localMeetingsList", allMyMeetingsList)
+                        localDatabaseService.add(LocalDBItems.localMeetingsList, allMyMeetingsList)
                         navigationService.closeCurrentActivity()
                     }
                 })
@@ -86,10 +87,10 @@ class MyMeetingDetailViewModel : BaseViewModel() {
 
     @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllParticipantsForMeeting() {
-        ShowLoadingView(true)
+        showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllParticipantsForMeetingFromDatabase()
-            ShowLoadingView(false)
+            showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 participantsList.clear()
                 if (!list.isNullOrEmpty())
@@ -103,7 +104,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchAllParticipantsForMeetingFromDatabase(): ArrayList<ParticipantObj> {
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allParticipantsNameList = ArrayList<ParticipantObj>()
 
@@ -127,7 +128,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
 
     private fun editOldMeeting() {
         val myMeetingsList =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList)
                 ?: return
         if (myMeetingsList.any { it.meetingObj!!.uid == myCustomMeetingObj.value!!.meetingObj!!.uid }) {
             val oldMeeting =
@@ -135,7 +136,7 @@ class MyMeetingDetailViewModel : BaseViewModel() {
             myMeetingsList.remove(oldMeeting)
         }
         myMeetingsList.add(myCustomMeetingObj.value!!)
-        localDatabaseService.add("localMeetingsList", myMeetingsList)
+        localDatabaseService.add(LocalDBItems.localMeetingsList, myMeetingsList)
     }
 
     fun isMeetingPast() : Boolean

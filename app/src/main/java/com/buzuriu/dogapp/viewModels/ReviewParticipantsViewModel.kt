@@ -7,6 +7,7 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.RatingUserCellAdapter
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
@@ -16,13 +17,13 @@ import kotlinx.coroutines.launch
 class ReviewParticipantsViewModel : BaseViewModel() {
 
     private var reviewList = ArrayList<UserWithReview>()
-    var ratingUserCellAdapter: RatingUserCellAdapter? = null
-
     private var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
+
+    var ratingUserCellAdapter: RatingUserCellAdapter? = null
     var myLatLng = MutableLiveData<LatLng>()
 
     init {
-        pastMeeting.value = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
+        pastMeeting.value = exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name)
         ratingUserCellAdapter = RatingUserCellAdapter(reviewList, this)
 
         viewModelScope.launch {
@@ -43,7 +44,10 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                             if (successful) {
                                 viewModelScope.launch(Dispatchers.Main) {
                                     snackMessageService.displaySnackBar("Review edited successfully")
-                                    changeNumberOfStarsInLocalDatabase(userWithReview.userUid!!, userWithReview.reviewObj!!.numberOfStars!!)
+                                    changeNumberOfStarsInLocalDatabase(
+                                        userWithReview.userUid!!,
+                                        userWithReview.reviewObj!!.numberOfStars!!
+                                    )
                                     delay(2000)
 
                                 }
@@ -90,11 +94,10 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         }
     }
 
-    fun changeNumberOfStarsInLocalDatabase(userUid: String, newNumberOfStars : Float)
-    {
+    fun changeNumberOfStarsInLocalDatabase(userUid: String, newNumberOfStars: Float) {
         val review: ReviewObj?
         val listOfReviews =
-            localDatabaseService.get<java.util.ArrayList<ReviewObj>>("reviewsUserLeft")
+            localDatabaseService.get<java.util.ArrayList<ReviewObj>>(LocalDBItems.reviewsUserLeft)
         if (listOfReviews != null) {
             review =
                 listOfReviews.find { it.userIdThatLeftReview == currentUser!!.uid && it.userThatReviewIsFor == userUid }
@@ -108,7 +111,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     private fun didCurrentUserAlreadyReviewUser(userUid: String): ReviewObj? {
         var review: ReviewObj? = null
         val listOfReviews =
-            localDatabaseService.get<java.util.ArrayList<ReviewObj>>("reviewsUserLeft")
+            localDatabaseService.get<java.util.ArrayList<ReviewObj>>(LocalDBItems.reviewsUserLeft)
         if (listOfReviews != null) {
             review =
                 listOfReviews.find { it.userIdThatLeftReview == currentUser!!.uid && it.userThatReviewIsFor == userUid }
@@ -121,11 +124,11 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private suspend fun fetchAllParticipantsForMeeting() : ArrayList<UserWithReview>{
-        ShowLoadingView(true)
+    private suspend fun fetchAllParticipantsForMeeting(): ArrayList<UserWithReview> {
+        showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllParticipantsForMeetingFromDatabase()
-            ShowLoadingView(false)
+            showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 reviewList.clear()
                 reviewList.addAll(list)
@@ -136,7 +139,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchAllParticipantsForMeetingFromDatabase(): ArrayList<UserWithReview> {
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allParticipantsNameList = ArrayList<ParticipantObj>()
         val userWithReviewList = ArrayList<UserWithReview>()
@@ -144,7 +147,10 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         val allParticipantsList: ArrayList<ParticipantObj> =
             databaseService.fetchAllMeetingParticipants(pastMeeting.value!!.meetingObj!!.uid!!)!!
 
-        val creatorMeetingAsParticipant = convertMeetingCreatorToParticipant(pastMeeting.value!!.meetingObj!!.userUid!!, pastMeeting.value!!.dog!!)
+        val creatorMeetingAsParticipant = convertMeetingCreatorToParticipant(
+            pastMeeting.value!!.meetingObj!!.userUid!!,
+            pastMeeting.value!!.dog!!
+        )
         allParticipantsList.add(creatorMeetingAsParticipant)
 
         for (participant in allParticipantsList) {
@@ -157,13 +163,12 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                     val participantObj = ParticipantObj(user.name!!, dog.name)
                     allParticipantsNameList.add(participantObj)
                     val review = didCurrentUserAlreadyReviewUser(participant.userUid!!)
-                    if (review!= null) {
+                    if (review != null) {
                         val userWithReview = UserWithReview(participant.userUid!!, user, review)
                         userWithReviewList.add(userWithReview)
-                    }
-                    else
-                    {
-                        val userWithReview = UserWithReview(participant.userUid!!, user, ReviewObj())
+                    } else {
+                        val userWithReview =
+                            UserWithReview(participant.userUid!!, user, ReviewObj())
                         userWithReviewList.add(userWithReview)
                     }
 

@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.ParticipantAdapter
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.ParticipantObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.MapUtils
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
@@ -27,9 +24,10 @@ class PastMeetingDetailViewModel : BaseViewModel() {
 
     init {
         pastMeeting.value =
-            dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)!!
+            exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name)!!
 
-        displayedText.value = "There were no other participants besides you and ${pastMeeting.value!!.user!!.name}"
+        displayedText.value =
+            "There were no other participants besides you and ${pastMeeting.value!!.user!!.name}"
 
         dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
         myLatLng.value =
@@ -42,14 +40,13 @@ class PastMeetingDetailViewModel : BaseViewModel() {
 
     @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllParticipantsForMeeting() {
-        ShowLoadingView(true)
+        showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllParticipantsForMeetingFromDatabase()
-            ShowLoadingView(false)
+            showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 participantsList.clear()
-                if (!list.isNullOrEmpty())
-                {
+                if (!list.isNullOrEmpty()) {
                     displayedText.value = "Other participants"
                 }
                 participantsList.addAll(list)
@@ -59,7 +56,7 @@ class PastMeetingDetailViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchAllParticipantsForMeetingFromDatabase(): ArrayList<ParticipantObj> {
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allParticipantsNameList = ArrayList<ParticipantObj>()
 

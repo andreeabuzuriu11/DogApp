@@ -7,12 +7,12 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 
-interface IConnectivityService {
+interface IInternetService {
     fun isInternetAvailable(): Boolean
 }
 
-class ConnectivityService(private val activityService: ICurrentActivityService) :
-    IConnectivityService {
+class InternetService(private val activityService: ICurrentActivityService) :
+    IInternetService {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun isInternetAvailable(): Boolean {
         val connectivityManager =

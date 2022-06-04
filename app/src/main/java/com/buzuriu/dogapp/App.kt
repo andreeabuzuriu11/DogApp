@@ -15,9 +15,9 @@ class App : Application() {
         single<ISnackMessageService> { SnackMessageService(get()) }
         single<IFirebaseAuthService> { FirebaseAuthService() }
         single<INavigationService> { NavigationService(get()) }
-        single<IConnectivityService> { ConnectivityService(get()) }
+        single<IInternetService> { InternetService(get()) }
         single<IDatabaseService> { DatabaseService(get()) }
-        single<IDataExchangeService> { DataExchangeService() }
+        single<IExchangeInfoService> { ExchangeInfoService() }
         single<IAlertMessageService> { AlertMessageService(get()) }
         single<IPermissionService> { PermissionService(get()) }
         single<IActivityResultService> { ActivityResultService() }

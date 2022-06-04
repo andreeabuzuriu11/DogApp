@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.auth.ForgotPasswordActivity
@@ -24,14 +25,14 @@ class LoginViewModel : BaseViewModel() {
     fun loginClicked() {
         if (!fieldsAreCompleted()) return
 
-        ShowLoadingView(true)
+        showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
 
             firebaseAuthService.login(email.value!!, password.value!!,
                 object : IOnCompleteListener {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
 
-                        ShowLoadingView(false)
+                        showLoadingView(false)
 
                         if (successful) {
                             viewModelScope.launch(Dispatchers.IO) {
@@ -62,7 +63,7 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private fun fieldsAreCompleted(): Boolean {
-        if (!connectivityService.isInternetAvailable()) {
+        if (!internetService.isInternetAvailable()) {
             snackMessageService.displaySnackBar(R.string.no_internet_message)
             return false
         }
@@ -88,9 +89,9 @@ class LoginViewModel : BaseViewModel() {
     private suspend fun prepareForMain() {
         val userDogs = databaseService.fetchUserDogs(currentUser!!.uid)
         if (userDogs != null) {
-            localDatabaseService.add("localDogsList", userDogs)
+            localDatabaseService.add(LocalDBItems.localDogsList, userDogs)
         }
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
@@ -107,14 +108,14 @@ class LoginViewModel : BaseViewModel() {
                 }
             }
 
-            localDatabaseService.add("localMeetingsList", allCustomMeetings)
+            localDatabaseService.add(LocalDBItems.localMeetingsList, allCustomMeetings)
         }
     }
 
     private suspend fun getAllMeetingsThatUserJoined() {
         var allMeetingsParticipants: ArrayList<ParticipantObj>
         val allMeetingsThatUserJoined = ArrayList<MyCustomMeetingObj>()
-        var user: UserInfo?
+        var user: UserObj?
         var dog: DogObj?
         val allOtherMeetings: ArrayList<MeetingObj> = databaseService.fetchAllOtherMeetings(currentUser!!.uid)!!
 
@@ -132,14 +133,14 @@ class LoginViewModel : BaseViewModel() {
                     }
                 }
         }
-        localDatabaseService.add("meetingsUserJoined", allMeetingsThatUserJoined)
+        localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoined)
     }
 
     private suspend fun getUserAccountInfo() {
-        val userInfo : UserInfo? = databaseService.fetchUserByUid(currentUser!!.uid)
+        val userObj : UserObj? = databaseService.fetchUserByUid(currentUser!!.uid)
 
-        if (userInfo!=null)
-            localDatabaseService.add("currentUser", userInfo)
+        if (userObj!=null)
+            localDatabaseService.add(LocalDBItems.currentUser, userObj)
         else {
             snackMessageService.displaySnackBar("Error, this user has been deleted!")
             delay(3000)

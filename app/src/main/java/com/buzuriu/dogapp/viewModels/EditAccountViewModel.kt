@@ -5,19 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.MeetingObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.UserObj
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class EditAccountViewModel : BaseViewModel() {
 
-    var user = MutableLiveData<UserInfo>()
+    var user = MutableLiveData<UserObj>()
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
     var currentGenderString: String? = null
 
     init {
-        user.value = dataExchangeService.get<UserInfo>(this::class.java.name)
+        user.value = exchangeInfoService.get<UserObj>(this::class.java.name)
         checkUserGender(user.value!!.gender!!)
     }
 
@@ -34,7 +34,7 @@ class EditAccountViewModel : BaseViewModel() {
         } else
             "male"
 
-        val user = UserInfo(
+        val user = UserObj(
             user.value!!.email,
             user.value!!.name,
             user.value!!.phone,
@@ -42,13 +42,13 @@ class EditAccountViewModel : BaseViewModel() {
         )
         viewModelScope.launch(Dispatchers.IO)
         {
-            databaseService.storeUserInfo(currentUser!!.uid, user, object : IOnCompleteListener {
+            databaseService.storeUser(currentUser!!.uid, user, object : IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
 
                     if (successful) {
                         viewModelScope.launch(Dispatchers.Main) {
                             snackMessageService.displaySnackBar("Edited successful")
-                            dataExchangeService.put(AccountDetailViewModel::class.java.name, user)
+                            exchangeInfoService.put(AccountDetailViewModel::class.java.name, user)
                             delay(2000)
                             changeMeetingInfoRelatedToThisUser()
                             navigationService.closeCurrentActivity()
@@ -62,7 +62,7 @@ class EditAccountViewModel : BaseViewModel() {
                         }
                     }
 
-                    ShowLoadingView(false)
+                    showLoadingView(false)
                 }
             })
         }
@@ -77,7 +77,7 @@ class EditAccountViewModel : BaseViewModel() {
                 for (meeting in meetings) {
                     meeting.userGender = currentGenderString
 
-                    databaseService.storeMeetingInfo(
+                    databaseService.storeMeeting(
                         meeting.uid!!,
                         meeting,
                         object : IOnCompleteListener {

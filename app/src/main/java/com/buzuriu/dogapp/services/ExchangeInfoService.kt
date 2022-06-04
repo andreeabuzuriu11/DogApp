@@ -1,11 +1,11 @@
 package com.buzuriu.dogapp.services
 
-interface IDataExchangeService {
+interface IExchangeInfoService {
     fun put(key: String, data: Any)
     fun <T> get(key: String): T?
 }
 
-class DataExchangeService : IDataExchangeService {
+class ExchangeInfoService : IExchangeInfoService {
 
     var exchangeMap: MutableMap<String, Any> = mutableMapOf()
 

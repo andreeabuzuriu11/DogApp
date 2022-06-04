@@ -63,7 +63,7 @@ class FilterMeetingsViewModel : BaseViewModel() {
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
 
-        dataExchangeService.put(MapViewModel::class.java.name, listOfCheckedFilters)
+        exchangeInfoService.put(MapViewModel::class.java.name, listOfCheckedFilters)
 
         navigationService.closeCurrentActivity()
     }

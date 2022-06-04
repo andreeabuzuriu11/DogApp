@@ -15,15 +15,18 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class EditMeetingViewModel : BaseViewModel() {
+
+    private var meetingInUtc: Calendar = Calendar.getInstance()
+
     var myCustomMeetingObj: MyCustomMeetingObj? = null
     var datePickerCalendar = MutableLiveData<Calendar>()
     var timePickerCalendar = MutableLiveData<Calendar>()
     var myLatLng = MutableLiveData<LatLng>()
     var location = GeoPoint(0.0, 0.0)
-    private var meetingInUtc: Calendar = Calendar.getInstance()
+
 
     init {
-        myCustomMeetingObj = dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)!!
+        myCustomMeetingObj = exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name)!!
         if (myCustomMeetingObj != null)
             initFields()
     }
@@ -76,7 +79,7 @@ class EditMeetingViewModel : BaseViewModel() {
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            databaseService.storeMeetingInfo(
+            databaseService.storeMeeting(
                 myCustomMeetingObj!!.meetingObj?.uid!!,
                 myCustomMeetingObj!!.meetingObj!!,
                 object : IOnCompleteListener {
@@ -84,7 +87,7 @@ class EditMeetingViewModel : BaseViewModel() {
                         if (successful) {
                             viewModelScope.launch(Dispatchers.Main) {
                                 snackMessageService.displaySnackBar("Edited successful")
-                                dataExchangeService.put(
+                                exchangeInfoService.put(
                                     MyMeetingDetailViewModel::class.java.name,
                                     myCustomMeetingObj!!
                                 )

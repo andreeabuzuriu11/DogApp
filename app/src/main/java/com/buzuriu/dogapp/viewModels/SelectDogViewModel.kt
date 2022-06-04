@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import com.buzuriu.dogapp.adapters.DogNameAdapter
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.utils.LocalDBItems
 import java.util.*
 
 class SelectDogViewModel : BaseViewModel() {
@@ -13,7 +14,7 @@ class SelectDogViewModel : BaseViewModel() {
     init {
         initDogs()
 
-        val dogName = dataExchangeService.get<String>(this::class.qualifiedName!!)
+        val dogName = exchangeInfoService.get<String>(this::class.qualifiedName!!)
         if (dogName != null) {
             val dog = dogsList.find { x -> x.name == dogName }
             selectDog(dog!!)
@@ -21,7 +22,7 @@ class SelectDogViewModel : BaseViewModel() {
     }
 
     private fun initDogs() {
-        dogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!
+        dogsList = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)!!
         dogNameAdapter = DogNameAdapter(dogsList, this)
     }
 
@@ -30,7 +31,7 @@ class SelectDogViewModel : BaseViewModel() {
             snackMessageService.displaySnackBar("Please select a dog")
             return
         }
-        dataExchangeService.put(AddMeetingViewModel::class.java.name, selectedDog!!)
+        exchangeInfoService.put(AddMeetingViewModel::class.java.name, selectedDog!!)
         close()
     }
 

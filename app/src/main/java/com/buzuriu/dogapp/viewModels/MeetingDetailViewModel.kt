@@ -1,10 +1,7 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.ParticipantObj
@@ -23,7 +20,7 @@ class MeetingDetailViewModel : BaseViewModel() {
 
     init {
         myCustomMeetingObj.value =
-            dataExchangeService.get<MyCustomMeetingObj>(this::class.java.name)
+            exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name)
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(myCustomMeetingObj.value?.meetingObj?.location!!)
 
@@ -35,7 +32,7 @@ class MeetingDetailViewModel : BaseViewModel() {
     override fun onResume() {
         super.onResume()
 
-        val selectedDog = dataExchangeService.get<DogObj>(this::class.qualifiedName!!)
+        val selectedDog = exchangeInfoService.get<DogObj>(this::class.qualifiedName!!)
         if (selectedDog != null) {
             myDog.value = selectedDog!!
         }
@@ -66,7 +63,7 @@ class MeetingDetailViewModel : BaseViewModel() {
     }
 
     fun changeDog() {
-        dataExchangeService.put(
+        exchangeInfoService.put(
             SelectDogForJoinMeetViewModel::class.java.name,
             myCustomMeetingObj.value!!
         )

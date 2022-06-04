@@ -4,10 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
-import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.UserInfo
+import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectDogFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
@@ -22,11 +20,12 @@ import java.util.*
 
 class AddMeetingViewModel : BaseViewModel() {
 
+    private var meetingInUtc: Calendar = Calendar.getInstance()
+
     var dog = MutableLiveData<DogObj>()
     var datePickerCalendar = MutableLiveData<Calendar>()
     var timePickerCalendar = MutableLiveData<Calendar>()
     var position = MutableLiveData<LatLng>()
-    private var meetingInUtc: Calendar = Calendar.getInstance()
     var location = GeoPoint(0.0, 0.0)
 
     init {
@@ -34,11 +33,11 @@ class AddMeetingViewModel : BaseViewModel() {
         timePickerCalendar.value = Calendar.getInstance()
 
         if (doesUserHaveOnlyOneDog())
-            dog.value = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")?.get(0)
+            dog.value = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)?.get(0)
     }
 
     override fun onResume() {
-        val selectedDog = dataExchangeService.get<DogObj>(this::class.qualifiedName!!)
+        val selectedDog = exchangeInfoService.get<DogObj>(this::class.qualifiedName!!)
         if (selectedDog != null) {
             dog.value = selectedDog!!
         }
@@ -52,7 +51,7 @@ class AddMeetingViewModel : BaseViewModel() {
             SelectDogFragment::class.qualifiedName
         )
         if (!dog.value?.name.isNullOrEmpty())
-            dataExchangeService.put(
+            exchangeInfoService.put(
                 SelectDogViewModel::class.qualifiedName!!,
                 dog.value?.name.toString()
             )
@@ -65,11 +64,11 @@ class AddMeetingViewModel : BaseViewModel() {
         if (!isDogSelected())
             return
 
-        val userGender = localDatabaseService.get<UserInfo>("currentUser")!!.gender
+        val userGender = localDatabaseService.get<UserObj>(LocalDBItems.currentUser)!!.gender
 
         val meetingUid = StringUtils.getRandomUID()
 
-        ShowLoadingView(true)
+        showLoadingView(true)
 
         val newMeeting = MeetingObj(
             meetingUid, meetingInUtc.timeInMillis, location, dog.value!!.uid, currentUser!!.uid,
@@ -78,13 +77,13 @@ class AddMeetingViewModel : BaseViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            databaseService.storeMeetingInfo(meetingUid, newMeeting, object : IOnCompleteListener {
+            databaseService.storeMeeting(meetingUid, newMeeting, object : IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
 
                     if (successful) {
                         viewModelScope.launch(Dispatchers.Main) {
                             snackMessageService.displaySnackBar(R.string.added_success_message_meeting)
-                            dataExchangeService.put(MyMeetingsViewModel::class.java.name, true)
+                            exchangeInfoService.put(MyMeetingsViewModel::class.java.name, true)
                             addMeetingToLocalDatabase(newMeeting)
                             delay(2000)
                             navigationService.closeCurrentActivity()
@@ -97,22 +96,21 @@ class AddMeetingViewModel : BaseViewModel() {
                             delay(2000)
                         }
                     }
-
-                    ShowLoadingView(false)
+                    showLoadingView(false)
                 }
             })
         }
     }
 
     private fun addMeetingToLocalDatabase(meetingObj: MeetingObj) {
-        val user = localDatabaseService.get<UserInfo>("currentUser")!!
+        val user = localDatabaseService.get<UserObj>(LocalDBItems.currentUser)!!
         val myCustomMeetingObj = MyCustomMeetingObj(meetingObj, user, dog.value!!)
 
         val myMeetingsList =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList")
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList)
                 ?: return
         myMeetingsList.add(myCustomMeetingObj)
-        localDatabaseService.add("localMeetingsList", myMeetingsList)
+        localDatabaseService.add(LocalDBItems.localMeetingsList, myMeetingsList)
     }
 
     private fun getDateAndTimeOfMeeting() {
@@ -141,7 +139,7 @@ class AddMeetingViewModel : BaseViewModel() {
     }
 
     private fun doesUserHaveOnlyOneDog(): Boolean {
-        if (localDatabaseService.get<ArrayList<DogObj>>("localDogsList")!!.size == 1)
+        if (localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)!!.size == 1)
             return true
         return false
     }

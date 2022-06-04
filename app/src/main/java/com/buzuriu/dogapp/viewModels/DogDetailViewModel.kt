@@ -11,6 +11,7 @@ import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.ParticipantObj
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
@@ -23,19 +24,19 @@ class DogDetailViewModel : BaseViewModel() {
     var dog = MutableLiveData<DogObj>()
 
     init {
-        dog.value = dataExchangeService.get<DogObj>(this::class.java.name)!!
+        dog.value = exchangeInfoService.get<DogObj>(this::class.java.name)!!
     }
 
     override fun onResume() {
         super.onResume()
-        val editedDog = dataExchangeService.get<DogObj>(this::class.java.name)
+        val editedDog = exchangeInfoService.get<DogObj>(this::class.java.name)
         if (editedDog != null) {
             dog.value = editedDog!!
         }
     }
 
     fun editDog() {
-        dataExchangeService.put(AddDogViewModel::class.java.name, dog.value!!)
+        exchangeInfoService.put(AddDogViewModel::class.java.name, dog.value!!)
         navigationService.navigateToActivity(AddDogActivity::class.java)
     }
 
@@ -49,7 +50,7 @@ class DogDetailViewModel : BaseViewModel() {
                 override fun clicked() {
                     deleteDogFromDatabase()
                     deleteDogRelatedToUserFromDatabase()
-                    dataExchangeService.put(
+                    exchangeInfoService.put(
                         MyDogsViewModel::class.java.name,
                         true
                     ) // is refresh list needed
@@ -63,10 +64,10 @@ class DogDetailViewModel : BaseViewModel() {
                 IOnCompleteListener {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(successful: Boolean, exception: Exception?) {
-                    val allDogsList = localDatabaseService.get<ArrayList<DogObj>>("localDogsList")
+                    val allDogsList = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
                     allDogsList!!.remove(dog.value!!)
 
-                    localDatabaseService.add("localDogsList", allDogsList)
+                    localDatabaseService.add(LocalDBItems.localDogsList, allDogsList)
                     deleteMeetingRelatedToDogFromDatabase(dog.value!!.uid)
                     deleteMeetingRelatedToDogFromLocalDatabase()
                     deleteParticipantObjWhereThisDogWasAttending()
@@ -175,16 +176,16 @@ class DogDetailViewModel : BaseViewModel() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun deleteMeetingRelatedToDogFromLocalDatabase() {
         val meetingsList: ArrayList<MyCustomMeetingObj> =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>("localMeetingsList") ?: return
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList) ?: return
 
         if (meetingsList.any { it.meetingObj!!.dogUid == dog.value!!.uid }) {
             meetingsList.removeIf { x: MyCustomMeetingObj -> x.meetingObj!!.dogUid == dog.value!!.uid }
-            dataExchangeService.put(
+            exchangeInfoService.put(
                 MyMeetingsViewModel::class.java.name,
                 true
             )
         }
-        localDatabaseService.add("localMeetingsList", meetingsList)
+        localDatabaseService.add(LocalDBItems.localMeetingsList, meetingsList)
     }
 
 }

@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.FieldsItems
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.maps.model.LatLng
@@ -16,24 +18,26 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.tasks.await
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.temporal.TemporalAdjusters
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 interface IDatabaseService {
     val fireAuth: FirebaseAuth
 
-    suspend fun storeUserInfo(
+    suspend fun storeUser(
         userUid: String,
-        userInfo: UserInfo,
+        userObj: UserObj,
         onCompleteListener: IOnCompleteListener
     )
 
-    suspend fun storeDogInfo(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
+    suspend fun storeDog(userUid: String, dog: DogObj, onCompleteListener: IOnCompleteListener)
     suspend fun storeDogUidToUser(
         userUid: String,
         dogUid: String,
@@ -46,7 +50,7 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
-    suspend fun storeMeetingInfo(
+    suspend fun storeMeeting(
         meetingUid: String,
         meetingObj: MeetingObj,
         onCompleteListener: IOnCompleteListener
@@ -80,10 +84,9 @@ interface IDatabaseService {
 
     suspend fun fetchMeetingByUid(meetingUid: String): MeetingObj?
     suspend fun fetchDogByUid(dogUid: String): DogObj?
-    suspend fun fetchUserByUid(userUid: String): UserInfo?
+    suspend fun fetchUserByUid(userUid: String): UserObj?
     suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj>?
-    suspend fun fetchUserReviews(userUid: String) : ArrayList<ReviewObj>?
-    suspend fun fetchReviewsThatUserLeft(userUid: String) : ArrayList<ReviewObj>?
+    suspend fun fetchReviewsFor(field: String, userUid: String) : ArrayList<ReviewObj>?
     suspend fun fetchMeetings(
         filtersList: ArrayList<IFilterObj>,
         userUid: String
@@ -91,9 +94,9 @@ interface IDatabaseService {
 
     suspend fun fetchAllMeetingParticipants(meetingUid: String): ArrayList<ParticipantObj>?
     suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String?
-    suspend fun fetchReviewUidForUser(userThatLeftReview: String, userThatReviewIsFor: String) : String?
+
     suspend fun fetchAllOtherMeetings(userUid: String): ArrayList<MeetingObj>?
-    suspend fun fetchAllOtherPastMeetings(userUid: String) : ArrayList<MeetingObj>?
+    suspend fun fetchAllOtherPastMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchDogMeetings(dogUid: String): ArrayList<MeetingObj>?
     suspend fun fetchMeetingsByFilters(
@@ -129,8 +132,8 @@ class DatabaseService(
     private val localDatabaseService: ILocalDatabaseService
 ) : IDatabaseService {
     override val fireAuth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
-    private val userInfoCollection = "UserInfo"
-    private val dogInfoCollection = "Dog"
+    private val userCollection = "UserInfo"
+    private val dogCollection = "Dog"
     private val meetingsCollection = "Meeting"
     private val reviewCollection = "Review"
     private val meetingParticipants = "MeetingParticipants"
@@ -138,14 +141,14 @@ class DatabaseService(
     private var tasksList = ArrayList<Task<QuerySnapshot>>()
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    override suspend fun storeUserInfo(
+    override suspend fun storeUser(
         userUid: String,
-        userInfo: UserInfo,
+        userObj: UserObj,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(userInfoCollection)
+        firestore.collection(userCollection)
             .document(userUid)
-            .set(userInfo)
+            .set(userObj)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
@@ -155,9 +158,9 @@ class DatabaseService(
         dogUid: String,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(userInfoCollection)
+        firestore.collection(userCollection)
             .document(userUid)
-            .collection(dogInfoCollection)
+            .collection(dogCollection)
             .document(dogUid)
             .set({
                 userUid
@@ -179,19 +182,18 @@ class DatabaseService(
     }
 
 
-
-    override suspend fun storeDogInfo(
+    override suspend fun storeDog(
         userUid: String,
         dog: DogObj,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(dogInfoCollection)
+        firestore.collection(dogCollection)
             .document(dog.uid).set(dog)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
 
-    override suspend fun storeMeetingInfo(
+    override suspend fun storeMeeting(
         meetingUid: String,
         meetingObj: MeetingObj,
         onCompleteListener: IOnCompleteListener
@@ -228,7 +230,7 @@ class DatabaseService(
             .document(meetingUid)
             .collection(meetingParticipants)
             .document(participantUid)
-            .update("dogUid", newDogUid)
+            .update(FieldsItems.dogUid, newDogUid)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
@@ -262,7 +264,7 @@ class DatabaseService(
     override suspend fun fetchDogByUid(dogUid: String): DogObj? {
         var dogObj: DogObj? = null
         val documentSnapshot =
-            firestore.collection(dogInfoCollection)
+            firestore.collection(dogCollection)
                 .document(dogUid)
                 .get()
                 .await()
@@ -297,30 +299,30 @@ class DatabaseService(
         return meetingObj
     }
 
-    override suspend fun fetchUserByUid(userUid: String): UserInfo? {
-        var userInfo: UserInfo? = null
+    override suspend fun fetchUserByUid(userUid: String): UserObj? {
+        var userObj: UserObj? = null
         val documentSnapshot =
-            firestore.collection(userInfoCollection)
+            firestore.collection(userCollection)
                 .document(userUid)
                 .get()
                 .await()
 
         if (documentSnapshot != null) {
             try {
-                userInfo = documentSnapshot.toObject(UserInfo::class.java)
+                userObj = documentSnapshot.toObject(UserObj::class.java)
             } catch (e: Exception) {
                 Log.d("Error", e.message.toString())
             }
         }
 
-        return userInfo
+        return userObj
     }
 
     override suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj> {
         val dogList = ArrayList<DogObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
-        val query = firestore.collection(dogInfoCollection)
-            .whereEqualTo("owner", userUid)
+        val query = firestore.collection(dogCollection)
+            .whereEqualTo(FieldsItems.owner, userUid)
             .get()
 
         queryList.add(query)
@@ -344,14 +346,14 @@ class DatabaseService(
         return dogList
     }
 
-    //TODO make a function out of these 2
-    override suspend fun fetchUserReviews(
+    override suspend fun fetchReviewsFor(
+        field: String,
         userUid: String
     ): ArrayList<ReviewObj> {
         val reviewList = ArrayList<ReviewObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(reviewCollection)
-            .whereEqualTo("userThatReviewIsFor", userUid)
+            .whereEqualTo(field, userUid)
             .get()
 
         queryList.add(query)
@@ -363,36 +365,6 @@ class DatabaseService(
             for (reviewDocSnapshot in it) {
                 for (querySnapshot in reviewDocSnapshot) {
                     val review = querySnapshot.toObject(ReviewObj::class.java)
-                    reviewList.add(review)
-                }
-            }
-        }
-            .addOnFailureListener { throw it }
-
-        allTasks.await()
-
-
-        return reviewList
-    }
-
-    override suspend fun fetchReviewsThatUserLeft(userUid: String): ArrayList<ReviewObj> {
-        var reviewList = ArrayList<ReviewObj>()
-        val queryList = ArrayList<Task<QuerySnapshot>>()
-        val query = firestore
-            .collection(reviewCollection)
-            .whereEqualTo("userIdThatLeftReview", userUid)
-            .get()
-
-        queryList.add(query)
-
-        val allTasks =
-            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
-
-        allTasks.addOnSuccessListener {
-            for (reviewDocSnapshot in it) {
-                for (querySnapshot in reviewDocSnapshot) {
-                    val review = querySnapshot.toObject(ReviewObj::class.java)
-
                     reviewList.add(review)
                 }
             }
@@ -463,7 +435,7 @@ class DatabaseService(
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
-            .whereEqualTo("userUid", userUid)
+            .whereEqualTo(FieldsItems.userUid, userUid)
             .get()
 
         queryList.add(query)
@@ -491,7 +463,7 @@ class DatabaseService(
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
-            .whereEqualTo("dogUid", dogUid)
+            .whereEqualTo(FieldsItems.dogUid, dogUid)
             .get()
 
         queryList.add(query)
@@ -560,11 +532,15 @@ class DatabaseService(
 
                 val localDate: LocalDate = LocalDate.now()
 
-                val startLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.FRIDAY.toString())))
-                val endLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.FRIDAY.toString())))
+                val startLocalDate =
+                    localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.FRIDAY.toString())))
+                val endLocalDate =
+                    localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.FRIDAY.toString())))
 
-                val startLong = startLocalDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
-                val endLong = endLocalDate.atTime(23,59,59).atOffset(ZoneOffset.UTC).toInstant().toEpochMilli()
+                val startLong =
+                    startLocalDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+                val endLong = endLocalDate.atTime(23, 59, 59).atOffset(ZoneOffset.UTC).toInstant()
+                    .toEpochMilli()
 
                 start = longToCalendar(startLong)!!
                 end = longToCalendar(endLong)!!
@@ -586,11 +562,15 @@ class DatabaseService(
 
                 val localDate: LocalDate = LocalDate.now()
 
-                val startLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SATURDAY.toString())))
-                val endLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SATURDAY.toString())))
+                val startLocalDate =
+                    localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SATURDAY.toString())))
+                val endLocalDate =
+                    localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SATURDAY.toString())))
 
-                val startLong = startLocalDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
-                val endLong = endLocalDate.atTime(23,59,59).atOffset(ZoneOffset.UTC).toInstant().toEpochMilli()
+                val startLong =
+                    startLocalDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+                val endLong = endLocalDate.atTime(23, 59, 59).atOffset(ZoneOffset.UTC).toInstant()
+                    .toEpochMilli()
 
                 start = longToCalendar(startLong)!!
                 end = longToCalendar(endLong)!!
@@ -612,11 +592,15 @@ class DatabaseService(
 
                 val localDate: LocalDate = LocalDate.now()
 
-                val startLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SUNDAY.toString())))
-                val endLocalDate = localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SUNDAY.toString())))
+                val startLocalDate =
+                    localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SUNDAY.toString())))
+                val endLocalDate =
+                    localDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(DayOfWeek.SUNDAY.toString())))
 
-                val startLong = startLocalDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
-                val endLong = endLocalDate.atTime(23,59,59).atOffset(ZoneOffset.UTC).toInstant().toEpochMilli()
+                val startLong =
+                    startLocalDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+                val endLong = endLocalDate.atTime(23, 59, 59).atOffset(ZoneOffset.UTC).toInstant()
+                    .toEpochMilli()
 
                 start = longToCalendar(startLong)!!
                 end = longToCalendar(endLong)!!
@@ -628,35 +612,33 @@ class DatabaseService(
             .whereLessThan("date", end.timeInMillis)
             .get()
 
-        Log.d("mytag1", "query=$query")
-
         tasksList.add(query)
     }
 
 
     private fun setDogGenderTypeQuery(filterType: IFilterObj) {
         val query = meetingsQuery!!
-            .whereEqualTo("dogGender", filterType.name)
+            .whereEqualTo(FieldsItems.dogGender, filterType.name)
             .get()
         tasksList.add(query)
     }
 
     private fun setUserGenderTypeQuery(filterType: IFilterObj) {
         val query = meetingsQuery!!
-            .whereEqualTo("userGender", filterType.name)
+            .whereEqualTo(FieldsItems.userGender, filterType.name)
             .get()
         tasksList.add(query)
     }
 
     private fun setDogBreedTypeQuery(filterType: IFilterObj) {
         val query = meetingsQuery!!
-            .whereEqualTo("dogBreed", filterType.name)
+            .whereEqualTo(FieldsItems.dogBreed, filterType.name)
             .get()
         tasksList.add(query)
     }
 
     private fun setMeetingsDistanceQuery(radiusInKM: Int) {
-        val myCurrentUserLocation = localDatabaseService.get<LatLng>("userLocation")
+        val myCurrentUserLocation = localDatabaseService.get<LatLng>(LocalDBItems.userLocation)
         if (myCurrentUserLocation == null) {
             Log.d("Error", "Current User Location is null in Local Database")
         }
@@ -672,7 +654,9 @@ class DatabaseService(
             meetingsQuery?.whereGreaterThan(
                 "location", GeoPoint(
                     bounds.first.latitude,
-                    bounds.first.longitude))!!
+                    bounds.first.longitude
+                )
+            )!!
                 .whereLessThan(
                     "location", GeoPoint(
                         bounds.second.latitude,
@@ -729,7 +713,7 @@ class DatabaseService(
 
                     if (MeetingUtils.checkFiltersAreAllAccomplished(
                             meeting, filters,
-                            localDatabaseService.get<LatLng>("userLocation")
+                            localDatabaseService.get<LatLng>(LocalDBItems.userLocation)
                         ) && !MeetingUtils.isMeetingInThePast(meeting)
                     ) {
 
@@ -797,13 +781,16 @@ class DatabaseService(
         return participantsList
     }
 
-    override suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String {
+    override suspend fun fetchUserParticipantUidForMeeting(
+        meetingUid: String,
+        userUid: String
+    ): String {
         var participantUid = String()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
             .document(meetingUid)
             .collection(meetingParticipants)
-            .whereEqualTo("userUid", userUid)
+            .whereEqualTo(FieldsItems.userUid, userUid)
             .get()
 
         queryList.add(query)
@@ -827,42 +814,11 @@ class DatabaseService(
         return participantUid
     }
 
-    override suspend fun fetchReviewUidForUser(
-        userThatLeftReview: String,
-        userThatReviewIsFor: String
-    ): String? {
-        var reviewUid: String? = null
-        val queryList = ArrayList<Task<QuerySnapshot>>()
-        val query = firestore
-            .collection(reviewCollection)
-            .whereEqualTo("userIdThatLeftReview", userThatLeftReview)
-            .whereEqualTo("userThatReviewIsFor", userThatReviewIsFor)
-            .get()
-
-        queryList.add(query)
-
-        val allTasks =
-            Tasks.whenAllSuccess<QuerySnapshot>(queryList)
-
-        allTasks.addOnSuccessListener {
-            for (dogDocSnapshot in it) {
-                for (querySnapshot in dogDocSnapshot) {
-                    reviewUid = querySnapshot.toObject(ReviewObj::class.java).uid!!
-                }
-            }
-        }
-            .addOnFailureListener { throw it }
-
-        allTasks.await()
-
-        return reviewUid
-    }
-
     override suspend fun deleteDog(
         dogUid: String,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(dogInfoCollection)
+        firestore.collection(dogCollection)
             .document(dogUid)
             .delete()
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
@@ -874,9 +830,9 @@ class DatabaseService(
         dogUid: String,
         onCompleteListener: IOnCompleteListener
     ) {
-        firestore.collection(userInfoCollection)
+        firestore.collection(userCollection)
             .document(userUid)
-            .collection(dogInfoCollection)
+            .collection(dogCollection)
             .document(dogUid)
             .delete()
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
