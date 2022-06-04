@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.views.main.ui.notifications.NotificationsViewModel" />
+            type="com.buzuriu.dogapp.views.main.ui.notifications.HistoryViewModel" />
     </data>
 
     <RelativeLayout

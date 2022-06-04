@@ -2,15 +2,11 @@ package com.buzuriu.dogapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.RatingUserCellBinding
-import com.buzuriu.dogapp.models.ReviewObj
 import com.buzuriu.dogapp.models.UserWithReview
 import com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel
-import com.buzuriu.dogapp.views.ReviewParticipantsFragment
-import com.buzuriu.dogapp.views.main.ui.notifications.NotificationsViewModel
-import kotlin.reflect.KFunction1
+
 
 class RatingUserCellAdapter(
     private var reviewUserList: ArrayList<UserWithReview>,

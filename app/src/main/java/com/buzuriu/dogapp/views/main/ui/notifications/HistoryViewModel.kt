@@ -17,7 +17,7 @@ import com.buzuriu.dogapp.views.ReviewParticipantsFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 
 @SuppressLint("NotifyDataSetChanged")
-class NotificationsViewModel : BaseViewModel() {
+class HistoryViewModel : BaseViewModel() {
 
     var reviewNotificationAdapter: ReviewNotificationAdapter?
     private var pastMeetingsUserJoinedList = ArrayList<MyCustomMeetingObj>()

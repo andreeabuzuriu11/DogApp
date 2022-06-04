@@ -8,7 +8,7 @@
             type="com.buzuriu.dogapp.models.MyCustomMeetingObj" />
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.views.main.ui.notifications.NotificationsViewModel" />
+            type="com.buzuriu.dogapp.views.main.ui.notifications.HistoryViewModel" />
     </data>
     <LinearLayout
         android:id="@+id/review_linear_layout"

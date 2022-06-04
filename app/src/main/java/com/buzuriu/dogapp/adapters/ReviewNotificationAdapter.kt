@@ -2,21 +2,20 @@ package com.buzuriu.dogapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.*
 import com.buzuriu.dogapp.models.IMeetingObj
 import com.buzuriu.dogapp.models.MeetingSectionObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.services.FirebaseAuthService
-import com.buzuriu.dogapp.views.main.ui.notifications.NotificationsViewModel
+import com.buzuriu.dogapp.views.main.ui.notifications.HistoryViewModel
 import com.google.firebase.auth.FirebaseUser
 import kotlin.reflect.KFunction1
 
 class ReviewNotificationAdapter(
     private var reviewNotificationList: ArrayList<IMeetingObj>,
     var selectedPastMeeting: KFunction1<MyCustomMeetingObj, Unit>,
-    var viewModel: NotificationsViewModel
+    var viewModel: HistoryViewModel
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

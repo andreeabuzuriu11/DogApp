@@ -7,15 +7,15 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.databinding.FragmentNotificationsBinding
+import com.buzuriu.dogapp.databinding.FragmentHistoryBinding
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
-class NotificationsFragment :
-    BaseBoundFragment<NotificationsViewModel, FragmentNotificationsBinding>(NotificationsViewModel::class.java) {
-    override val layoutId: Int = R.layout.fragment_notifications
-    private lateinit var currentBinding : FragmentNotificationsBinding
+class HistoryFragment :
+    BaseBoundFragment<HistoryViewModel, FragmentHistoryBinding>(HistoryViewModel::class.java) {
+    override val layoutId: Int = R.layout.fragment_history
+    private lateinit var currentBinding : FragmentHistoryBinding
 
-    override fun setupDataBinding(binding: FragmentNotificationsBinding) {
+    override fun setupDataBinding(binding: FragmentHistoryBinding) {
         binding.viewModel = mViewModel
         currentBinding = binding
     }

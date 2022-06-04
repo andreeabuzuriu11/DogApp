@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_map"
         android:name="com.buzuriu.dogapp.views.main.ui.map.MapFragment"
-        android:label="@string/title_map"
+        android:label="@string/title_around_you"
         tools:layout="@layout/fragment_map" />
 
     <fragment
@@ -24,8 +24,8 @@
         tools:layout="@layout/fragment_my_meetings" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.buzuriu.dogapp.views.main.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_history"
+        android:name="com.buzuriu.dogapp.views.main.ui.notifications.HistoryFragment"
+        android:label="@string/title_history"
+        tools:layout="@layout/fragment_history" />
 </navigation>

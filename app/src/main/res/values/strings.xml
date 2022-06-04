@@ -30,10 +30,10 @@
     <string name="err_camera_permission_needed">Please grant camera access</string>
     <string name="write_email_hint">Email address</string>
     <string name="title_activity_main8">Main8Activity</string>
-    <string name="title_map">Map</string>
+    <string name="title_around_you">Around you</string>
     <string name="title_my_dogs">My Dogs</string>
     <string name="title_my_meetings">My Meetings</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_history">History</string>
     <string name="email_missing_message">Please add an email</string>
     <string name="wrong_email_format_message">Please add a valid email</string>
     <string name="password_missing_message">Please enter a password</string>
