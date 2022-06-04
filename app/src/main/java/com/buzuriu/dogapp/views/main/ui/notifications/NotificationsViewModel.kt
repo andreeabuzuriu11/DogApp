@@ -34,22 +34,19 @@ class NotificationsViewModel : BaseViewModel() {
         if (pastMeetingsUserCreatedList.size > 0) {
             allPastMeetings.add(MeetingSectionObj(meetingsICreatedText))
             allPastMeetings.addAll(pastMeetingsUserCreatedList)
-        }
-        else
-        {
+        } else {
             allPastMeetings.add(MeetingSectionObj("Empty list of past created meetings"))
         }
 
         if (pastMeetingsUserJoinedList.size > 0) {
             allPastMeetings.add(MeetingSectionObj(meetingsIJoinText))
             allPastMeetings.addAll(pastMeetingsUserJoinedList)
-        }
-        else
-        {
+        } else {
             allPastMeetings.add(MeetingSectionObj("Empty list of past joined meetings"))
         }
 
-        reviewNotificationAdapter = ReviewNotificationAdapter(allPastMeetings, ::selectedPastMeeting, this)
+        reviewNotificationAdapter =
+            ReviewNotificationAdapter(allPastMeetings, ::selectedPastMeeting, this)
         reviewNotificationAdapter!!.notifyDataSetChanged()
     }
 
@@ -70,15 +67,11 @@ class NotificationsViewModel : BaseViewModel() {
 
     }
 
-    private fun selectedPastMeeting(myCustomMeetingObj: MyCustomMeetingObj)
-    {
-        if (isMeetingCreatedByMe(myCustomMeetingObj))
-        {
+    private fun selectedPastMeeting(myCustomMeetingObj: MyCustomMeetingObj) {
+        if (isMeetingCreatedByMe(myCustomMeetingObj)) {
             exchangeInfoService.put(MyMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
             navigationService.navigateToActivity(MyMeetingDetailActivity::class.java, false)
-        }
-        else
-        {
+        } else {
             exchangeInfoService.put(PastMeetingDetailViewModel::class.java.name, myCustomMeetingObj)
             navigationService.navigateToActivity(PastMeetingDetailActivity::class.java, false)
         }
@@ -88,8 +81,7 @@ class NotificationsViewModel : BaseViewModel() {
         return meeting.meetingObj!!.userUid == currentUser!!.uid
     }
 
-    fun openReviewParticipantsFragment(myCustomMeetingObj: MyCustomMeetingObj)
-    {
+    fun openReviewParticipantsFragment(myCustomMeetingObj: MyCustomMeetingObj) {
         exchangeInfoService.put(ReviewParticipantsViewModel::class.java.name, myCustomMeetingObj)
         navigationService.showOverlay(
             OverlayActivity::class.java,

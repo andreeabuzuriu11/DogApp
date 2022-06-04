@@ -225,6 +225,7 @@ class MapViewModel : BaseViewModel() {
         return false
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllMeetings() {
         showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -278,23 +279,29 @@ class MapViewModel : BaseViewModel() {
             viewModelScope.launch(Dispatchers.Main) {
                 pastMeetingsListUserCreated.clear()
                 pastMeetingsListUserJoined.clear()
-                for (item in list)
-                {
-                    if (item.meetingObj!!.userUid == currentUser!!.uid)
-                    {
+                for (item in list) {
+                    if (item.meetingObj!!.userUid == currentUser!!.uid) {
                         // if meeting has user uid same id as current, it means that the user created
-                            // that particular meeting
+                        // that particular meeting
                         pastMeetingsListUserCreated.add(item)
-                    }
-                    else // we should check that this user id is among the participant ids
+                    } else // we should check that this user id is among the participant ids
                     {
                         val allMeetingsUserJoined = getAllMeetingsThatUserJoined()
-                        if (allMeetingsUserJoined.contains(item))
-                            pastMeetingsListUserJoined.add(item)
+                        for (meetUserJoined in allMeetingsUserJoined) {
+                            if (meetUserJoined.meetingObj!!.uid == item.meetingObj!!.uid) {
+                                pastMeetingsListUserJoined.add(item)
+                            }
+                        }
                     }
                 }
-                localDatabaseService.add(LocalDBItems.pastMeetingsUserCreated, pastMeetingsListUserCreated)
-                localDatabaseService.add(LocalDBItems.pastMeetingsUserJoined, pastMeetingsListUserJoined)
+                localDatabaseService.add(
+                    LocalDBItems.pastMeetingsUserCreated,
+                    pastMeetingsListUserCreated
+                )
+                localDatabaseService.add(
+                    LocalDBItems.pastMeetingsUserJoined,
+                    pastMeetingsListUserJoined
+                )
             }
         }
     }
@@ -306,7 +313,7 @@ class MapViewModel : BaseViewModel() {
 
         // currentUser uid as parameter, because we have to ignore that user when searching new meetings
         val allMeetings: ArrayList<MeetingObj>? =
-            databaseService.fetchAllOtherPastMeetings(currentUser!!.uid)
+            databaseService.fetchAllPastMeetings(currentUser!!.uid)
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
@@ -324,11 +331,12 @@ class MapViewModel : BaseViewModel() {
     }
 
 
-    private suspend fun getAllReviewsThatUserLeft() : ArrayList<ReviewObj> {
+    private suspend fun getAllReviewsThatUserLeft(): ArrayList<ReviewObj> {
         val allReviewsUserHasLeft = ArrayList<ReviewObj>()
 
-        val list : ArrayList<ReviewObj>? = databaseService.fetchReviewsFor(FieldsItems.userIdThatLeftReview, currentUser!!.uid)
-        if (list!=null) {
+        val list: ArrayList<ReviewObj>? =
+            databaseService.fetchReviewsFor(FieldsItems.userIdThatLeftReview, currentUser!!.uid)
+        if (list != null) {
             for (review in list) {
                 val reviewObj = ReviewObj(
                     review.uid!!,
@@ -427,24 +435,13 @@ class MapViewModel : BaseViewModel() {
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
-                var reviews = ArrayList<ReviewObj>()
-                reviews = fetchUserReviews(meeting.userUid!!)!!
-                if (reviews != null)
-                {
-                    val meanOfReviews =  getMeanOfReviews(reviews)
+                val reviews = fetchUserReviews(meeting.userUid!!)!!
+                val meanOfReviews = getMeanOfReviews(reviews)
 
-                    if (user != null && dog != null) {
-                        user.rating = meanOfReviews
-                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
-                        allCustomMeetings.add(meetingObj)
-                    }
-                }
-                else
-                {
-                    if (user != null && dog != null) {
-                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
-                        allCustomMeetings.add(meetingObj)
-                    }
+                if (user != null && dog != null) {
+                    user.rating = meanOfReviews
+                    val meetingObj = MyCustomMeetingObj(meeting, user, dog)
+                    allCustomMeetings.add(meetingObj)
                 }
 
 
@@ -480,17 +477,14 @@ class MapViewModel : BaseViewModel() {
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 val reviews = fetchUserReviews(meeting.userUid!!)
-                if (reviews != null)
-                {
-                    val meanOfReviews =  getMeanOfReviews(reviews)
+                if (reviews != null) {
+                    val meanOfReviews = getMeanOfReviews(reviews)
                     user!!.rating = meanOfReviews
-                    if (user != null && dog != null) {
+                    if (dog != null) {
                         val meetingObj = MyCustomMeetingObj(meeting, user, dog)
                         allCustomMeetings.add(meetingObj)
                     }
-                }
-                else
-                {
+                } else {
                     if (user != null && dog != null) {
                         val meetingObj = MyCustomMeetingObj(meeting, user, dog)
                         allCustomMeetings.add(meetingObj)
