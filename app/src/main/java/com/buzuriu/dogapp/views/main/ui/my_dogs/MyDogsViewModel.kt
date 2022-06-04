@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.views.main.ui.my_dogs
 import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.DogAdapter
+import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.viewModels.BaseViewModel
@@ -61,6 +62,7 @@ class MyDogsViewModel : BaseViewModel() {
 
     fun addDog() {
         navigationService.navigateToActivity(AddDogActivity::class.java, false)
+        navigationService.navigateToActivity(AddDogActivity::class.java, false)
     }
 
     fun goToAccountDetails() {
@@ -68,9 +70,18 @@ class MyDogsViewModel : BaseViewModel() {
     }
 
     fun logout() {
-        firebaseAuthService.logout()
-        localDatabaseService.clear()
-        navigationService.navigateToActivity(LoginActivity::class.java, true)
+        alertMessageService.displayAlertDialog(
+            "Logout?",
+            "Are you sure you want to do that?",
+            "Logout",
+            object :
+                IClickListener {
+                override fun clicked() {
+                    firebaseAuthService.logout()
+                    localDatabaseService.clear()
+                    navigationService.navigateToActivity(LoginActivity::class.java, true)
+                }
+            })
     }
 
 }

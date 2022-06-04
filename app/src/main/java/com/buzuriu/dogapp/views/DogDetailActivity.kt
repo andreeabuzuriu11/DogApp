@@ -17,7 +17,7 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_edit, menu)
+        menuInflater.inflate(R.menu.menu_edit_and_delete, menu)
         return true
     }
 

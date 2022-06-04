@@ -30,10 +30,6 @@ class AccountDetailActivity :
             mViewModel.editUser()
             return true
         }
-        if (id == R.id.delete) {
-            // mViewModel.deleteUser()
-            return true
-        }
         return super.onOptionsItemSelected(item)
     }
 }
