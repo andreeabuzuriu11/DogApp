@@ -306,7 +306,6 @@ class AddDogViewModel : BaseViewModel() {
 
                                 if (successful) {
                                     viewModelScope.launch(Dispatchers.Main) {
-                                        snackMessageService.displaySnackBar("All meetings have been updated with the new info")
                                         delay(2000)
                                     }
                                 } else {

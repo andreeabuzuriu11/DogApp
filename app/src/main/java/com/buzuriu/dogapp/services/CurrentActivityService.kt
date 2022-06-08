@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference
 
 interface ICurrentActivityService {
     fun initWithApplication(application: Application)
-    var activity: Activity?
+    val activity: Activity?
 }
 
 class CurrentActivityService : ICurrentActivityService {
@@ -18,7 +18,7 @@ class CurrentActivityService : ICurrentActivityService {
         application.registerActivityLifecycleCallbacks(activityLifecycleListener)
     }
 
-    override var activity: Activity? = null
+    override val activity: Activity?
         get() {
             return activityLifecycleListener.activity
         }

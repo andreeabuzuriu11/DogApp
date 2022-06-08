@@ -77,9 +77,9 @@ class MyDogsViewModel : BaseViewModel() {
             object :
                 IClickListener {
                 override fun clicked() {
-                    firebaseAuthService.logout()
                     localDatabaseService.clear()
                     navigationService.navigateToActivity(LoginActivity::class.java, true)
+                    firebaseAuthService.logout()
                 }
             })
     }

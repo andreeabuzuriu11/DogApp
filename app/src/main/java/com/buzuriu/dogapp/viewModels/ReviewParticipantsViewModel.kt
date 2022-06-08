@@ -51,6 +51,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                                     )
                                     delay(2000)
 
+
                                 }
                             } else {
                                 viewModelScope.launch(Dispatchers.Main) {
@@ -107,6 +108,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
             newReviewObj!!.numberOfStars = newNumberOfStars
             listOfReviews.add(newReviewObj)
         }
+        ratingUserCellAdapter!!.notifyDataSetChanged()
     }
 
     private fun didCurrentUserAlreadyReviewUser(userUid: String): ReviewObj? {
