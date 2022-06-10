@@ -42,7 +42,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:timePickerMode="spinner"
-                        cb_getTime="@={viewModel.timePickerCalendar}"/>
+                        timeSetBinding="@={viewModel.timePickerCalendar}"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                         android:layout_weight="4"
                         android:calendarViewShown="false"
                         android:datePickerMode="spinner"
-                        cb_getDate="@={viewModel.datePickerCalendar}"/>
+                        dateSetBinding="@={viewModel.datePickerCalendar}"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                     <com.buzuriu.dogapp.components.MapWithPin
                         android:id="@+id/map_with_pin"
                         android:layout_width="match_parent"
-                        cb_getPosition = "@={viewModel.myLatLng}"
+                        latLngMapBinding = "@={viewModel.myLatLng}"
                         android:layout_height="300dp" />
 
                 </LinearLayout>

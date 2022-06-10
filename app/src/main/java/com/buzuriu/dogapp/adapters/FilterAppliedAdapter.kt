@@ -34,7 +34,6 @@ class FilterAppliedAdapter(
         fun bind(item: IFilterObj) {
             applicationBinding.filterItem = item
             applicationBinding.discardFilter.setOnClickListener {
-                Log.d("debug", "ajunge aici")
                 viewModel.discardFilter(item)
             }
         }

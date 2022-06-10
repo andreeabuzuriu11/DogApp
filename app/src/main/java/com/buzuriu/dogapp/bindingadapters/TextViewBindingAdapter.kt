@@ -8,14 +8,14 @@ import com.buzuriu.dogapp.utils.DateUtils
 
 object TextViewBindingAdapter {
     @TargetApi(Build.VERSION_CODES.M)
-    @BindingAdapter("cb_meetingDate")
+    @BindingAdapter("meetingDateBinding")
     @JvmStatic
     fun TextView.setMeetingDateText(date: Long) {
         this.text = DateUtils.getDateString(date)
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    @BindingAdapter("cb_meetingTime")
+    @BindingAdapter("meetingTimeBinding")
     @JvmStatic
     fun TextView.setMeetingTimeText(date: Long) {
         this.text = DateUtils.getTimeString(date)

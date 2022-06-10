@@ -31,7 +31,7 @@ class SelectBreedFragment : BaseBoundFragment<SelectBreedViewModel, FragmentSele
             activity,
             RecyclerView.VERTICAL,
             false
-        )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        )
         recyclerView.adapter = mViewModel.breedAdapter
     }
 

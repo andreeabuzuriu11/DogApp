@@ -275,7 +275,7 @@
 
                         <TextView
                             android:id="@+id/meeting_date"
-                            cb_meetingDate="@{viewModel.pastMeeting.meetingObj.date}"
+                            meetingDateBinding="@{viewModel.pastMeeting.meetingObj.date}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/date"
@@ -304,7 +304,7 @@
 
                         <TextView
                             android:id="@+id/meeting_time"
-                            cb_meetingTime="@{viewModel.pastMeeting.meetingObj.date}"
+                            meetingTimeBinding="@{viewModel.pastMeeting.meetingObj.date}"
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
                             android:hint="@string/time"

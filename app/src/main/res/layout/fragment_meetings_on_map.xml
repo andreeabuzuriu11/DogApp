@@ -43,7 +43,7 @@
 
                 <com.buzuriu.dogapp.components.DistanceSeekBar
                     android:id="@+id/distance_seek_bar"
-                    cb_progress="@={viewModel.progress}"
+                    sBProgressBinding="@={viewModel.progress}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/map" />

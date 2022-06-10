@@ -23,25 +23,25 @@ class FilterMeetingsFragment :
     }
 
     private fun setupRecyclerView() {
-        val recyclerView = currentBinding.filterMeetingsByTime
-        recyclerView.layoutManager =
-            GridLayoutManager(activity, 3)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView.adapter = mViewModel.filterAdapterTime
+        val recyclerViewTime = currentBinding.filterMeetingsByTime
+        recyclerViewTime.layoutManager =
+            GridLayoutManager(activity, 3)
+        recyclerViewTime.adapter = mViewModel.filterAdapterTime
 
-        val recyclerView2 = currentBinding.filterDogsByGender
-        recyclerView2.layoutManager =
-            GridLayoutManager(activity, 3)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView2.adapter = mViewModel.filterAdapterDogGender
+        val recyclerViewDogGender = currentBinding.filterDogsByGender
+        recyclerViewDogGender.layoutManager =
+            GridLayoutManager(activity, 3)
+        recyclerViewDogGender.adapter = mViewModel.filterAdapterDogGender
 
-        val recyclerView3 = currentBinding.filterDogsByBreed
-        recyclerView3.layoutManager =
-            GridLayoutManager(activity, 3)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView3.adapter = mViewModel.filterAdapterDogBreed
+        val recyclerViewDogBreed = currentBinding.filterDogsByBreed
+        recyclerViewDogBreed.layoutManager =
+            GridLayoutManager(activity, 3)
+        recyclerViewDogBreed.adapter = mViewModel.filterAdapterDogBreed
 
-        val recyclerView4 = currentBinding.filterUsersByGender
-        recyclerView4.layoutManager =
-            GridLayoutManager(activity, 3)//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView4.adapter = mViewModel.filterAdapterUserGender
+        val recyclerViewUserGender = currentBinding.filterUsersByGender
+        recyclerViewUserGender.layoutManager =
+            GridLayoutManager(activity, 3)
+        recyclerViewUserGender.adapter = mViewModel.filterAdapterUserGender
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

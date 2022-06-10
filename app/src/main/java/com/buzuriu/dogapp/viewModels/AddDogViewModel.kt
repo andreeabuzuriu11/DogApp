@@ -17,6 +17,7 @@ import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
+import com.buzuriu.dogapp.views.DogDetailActivity
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
@@ -132,7 +133,7 @@ class AddDogViewModel : BaseViewModel() {
                             if (activityResult.resultCode == Activity.RESULT_OK) {
                                 val imageUri = activityResult.data?.data as Uri
                                 dogBitmapImage.value =
-                                    ImageUtils.getBitmap(activityService.activity!!, imageUri)
+                                    ImageUtils.convertToBitmap(activityService.activity!!, imageUri)
                             }
                         }
                     })
@@ -225,7 +226,6 @@ class AddDogViewModel : BaseViewModel() {
 
                                                         delay(2000)
                                                         navigationService.closeCurrentActivity()
-
                                                     }
                                                 } else {
                                                     viewModelScope.launch(Dispatchers.Main) {
@@ -329,7 +329,7 @@ class AddDogViewModel : BaseViewModel() {
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
-            OverlayActivity.fragmentClassNameParam,
+            LocalDBItems.fragmentName,
             SelectBreedFragment::class.qualifiedName
         )
         if (!breed.value.isNullOrEmpty())

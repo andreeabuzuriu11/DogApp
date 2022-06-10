@@ -72,7 +72,6 @@ class MeetingsOnMapFragment :
 
         getLocation()
 
-        //set observable
         try {
             mViewModel.progress.observe(requireActivity(), Observer {
                 drawCircle(LatLng(latitude, longitude), it.toDouble() * 1000)

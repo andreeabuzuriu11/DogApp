@@ -72,11 +72,9 @@ class MapWithPin : FrameLayout, OnMapReadyCallback, DefaultLifecycleObserver {
             val locationListener = object : LocationListener {
                 @TargetApi(Build.VERSION_CODES.M)
                 override fun onLocationChanged(p0: Location) {
-
                     mapPosition = LatLng(p0.latitude, p0.longitude)
                     setCameraPosition(mapPosition!!)
                     locationManager!!.removeUpdates(this)
-                    //now map is ready to show current position
                 }
 
                 override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {

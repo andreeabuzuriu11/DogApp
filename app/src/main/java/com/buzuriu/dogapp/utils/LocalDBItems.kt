@@ -12,5 +12,7 @@ class LocalDBItems {
         var reviewsUserLeft = "reviewsUserLeft"
         var pastMeetingsUserCreated = "pastMeetingsUserCreated"
         var pastMeetingsUserJoined = "pastMeetingsUserJoined"
+        var fragmentName = "fragmentName"
+        var mapBundle = "MapBundle"
     }
 }

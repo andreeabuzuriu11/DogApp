@@ -21,25 +21,19 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_margin="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/relativeLayout1"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="@string/name"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/user_name"
@@ -50,18 +44,29 @@
                             android:text="@={viewModel.user.name}"
                             android:textSize="20sp" />
 
-                    </LinearLayout>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="@string/name"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="100dp"
-                        android:background="@color/light_grey" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/user_phone"
+                            android:layout_width="230dp"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/phone"
+                            android:padding="10dp"
+                            android:text="@={viewModel.user.phone}"
+                            android:textSize="20sp" />
 
                         <TextView
                             android:layout_width="100dp"
@@ -70,37 +75,12 @@
                             android:text="@string/phone"
                             android:textSize="20sp"
                             android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/user_phone"
-                            android:layout_width="230dp"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/phone"
-                            android:text="@={viewModel.user.phone}"
-                            android:padding="10dp"
-                            android:textSize="20sp" />
                     </LinearLayout>
-
-
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="100dp"
-                        android:background="@color/light_grey" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:padding="10dp"
-                            android:text="Gender"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
 
                         <RadioGroup
                             android:layout_width="match_parent"
@@ -124,8 +104,28 @@
                                 android:text="@string/female_gender"
                                 android:textAlignment="textEnd" />
                         </RadioGroup>
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Gender"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="100dp"
+                        android:background="@color/light_grey" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="100dp"
+                        android:background="@color/light_grey" />
 
 
                 </LinearLayout>

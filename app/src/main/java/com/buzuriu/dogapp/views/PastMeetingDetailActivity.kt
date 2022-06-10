@@ -39,17 +39,17 @@ class PastMeetingDetailActivity : BaseBoundActivity<
     }
 
     override fun onMapReady(p0: GoogleMap) {
-        val coords =
+        val latLng =
             LatLng(mViewModel.myLatLng.value!!.latitude, mViewModel.myLatLng.value!!.longitude)
         p0.addMarker(
             MarkerOptions()
-                .position(coords)
+                .position(latLng)
                 .title("This is the meeting point")
         )
 
         p0.setMinZoomPreference(10.0f)
         p0.setMaxZoomPreference(14.0f)
-        p0.moveCamera(CameraUpdateFactory.newLatLng(coords))
+        p0.moveCamera(CameraUpdateFactory.newLatLng(latLng))
     }
 
     private fun initParticipantList() {

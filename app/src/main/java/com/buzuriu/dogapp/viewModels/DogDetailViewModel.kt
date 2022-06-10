@@ -37,7 +37,7 @@ class DogDetailViewModel : BaseViewModel() {
 
     fun editDog() {
         exchangeInfoService.put(AddDogViewModel::class.java.name, dog.value!!)
-        navigationService.navigateToActivity(AddDogActivity::class.java)
+        navigationService.navigateToActivity(AddDogActivity::class.java, false)
     }
 
     fun deleteDog() {

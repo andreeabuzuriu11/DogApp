@@ -12,7 +12,7 @@ import com.buzuriu.dogapp.viewModels.BaseViewModel
 
 abstract class BaseFragment<out T : BaseViewModel>(vmClass: Class<T>) : Fragment() {
 
-    val mViewModel by lazy { ViewModelProvider(this).get(vmClass) }
+    val mViewModel by lazy { ViewModelProvider(this)[vmClass] }
 
     protected abstract val layoutId: Int
 

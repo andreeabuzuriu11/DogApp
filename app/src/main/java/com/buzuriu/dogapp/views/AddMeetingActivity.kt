@@ -8,16 +8,14 @@ import androidx.annotation.RequiresApi
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.components.MapWithPin
 import com.buzuriu.dogapp.databinding.ActivityAddMeetingBinding
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.viewModels.AddMeetingViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
 
 class AddMeetingActivity :
     BaseBoundActivity<AddMeetingViewModel, ActivityAddMeetingBinding>(AddMeetingViewModel::class.java) {
 
-
     override val layoutId: Int = R.layout.activity_add_meeting
-
-    private val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
     var mapView: MapWithPin? = null
 
     override fun setupDataBinding(binding: ActivityAddMeetingBinding) {
@@ -33,9 +31,8 @@ class AddMeetingActivity :
         var mapViewBundle: Bundle? = null
 
         if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY)
+            mapViewBundle = savedInstanceState.getBundle(LocalDBItems.mapBundle)
         }
-
 
         mapView = findViewById(R.id.map_with_pin)
         mapView!!.setMapBundle(mapViewBundle)
@@ -44,12 +41,12 @@ class AddMeetingActivity :
     }
 
     private fun restrictDatePicker() {
-        var datePicker: DatePicker = this.findViewById(R.id.date_picker)
+        val datePicker: DatePicker = this.findViewById(R.id.date_picker)
         datePicker.minDate = System.currentTimeMillis() - 1000
     }
 
     private fun set24HourFormat() {
-        var timePicker: TimePicker = this.findViewById(R.id.timePicker)
+        val timePicker: TimePicker = this.findViewById(R.id.timePicker)
         timePicker.setIs24HourView(true)
     }
 

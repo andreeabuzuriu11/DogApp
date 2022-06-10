@@ -32,10 +32,8 @@ class BreedAdapter(
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(item: BreedObj) {
             applicationBinding.breedItem = item
-            if (viewModel != null) {
-                applicationBinding.breedCellLayout.setOnClickListener {
-                    viewModel?.selectBreed(item)
-                }
+            applicationBinding.breedCellLayout.setOnClickListener {
+                viewModel?.selectBreed(item)
             }
         }
     }

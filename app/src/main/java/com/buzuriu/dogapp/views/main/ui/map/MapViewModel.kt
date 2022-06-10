@@ -47,7 +47,13 @@ class MapViewModel : BaseViewModel() {
 
         viewModelScope.launch {
             fetchAllMeetings()
+        }
+
+        viewModelScope.launch {
             fetchAllPastMeetings()
+        }
+
+        viewModelScope.launch {
             fetchAllReviewsUserLeft()
         }
     }
@@ -91,7 +97,7 @@ class MapViewModel : BaseViewModel() {
                 navigationService.showOverlay(
                     OverlayActivity::class.java,
                     false,
-                    OverlayActivity.fragmentClassNameParam,
+                    LocalDBItems.fragmentName,
                     SelectDogForJoinMeetFragment::class.qualifiedName
                 )
 
@@ -397,7 +403,7 @@ class MapViewModel : BaseViewModel() {
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
-            OverlayActivity.fragmentClassNameParam,
+            LocalDBItems.fragmentName,
             FilterMeetingsFragment::class.qualifiedName
         )
     }
@@ -411,7 +417,7 @@ class MapViewModel : BaseViewModel() {
                 navigationService.showOverlay(
                     OverlayActivity::class.java,
                     false,
-                    OverlayActivity.fragmentClassNameParam,
+                    LocalDBItems.fragmentName,
                     MeetingsOnMapFragment::class.qualifiedName
                 )
             } else {

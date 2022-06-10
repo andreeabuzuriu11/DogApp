@@ -9,7 +9,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 
-object SpinnerViewBindingAdapter {
+object SpinnerBindingAdapter {
     @BindingAdapter("cb_entries")
     @JvmStatic
     fun Spinner.setEntries(entries: List<Any>?) {

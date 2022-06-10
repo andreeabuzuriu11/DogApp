@@ -5,6 +5,5 @@ class FilterByDogBreedObj : IFilterObj {
         title: String, isSelected:
         Boolean
     ) :
-            super(title, isSelected) {
-    }
+            super(title, isSelected)
 }

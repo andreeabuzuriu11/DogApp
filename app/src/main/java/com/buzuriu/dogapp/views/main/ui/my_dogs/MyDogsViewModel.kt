@@ -62,7 +62,6 @@ class MyDogsViewModel : BaseViewModel() {
 
     fun addDog() {
         navigationService.navigateToActivity(AddDogActivity::class.java, false)
-        navigationService.navigateToActivity(AddDogActivity::class.java, false)
     }
 
     fun goToAccountDetails() {

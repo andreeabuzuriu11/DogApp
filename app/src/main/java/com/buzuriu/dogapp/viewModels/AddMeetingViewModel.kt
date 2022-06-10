@@ -47,7 +47,7 @@ class AddMeetingViewModel : BaseViewModel() {
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
-            OverlayActivity.fragmentClassNameParam,
+            LocalDBItems.fragmentName,
             SelectDogFragment::class.qualifiedName
         )
         if (!dog.value?.name.isNullOrEmpty())

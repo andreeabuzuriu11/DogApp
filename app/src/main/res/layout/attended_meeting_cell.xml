@@ -72,7 +72,7 @@
                         android:textAlignment="center"
                         android:layout_gravity="center"
                         android:textSize="@dimen/normal_size"
-                        cb_meetingDate = "@{meeting.meetingObj.date}"
+                        meetingDateBinding= "@{meeting.meetingObj.date}"
                         />
                     <View
                         android:id="@+id/innerLine"
@@ -87,7 +87,7 @@
                         android:layout_gravity="center"
                         android:textSize="@dimen/normal_size"
                         android:layout_height="wrap_content"
-                        cb_meetingTime  = "@{meeting.meetingObj.date}"/>
+                        meetingTimeBinding= "@{meeting.meetingObj.date}"/>
 
                 </LinearLayout>
 

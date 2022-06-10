@@ -9,7 +9,7 @@ import com.buzuriu.dogapp.components.DistanceSeekBar
 
 object DistanceSeekBarBindingAdapter {
 
-    @BindingAdapter("cb_progressAttrChanged")
+    @BindingAdapter("sBProgressBindingAttrChanged")
     @JvmStatic
     fun DistanceSeekBar.setListener(listener: InverseBindingListener?) {
         val seekBar = findViewById<SeekBar>(R.id.my_custom_seekbar)
@@ -35,15 +35,15 @@ object DistanceSeekBarBindingAdapter {
 
     }
 
-    @BindingAdapter("cb_progress")
+    @BindingAdapter("sBProgressBinding")
     @JvmStatic
-    fun DistanceSeekBar.setProgress(value: Int) {
-        this.setProgress(value as Int)
+    fun DistanceSeekBar.setProgress(noOfKilometers: Int) {
+        this.setProgress(noOfKilometers)
     }
 
-    @InverseBindingAdapter(attribute = "cb_progress")
+    @InverseBindingAdapter(attribute = "sBProgressBinding")
     @JvmStatic
-    fun DistanceSeekBar.getProgress(): Int? {
+    fun DistanceSeekBar.getProgress(): Int {
         return this.getProgress()
     }
 }

@@ -9,21 +9,21 @@ import com.buzuriu.dogapp.listeners.IGetLocationListener
 import com.google.android.gms.maps.model.LatLng
 
 object MapBindingAdapter {
-    @BindingAdapter("cb_getPositionAttrChanged")
+    @BindingAdapter("latLngMapBindingAttrChanged")
     @JvmStatic
     fun MapWithPin.setListener(listener: InverseBindingListener?) {
         if (listener != null) {
             this.getLocationListener =
                 (object : IGetLocationListener {
-                    override fun getLocation(coords: LatLng?) {
-                        mapPosition = coords
+                    override fun getLocation(latLng: LatLng?) {
+                        mapPosition = latLng
                         listener.onChange()
                     }
                 })
         }
     }
 
-    @BindingAdapter("cb_getPosition")
+    @BindingAdapter("latLngMapBinding")
     @JvmStatic
     fun MapWithPin.setMyPosition(position: LatLng?) {
         if (position != null) {
@@ -31,7 +31,7 @@ object MapBindingAdapter {
         }
     }
 
-    @InverseBindingAdapter(attribute = "cb_getPosition")
+    @InverseBindingAdapter(attribute = "latLngMapBinding")
     @JvmStatic
     fun MapWithPin.getMyPosition(): LatLng? {
         return this.mapPosition

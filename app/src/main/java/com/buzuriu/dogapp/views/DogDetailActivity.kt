@@ -23,7 +23,7 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here.
-        val id: Int = item.getItemId()
+        val id: Int = item.itemId
         if (id == R.id.edit) {
             mViewModel.editDog()
             return true

@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.components.MapWithPin
 import com.buzuriu.dogapp.databinding.ActivityEditMeetingBinding
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.viewModels.EditMeetingViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundActivity
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -19,7 +20,6 @@ class EditMeetingActivity : BaseBoundActivity<EditMeetingViewModel, ActivityEdit
         get() = R.layout.activity_edit_meeting
 
     var mapView: MapWithPin? = null
-    private val MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey"
 
     override fun setupDataBinding(binding: ActivityEditMeetingBinding) {
         binding.viewModel = mViewModel
@@ -31,7 +31,7 @@ class EditMeetingActivity : BaseBoundActivity<EditMeetingViewModel, ActivityEdit
         var mapViewBundle: Bundle? = null
 
         if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY)
+            mapViewBundle = savedInstanceState.getBundle(LocalDBItems.mapBundle)
         }
 
         mapView = findViewById(R.id.map_with_pin)

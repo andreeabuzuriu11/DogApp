@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.ParticipantObj
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
@@ -71,7 +72,7 @@ class MeetingDetailViewModel : BaseViewModel() {
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
-            OverlayActivity.fragmentClassNameParam,
+            LocalDBItems.fragmentName,
             SelectDogForJoinMeetFragment::class.qualifiedName
         )
     }

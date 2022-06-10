@@ -86,7 +86,7 @@ class HistoryViewModel : BaseViewModel() {
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
-            OverlayActivity.fragmentClassNameParam,
+            LocalDBItems.fragmentName,
             ReviewParticipantsFragment::class.qualifiedName
         )
     }

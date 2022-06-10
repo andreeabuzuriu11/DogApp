@@ -10,10 +10,7 @@ import com.buzuriu.dogapp.viewModels.BaseViewModel
 
 abstract class BaseActivity<out T : BaseViewModel>(vmClass: Class<T>) : AppCompatActivity() {
 
-    val mViewModel by lazy { ViewModelProvider(this).get(vmClass) }
-
-    protected open var activityTitleResourceId: Int? = null
-    protected var activitySubtitleResourceId: Int? = null
+    val mViewModel by lazy { ViewModelProvider(this)[vmClass] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         mViewModel.onCreate()
