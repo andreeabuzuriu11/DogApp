@@ -8,11 +8,11 @@ import androidx.databinding.BindingAdapter
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.enums.MeetingStateEnum
 
-object LayoutBindingAdapter {
+object RelativeLayoutBindingAdapter {
 
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     @TargetApi(Build.VERSION_CODES.M)
-    @BindingAdapter("cb_background")
+    @BindingAdapter("backgroundBinding")
     @JvmStatic
     fun RelativeLayout.setBackground(meetingStateEnum: MeetingStateEnum?) {
         if (meetingStateEnum == MeetingStateEnum.JOINED)

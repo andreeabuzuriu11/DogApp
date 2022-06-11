@@ -163,7 +163,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
-                        cb_dogImg="@{viewModel.dog}"
+                        dogImageBinding="@{viewModel.dog}"
                         android:layout_width="200dp"
                         android:layout_height="200dp"
                         android:layout_centerInParent="true"

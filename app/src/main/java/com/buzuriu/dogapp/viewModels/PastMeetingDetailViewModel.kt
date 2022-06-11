@@ -16,7 +16,6 @@ class PastMeetingDetailViewModel : BaseViewModel() {
 
     private var participantsList = ArrayList<ParticipantObj>()
 
-    var dogPlaceHolder: MutableLiveData<Drawable>
     var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
     var myLatLng = MutableLiveData<LatLng>()
     var participantsAdapter: ParticipantAdapter? = ParticipantAdapter(participantsList)
@@ -29,7 +28,6 @@ class PastMeetingDetailViewModel : BaseViewModel() {
         displayedText.value =
             "There were no other participants besides you and ${pastMeeting.value!!.user!!.name}"
 
-        dogPlaceHolder = MutableLiveData<Drawable>(getDogPlaceHolder())
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(pastMeeting.value!!.meetingObj?.location!!)
 
@@ -79,10 +77,5 @@ class PastMeetingDetailViewModel : BaseViewModel() {
         }
 
         return allParticipantsNameList
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun getDogPlaceHolder(): Drawable? {
-        return activityService.activity!!.getDrawable(R.drawable.ic_dog_svgrepo_com)
     }
 }

@@ -6,12 +6,11 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.bindingadapters.RatingBarBindingAdapter.setNumStars
 import com.buzuriu.dogapp.components.RatingBarWithNumber
 
 object RatingBarBindingAdapter {
 
-    @BindingAdapter("cb_nr_of_starsAttrChanged")
+    @BindingAdapter("numberOfStarsAttrChanged")
     @JvmStatic
     fun RatingBarWithNumber.setListener(listener: InverseBindingListener?) {
         val ratingBar = findViewById<RatingBar>(R.id.rating_bar)
@@ -31,14 +30,14 @@ object RatingBarBindingAdapter {
     }
 
 
-    @BindingAdapter("cb_nr_of_stars")
+    @BindingAdapter("numberOfStars")
     @JvmStatic
     fun RatingBarWithNumber.setNumStars(value: Float) {
         this.setText(value as Float)
         this.ratingBar?.rating = value
     }
 
-    @InverseBindingAdapter(attribute = "cb_nr_of_stars")
+    @InverseBindingAdapter(attribute = "numberOfStars")
     @JvmStatic
     fun RatingBarWithNumber.getNumOfStars(): Float? {
         return this.getNumOfStars()!!.toFloat()

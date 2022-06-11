@@ -40,7 +40,7 @@
                         android:src="@drawable/dog_image"
                         android:layout_marginRight="10dp"
                         android:layout_height="@dimen/cell_image_height"
-                        cb_dogImg="@{meeting.dog}">
+                        dogImageBinding="@{meeting.dog}">
                     </de.hdodenhof.circleimageview.CircleImageView>
 
                     <TextView

@@ -48,7 +48,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
-                        cb_dogImg="@{viewModel.myCustomMeetingObj.dog}"
+                        dogImageBinding="@{viewModel.myCustomMeetingObj.dog}"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:src="@drawable/ic_dog_svgrepo_com" />
@@ -71,7 +71,7 @@
 
                     <TextView
                         android:id="@+id/meeting_date"
-                        meetingTimeBinding="@{viewModel.myCustomMeetingObj.meetingObj.date}"
+                        meetingDateBinding="@{viewModel.myCustomMeetingObj.meetingObj.date}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/date"

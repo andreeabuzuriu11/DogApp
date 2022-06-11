@@ -91,8 +91,8 @@
                             android:id="@+id/dogImage"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
-                            cb_imageUrl="@{viewModel.dog.imageUrl}"
-                            cb_placeholder="@{@drawable/ic_dog_svgrepo_com}"
+                            imageBinding="@{viewModel.dog.imageUrl}"
+                            android:src="@drawable/ic_dog_svgrepo_com"
                             />
 
                         <Button

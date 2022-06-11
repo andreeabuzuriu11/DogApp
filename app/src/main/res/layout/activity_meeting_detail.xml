@@ -364,8 +364,8 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/dogImage"
-                            cb_imageUrl="@{viewModel.myDog.imageUrl}"
-                            cb_placeholder="@{@drawable/ic_dog_svgrepo_com}"
+                            imageBinding="@{viewModel.myDog.imageUrl}"
+                            android:src="@drawable/ic_dog_svgrepo_com"
                             android:layout_width="50dp"
                             android:layout_height="50dp" />
                     </RelativeLayout>
@@ -380,7 +380,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
-                        cb_dogImg="@{viewModel.myCustomMeetingObj.dog}"
+                        dogImageBinding="@{viewModel.myCustomMeetingObj.dog}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_centerInParent="true"

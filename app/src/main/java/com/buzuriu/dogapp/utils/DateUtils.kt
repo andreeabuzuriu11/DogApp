@@ -44,7 +44,7 @@ class DateUtils {
         fun isMeetingHappeningAtThisTime(meetingObj: MeetingObj, filterType: IFilterObj): Boolean {
             var start = Calendar.getInstance()
             var end = Calendar.getInstance()
-            var meetingCalendar = Calendar.getInstance()
+            val meetingCalendar = Calendar.getInstance()
 
             start.timeInMillis = System.currentTimeMillis()
             end.time = Calendar.getInstance().time

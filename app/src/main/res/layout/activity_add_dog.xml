@@ -56,8 +56,8 @@
 
                         <Spinner
                             android:id="@+id/spinner"
-                            cb_entries="@{viewModel.spinnerEntries}"
-                            cb_selectedValue="@={viewModel.ageString}"
+                            itemSelected="@={viewModel.ageString}"
+                            android:entries="@array/spinnerItems"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -127,9 +127,9 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
-                        cb_bitmap="@{viewModel.dogBitmapImage}"
-                        cb_imageUrl="@{viewModel.dogImageUrl}"
-                        cb_placeholder="@{@drawable/ic_dog_svgrepo_com}"
+                        bitmapBinding="@{viewModel.dogBitmapImage}"
+                        imageBinding="@{viewModel.dogImageUrl}"
+                        android:src="@drawable/ic_dog_svgrepo_com"
                         android:layout_width="130dp"
                         android:layout_height="130dp"
                         android:layout_below="@+id/addPetTextView"
@@ -150,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="@string/profile_picture_string"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
 
 

@@ -10,14 +10,12 @@ import androidx.activity.result.ActivityResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.enums.AgeEnum
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
-import com.buzuriu.dogapp.views.DogDetailActivity
 import com.buzuriu.dogapp.views.SelectBreedFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
@@ -29,7 +27,6 @@ import kotlinx.coroutines.tasks.await
 
 class AddDogViewModel : BaseViewModel() {
 
-    var spinnerEntries = listOf(AgeEnum.MONTHS.toString(), AgeEnum.YEARS.toString())
     var dogBitmapImage = MutableLiveData<Bitmap>()
     var name = MutableLiveData("")
     var breed = MutableLiveData("")

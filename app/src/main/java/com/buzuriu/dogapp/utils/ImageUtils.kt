@@ -12,10 +12,6 @@ import java.io.ByteArrayOutputStream
 
 object ImageUtils {
 
-    fun getDogPlaceholder(): Int {
-        return R.drawable.ic_dog_svgrepo_com
-    }
-
     fun getCompressedImage(image: Bitmap): ByteArray {
         val byteArrOutStream = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrOutStream)

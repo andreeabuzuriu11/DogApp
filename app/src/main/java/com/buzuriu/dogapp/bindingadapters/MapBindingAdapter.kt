@@ -25,15 +25,13 @@ object MapBindingAdapter {
 
     @BindingAdapter("latLngMapBinding")
     @JvmStatic
-    fun MapWithPin.setMyPosition(position: LatLng?) {
-        if (position != null) {
-            this.mapPosition = position
-        }
+    fun MapWithPin.setMapPosition(latLng: LatLng?) {
+            this.mapPosition = latLng
     }
 
     @InverseBindingAdapter(attribute = "latLngMapBinding")
     @JvmStatic
-    fun MapWithPin.getMyPosition(): LatLng? {
+    fun MapWithPin.getMapPosition(): LatLng? {
         return this.mapPosition
     }
 }

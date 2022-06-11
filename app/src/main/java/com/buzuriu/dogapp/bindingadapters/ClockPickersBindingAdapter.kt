@@ -17,12 +17,8 @@ object ClockPickersBindingAdapter {
         this.init(
             this.year,
             this.month,
-            this.dayOfMonth,
-            object : DatePicker.OnDateChangedListener {
-                override fun onDateChanged(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
-                    listener?.onChange()
-                }
-            })
+            this.dayOfMonth
+        ) { _, _, _, _ -> listener?.onChange() }
     }
 
     @BindingAdapter("dateSetBinding")
@@ -50,12 +46,7 @@ object ClockPickersBindingAdapter {
     @JvmStatic
     fun TimePicker.setListener(listener: InverseBindingListener?) {
         if (listener != null) {
-            this.setOnTimeChangedListener(object : TimePicker.OnTimeChangedListener {
-                override fun onTimeChanged(p0: TimePicker?, p1: Int, p2: Int) {
-                    listener.onChange()
-                }
-
-            })
+            this.setOnTimeChangedListener { _, _, _ -> listener.onChange() }
         }
     }
 

@@ -43,7 +43,7 @@
 
                 <com.buzuriu.dogapp.components.RatingBarWithNumber
                     android:id="@+id/rating_bar_with_number"
-                    cb_nr_of_stars="@={userWithReview.reviewObj.numberOfStars}"
+                    numberOfStars="@={userWithReview.reviewObj.numberOfStars}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

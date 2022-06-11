@@ -23,7 +23,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:padding="10dp"
-            cb_background="@{meetingState}"
+            backgroundBinding="@{meetingState}"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -42,7 +42,7 @@
                     android:numStars="5"
                     android:rating="3.5"
                     android:isIndicator="false"
-                    cb_nr_of_stars="@{meeting.user.rating}"
+                    numberOfStars="@{meeting.user.rating}"
                     />
 
                 <LinearLayout
@@ -54,7 +54,7 @@
                         android:src="@drawable/dog_image"
                         android:layout_marginRight="10dp"
                         android:layout_height="@dimen/cell_image_height"
-                        cb_dogImg="@{meeting.dog}">
+                        dogImageBinding="@{meeting.dog}">
                     </de.hdodenhof.circleimageview.CircleImageView>
 
                     <TextView
@@ -99,7 +99,7 @@
                         android:textSize="@dimen/normal_size"
 
                         android:layout_height="wrap_content"
-                        meetingDateBinding= "@{meeting.meetingObj.date}"/>
+                        meetingTimeBinding= "@{meeting.meetingObj.date}"/>
 
                 </LinearLayout>
 
