@@ -1,4 +1,5 @@
 package com.buzuriu.dogapp.viewModels
+
 import android.Manifest
 import android.content.Intent
 import android.util.Log
@@ -7,6 +8,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.enums.PermissionResultEnum
 import com.buzuriu.dogapp.services.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -83,74 +85,24 @@ open class BaseViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    protected suspend fun askReadExternalPermission(): Task<Boolean> {
+    suspend fun requestPermissionKind(manifestList: List<String>): Task<Boolean> {
         return Tasks.forResult(suspendCoroutine<Boolean> {
             viewModelScope.launch(Dispatchers.Main) {
-                val permissionsResult = permissionService.requestPermissionStatusAsync(
-                    listOf(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
-                    )
-                ).await()
-                var grantedCounter = 0
+                var nrOfGivenPermissions = 0
+
+                val permissionsResult =
+                    permissionService.requestPermissionStatusAsync(manifestList).await()
+
                 for (result in permissionsResult) {
-                    if (result.permissionStatus == PermissionStatus.Granted) {
-                        grantedCounter++
+                    if (result.permissionResultEnum == PermissionResultEnum.Granted) {
+                        nrOfGivenPermissions++
                     }
                 }
 
-                if (grantedCounter == permissionsResult.size) {
-                    it.resumeWith(Result.success(true))
-                } else {
+                if (nrOfGivenPermissions != permissionsResult.size) {
                     it.resumeWith(Result.success(false))
-                }
-            }
-        })
-    }
-
-    protected suspend fun askCameraPermission(): Task<Boolean> {
-        return Tasks.forResult(suspendCoroutine<Boolean> {
-            viewModelScope.launch(Dispatchers.Main) {
-                val permissionsResult = permissionService.requestPermissionStatusAsync(
-                    listOf(
-                        Manifest.permission.CAMERA
-                    )
-                ).await()
-                var grantedCounter = 0
-                for (result in permissionsResult) {
-                    if (result.permissionStatus == PermissionStatus.Granted) {
-                        grantedCounter++
-                    }
-                }
-
-                if (grantedCounter == permissionsResult.size) {
-                    it.resumeWith(Result.success(true))
                 } else {
-                    it.resumeWith(Result.success(false))
-                }
-            }
-        })
-    }
-
-    protected suspend fun askLocationPermission(): Task<Boolean> {
-        return Tasks.forResult(suspendCoroutine<Boolean> {
-            viewModelScope.launch(Dispatchers.Main) {
-                val permissionsResult = permissionService.requestPermissionStatusAsync(
-                    listOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    )
-                ).await()
-                var grantedCounter = 0
-                for (result in permissionsResult) {
-                    if (result.permissionStatus == PermissionStatus.Granted) {
-                        grantedCounter++
-                    }
-                }
-
-                if (grantedCounter == permissionsResult.size) {
                     it.resumeWith(Result.success(true))
-                } else {
-                    it.resumeWith(Result.success(false))
                 }
             }
         })

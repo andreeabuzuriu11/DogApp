@@ -8,7 +8,6 @@ import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -16,7 +15,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class SplashViewModel : BaseViewModel() {
+class ProgressBarViewModel : BaseViewModel() {
 
     init {
         if (Firebase.auth.currentUser != null) {

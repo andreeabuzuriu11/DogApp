@@ -23,7 +23,8 @@ object RatingBarBindingAdapter {
                     fromUser: Boolean
                 ) {
                     listener.onChange()
-                    textView.text = "$rating stars"
+                    val number2digits = String.format("%.2f", rating)
+                    textView.text = "$number2digits stars"
                 }
             }
         }

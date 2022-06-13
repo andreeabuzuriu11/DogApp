@@ -19,7 +19,7 @@ class MyDogsViewModel : BaseViewModel() {
 
     private var dogsList: ArrayList<DogObj> = ArrayList()
     var dogAdapter: DogAdapter?
-    var doesUserHaveAnyDog = MutableLiveData<Boolean>(false)
+    var doesUserHaveAnyDog = MutableLiveData(false)
 
     init {
         val dogsFromLocalDB = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)

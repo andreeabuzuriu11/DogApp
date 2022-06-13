@@ -1,8 +1,8 @@
 package com.buzuriu.dogapp.views.main.ui.my_meetings
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.MyMeetingAdapter
@@ -104,7 +104,7 @@ class MyMeetingsViewModel : BaseViewModel() {
         }
 
         viewModelScope.launch(Dispatchers.Main) {
-            val hasPermission = askLocationPermission().await()
+            val hasPermission = requestPermissionKind(listOf(Manifest.permission.ACCESS_FINE_LOCATION)).await()
             if (!hasPermission) {
                 snackMessageService.displaySnackBar("Location permission needed to add a meeting!")
                 return@launch

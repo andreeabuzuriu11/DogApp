@@ -2,60 +2,77 @@ package com.buzuriu.dogapp.services
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
+import com.buzuriu.dogapp.enums.PermissionResultEnum
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.suspendCoroutine
 
 interface IPermissionService {
-    suspend fun requestPermissionStatusAsync(permissions: List<String>): Task<List<PermissionResponse>>
+    suspend fun requestPermissionStatusAsync(permissionsList: List<String>): Task<List<PermissionResult>>
 
-    //needs to be called by the current activity upon  callback for this service to work properly
     fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<out String>,
+        permissionsList: Array<out String>,
         grantResults: IntArray
     )
 }
 
+data class PermissionResult(
+    val permissionChecked: String,
+    val permissionResultEnum: PermissionResultEnum
+)
+
+data class PermissionReq(
+    val partialResult: MutableList<PermissionResult>,
+    val continuation: Continuation<MutableList<PermissionResult>>
+)
+
 class PermissionService(private val activityService: ICurrentActivityService) : IPermissionService {
 
     private val requestCode: Int = 29
-    private val permissionRequests: MutableMap<Int, PermissionRequest> = mutableMapOf()
+    private val permissionRequests: MutableMap<Int, PermissionReq> = mutableMapOf()
 
-
-    override suspend fun requestPermissionStatusAsync(permissions: List<String>): Task<List<PermissionResponse>> {
+    override suspend fun requestPermissionStatusAsync(permissionsList: List<String>): Task<List<PermissionResult>> {
         val activity = activityService.activity
-            ?: throw RuntimeException("Can not find current Activity. Please make sure you instantiated and initialized CurrentActivityService")
+            ?: throw Exception("The activity is not found")
 
-        ensurePermissionDefinedInManifest(permissions)
+        checkIfPermissionIsAllowedAndroidManifest(permissionsList)
 
-        return Tasks.forResult(suspendCoroutine<MutableList<PermissionResponse>> {
-            val partialResponse: MutableList<PermissionResponse> = mutableListOf()
-            val permissionsStillNeedingGrant: MutableList<String> = mutableListOf()
+        return Tasks.forResult(suspendCoroutine<MutableList<PermissionResult>> {
 
-            for (permission in permissions) {
+            val partialResponse: MutableList<PermissionResult> = mutableListOf()
+            val permissionsListNotGivenYet: MutableList<String> = mutableListOf()
+
+            for (permission in permissionsList) {
                 val result = checkPermissionStatus(activity.applicationContext, permission)
 
-                if (result == PermissionStatus.Denied) {
-                    permissionsStillNeedingGrant.add(permission)
+                if (result == PermissionResultEnum.Granted) {
+                    // the permission has been given
+                    partialResponse.add(
+                        PermissionResult(
+                            permission,
+                            PermissionResultEnum.Granted
+                        )
+                    )
                 } else {
-                    partialResponse.add(PermissionResponse(permission, PermissionStatus.Granted))
+                    // the permission is not given yet
+                    permissionsListNotGivenYet.add(permission)
                 }
+
             }
 
-            if (permissionsStillNeedingGrant.size > 0) {
+            if (permissionsListNotGivenYet.isNotEmpty()) {
                 synchronized(this) {
-                    permissionRequests[requestCode] = PermissionRequest(partialResponse, it)
+                    permissionRequests[requestCode] = PermissionReq(partialResponse, it)
                 }
 
                 ActivityCompat.requestPermissions(
                     activity,
-                    permissionsStillNeedingGrant.toTypedArray(),
+                    permissionsListNotGivenYet.toTypedArray(),
                     requestCode
                 )
             } else {
@@ -66,86 +83,72 @@ class PermissionService(private val activityService: ICurrentActivityService) : 
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<out String>,
+        permissionsList: Array<out String>,
         grantResults: IntArray
     ) {
         val request = permissionRequests[requestCode]
+        var permissionResultEnum: PermissionResultEnum
 
         if (request != null) {
-            for (i in permissions.indices) {
-                val permissionStatus =
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) PermissionStatus.Granted else PermissionStatus.Denied
-                val permissionName = permissions[i]
 
-                request.partialResponse.add(PermissionResponse(permissionName, permissionStatus))
+            for ((index, _) in permissionsList.withIndex()) {
+                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                    permissionResultEnum = PermissionResultEnum.Granted
+                } else {
+                    permissionResultEnum = PermissionResultEnum.Denied
+                }
+
+                val permissionName = permissionsList[index]
+                request.partialResult.add(PermissionResult(permissionName, permissionResultEnum))
             }
 
             synchronized(this) {
                 permissionRequests.remove(requestCode)
             }
 
-            request.continuation.resumeWith(Result.success(request.partialResponse))
+            request.continuation.resumeWith(Result.success(request.partialResult))
+
         } else {
-            throw RuntimeException("We got response for request we never triggert. RequestCode does not match!")
+            throw Exception("We got response for request we never triggert. RequestCode does not match!")
         }
     }
 
     private fun checkPermissionStatus(
         context: Context,
-        permission: String
-    ): PermissionStatus {
-        val targetsMOrHigher = context.applicationInfo.targetSdkVersion >= Build.VERSION_CODES.M
-
-        if (targetsMOrHigher) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    permission
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return PermissionStatus.Denied
-            }
-        } else {
-            if (PermissionChecker.checkSelfPermission(
-                    context,
-                    permission
-                ) != PermissionChecker.PERMISSION_GRANTED
-            ) {
-                return PermissionStatus.Denied
-            }
-        }
-
-        return PermissionStatus.Granted
+        permissionChecked: String
+    ): PermissionResultEnum {
+        return if (ContextCompat.checkSelfPermission(
+                context,
+                permissionChecked
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            PermissionResultEnum.Denied
+        } else
+            PermissionResultEnum.Granted
     }
 
 
-    private fun ensurePermissionDefinedInManifest(permissions: List<String>) {
+    private fun checkIfPermissionIsAllowedAndroidManifest(permissionsList: List<String>) {
         val context = activityService.activity?.applicationContext
-            ?: throw RuntimeException("Can not find current Activity. Please make sure you instantiated and initialized CurrentActivityService")
+            ?: throw Exception("The activity is not found")
 
         val packageInfo = context.packageManager.getPackageInfo(
             context.packageName,
             PackageManager.GET_PERMISSIONS
         )
-        if (packageInfo != null) {
-            val manifestPermissions = packageInfo.requestedPermissions
-            for (permission in permissions) {
-                if (!manifestPermissions.contains(permission)) {
-                    throw RuntimeException("You forgot to add permission $permission to manifest.")
+        if (packageInfo == null) {
+            Log.e("ERROR", "Package is empty")
+        } else {
+            val reqPermissionsInManifest = packageInfo.requestedPermissions
+            for (manifestPerm in permissionsList) {
+                if (!reqPermissionsInManifest.contains(manifestPerm)) {
+                    throw Exception("This permission $manifestPerm is not defined in manifest, please add it")
                 }
             }
         }
+
     }
-
 }
 
-enum class PermissionStatus {
-    Denied,
-    Granted,
-}
 
-data class PermissionRequest(
-    val partialResponse: MutableList<PermissionResponse>,
-    val continuation: Continuation<MutableList<PermissionResponse>>
-)
 
-data class PermissionResponse(val permission: String, val permissionStatus: PermissionStatus)

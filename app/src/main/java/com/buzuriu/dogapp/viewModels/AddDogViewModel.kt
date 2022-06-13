@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -86,7 +87,7 @@ class AddDogViewModel : BaseViewModel() {
     private fun takeImage() {
         viewModelScope.launch(Dispatchers.Main) {
 
-            val hasPermission = askCameraPermission().await()
+            val hasPermission = requestPermissionKind(listOf(Manifest.permission.CAMERA)).await()
             if (!hasPermission) {
                 snackMessageService.displaySnackBar(R.string.err_camera_permission_needed)
                 return@launch
@@ -112,7 +113,8 @@ class AddDogViewModel : BaseViewModel() {
     private fun uploadPictureFromGallery() {
         viewModelScope.launch(Dispatchers.Main) {
 
-            val hasReadExternalPermission = askReadExternalPermission().await()
+            val hasReadExternalPermission = requestPermissionKind(listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE)).await()
             if (!hasReadExternalPermission) {
                 snackMessageService.displaySnackBar("Error permission")
                 return@launch
@@ -249,7 +251,6 @@ class AddDogViewModel : BaseViewModel() {
     fun getCurrentUser(): UserObj {
         return localDatabaseService.get<UserObj>(LocalDBItems.currentUser)!!
     }
-
 
     fun addOrEditDogToData(dog: DogObj) {
         val dogsList: ArrayList<DogObj> =

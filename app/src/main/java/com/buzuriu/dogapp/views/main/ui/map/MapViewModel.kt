@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.views.main.ui.map
 
+import android.Manifest
 import android.annotation.SuppressLint
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FilterAppliedAdapter
@@ -410,7 +411,8 @@ class MapViewModel : BaseViewModel() {
 
     fun filterMeetingsByRadiusClicked() {
         viewModelScope.launch(Dispatchers.Main) {
-            val hasLocationPermission = askLocationPermission().await()
+
+            val hasLocationPermission = requestPermissionKind(listOf(Manifest.permission.ACCESS_FINE_LOCATION)).await()
             if (hasLocationPermission) {
 
                 lastViewModel = MeetingsOnMapViewModel::class.qualifiedName

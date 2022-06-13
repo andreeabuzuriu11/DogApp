@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.viewModels.SplashViewModel
+import com.buzuriu.dogapp.viewModels.ProgressBarViewModel
 import com.buzuriu.dogapp.views.base.BaseActivity
 
-@SuppressLint("CustomSplashScreen")
-class SplashScreenActivity : BaseActivity<SplashViewModel>(SplashViewModel::class.java) {
+@SuppressLint("ProgressBar")
+class ProgressBarActivity : BaseActivity<ProgressBarViewModel>(ProgressBarViewModel::class.java) {
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        setContentView(R.layout.activity_splash_screen)
+        setContentView(R.layout.activity_progress_bar)
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())

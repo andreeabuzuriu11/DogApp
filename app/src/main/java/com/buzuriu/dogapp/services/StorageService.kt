@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.services
 
+import com.buzuriu.dogapp.utils.StringUtils
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import java.util.*
@@ -21,18 +22,18 @@ class StorageService : IStorageService {
         imageByteArray: ByteArray
     ): String {
 
-        val randomKey = UUID.randomUUID().toString()
-        var imageUrl = ""
+        var dogImageUrl : String = ""
+        val randomUUID = StringUtils.getRandomUID()
 
-        val uploadTask =
+        val uploadImageTask =
             storage.reference.child(dogImages).child(dogUid)
-                .child(randomKey).putBytes(imageByteArray)
+                .child(randomUUID).putBytes(imageByteArray)
                 .await()
 
-        uploadTask.storage.downloadUrl.addOnSuccessListener {
-            imageUrl = it.toString()
+        uploadImageTask.storage.downloadUrl.addOnSuccessListener {
+            dogImageUrl = it.toString()
         }.await()
 
-        return imageUrl
+        return dogImageUrl
     }
 }

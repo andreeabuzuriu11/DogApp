@@ -6,9 +6,9 @@
     <application
         android:name=".App"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_walking_the_dog_svgrepo_com"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/ic_walking_the_dog_svgrepo_com"
         android:supportsRtl="true"
         android:theme="@style/Theme.DogApp"
         android:usesCleartextTraffic="true"
@@ -71,7 +71,7 @@
             android:name=".views.auth.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".views.SplashScreenActivity"
+            android:name=".views.ProgressBarActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Design.NoActionBar">

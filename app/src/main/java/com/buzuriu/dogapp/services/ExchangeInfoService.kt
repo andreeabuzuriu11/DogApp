@@ -15,7 +15,7 @@ class ExchangeInfoService : IExchangeInfoService {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> get(key: String): T? {
-        var tmp = exchangeMap[key]
+        val tmp = exchangeMap[key]
 
         if (tmp != null) {
             exchangeMap.remove(key)

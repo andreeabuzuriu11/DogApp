@@ -45,13 +45,13 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
                 }
             )
         } else {
-            throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")
+            throw Exception("The activity you are trying to navigate to does not exist")
         }
     }
 
     override fun <T : Activity> showOverlay(
         activityClass: Class<T>,
-        finishCurrentActivity: Boolean,
+        finishThisActivity: Boolean,
         parameterName: String?,
         parameterValue: String?
     ) {
@@ -71,13 +71,13 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
                 Runnable {
                     activity.startActivity(intent)
 
-                    if (finishCurrentActivity) {
+                    if (finishThisActivity) {
                         activity.finish()
                     }
                 }
             )
         } else {
-            throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")
+            throw Exception("The activity you are trying to navigate to does not exist")
         }
     }
 
@@ -87,7 +87,7 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
         if (activity != null) {
             activity.finish()
         } else {
-            throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")
+            throw Exception("The activity you are trying to close does not exist")
         }
     }
 
