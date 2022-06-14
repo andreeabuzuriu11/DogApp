@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.bindingadapters
 
+import android.annotation.SuppressLint
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -7,6 +8,7 @@ import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.components.RatingBarWithNumber
+import kotlin.math.roundToInt
 
 object RatingBarBindingAdapter {
 
@@ -17,6 +19,7 @@ object RatingBarBindingAdapter {
         val textView = findViewById<TextView>(R.id.star_number_text_view)
         if (listener != null) {
             ratingBar.onRatingBarChangeListener = object : RatingBar.OnRatingBarChangeListener {
+                @SuppressLint("SetTextI18n")
                 override fun onRatingChanged(
                     ratingBar: RatingBar?,
                     rating: Float,
@@ -34,14 +37,16 @@ object RatingBarBindingAdapter {
     @BindingAdapter("numberOfStars")
     @JvmStatic
     fun RatingBarWithNumber.setNumStars(value: Float) {
-        this.setText(value as Float)
-        this.ratingBar?.rating = value
+        val doubleValue = (value * 100.0).roundToInt() / 100.0
+        this.setText(doubleValue.toFloat())
+        this.ratingBar?.rating = doubleValue.toFloat()
     }
 
     @InverseBindingAdapter(attribute = "numberOfStars")
     @JvmStatic
     fun RatingBarWithNumber.getNumOfStars(): Float? {
-        return this.getNumOfStars()!!.toFloat()
+        val doubleValue = (this.getNumOfStars()!!.toFloat() * 100.0).roundToInt() / 100.0
+        return doubleValue.toFloat()
     }
 }
 

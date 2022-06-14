@@ -185,17 +185,18 @@ class MapViewModel : BaseViewModel() {
         localDatabaseService.add(LocalDBItems.locationPoints, locationPoints)
     }
 
+
     private suspend fun getAllMeetingsThatUserJoined(): ArrayList<MyCustomMeetingObj> {
         var allMeetingsParticipants: ArrayList<ParticipantObj>
 
         for (meeting in meetingsList) {
             allMeetingsParticipants =
-                databaseService.fetchAllMeetingParticipants(meeting.meetingObj!!.uid!!)!!
+                databaseService.fetchAllMeetingParticipants(meeting.meetingObj?.uid!!)!!
             for (meet in allMeetingsParticipants)
                 if (meet.userUid == currentUser!!.uid) {
                     userJoinedMeetings.add(meeting)
                     changeStateOfMeeting(meeting)
-                    mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid!!] =
+                    mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj?.uid!!] =
                         meet
                 }
         }
@@ -229,7 +230,7 @@ class MapViewModel : BaseViewModel() {
         showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllMeetingsFromDatabase()
-            //showLoadingView(false)
+
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
                 meetingsList.addAll(list)
@@ -238,9 +239,7 @@ class MapViewModel : BaseViewModel() {
                 getAllMeetingsThatUserJoined()
                 meetingAdapter!!.notifyDataSetChanged()
                 filterAdapter!!.notifyDataSetChanged()
-
             }
-            //showLoadingView(false)
         }
     }
 
@@ -249,7 +248,6 @@ class MapViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchFilteredMeetingsFromDatabase(filtersList)
 
-           // showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
                 meetingsList.clear()
                 meetingsList.addAll(list)
@@ -260,12 +258,9 @@ class MapViewModel : BaseViewModel() {
     }
 
     private suspend fun fetchAllReviewsUserLeft() {
-        //showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = getAllReviewsThatUserLeft()
-            //showLoadingView(false)
             viewModelScope.launch(Dispatchers.Main) {
-                //showLoadingView(false)
                 userReviewsForOthers.clear()
                 userReviewsForOthers.addAll(list)
                 localDatabaseService.add(LocalDBItems.reviewsUserLeft, userReviewsForOthers)
@@ -277,7 +272,6 @@ class MapViewModel : BaseViewModel() {
 
     @SuppressLint("NotifyDataSetChanged")
     private suspend fun fetchAllPastMeetings() {
-        //showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllPastMeetingsFromDatabase()
 
@@ -291,12 +285,8 @@ class MapViewModel : BaseViewModel() {
                         pastMeetingsListUserCreated.add(item)
                     } else // we should check that this user id is among the participant ids
                     {
-                        val allMeetingsUserJoined = getAllMeetingsThatUserJoined()
-                        for (meetUserJoined in allMeetingsUserJoined) {
-                            if (meetUserJoined.meetingObj!!.uid == item.meetingObj!!.uid) {
-                                pastMeetingsListUserJoined.add(item)
-                            }
-                        }
+                        if (wasUserParticipant(item))
+                            pastMeetingsListUserJoined.add(item)
                     }
                 }
                 localDatabaseService.add(
@@ -309,7 +299,20 @@ class MapViewModel : BaseViewModel() {
                 )
             }
         }
-        //showLoadingView(false)
+    }
+
+    private suspend fun wasUserParticipant(myCustomMeetingObj: MyCustomMeetingObj): Boolean {
+        val allParticipantsList: ArrayList<ParticipantObj>? =
+            databaseService.fetchAllMeetingParticipants(myCustomMeetingObj.meetingObj?.uid!!)
+
+        if (allParticipantsList != null) {
+            for (participant in allParticipantsList) {
+                if (participant.userUid == currentUser!!.uid) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     private suspend fun fetchAllPastMeetingsFromDatabase(): ArrayList<MyCustomMeetingObj> {
@@ -412,7 +415,8 @@ class MapViewModel : BaseViewModel() {
     fun filterMeetingsByRadiusClicked() {
         viewModelScope.launch(Dispatchers.Main) {
 
-            val hasLocationPermission = requestPermissionKind(listOf(Manifest.permission.ACCESS_FINE_LOCATION)).await()
+            val hasLocationPermission =
+                requestPermissionKind(listOf(Manifest.permission.ACCESS_FINE_LOCATION)).await()
             if (hasLocationPermission) {
 
                 lastViewModel = MeetingsOnMapViewModel::class.qualifiedName
@@ -435,12 +439,17 @@ class MapViewModel : BaseViewModel() {
 
         // currentUser uid as parameter, because we have to ignore that user when searching new meetings
         val allMeetings: ArrayList<MeetingObj>? =
-            databaseService.fetchAllOtherMeetings(currentUser!!.uid, object : IOnCompleteListener {
-                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
-                    showLoadingView(false)
+            databaseService.fetchAllOtherMeetings(
+                currentUser!!.uid,
+                object : IOnCompleteListener {
+                    override fun onComplete(
+                        successful: Boolean,
+                        exception: java.lang.Exception?
+                    ) {
+                        showLoadingView(false)
 
-                }
-            })
+                    }
+                })
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
@@ -503,8 +512,6 @@ class MapViewModel : BaseViewModel() {
                         allCustomMeetings.add(meetingObj)
                     }
                 }
-
-
             }
         }
         return allCustomMeetings
