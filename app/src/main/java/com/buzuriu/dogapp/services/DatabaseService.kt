@@ -669,7 +669,7 @@ class DatabaseService(
     private fun setMeetingsDistanceQuery(radiusInKM: Int) {
         val myCurrentUserLocation = localDatabaseService.get<LatLng>(LocalDBItems.userLocation)
         if (myCurrentUserLocation == null) {
-            Log.d("Error", "Current User Location is null in Local Database")
+            Log.d("Error", "User's location does not exits. Check LocalDbService")
         }
 
         val center = LatLng(
@@ -697,7 +697,7 @@ class DatabaseService(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createFilterQuery(filtersList: ArrayList<IFilterObj>) {
+    private fun setFiltersQuery(filtersList: ArrayList<IFilterObj>) {
         filtersList.forEach {
             when (it) {
                 is FilterByTimeObj -> {
@@ -729,7 +729,7 @@ class DatabaseService(
         meetingsQuery =
             firestore.collection(meetingsCollection)
 
-        createFilterQuery(filters)
+        setFiltersQuery(filters)
 
         val allTasks =
             Tasks.whenAllSuccess<QuerySnapshot>(tasksQueryList)

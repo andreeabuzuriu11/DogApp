@@ -20,7 +20,7 @@ class App : Application() {
         single<IExchangeInfoService> { ExchangeInfoService() }
         single<IAlertMessageService> { AlertMessageService(get()) }
         single<IPermissionService> { PermissionService(get()) }
-        single<IActivityResultService> { ActivityResultService() }
+        single<IActivityForResultService> { ActivityForResultService() }
         single<IStorageService> { StorageService() }
         single<ILocalDatabaseService> { LocalDatabaseService() }
     }

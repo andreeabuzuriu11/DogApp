@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.result.ActivityResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -96,7 +97,7 @@ class AddDogViewModel : BaseViewModel() {
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             viewModelScope.launch(Dispatchers.Main) {
 
-                activityResultService.launchCurrentActivityResultLauncher(
+                activityForResultService.launchCurrentActivityResultLauncher(
                     cameraIntent,
                     object : IGetActivityForResultListener {
                         override fun activityForResult(activityResult: ActivityResult) {
@@ -123,7 +124,7 @@ class AddDogViewModel : BaseViewModel() {
                 Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             viewModelScope.launch(Dispatchers.Main) {
 
-                activityResultService.launchCurrentActivityResultLauncher(
+                activityForResultService.launchCurrentActivityResultLauncher(
                     intent,
                     object : IGetActivityForResultListener {
                         @SuppressLint("NewApi")
@@ -208,6 +209,7 @@ class AddDogViewModel : BaseViewModel() {
                                                             MyDogsViewModel::class.java.name,
                                                             true
                                                         )
+                                                        Log.d("DEBUG", "Dog ${dog.name} successfully added")
                                                         addOrEditDogToData(dog)
                                                         if (!isEdit) {
                                                             snackMessageService.displaySnackBar(R.string.added_success_message)

@@ -6,7 +6,7 @@ import androidx.activity.result.ActivityResultLauncher
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 
 
-interface IActivityResultService {
+interface IActivityForResultService {
 
     fun setupActivityForResultLauncher(resultLauncher: ActivityResultLauncher<Intent>)
     fun launchCurrentActivityResultLauncher(intent: Intent, listener: IGetActivityForResultListener)
@@ -14,7 +14,7 @@ interface IActivityResultService {
 
 }
 
-class ActivityResultService : IActivityResultService {
+class ActivityForResultService : IActivityForResultService {
 
     private var resultLauncher: ActivityResultLauncher<Intent>? = null
     private var listener: IGetActivityForResultListener? = null

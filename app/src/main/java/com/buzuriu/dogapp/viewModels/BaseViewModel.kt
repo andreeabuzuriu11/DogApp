@@ -24,7 +24,7 @@ open class BaseViewModel : ViewModel(), KoinComponent {
     var isLoadingViewVisible: MutableLiveData<Boolean> = MutableLiveData(false)
 
     private val permissionService: IPermissionService by inject()
-    protected val activityResultService: IActivityResultService by inject()
+    protected val activityForResultService: IActivityForResultService by inject()
     protected val activityService: ICurrentActivityService by inject()
     protected val alertMessageService: IAlertMessageService by inject()
     protected val exchangeInfoService: IExchangeInfoService by inject()
@@ -63,19 +63,19 @@ open class BaseViewModel : ViewModel(), KoinComponent {
     }
 
     fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        reqCode: Int,
+        permissionsList: Array<out String>,
+        resultsGranted: IntArray
     ) {
-        permissionService.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionService.onReqPermissionsResult(reqCode, permissionsList, resultsGranted)
     }
 
     fun setupActivityForResultLauncher(resultLauncher: ActivityResultLauncher<Intent>) {
-        activityResultService.setupActivityForResultLauncher(resultLauncher)
+        activityForResultService.setupActivityForResultLauncher(resultLauncher)
     }
 
     fun onActivityForResult(activityResult: ActivityResult) {
-        activityResultService.onActivityForResult(activityResult)
+        activityForResultService.onActivityForResult(activityResult)
     }
 
     protected fun showLoadingView(isVisible: Boolean) {

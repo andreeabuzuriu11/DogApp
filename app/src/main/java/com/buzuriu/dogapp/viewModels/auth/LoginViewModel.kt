@@ -104,7 +104,6 @@ class LoginViewModel : BaseViewModel() {
 
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
-                Log.d("andreea", "${user!!.name}")
 
                 if (dog != null) {
                     val meetingObj = MyCustomMeetingObj(meeting, user!!, dog)
@@ -123,7 +122,9 @@ class LoginViewModel : BaseViewModel() {
         var dog: DogObj?
         val allOtherMeetings: ArrayList<MeetingObj> =
             databaseService.fetchAllOtherMeetings(currentUser!!.uid, object : IOnCompleteListener {
-                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                    Log.d("DEBUG", "All meetings have been downloaded with success.")
+                }
             })!!
 
         for (meeting in allOtherMeetings) {

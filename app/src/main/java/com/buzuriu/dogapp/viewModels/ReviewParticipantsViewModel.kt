@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -49,9 +50,8 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                                         userWithReview.userUid!!,
                                         userWithReview.reviewObj!!.numberOfStars!!
                                     )
+                                    Log.d("DEBUG", "The review has been successfully changed for ${userWithReview.userObj?.name}")
                                     delay(2000)
-
-
                                 }
                             } else {
                                 viewModelScope.launch(Dispatchers.Main) {

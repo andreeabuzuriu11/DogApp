@@ -14,10 +14,10 @@ import kotlin.coroutines.suspendCoroutine
 interface IPermissionService {
     suspend fun requestPermissionStatusAsync(permissionsList: List<String>): Task<List<PermissionResult>>
 
-    fun onRequestPermissionsResult(
-        requestCode: Int,
+    fun onReqPermissionsResult(
+        reqCode: Int,
         permissionsList: Array<out String>,
-        grantResults: IntArray
+        resultsGranted: IntArray
     )
 }
 
@@ -33,7 +33,7 @@ data class PermissionReq(
 
 class PermissionService(private val activityService: ICurrentActivityService) : IPermissionService {
 
-    private val requestCode: Int = 29
+    private val reqCode: Int = 29
     private val permissionRequests: MutableMap<Int, PermissionReq> = mutableMapOf()
 
     override suspend fun requestPermissionStatusAsync(permissionsList: List<String>): Task<List<PermissionResult>> {
@@ -48,7 +48,7 @@ class PermissionService(private val activityService: ICurrentActivityService) : 
             val permissionsListNotGivenYet: MutableList<String> = mutableListOf()
 
             for (permission in permissionsList) {
-                val result = checkPermissionStatus(activity.applicationContext, permission)
+                val result = convertPermissionStatusToPermissionResult(activity.applicationContext, permission)
 
                 if (result == PermissionResultEnum.Granted) {
                     // the permission has been given
@@ -67,13 +67,13 @@ class PermissionService(private val activityService: ICurrentActivityService) : 
 
             if (permissionsListNotGivenYet.isNotEmpty()) {
                 synchronized(this) {
-                    permissionRequests[requestCode] = PermissionReq(partialResponse, it)
+                    permissionRequests[reqCode] = PermissionReq(partialResponse, it)
                 }
 
                 ActivityCompat.requestPermissions(
                     activity,
                     permissionsListNotGivenYet.toTypedArray(),
-                    requestCode
+                    reqCode
                 )
             } else {
                 it.resumeWith(Result.success(partialResponse))
@@ -81,18 +81,18 @@ class PermissionService(private val activityService: ICurrentActivityService) : 
         })
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
+    override fun onReqPermissionsResult(
+        reqCode: Int,
         permissionsList: Array<out String>,
-        grantResults: IntArray
+        resultsGranted: IntArray
     ) {
-        val request = permissionRequests[requestCode]
+        val request = permissionRequests[reqCode]
         var permissionResultEnum: PermissionResultEnum
 
         if (request != null) {
 
             for ((index, _) in permissionsList.withIndex()) {
-                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                if (resultsGranted[index] == PackageManager.PERMISSION_GRANTED) {
                     permissionResultEnum = PermissionResultEnum.Granted
                 } else {
                     permissionResultEnum = PermissionResultEnum.Denied
@@ -103,17 +103,17 @@ class PermissionService(private val activityService: ICurrentActivityService) : 
             }
 
             synchronized(this) {
-                permissionRequests.remove(requestCode)
+                permissionRequests.remove(reqCode)
             }
 
             request.continuation.resumeWith(Result.success(request.partialResult))
 
         } else {
-            throw Exception("We got response for request we never triggert. RequestCode does not match!")
+            throw Exception("This request code doesn't exist")
         }
     }
 
-    private fun checkPermissionStatus(
+    private fun convertPermissionStatusToPermissionResult(
         context: Context,
         permissionChecked: String
     ): PermissionResultEnum {
