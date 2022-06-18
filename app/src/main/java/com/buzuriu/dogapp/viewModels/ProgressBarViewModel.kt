@@ -31,7 +31,7 @@ class ProgressBarViewModel : BaseViewModel() {
         } else {
             viewModelScope.launch(Dispatchers.IO) {
                 delay(1000)
-                navigationService.navigateToActivity(RegisterActivity::class.java, true)
+                navigationService.navigateToActivity(LoginActivity::class.java, true)
             }
         }
 

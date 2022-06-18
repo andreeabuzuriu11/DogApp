@@ -12,7 +12,7 @@ interface INavigationService {
 
     fun <T : Activity> showOverlay(
         activityClass: Class<T>,
-        finishCurrentActivity: Boolean = false,
+        finishOldActivity: Boolean = false,
         parameterName: String? = null,
         parameterValue: String? = null
     )
@@ -51,7 +51,7 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
 
     override fun <T : Activity> showOverlay(
         activityClass: Class<T>,
-        finishThisActivity: Boolean,
+        finishOldActivity: Boolean,
         parameterName: String?,
         parameterValue: String?
     ) {
@@ -71,7 +71,7 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
                 Runnable {
                     activity.startActivity(intent)
 
-                    if (finishThisActivity) {
+                    if (finishOldActivity) {
                         activity.finish()
                     }
                 }

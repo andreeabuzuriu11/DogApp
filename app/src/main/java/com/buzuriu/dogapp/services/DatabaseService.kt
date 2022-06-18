@@ -139,7 +139,7 @@ class DatabaseService(
     private val reviewCollection = "Review"
     private val meetingParticipants = "MeetingParticipants"
     private var meetingsQuery: Query? = null
-    private var tasksList = ArrayList<Task<QuerySnapshot>>()
+    private var tasksQueryList = ArrayList<Task<QuerySnapshot>>()
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override suspend fun storeUser(
@@ -641,7 +641,7 @@ class DatabaseService(
             .whereLessThan("date", end.timeInMillis)
             .get()
 
-        tasksList.add(query)
+        tasksQueryList.add(query)
     }
 
 
@@ -649,21 +649,21 @@ class DatabaseService(
         val query = meetingsQuery!!
             .whereEqualTo(FieldsItems.dogGender, filterType.name)
             .get()
-        tasksList.add(query)
+        tasksQueryList.add(query)
     }
 
     private fun setUserGenderTypeQuery(filterType: IFilterObj) {
         val query = meetingsQuery!!
             .whereEqualTo(FieldsItems.userGender, filterType.name)
             .get()
-        tasksList.add(query)
+        tasksQueryList.add(query)
     }
 
     private fun setDogBreedTypeQuery(filterType: IFilterObj) {
         val query = meetingsQuery!!
             .whereEqualTo(FieldsItems.dogBreed, filterType.name)
             .get()
-        tasksList.add(query)
+        tasksQueryList.add(query)
     }
 
     private fun setMeetingsDistanceQuery(radiusInKM: Int) {
@@ -693,7 +693,7 @@ class DatabaseService(
                     )
                 ).get()
 
-        tasksList.add(distanceQuery)
+        tasksQueryList.add(distanceQuery)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -732,7 +732,7 @@ class DatabaseService(
         createFilterQuery(filters)
 
         val allTasks =
-            Tasks.whenAllSuccess<QuerySnapshot>(tasksList)
+            Tasks.whenAllSuccess<QuerySnapshot>(tasksQueryList)
 
         allTasks.addOnSuccessListener { it ->
 
@@ -754,7 +754,7 @@ class DatabaseService(
             }
         }
             .addOnSuccessListener {
-                tasksList.clear()
+                tasksQueryList.clear()
             }
             .addOnFailureListener { throw it }
 

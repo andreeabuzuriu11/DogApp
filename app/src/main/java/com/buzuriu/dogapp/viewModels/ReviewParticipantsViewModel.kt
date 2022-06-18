@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class ReviewParticipantsViewModel : BaseViewModel() {
 
-    private var reviewList = ArrayList<UserWithReview>()
+    private var reviewList = ArrayList<UserWithReviewObj>()
     private var pastMeeting = MutableLiveData<MyCustomMeetingObj>()
 
     var doesMeetingHaveAnyParticipants = MutableLiveData<Boolean>(false)
@@ -33,7 +33,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     }
 
 
-    fun saveReviewInDatabase(userWithReview: UserWithReview) {
+    fun saveReviewInDatabase(userWithReview: UserWithReviewObj) {
         val review = didCurrentUserAlreadyReviewUser(userWithReview.userUid!!)
         if (review != null) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -127,7 +127,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private suspend fun fetchAllParticipantsForMeeting(): ArrayList<UserWithReview> {
+    private suspend fun fetchAllParticipantsForMeeting(): ArrayList<UserWithReviewObj> {
         showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             val list = fetchAllParticipantsForMeetingFromDatabase()
@@ -143,11 +143,11 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         return reviewList
     }
 
-    private suspend fun fetchAllParticipantsForMeetingFromDatabase(): ArrayList<UserWithReview> {
+    private suspend fun fetchAllParticipantsForMeetingFromDatabase(): ArrayList<UserWithReviewObj> {
         var user: UserObj?
         var dog: DogObj?
         val allParticipantsNameList = ArrayList<ParticipantObj>()
-        val userWithReviewList = ArrayList<UserWithReview>()
+        val userWithReviewList = ArrayList<UserWithReviewObj>()
 
         val allParticipantsList: ArrayList<ParticipantObj> =
             databaseService.fetchAllMeetingParticipants(pastMeeting.value!!.meetingObj!!.uid!!)!!
@@ -169,11 +169,11 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                     allParticipantsNameList.add(participantObj)
                     val review = didCurrentUserAlreadyReviewUser(participant.userUid!!)
                     if (review != null) {
-                        val userWithReview = UserWithReview(participant.userUid!!, user, review)
+                        val userWithReview = UserWithReviewObj(participant.userUid!!, user, review)
                         userWithReviewList.add(userWithReview)
                     } else {
                         val userWithReview =
-                            UserWithReview(participant.userUid!!, user, ReviewObj())
+                            UserWithReviewObj(participant.userUid!!, user, ReviewObj())
                         userWithReviewList.add(userWithReview)
                     }
 

@@ -22,12 +22,15 @@ class MyMeetingDetailActivity :
     ), OnMapReadyCallback {
 
     private var mapFragment: SupportMapFragment? = null
+    private var activityMyMeetingDetailBinding : ActivityMyMeetingDetailBinding? = null
 
     override val layoutId: Int
         get() = R.layout.activity_my_meeting_detail
 
     override fun setupDataBinding(binding: ActivityMyMeetingDetailBinding) {
         binding.viewModel = mViewModel
+        activityMyMeetingDetailBinding = binding
+        activityMyMeetingDetailBinding?.viewModel = mViewModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,9 +84,8 @@ class MyMeetingDetailActivity :
     }
 
     private fun initParticipantList() {
-        val partList = findViewById<RecyclerView>(R.id.participants_list)
-        partList.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        partList.adapter = mViewModel.participantsAdapter
+        activityMyMeetingDetailBinding?.participantsList?.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        activityMyMeetingDetailBinding?.participantsList?.adapter = mViewModel.participantsAdapter
     }
 
     private fun initMap() {

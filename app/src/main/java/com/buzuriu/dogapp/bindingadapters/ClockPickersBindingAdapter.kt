@@ -54,6 +54,7 @@ object ClockPickersBindingAdapter {
     @BindingAdapter("timeSetBinding")
     @JvmStatic
     fun TimePicker.setMyTime(myDate: Calendar) {
+        // setting my current time initially
         this.hour = myDate.get(Calendar.HOUR_OF_DAY)
         this.minute = myDate.get(Calendar.MINUTE)
     }

@@ -2,10 +2,10 @@ package com.buzuriu.dogapp.services
 
 import android.app.AlertDialog
 import com.buzuriu.dogapp.listeners.IClickListener
-import com.buzuriu.dogapp.models.AlertBuilderSettings
+import com.buzuriu.dogapp.models.AlertDialogTextObj
 
 interface IAlertMessageService {
-    fun displayAlertDialog(listOfOptions: AlertBuilderSettings)
+    fun displayAlertDialog(listOfOptions: AlertDialogTextObj)
     fun displayAlertDialog(
         title: String,
         message: String,
@@ -16,16 +16,16 @@ interface IAlertMessageService {
 
 class AlertMessageService(private val activityService: ICurrentActivityService) :
     IAlertMessageService {
-    override fun displayAlertDialog(listOfOptions: AlertBuilderSettings) {
+    override fun displayAlertDialog(listOfOptions: AlertDialogTextObj) {
         val builder = AlertDialog.Builder(activityService.activity)
         val optionsList = ArrayList<String>()
-        for (item in listOfOptions.itemsName!!) {
+        for (item in listOfOptions.options!!) {
             optionsList.add(item.toString())
         }
 
-        builder.setItems(listOfOptions.itemsName) { dialogInterface, i ->
+        builder.setItems(listOfOptions.options) { dialogInterface, i ->
             if (optionsList[i] != "Cancel") {
-                listOfOptions.itemActions!![optionsList[i]]?.invoke()
+                listOfOptions.action!![optionsList[i]]?.invoke()
             } else {
                 dialogInterface.dismiss()
             }

@@ -19,7 +19,6 @@ abstract class BaseFragment<out T : BaseViewModel>(vmClass: Class<T>) : Fragment
     protected open fun layoutInflated(root: View) {}
 
     private var navHostFragment: Fragment? = null
-    private var navHostMain: Fragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,

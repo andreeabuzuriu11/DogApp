@@ -36,7 +36,7 @@ class DistanceSeekBar : RelativeLayout {
         textView!!.text = value.toString() + "km"
         val stringWidth = bounds.width()
 
-        //seekBar width
+        // set the seekBar width
         val width = (seekBar!!.width
                 - seekBar!!.paddingLeft
                 - seekBar!!.paddingRight)

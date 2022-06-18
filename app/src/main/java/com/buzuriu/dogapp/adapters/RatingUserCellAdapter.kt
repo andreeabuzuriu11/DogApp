@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.RatingUserCellBinding
-import com.buzuriu.dogapp.models.UserWithReview
+import com.buzuriu.dogapp.models.UserWithReviewObj
 import com.buzuriu.dogapp.viewModels.ReviewParticipantsViewModel
 
 
 class RatingUserCellAdapter(
-    private var reviewUserList: ArrayList<UserWithReview>,
+    private var reviewUserList: ArrayList<UserWithReviewObj>,
     var viewModel: ReviewParticipantsViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -22,9 +22,9 @@ class RatingUserCellAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val userWithReview = reviewUserList[position]
+        val userWithReviewObj = reviewUserList[position]
         if (holder is RatingUserCellAdapter.RatingUserCellViewHolder) {
-            (holder).bind(userWithReview)
+            (holder).bind(userWithReviewObj)
         }
     }
 
@@ -34,10 +34,10 @@ class RatingUserCellAdapter(
 
     inner class RatingUserCellViewHolder(private var applicationBinding: RatingUserCellBinding)
         : RecyclerView.ViewHolder(applicationBinding.root) {
-        fun bind(userWithReview: UserWithReview) {
-            applicationBinding.userWithReview = userWithReview
+        fun bind(userWithReviewObj: UserWithReviewObj) {
+            applicationBinding.userWithReviewObj = userWithReviewObj
             applicationBinding.rateIt.setOnClickListener {
-                viewModel.saveReviewInDatabase(userWithReview)
+                viewModel.saveReviewInDatabase(userWithReviewObj)
             }
         }
     }

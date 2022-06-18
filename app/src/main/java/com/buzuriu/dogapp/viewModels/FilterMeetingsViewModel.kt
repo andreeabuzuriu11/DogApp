@@ -84,4 +84,9 @@ class FilterMeetingsViewModel : BaseViewModel() {
         refreshFilters()
         navigationService.closeCurrentActivity()
     }
+
+    override fun onDestroy() {
+        refreshFilters()
+    }
+
 }

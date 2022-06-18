@@ -141,7 +141,7 @@
                         android:layout_alignStart="@+id/dogProfileImage"
                         android:layout_alignBottom="@id/dogProfileImage"
                         android:layout_marginStart="100dp"
-                        android:onClick="@{()->viewModel.takePicture()}"
+                        android:onClick="@{()->viewModel.takePictureClicked()}"
                         android:src="@drawable/ic_baseline_image_search_24" />
 
                     <TextView

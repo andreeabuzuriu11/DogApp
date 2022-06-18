@@ -3,8 +3,8 @@
 
     <data>
         <variable
-            name="userWithReview"
-            type="com.buzuriu.dogapp.models.UserWithReview" />
+            name="userWithReviewObj"
+            type="com.buzuriu.dogapp.models.UserWithReviewObj" />
 
         <variable
             name="viewModel"
@@ -38,12 +38,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:hint="user name"
-                    android:text="@{userWithReview.userObj.name}"
+                    android:text="@{userWithReviewObj.userObj.name}"
                     android:textSize="18dp"></TextView>
 
                 <com.buzuriu.dogapp.components.RatingBarWithNumber
                     android:id="@+id/rating_bar_with_number"
-                    numberOfStars="@={userWithReview.reviewObj.numberOfStars}"
+                    numberOfStars="@={userWithReviewObj.reviewObj.numberOfStars}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

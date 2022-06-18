@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlin.system.exitProcess
 
 class AddDogViewModel : BaseViewModel() {
 
@@ -72,19 +73,18 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
-    fun takePicture() {
-
-        val methodsMap = HashMap<String, () -> Unit>()
-        val itemsName = arrayOf<CharSequence>("Camera", "Gallery", "Cancel")
-        methodsMap["Camera"] = ::takeImage
-        methodsMap["Gallery"] = ::uploadPictureFromGallery
-        methodsMap["Cancel"] = {}
-
-        val alertBuilderSettings = AlertBuilderSettings(itemsName, methodsMap)
-        alertMessageService.displayAlertDialog(alertBuilderSettings)
+    fun takePictureClicked() {
+        val waysToUpload = mapOf(
+            "Camera" to ::shootPictureUsingCamera,
+            "Gallery" to ::choosePictureUsingGallery,
+            "Cancel" to ::exit
+        )
+        val options = arrayOf<String>("Camera", "Gallery", "Cancel")
+        val alertDialogTextObj = AlertDialogTextObj(options, waysToUpload)
+        alertMessageService.displayAlertDialog(alertDialogTextObj)
     }
 
-    private fun takeImage() {
+    private fun shootPictureUsingCamera() {
         viewModelScope.launch(Dispatchers.Main) {
 
             val hasPermission = requestPermissionKind(listOf(Manifest.permission.CAMERA)).await()
@@ -110,7 +110,7 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
-    private fun uploadPictureFromGallery() {
+    private fun choosePictureUsingGallery() {
         viewModelScope.launch(Dispatchers.Main) {
 
             val hasReadExternalPermission = requestPermissionKind(listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -138,6 +138,11 @@ class AddDogViewModel : BaseViewModel() {
                     })
             }
         }
+    }
+
+    private fun exit()
+    {
+        navigationService.closeCurrentActivity()
     }
 
     fun addDog() {

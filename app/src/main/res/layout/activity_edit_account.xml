@@ -48,7 +48,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/name_hint"
                             android:padding="10dp"
-                            android:text="@{viewModel.user.name}"
+                            android:text="@={viewModel.user.name}"
                             android:textSize="20sp" />
 
                     </LinearLayout>

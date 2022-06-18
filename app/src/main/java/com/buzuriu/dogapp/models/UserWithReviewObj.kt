@@ -1,6 +1,6 @@
 package com.buzuriu.dogapp.models
 
-class UserWithReview {
+class UserWithReviewObj {
     var userUid : String? = null
     var userObj : UserObj? = null
     var reviewObj : ReviewObj? = null

@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.viewModels.auth
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -95,12 +96,15 @@ class LoginViewModel : BaseViewModel() {
         var dog: DogObj?
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
-        val userMeetings: ArrayList<MeetingObj>? = databaseService.fetchUserMeetings(currentUser!!.uid)
+        val userMeetings: ArrayList<MeetingObj>? =
+            databaseService.fetchUserMeetings(currentUser!!.uid)
 
         if (userMeetings != null) {
             for (meeting in userMeetings) {
+
                 user = databaseService.fetchUserByUid(meeting.userUid!!)
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
+                Log.d("andreea", "${user!!.name}")
 
                 if (dog != null) {
                     val meetingObj = MyCustomMeetingObj(meeting, user!!, dog)
@@ -117,9 +121,10 @@ class LoginViewModel : BaseViewModel() {
         val allMeetingsThatUserJoined = ArrayList<MyCustomMeetingObj>()
         var user: UserObj?
         var dog: DogObj?
-        val allOtherMeetings: ArrayList<MeetingObj> = databaseService.fetchAllOtherMeetings(currentUser!!.uid, object : IOnCompleteListener {
-            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
-        })!!
+        val allOtherMeetings: ArrayList<MeetingObj> =
+            databaseService.fetchAllOtherMeetings(currentUser!!.uid, object : IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+            })!!
 
         for (meeting in allOtherMeetings) {
             allMeetingsParticipants =
@@ -139,9 +144,9 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private suspend fun getUserAccountInfo() {
-        val userObj : UserObj? = databaseService.fetchUserByUid(currentUser!!.uid)
+        val userObj: UserObj? = databaseService.fetchUserByUid(currentUser!!.uid)
 
-        if (userObj!=null)
+        if (userObj != null)
             localDatabaseService.add(LocalDBItems.currentUser, userObj)
         else {
             snackMessageService.displaySnackBar("Error, this user has been deleted!")
