@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.ml.ModelUnquant
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.LocalDBItems
@@ -26,6 +27,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import kotlin.system.exitProcess
 
 class AddDogViewModel : BaseViewModel() {
@@ -114,8 +118,12 @@ class AddDogViewModel : BaseViewModel() {
     private fun choosePictureUsingGallery() {
         viewModelScope.launch(Dispatchers.Main) {
 
-            val hasReadExternalPermission = requestPermissionKind(listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE)).await()
+            val hasReadExternalPermission = requestPermissionKind(
+                listOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            ).await()
             if (!hasReadExternalPermission) {
                 snackMessageService.displaySnackBar("Error permission")
                 return@launch
@@ -141,8 +149,7 @@ class AddDogViewModel : BaseViewModel() {
         }
     }
 
-    private fun exit()
-    {
+    private fun exit() {
         navigationService.closeCurrentActivity()
     }
 
@@ -209,7 +216,10 @@ class AddDogViewModel : BaseViewModel() {
                                                             MyDogsViewModel::class.java.name,
                                                             true
                                                         )
-                                                        Log.d("DEBUG", "Dog ${dog.name} successfully added")
+                                                        Log.d(
+                                                            "DEBUG",
+                                                            "Dog ${dog.name} successfully added"
+                                                        )
                                                         addOrEditDogToData(dog)
                                                         if (!isEdit) {
                                                             snackMessageService.displaySnackBar(R.string.added_success_message)
@@ -277,7 +287,8 @@ class AddDogViewModel : BaseViewModel() {
 
     fun editMyMeeting(meeting: MyCustomMeetingObj) {
         val meetingsList: ArrayList<MyCustomMeetingObj> =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList) ?: return
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList)
+                ?: return
         if (meetingsList.any { it.meetingObj!!.uid == meeting.meetingObj!!.uid }) {
             val oldMeeting = meetingsList.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
             meetingsList.remove(oldMeeting)
@@ -344,8 +355,26 @@ class AddDogViewModel : BaseViewModel() {
             )
     }
 
-    fun predictBreed(){
-        // todo add prediction logic
+    fun predictBreed() {
+
+        var tensorImage = TensorImage(DataType.FLOAT32)
+        tensorImage.load(dogBitmapImage.value)
+
+        // todo need to resize the image to match the size below
+
+        val model = ModelUnquant.newInstance(activityService.activity!!.applicationContext)
+
+        // Creates inputs for reference.
+        val inputFeature0 =
+            TensorBuffer.createFixedSize(intArrayOf(1, 224, 224, 3), DataType.FLOAT32)
+        inputFeature0.loadBuffer(tensorImage.buffer)
+
+        // Runs model inference and gets result.
+        val outputs = model.process(inputFeature0)
+        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+
+        // Releases model resources if no longer used.
+        model.close()
     }
 
     private fun areFieldsCompleted(): Boolean {
