@@ -344,6 +344,10 @@ class AddDogViewModel : BaseViewModel() {
             )
     }
 
+    fun predictBreed(){
+        // todo add prediction logic
+    }
+
     private fun areFieldsCompleted(): Boolean {
         if (name.value.isNullOrEmpty()) {
             snackMessageService.displaySnackBar("Please add a name")

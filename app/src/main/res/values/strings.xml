@@ -93,4 +93,5 @@
     <string name="you_attend_with">You attend with</string>
     <string name="you_attended_this_meeting_with">You attended this meeting with</string>
     <string name="you_have_no_dogs_yet">You have no dogs yet</string>
+    <string name="predict_breed">Predict the breed</string>
 </resources>
