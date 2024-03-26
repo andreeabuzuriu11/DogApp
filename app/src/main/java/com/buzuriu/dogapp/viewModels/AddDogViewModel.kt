@@ -28,9 +28,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.tensorflow.lite.DataType
+import org.tensorflow.lite.support.common.ops.NormalizeOp
+import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
+import org.tensorflow.lite.support.image.ops.ResizeOp
+import org.tensorflow.lite.support.image.ops.TransformToGrayscaleOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
-import kotlin.system.exitProcess
+
 
 class AddDogViewModel : BaseViewModel() {
 
@@ -358,9 +362,19 @@ class AddDogViewModel : BaseViewModel() {
     fun predictBreed() {
 
         var tensorImage = TensorImage(DataType.FLOAT32)
-        tensorImage.load(dogBitmapImage.value)
 
-        // todo need to resize the image to match the size below
+        var bmp = dogBitmapImage.value?.copy(Bitmap.Config.ARGB_8888,true) ;
+
+        tensorImage.load(bmp)
+
+
+        tensorImage = ImageProcessor.Builder()
+//            .add(NormalizeOp(0.0f,255.0f))
+//            .add(TransformToGrayscaleOp())
+            .add(ResizeOp(224, 224, ResizeOp.ResizeMethod.BILINEAR))
+            .build()
+            .process(tensorImage)
+
 
         val model = ModelUnquant.newInstance(activityService.activity!!.applicationContext)
 
@@ -371,7 +385,17 @@ class AddDogViewModel : BaseViewModel() {
 
         // Runs model inference and gets result.
         val outputs = model.process(inputFeature0)
-        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+        val outputFeature0 = outputs.outputFeature0AsTensorBuffer.floatArray
+
+        var maxIdx = 0
+        outputFeature0.forEachIndexed { index, fl ->
+            if (outputFeature0[maxIdx] < fl) {
+                maxIdx = index
+            }
+        }
+
+        // TODO add labels.txt and select breed based on this prediction
+        var resultText = maxIdx.toString()
 
         // Releases model resources if no longer used.
         model.close()
