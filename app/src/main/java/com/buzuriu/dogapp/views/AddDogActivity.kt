@@ -14,5 +14,4 @@ class AddDogActivity :
     override fun setupDataBinding(binding: ActivityAddDogBinding) {
         binding.viewModel = mViewModel
     }
-
 }

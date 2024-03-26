@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.viewModels
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -47,6 +48,8 @@ class AddDogViewModel : BaseViewModel() {
     var dogImageUrl = MutableLiveData<String>()
     var isEdit: Boolean = false
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
+
+    var labels = activityService.activity!!.applicationContext.assets.open("labels.txt").bufferedReader().readLines()
 
     private var currentDogUid: String? = ""
     private var currentGenderString: String? = null
@@ -394,8 +397,8 @@ class AddDogViewModel : BaseViewModel() {
             }
         }
 
-        // TODO add labels.txt and select breed based on this prediction
-        var resultText = maxIdx.toString()
+        // TODO select the breed based on this prediction or show it somewhere at least
+        var resultText = labels[maxIdx]
 
         // Releases model resources if no longer used.
         model.close()
