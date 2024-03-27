@@ -13,14 +13,18 @@ import androidx.activity.result.ActivityResult
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
+import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.ml.ModelUnquant
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.services.AlertMessageService
+import com.buzuriu.dogapp.utils.BreedsFile
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
+import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
@@ -49,7 +53,9 @@ class AddDogViewModel : BaseViewModel() {
     var isEdit: Boolean = false
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
 
-    var labels = activityService.activity!!.applicationContext.assets.open("labels.txt").bufferedReader().readLines()
+    var labels =
+        activityService.activity!!.applicationContext.assets.open("labels.txt").bufferedReader()
+            .readLines()
 
     private var currentDogUid: String? = ""
     private var currentGenderString: String? = null
@@ -91,7 +97,7 @@ class AddDogViewModel : BaseViewModel() {
             "Gallery" to ::choosePictureUsingGallery,
             "Cancel" to ::exit
         )
-        val options = arrayOf<String>("Camera", "Gallery", "Cancel")
+        val options = arrayOf("Camera", "Gallery", "Cancel")
         val alertDialogTextObj = AlertDialogTextObj(options, waysToUpload)
         alertMessageService.displayAlertDialog(alertDialogTextObj)
     }
@@ -366,10 +372,9 @@ class AddDogViewModel : BaseViewModel() {
 
         var tensorImage = TensorImage(DataType.FLOAT32)
 
-        var bmp = dogBitmapImage.value?.copy(Bitmap.Config.ARGB_8888,true) ;
+        var bmp = dogBitmapImage.value?.copy(Bitmap.Config.ARGB_8888, true);
 
         tensorImage.load(bmp)
-
 
         tensorImage = ImageProcessor.Builder()
 //            .add(NormalizeOp(0.0f,255.0f))
@@ -400,8 +405,50 @@ class AddDogViewModel : BaseViewModel() {
         // TODO select the breed based on this prediction or show it somewhere at least
         var resultText = labels[maxIdx]
 
+        setBreedBasedOnResult(resultText)
+
         // Releases model resources if no longer used.
         model.close()
+    }
+
+    private fun setBreedBasedOnResult(result: String) {
+        if (result == "") {
+            alertMessageService.displayAlertDialog(
+                "Error",
+                "The breed was not recognised",
+                "ok",
+                object :
+                    IClickListener {
+                    override fun clicked() {
+                        // close the alert
+                    }
+                })
+            return
+        }
+        val recognizedBreedString = result.substringAfter(" ") // get name after first space
+
+// look for recognized breed in the breeds list
+        val breedsList = BreedsFile.breedsList;
+        var breedToSelect = breedsList.find { breed -> breed == recognizedBreedString }
+        if (breedToSelect == null)
+            breedToSelect = breedsList.find { breed -> breed.contains(recognizedBreedString) }
+
+        if (breedToSelect == "") {
+            alertMessageService.displayAlertDialog(
+                "Error",
+                "The breed was not found",
+                "ok",
+                object :
+                    IClickListener {
+                    override fun clicked() {
+                        // close the alert
+                    }
+                })
+            return
+        }
+
+
+        breed.value = breedToSelect;
     }
 
     private fun areFieldsCompleted(): Boolean {
