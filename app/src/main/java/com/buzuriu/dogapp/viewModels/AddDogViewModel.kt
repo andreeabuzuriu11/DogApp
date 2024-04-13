@@ -121,6 +121,7 @@ class AddDogViewModel : BaseViewModel() {
                             if (activityResult.resultCode == Activity.RESULT_OK) {
                                 val imageBitmap = activityResult.data?.extras?.get("data") as Bitmap
                                 dogBitmapImage.value = imageBitmap
+                                predictBreed()
                             }
                         }
                     })
@@ -155,6 +156,7 @@ class AddDogViewModel : BaseViewModel() {
                                 val imageUri = activityResult.data?.data as Uri
                                 dogBitmapImage.value =
                                     ImageUtils.convertToBitmap(activityService.activity!!, imageUri)
+                                predictBreed()
                             }
                         }
                     })
