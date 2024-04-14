@@ -86,6 +86,7 @@
     <string name="title_history">History</string>
     <string name="title_my_dogs">My Dogs</string>
     <string name="title_my_meetings">My Meetings</string>
+    <string name="title_my_friends">My Friends</string>
     <string name="unknown_error">Unknown error</string>
     <string name="user_info">User Info</string>
     <string name="write_email_hint">Email address</string>

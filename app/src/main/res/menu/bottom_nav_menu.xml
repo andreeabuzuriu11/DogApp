@@ -16,6 +16,10 @@
         android:icon="@drawable/my_meeting_icon"
         android:title="@string/title_my_meetings" />
 
+    <item
+        android:id="@+id/navigation_friends"
+        android:icon="@drawable/my_meeting_icon"
+        android:title="@string/title_my_friends" />
 
     <item
         android:id="@+id/navigation_history"

@@ -28,4 +28,9 @@
         android:name="com.buzuriu.dogapp.views.main.ui.notifications.HistoryFragment"
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
+    <fragment
+        android:id="@+id/navigation_friends"
+        android:name="com.buzuriu.dogapp.views.main.ui.friends.FriendsFragment"
+        android:label="@string/title_my_friends"
+        tools:layout="@layout/fragment_friends" />
 </navigation>

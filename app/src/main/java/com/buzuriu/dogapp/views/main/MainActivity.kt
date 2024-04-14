@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_map,
                 R.id.navigation_dogs,
                 R.id.navigation_meetings,
+                R.id.navigation_friends,
                 R.id.navigation_history
             )
         )
