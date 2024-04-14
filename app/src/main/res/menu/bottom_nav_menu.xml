@@ -9,12 +9,12 @@
     <item
         android:id="@+id/navigation_dogs"
         android:icon="@drawable/my_dog_icon"
-        android:title="My Dogs" />
+        android:title="@string/title_my_dogs" />
 
     <item
         android:id="@+id/navigation_meetings"
         android:icon="@drawable/my_meeting_icon"
-        android:title="My Meetings" />
+        android:title="@string/title_my_meetings" />
 
 
     <item
