@@ -2,9 +2,14 @@ package com.buzuriu.dogapp.views.main.ui.friends
 
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.DogAdapter
+import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.listeners.IClickListener
+import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.viewModels.DogDetailViewModel
+import com.buzuriu.dogapp.views.DogDetailActivity
+import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -12,6 +17,7 @@ class FriendsViewModel : BaseViewModel() {
 
     var foundUser: UserObj? = null
     private var foundUsersList: ArrayList<UserObj> = ArrayList()
+    var userAdapter: UserAdapter? = null
 
     init {
 
@@ -31,7 +37,7 @@ class FriendsViewModel : BaseViewModel() {
                             foundUser = user
             }
 
-            if (foundUser?.email == null)
+            if (foundUser == null)
                 return@launch
 
             alertMessageService.displayAlertDialog(
@@ -46,9 +52,16 @@ class FriendsViewModel : BaseViewModel() {
                 })
         }
 
+        // TODO fix
         foundUsersList.add(foundUser!!)
+
+        userAdapter = UserAdapter(foundUsersList)
+        userAdapter!!.notifyDataSetChanged()
         return foundUser
     }
+
+
+
 
 
 
