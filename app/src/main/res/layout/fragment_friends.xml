@@ -21,6 +21,14 @@
             android:layout_height="50dp"
             android:autofillHints="@string/search_for_user"
             android:switchTextAppearance="@color/black"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/users_found_list"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/search_by_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
 

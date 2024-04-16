@@ -72,11 +72,10 @@
                     android:layout_width="match_parent"
                     android:text="Send"
                     android:width="5dp"
+                    android:layout_margin="10dp"
                     android:layout_height="wrap_content"/>
 
-
             </LinearLayout>
-
 
         </RelativeLayout>
 
