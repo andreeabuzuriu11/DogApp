@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.views.main.ui.friends
 
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
@@ -10,6 +11,7 @@ import kotlinx.coroutines.launch
 class FriendsViewModel : BaseViewModel() {
 
     var foundUser: UserObj? = null
+    private var foundUsersList: ArrayList<UserObj> = ArrayList()
 
     init {
 
@@ -43,8 +45,12 @@ class FriendsViewModel : BaseViewModel() {
                     }
                 })
         }
+
+        foundUsersList.add(foundUser!!)
         return foundUser
     }
+
+
 
 
 

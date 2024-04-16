@@ -32,7 +32,6 @@ class MyDogsViewModel : BaseViewModel() {
 
         dogAdapter = DogAdapter(dogsList, ::selectedDog)
         dogAdapter!!.notifyDataSetChanged()
-
     }
 
     override fun onResume() {
