@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
 import com.buzuriu.dogapp.databinding.FragmentFriendsBinding
+import com.buzuriu.dogapp.services.DatabaseService
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
 
@@ -39,9 +40,10 @@ class FriendsFragment :
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 var searchedText  = query // here it's the text user has searched for
+                var vm = mViewModel as FriendsViewModel
+                vm.getAllUsers(searchedText)
                 return false
             }
-
         })
     }
 }
