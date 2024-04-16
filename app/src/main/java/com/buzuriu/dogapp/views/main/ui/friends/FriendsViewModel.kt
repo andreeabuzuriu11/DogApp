@@ -1,6 +1,5 @@
 package com.buzuriu.dogapp.views.main.ui.friends
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.models.UserObj
@@ -10,14 +9,14 @@ import kotlinx.coroutines.launch
 
 class FriendsViewModel : BaseViewModel() {
 
-    var searchedEmail = MutableLiveData<String>()
+    var foundUser: UserObj? = null
 
     init {
 
     }
 
-    fun getAllUsers(searchedUserText: String) {
-        var foundUser: UserObj = UserObj("")
+    fun findUser(searchedUserText: String): UserObj? {
+        var foundUser: UserObj? = null
 
         viewModelScope.launch(Dispatchers.Main) {
             val allUsers = databaseService.fetchUsers()
@@ -30,9 +29,12 @@ class FriendsViewModel : BaseViewModel() {
                             foundUser = user
             }
 
+            if (foundUser?.email == null)
+                return@launch
+
             alertMessageService.displayAlertDialog(
                 "found user",
-                foundUser.name!! + foundUser.phone + foundUser.gender,
+                foundUser?.name!! + foundUser?.phone + foundUser?.gender,
                 "ok",
                 object :
                     IClickListener {
@@ -41,6 +43,9 @@ class FriendsViewModel : BaseViewModel() {
                     }
                 })
         }
+        return foundUser
     }
+
+
 
 }
