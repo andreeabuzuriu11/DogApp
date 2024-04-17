@@ -3,6 +3,8 @@ package com.buzuriu.dogapp.views.main.ui.friends
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.FragmentFriendsBinding
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
@@ -23,6 +25,10 @@ class FriendsFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+
+
         val currentSearchView =
             getView()?.findViewById<SearchView>(com.buzuriu.dogapp.R.id.search_by_email)
 
@@ -42,11 +48,20 @@ class FriendsFragment :
 
                 if (foundUser!=null)
                 {
-                    vm.foundUser = foundUser
                     return true
                 }
                 return false
             }
         })
+    }
+
+    private fun setupRecyclerView() {
+        val recyclerView = currentBinding.usersFoundList
+        recyclerView.layoutManager = LinearLayoutManager(
+            activity,
+            RecyclerView.VERTICAL,
+            false
+        )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = mViewModel.userAdapter
     }
 }

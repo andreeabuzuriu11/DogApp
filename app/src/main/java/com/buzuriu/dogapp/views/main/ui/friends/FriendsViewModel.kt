@@ -23,8 +23,7 @@ class FriendsViewModel : BaseViewModel() {
 
     }
 
-    fun findUser(searchedUserText: String): UserObj? {
-        var foundUser: UserObj? = null
+    fun findUser(searchedUserText: String) {
 
         viewModelScope.launch(Dispatchers.Main) {
             val allUsers = databaseService.fetchUsers()
@@ -50,21 +49,17 @@ class FriendsViewModel : BaseViewModel() {
                         // close the alert
                     }
                 })
+
+            // TODO fix
+            if (foundUser == null) return@launch
+
+            foundUsersList.add(foundUser!!)
+            userAdapter = UserAdapter(foundUsersList)
+            userAdapter!!.notifyDataSetChanged()
         }
 
-        // TODO fix
-        foundUsersList.add(foundUser!!)
 
-        userAdapter = UserAdapter(foundUsersList)
-        userAdapter!!.notifyDataSetChanged()
-        return foundUser
     }
-
-
-
-
-
-
 
 
 }

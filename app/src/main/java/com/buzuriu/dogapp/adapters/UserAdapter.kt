@@ -32,7 +32,7 @@ class UserAdapter(var userList: ArrayList<UserObj>) :
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(user: UserObj) {
             applicationBinding.user = user
-            applicationBinding.dogCell.setOnClickListener {
+            applicationBinding.userCell.setOnClickListener {
             }
         }
     }

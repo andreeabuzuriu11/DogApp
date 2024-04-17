@@ -14,7 +14,7 @@
     </data>
 
     <LinearLayout
-        android:id="@+id/dog_cell"
+        android:id="@+id/user_cell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -28,8 +28,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <LinearLayout
 
@@ -47,7 +46,7 @@
                     android:layout_marginBottom="20dp" />
 
                 <TextView
-                    android:id="@+id/dog_name"
+                    android:id="@+id/user_name"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="5dp"
@@ -55,7 +54,7 @@
                     android:text="@{user.name}"
                     android:textColor="@color/text_grey"
                     android:textSize="24dp"
-                    tool:text="Rex" />
+                    tool:text="Andy" />
 
 
             </LinearLayout>
@@ -70,10 +69,10 @@
 
                 <Button
                     android:layout_width="match_parent"
-                    android:text="Send"
-                    android:width="5dp"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:layout_height="wrap_content"/>
+                    android:width="5dp"
+                    android:text="Send" />
 
             </LinearLayout>
 
