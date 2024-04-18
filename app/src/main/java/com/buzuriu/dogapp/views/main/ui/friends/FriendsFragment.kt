@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.views.main.ui.friends
 
 import android.os.Bundle
 import android.view.View
+import android.widget.RelativeLayout
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,9 +29,8 @@ class FriendsFragment :
 
         setupRecyclerView()
 
-
         val currentSearchView =
-            getView()?.findViewById<SearchView>(com.buzuriu.dogapp.R.id.search_by_email)
+            getView()?.findViewById<SearchView>(com.buzuriu.dogapp.R.id.search_view)
 
         if (currentSearchView != null) {
             searchView = currentSearchView
@@ -40,14 +40,17 @@ class FriendsFragment :
 
             override fun onQueryTextChange(newText: String): Boolean {
                 val vm = mViewModel
-                vm.findUser(newText)
 
+                vm.findUser(newText)
                 return false
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 val vm = mViewModel
                 vm.findUser(query)
+
+                //todo fix loading
+                vm.showLoading(false)
 
                 return false
             }
