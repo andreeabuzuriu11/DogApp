@@ -42,12 +42,19 @@ class FriendsViewModel : BaseViewModel() {
 
 
         if (foundUser != null) {
-            foundUsersList.add(foundUser!!)
+            if (!isUserAlreadyFound(foundUser!!))
+                foundUsersList.add(foundUser!!)
         }
 
         userAdapter!!.notifyDataSetChanged()
 
     }
 
+
+    private fun isUserAlreadyFound(userObj: UserObj): Boolean {
+        if (foundUsersList.contains(userObj))
+            return true
+        return false
+    }
 
 }
