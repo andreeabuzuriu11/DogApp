@@ -39,6 +39,9 @@ class FriendsFragment :
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
+                val vm = mViewModel
+                vm.findUser(newText)
+
                 return false
             }
 

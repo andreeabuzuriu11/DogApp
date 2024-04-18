@@ -20,9 +20,6 @@ class FriendsViewModel : BaseViewModel() {
     var userAdapter: UserAdapter? = null
 
     init {
-        var user1 = UserObj("abc@gmail.com", "Ana", "0752434343", "female", 3.4f);
-        foundUsersList = arrayListOf(user1)
-        userAdapter = UserAdapter(foundUsersList)
         userAdapter = UserAdapter(foundUsersList)
     }
 
@@ -41,32 +38,14 @@ class FriendsViewModel : BaseViewModel() {
 
             if (foundUser == null)
                 return@launch
-
-            alertMessageService.displayAlertDialog(
-                "found user",
-                foundUser?.name!! + foundUser?.phone + foundUser?.gender,
-                "ok",
-                object :
-                    IClickListener {
-                    override fun clicked() {
-                        // close the alert
-                    }
-                })
-
-            // TODO fix
-
         }
 
 
-//        viewModelScope.launch(Dispatchers.IO) {
-//            if (foundUser != null) {
-//                foundUsersList.add(foundUser!!)
-//                userAdapter = UserAdapter(foundUsersList)
-//                 userAdapter = UserAdapter(foundUsersList)
-//            }
-//
-//        }
+        if (foundUser != null) {
+            foundUsersList.add(foundUser!!)
+        }
 
+        userAdapter!!.notifyDataSetChanged()
 
     }
 
