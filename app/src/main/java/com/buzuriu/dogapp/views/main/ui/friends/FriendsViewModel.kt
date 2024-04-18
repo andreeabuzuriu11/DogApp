@@ -86,4 +86,8 @@ class FriendsViewModel : BaseViewModel() {
         showLoadingView(isVisible)
     }
 
+    fun sendFriendRequest() {
+
+    }
+
 }
