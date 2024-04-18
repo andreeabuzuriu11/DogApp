@@ -44,15 +44,33 @@ class FriendsViewModel : BaseViewModel() {
         if (foundUser != null) {
             if (!isUserAlreadyFound(foundUser!!))
                 foundUsersList.add(foundUser!!)
+            if (!isUserMatchingWithCurrentSearch(foundUser!!, searchedUserText))
+                foundUsersList.remove(foundUser)
         }
 
-        userAdapter!!.notifyDataSetChanged()
+        if (isSearchedTextEmpty(searchedUserText))
+            foundUsersList.removeAll(foundUsersList.toSet())
 
+        userAdapter!!.notifyDataSetChanged()
     }
 
 
     private fun isUserAlreadyFound(userObj: UserObj): Boolean {
         if (foundUsersList.contains(userObj))
+            return true
+        return false
+    }
+
+    private fun isUserMatchingWithCurrentSearch(userObj: UserObj, searchedUserText: String): Boolean {
+        if (userObj.email!!.contains(searchedUserText))
+            return true
+        if (userObj.name!!.contains(searchedUserText))
+            return true
+        return false
+    }
+
+    private fun isSearchedTextEmpty(searchedUserText: String): Boolean {
+        if (searchedUserText.length == 1 || searchedUserText == "")
             return true
         return false
     }
