@@ -19,7 +19,7 @@ class UserAdapter(var userList: ArrayList<UserObj>) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val user = userList[position]
-        if (holder is UserAdapter.UserViewHolder) {
+        if (holder is UserViewHolder) {
             (holder).bind(user)
         }
     }

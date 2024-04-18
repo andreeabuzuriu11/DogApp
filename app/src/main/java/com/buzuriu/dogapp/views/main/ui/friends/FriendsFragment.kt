@@ -36,7 +36,7 @@ class FriendsFragment :
             searchView = currentSearchView
         }
 
-        searchView.setOnQueryTextListener(object :  SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 return false
@@ -44,12 +44,8 @@ class FriendsFragment :
 
             override fun onQueryTextSubmit(query: String): Boolean {
                 val vm = mViewModel
-                val foundUser = vm.findUser(query)
+                vm.findUser(query)
 
-                if (foundUser!=null)
-                {
-                    return true
-                }
                 return false
             }
         })

@@ -20,7 +20,10 @@ class FriendsViewModel : BaseViewModel() {
     var userAdapter: UserAdapter? = null
 
     init {
-
+        var user1 = UserObj("abc@gmail.com", "Ana", "0752434343", "female", 3.4f);
+        foundUsersList = arrayListOf(user1)
+        userAdapter = UserAdapter(foundUsersList)
+        userAdapter = UserAdapter(foundUsersList)
     }
 
     fun findUser(searchedUserText: String) {
@@ -51,12 +54,18 @@ class FriendsViewModel : BaseViewModel() {
                 })
 
             // TODO fix
-            if (foundUser == null) return@launch
 
-            foundUsersList.add(foundUser!!)
-            userAdapter = UserAdapter(foundUsersList)
-            userAdapter!!.notifyDataSetChanged()
         }
+
+
+//        viewModelScope.launch(Dispatchers.IO) {
+//            if (foundUser != null) {
+//                foundUsersList.add(foundUser!!)
+//                userAdapter = UserAdapter(foundUsersList)
+//                 userAdapter = UserAdapter(foundUsersList)
+//            }
+//
+//        }
 
 
     }
