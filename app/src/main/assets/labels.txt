@@ -1,2 +1,183 @@
-0 Chihuahua
-1 Shih Tzu
+0 Afghan Hound
+1 Airedale Terrier
+2 Akita
+3 Alaskan Malamute
+4 American English Coonhound
+5 American Eskimo Dog
+6 American Hairless Terrier
+7 American Staffordshire Terrier
+8 Anatolian Shepherd Dog
+9 Australian Cattle Dog
+10 Australian Shepherd
+11 Azawakh
+12 Basenji
+13 Basset
+14 Beagle
+15 Bearded Collie
+16 Bedlington Terrier
+17 Belgian Malinois
+18 Belgian Sheepdog
+19 Bergamasco Sheepdog
+20 Bernese Mountain Dog
+21 Black Russian Terrier
+22 Black and Tan Coonhound
+23 Bloodhound
+24 Bluetick Coonhound
+25 Bolognese
+26 Border Collie
+27 Border Terrier
+28 Borzoi
+29 Boston Terrier
+30 Bouvier des Flandres
+31 Boxer
+32 Boykin Spaniel
+33 Briard
+34 Brittany
+35 Brussels Griffon
+36 Bull Terrier
+37 Bulldog
+38 Bullmastiff
+39 Cairn Terrier
+40 Canaan Dog
+41 Cane Corso
+42 Cardigan Welsh Corgi
+43 Cavalier King Charles Spaniel
+44 Cesky Terrier
+45 Chesapeake Bay Retriever
+46 Chihuahua
+47 Chinese Crested
+48 Chinese Shar-Pei
+49 Chow Chow
+50 Australian Terrier
+51 Clumber Spaniel
+52 Cocker Spaniel
+53 Collie
+54 Coton de Tulear
+55 Curly -Coated Retriever
+56 Dachshund
+57 Dalmatian
+58 Dandie Dinmont Terrier
+59 Deerhound
+60 Doberman Pinscher
+61 Dogo Argentino
+62 Dogue de Bordeaux
+63 Dutch Shepherd
+64 English Cocker Spaniel
+65 English Foxhound
+66 English Setter
+67 English Springer Spaniel
+68 English Toy Spaniel
+69 Entlebucher Mountain Dog
+70 Eskimo Dog
+71 Estrela Mountain Dog
+72 Field Spaniel
+73 Finnish Lapphund
+74 Finnish Spitz
+75 Flat - Coated Retriever
+76 Fox Terrier
+77 French Bulldog
+78 German Pinscher
+79 German Shepherd Dog
+80 German Shorthaired Pointer
+81 German Wirehaired Pointer
+82 Giant Schnauzer
+83 Glen of Imaal Terrier
+84 Golden Retriever
+85 Gordon Setter
+86 Great Dane
+87 Great Pyrenees
+88 Greater Swiss Mountain Dog
+89 Greyhound
+90 Harrier
+91 Havanese
+92 Ibizan Hound
+93 Icelandic Sheepdog
+94 Irish Red and White Setter
+95 Irish Setter
+96 Irish Terrier
+97 Irish Water Spaniel
+98 Irish Wolfhound
+99 Italian Greyhound
+100 Jack Russell Terrier
+101 Japanese Chin
+102 Keeshond
+103 Kerry Blue Terrier
+104 Komondor
+105 Kuvasz
+106 Labrador Retriever
+107 Lakeland Terrier
+108 Lancashire Heeler
+109 Leonberger
+110 Lhasa Apso
+111 Lowchen
+112 Maltese
+113 Manchester Terrier
+114 Maremma Sheepdog
+115 Mastiff
+116 Miniature Bull Terrier
+117 Miniature Pinscher
+118 Miniature Schnauzer
+119 Neapolitan Mastiff
+120 Newfoundland
+121 Norfolk Terrier
+122 Norwegian Buhund
+123 Norwegian Elkhound
+124 Norwich Terrier
+125 Nova Scotia Duck Tolling Retriever
+126 Old English Sheepdog
+127 Otterhound
+128 Papillon
+129 Parson Russell Terrier
+130 Pekingese
+131 Pembroke Welsh Corgi
+132 Petit Basset Griffon Vendeen
+133 Pharaoh Hound
+134 Plott
+135 Pointer
+136 Polish Lowland Sheepdog
+137 Pomeranian
+138 Poodle
+139 Portuguese Podengo Pequeno
+140 Portuguese Water Dog
+141 Pug
+142 Puli
+143 Pumi
+144 Pyrenean Shepherd
+145 Redbone Coonhound
+146 Rhodesian Ridgeback
+147 Rottweiler
+148 Saluki
+149 Samoyed
+150 Schipperke
+151 Scottish Deerhound
+152 Scottish Terrier
+153 Sealyham Terrier
+154 Shetland Sheepdog
+155 Shiba Inu
+156 King Charles Spaniel Dog
+157 Shih Tzu
+158 Siberian Husky
+159 Silky Terrier
+160 Skye Terrier
+161 Sloughi
+162 Soft Coated Wheaten Terrier
+163 Spinone Italiano
+164 Staffordshire Bull Terrier
+165 Standard Schnauzer
+166 Sussex Spaniel
+167 Swedish Vallhund
+168 Tibetan Mastiff
+169 Tibetan Spaniel
+170 Tibetan Terrier
+171 Toy Fox Terrier
+172 Vizsla
+173 Weimaraner
+174 Welsh Springer Spaniel
+175 Welsh Terrier
+176 West Highland White Terrier
+177 Whippet
+178 Wire Fox Terrier
+179 Wirehaired Pointing Griffon
+180 Wirehaired Vizsla
+181 Xoloitzcuintli
+182 Yorkshire Terrier Dog
