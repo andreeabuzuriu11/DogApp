@@ -127,11 +127,11 @@
                         android:id="@+id/dogProfileImage"
                         bitmapBinding="@{viewModel.dogBitmapImage}"
                         imageBinding="@{viewModel.dogImageUrl}"
-                        android:src="@drawable/ic_dog_svgrepo_com"
                         android:layout_width="130dp"
                         android:layout_height="130dp"
                         android:layout_below="@+id/addPetTextView"
-                        android:layout_centerInParent="true" />
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_dog_svgrepo_com" />
 
                     <ImageView
                         android:layout_width="45dp"

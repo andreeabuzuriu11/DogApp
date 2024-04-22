@@ -5,5 +5,6 @@ data class UserObj(
     var name: String? = null,
     var phone: String? = null,
     var gender: String? = null,
-    var rating: Float? = null
+    var rating: Float? = null,
+    var imageUrl: String = "",
 )

@@ -52,6 +52,7 @@ class AddDogViewModel : BaseViewModel() {
     var dogImageUrl = MutableLiveData<String>()
     var isEdit: Boolean = false
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
+    private val dogImages = "dogImages" // todo move this somewhere useful
 
     var labels =
         activityService.activity!!.applicationContext.assets.open("labels.txt").bufferedReader()
@@ -201,7 +202,7 @@ class AddDogViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             if (dogBitmapImage.value != null) {
                 val compressedImage = ImageUtils.getCompressedImage(dogBitmapImage.value!!)
-                dog.imageUrl = storageService.uploadImageToDatabase(uid, compressedImage)
+                dog.imageUrl = storageService.uploadImageToDatabase(uid, dogImages, compressedImage)
             }
 
             viewModelScope.launch(Dispatchers.IO)
