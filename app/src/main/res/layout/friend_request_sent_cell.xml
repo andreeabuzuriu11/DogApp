@@ -43,6 +43,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
+                    userImageBinding="@{user}"
                     android:layout_marginBottom="20dp" />
 
                 <TextView
@@ -68,6 +69,7 @@
                 android:padding="8dp">
 
                 <Button
+                    android:id="@+id/send_req"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"

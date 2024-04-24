@@ -279,6 +279,7 @@ class MapViewModel : BaseViewModel() {
                 pastMeetingsListUserCreated.clear()
                 pastMeetingsListUserJoined.clear()
                 for (item in list) {
+                    // todo fix crash here
                     if (item.meetingObj!!.userUid == currentUser!!.uid) {
                         // if meeting has user uid same id as current, it means that the user created
                         // that particular meeting
