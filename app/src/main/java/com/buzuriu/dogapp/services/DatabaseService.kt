@@ -14,10 +14,7 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.GeoPoint
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.tasks.await
 import java.time.DayOfWeek
@@ -87,7 +84,7 @@ interface IDatabaseService {
     suspend fun fetchUserByUid(userUid: String): UserObj?
     suspend fun fetchUsers(): List<UserObj>?
     suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj>?
-    suspend fun fetchReviewsFor(field: String, userUid: String) : ArrayList<ReviewObj>?
+    suspend fun fetchReviewsFor(field: String, userUid: String): ArrayList<ReviewObj>?
     suspend fun fetchMeetings(
         filtersList: ArrayList<IFilterObj>,
         userUid: String
@@ -96,7 +93,11 @@ interface IDatabaseService {
     suspend fun fetchAllMeetingParticipants(meetingUid: String): ArrayList<ParticipantObj>?
     suspend fun fetchUserParticipantUidForMeeting(meetingUid: String, userUid: String): String?
 
-    suspend fun fetchAllOtherMeetings(userUid: String, onCompleteListener: IOnCompleteListener): ArrayList<MeetingObj>?
+    suspend fun fetchAllOtherMeetings(
+        userUid: String,
+        onCompleteListener: IOnCompleteListener
+    ): ArrayList<MeetingObj>?
+
     suspend fun fetchAllOtherPastMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchAllPastMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchUserMeetings(userUid: String): ArrayList<MeetingObj>?
@@ -128,6 +129,12 @@ interface IDatabaseService {
         participantUid: String,
         onCompleteListener: IOnCompleteListener
     )
+
+    suspend fun sendFriendRequest(
+        userIdThatSends: String,
+        userIdThatReceives: String,
+        onCompleteListener: IOnCompleteListener
+    )
 }
 
 class DatabaseService(
@@ -138,6 +145,9 @@ class DatabaseService(
     private val dogCollection = "Dog"
     private val meetingsCollection = "Meeting"
     private val reviewCollection = "Review"
+    private val friendRequestsCollection = "Requests"
+    private val ownRequests = "OwnRequests"
+    private val friendRequests = "FriendRequests"
     private val meetingParticipants = "MeetingParticipants"
     private var meetingsQuery: Query? = null
     private var tasksQueryList = ArrayList<Task<QuerySnapshot>>()
@@ -245,6 +255,27 @@ class DatabaseService(
         firestore.collection(reviewCollection)
             .document(reviewUid)
             .update("numberOfStars", newNumberOfStars)
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun sendFriendRequest(
+        userIdThatSends: String,
+        userIdThatReceives: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        val ownRequests = hashMapOf(ownRequests to userIdThatReceives);
+        val friendRequests = hashMapOf(friendRequests to userIdThatSends);
+
+        firestore.collection(friendRequestsCollection)
+            .document(userIdThatSends)
+            .set(ownRequests, SetOptions.merge())
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+
+        firestore.collection(friendRequestsCollection)
+            .document(userIdThatReceives)
+            .set(friendRequests, SetOptions.merge())
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
@@ -396,7 +427,10 @@ class DatabaseService(
         return reviewList
     }
 
-    override suspend fun fetchAllOtherMeetings(userUid: String, onCompleteListener: IOnCompleteListener): ArrayList<MeetingObj> {
+    override suspend fun fetchAllOtherMeetings(
+        userUid: String,
+        onCompleteListener: IOnCompleteListener
+    ): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
@@ -468,7 +502,7 @@ class DatabaseService(
             for (meetingDocSnapshot in it) {
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
-                        meetingsList.add(meeting)
+                    meetingsList.add(meeting)
                 }
             }
         }

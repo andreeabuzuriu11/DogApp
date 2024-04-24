@@ -3,7 +3,10 @@ package com.buzuriu.dogapp.views.main.ui.friends
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.models.UserObj
+import com.buzuriu.dogapp.services.DatabaseService
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -14,7 +17,7 @@ class FriendsViewModel : BaseViewModel() {
     var userAdapter: UserAdapter? = null
 
     init {
-        userAdapter = UserAdapter(foundUsersList)
+        userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
     }
 
     fun findUser(searchedUserText: String) {
@@ -86,8 +89,13 @@ class FriendsViewModel : BaseViewModel() {
         showLoadingView(isVisible)
     }
 
-    fun sendFriendRequest() {
+    fun sendFriendRequest(userReceivingRequest: UserObj) {
+        var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
 
+//        var userReceivingRequestUid: String = userReceivingRequest.uid
+
+
+        //databaseService.sendFriendRequest(, )
     }
 
 }

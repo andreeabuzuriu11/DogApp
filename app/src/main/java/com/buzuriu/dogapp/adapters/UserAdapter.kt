@@ -7,7 +7,7 @@ import com.buzuriu.dogapp.databinding.FriendRequestSentCellBinding
 import com.buzuriu.dogapp.models.UserObj
 import kotlin.reflect.KFunction1
 
-class UserAdapter(var userList: ArrayList<UserObj>) :
+class UserAdapter(var userList: ArrayList<UserObj>, var sendRequest: KFunction1<UserObj, Unit>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
@@ -32,7 +32,8 @@ class UserAdapter(var userList: ArrayList<UserObj>) :
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(user: UserObj) {
             applicationBinding.user = user
-            applicationBinding.userCell.setOnClickListener {
+            applicationBinding.sendReq.setOnClickListener {
+                sendRequest(user)
             }
         }
     }
