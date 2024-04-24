@@ -14,10 +14,19 @@ class FriendsViewModel : BaseViewModel() {
     var foundUsersList: ArrayList<UserObj> = ArrayList()
     var userAdapter: UserAdapter? = null
 
+    var doesUserHaveAnyFriends = MutableLiveData(false)
+    var doesUserHaveAnyRequests = MutableLiveData(false)
+
     var isFriendTabSelected = MutableLiveData(true)
     init {
         userAdapter = UserAdapter(foundUsersList)
     }
+
+    fun searchFriends()
+    {
+
+    }
+
 
     fun findUser(searchedUserText: String) {
 //        todo fix loading

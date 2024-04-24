@@ -29,10 +29,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:checked="@={viewModel.isFriendTabSelected}"
-                android:text="@string/title_my_dogs"
+                android:text="@string/title_my_friends"
                 android:background="@drawable/radio_flat_selector"
                 android:button="@android:color/transparent"
-                android:padding="10dp"
+                android:paddingHorizontal="50dp"
                 android:gravity="center" />
 
             <RadioButton
@@ -41,10 +41,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:checked="@={!viewModel.isFriendTabSelected}"
-                android:text="@string/title_my_friends"
+                android:text="@string/friends_requests"
                 android:background="@drawable/radio_flat_selector"
                 android:button="@android:color/transparent"
-                android:padding="10dp"
+                android:paddingHorizontal="50dp"
                 android:gravity="center" />
 
         </RadioGroup>
@@ -56,25 +56,34 @@
         android:visibility="@{viewModel.isFriendTabSelected ? View.VISIBLE : View.GONE}"
     android:layout_height="match_parent">
 
-        <SearchView
-            android:id="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="5dp"
-            android:autofillHints="@string/search_for_user"
-            android:switchTextAppearance="@color/black" />
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/users_found_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/search_view"
+            android:visibility="@{viewModel.doesUserHaveAnyFriends ? View.VISIBLE : View.GONE}"
             android:layout_marginTop="10dp" />
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/you_have_no_friends_yet"
+            android:textSize="18sp"
+            android:visibility="@{viewModel.doesUserHaveAnyFriends ? View.GONE : View.VISIBLE}"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:onClick="@{()->viewModel.searchFriends()}"
+            android:src="@drawable/ic_baseline_search_24"
+            android:tint="@color/white" />
     </RelativeLayout>
 
         <RelativeLayout
@@ -88,13 +97,21 @@
                 android:id="@+id/requests_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="@{viewModel.doesUserHaveAnyRequests ? View.VISIBLE : View.GONE}"
                 android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/you_have_no_friends_requests"
+                android:textSize="18sp"
+                android:visibility="@{viewModel.doesUserHaveAnyRequests ? View.GONE : View.VISIBLE}"/>
 
         </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/loadingView"
-        android:layout_below="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white_overlay"

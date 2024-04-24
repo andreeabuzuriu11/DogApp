@@ -96,4 +96,7 @@
     <string name="you_have_no_dogs_yet">You have no dogs yet</string>
     <string name="predict_breed">Predict the breed</string>
     <string name="search_for_user">Search for user</string>
+    <string name="friends_requests">Friend requests</string>
+    <string name="you_have_no_friends_requests">You have no friend requests\n</string>
+    <string name="you_have_no_friends_yet">You have no friends yet</string>
 </resources>
