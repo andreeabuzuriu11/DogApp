@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.models.UserObj
+import com.buzuriu.dogapp.viewModels.AddFriendViewModel
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.views.AddDogActivity
+import com.buzuriu.dogapp.views.AddFriendActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -108,8 +111,7 @@ class FriendsViewModel : BaseViewModel() {
 //
 
 
-
-//    init {
+    //    init {
 //
 //        friendsList.add(UserObj("mail@mail.com", "Tommy", "1234567", "Male"))
 //        friendsList.add(UserObj("mail@mail.com", "Jerry", "1234567", "Male"))
@@ -119,6 +121,6 @@ class FriendsViewModel : BaseViewModel() {
 //
 //
     fun searchFriends() {
-
+        navigationService.navigateToActivity(AddFriendActivity::class.java, false)
     }
 }

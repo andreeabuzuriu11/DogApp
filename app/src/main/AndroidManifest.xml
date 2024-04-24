@@ -68,6 +68,9 @@
             android:name=".views.auth.LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".views.AddFriendActivity"
+            android:exported="false" />
+        <activity
             android:name=".views.auth.RegisterActivity"
             android:exported="false" />
         <activity
