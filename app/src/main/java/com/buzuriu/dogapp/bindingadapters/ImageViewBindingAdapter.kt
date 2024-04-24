@@ -6,6 +6,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.squareup.picasso.Picasso
 
@@ -34,6 +35,16 @@ object ImageViewBindingAdapter {
             Picasso.get()
                 .load(dog?.imageUrl)
                 .placeholder(R.drawable.ic_dog_svgrepo_com)
+                .into(this)
+    }
+
+    @BindingAdapter("userImageBinding")
+    @JvmStatic
+    fun ImageView.imageUrl(user: UserObj?) {
+        if (user?.imageUrl != "")
+            Picasso.get()
+                .load(user?.imageUrl)
+                .placeholder(R.drawable.ic_user_account)
                 .into(this)
     }
 }
