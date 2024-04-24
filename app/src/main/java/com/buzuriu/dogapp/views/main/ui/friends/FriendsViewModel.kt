@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.views.main.ui.friends
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.models.UserObj
@@ -13,6 +14,7 @@ class FriendsViewModel : BaseViewModel() {
     var foundUsersList: ArrayList<UserObj> = ArrayList()
     var userAdapter: UserAdapter? = null
 
+    var isFriendTabSelected = MutableLiveData(true)
     init {
         userAdapter = UserAdapter(foundUsersList)
     }

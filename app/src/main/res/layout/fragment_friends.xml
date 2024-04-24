@@ -14,6 +14,48 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <RadioGroup
+            android:id="@+id/tabBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/dogTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:checked="@={viewModel.isFriendTabSelected}"
+                android:text="@string/title_my_dogs"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:padding="10dp"
+                android:gravity="center" />
+
+            <RadioButton
+                android:id="@+id/friendsTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:checked="@={!viewModel.isFriendTabSelected}"
+                android:text="@string/title_my_friends"
+                android:background="@drawable/radio_flat_selector"
+                android:button="@android:color/transparent"
+                android:padding="10dp"
+                android:gravity="center" />
+
+        </RadioGroup>
+
+    <RelativeLayout
+        android:id="@+id/friendsView"
+        android:layout_width="match_parent"
+        android:layout_below="@id/tabBar"
+        android:visibility="@{viewModel.isFriendTabSelected ? View.VISIBLE : View.GONE}"
+    android:layout_height="match_parent">
+
         <SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
@@ -32,27 +74,40 @@
             android:layout_below="@id/search_view"
             android:layout_marginTop="10dp" />
 
-        <RelativeLayout
-            android:id="@+id/loadingView"
-            android:layout_below="@+id/search_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white_overlay"
-            android:clickable="true"
-            android:focusable="true"
-            android:visibility="@{viewModel.isLoadingViewVisible ? View.VISIBLE : View.GONE}">
-
-
-            <ProgressBar
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-
 
     </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/requests_view"
+            android:layout_below="@id/tabBar"
+            android:layout_width="match_parent"
+            android:visibility="@{viewModel.isFriendTabSelected ? View.GONE : View.VISIBLE}"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/requests_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp" />
+
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/loadingView"
+        android:layout_below="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_overlay"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="@{viewModel.isLoadingViewVisible ? View.VISIBLE : View.GONE}">
 
 
+        <ProgressBar
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
+    </RelativeLayout>
 </layout>
