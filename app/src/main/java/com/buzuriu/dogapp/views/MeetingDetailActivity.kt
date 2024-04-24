@@ -47,6 +47,4 @@ class MeetingDetailActivity :
         p0.setMaxZoomPreference(14.0f)
         p0.moveCamera(CameraUpdateFactory.newLatLng(latLng))
     }
-
-
 }
