@@ -61,7 +61,6 @@
             android:id="@+id/users_found_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/search_view"
             android:visibility="@{viewModel.doesUserHaveAnyFriends ? View.VISIBLE : View.GONE}"
             android:layout_marginTop="10dp" />
 

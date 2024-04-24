@@ -14,7 +14,6 @@ class FriendsFragment :
     BaseBoundFragment<FriendsViewModel, FragmentFriendsBinding>(FriendsViewModel::class.java) {
 
     private lateinit var currentBinding: FragmentFriendsBinding
-    private lateinit var searchView: SearchView
 
     override fun setupDataBinding(binding: FragmentFriendsBinding) {
         binding.viewModel = mViewModel
@@ -28,33 +27,6 @@ class FriendsFragment :
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-
-        val currentSearchView =
-            getView()?.findViewById<SearchView>(com.buzuriu.dogapp.R.id.search_view)
-
-        if (currentSearchView != null) {
-            searchView = currentSearchView
-        }
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                val vm = mViewModel
-
-                vm.findUser(newText)
-                return false
-            }
-
-            override fun onQueryTextSubmit(query: String): Boolean {
-                val vm = mViewModel
-                vm.findUser(query)
-
-                //todo fix loading
-                vm.showLoading(false)
-
-                return false
-            }
-        })
     }
 
     private fun setupRecyclerView() {
@@ -64,6 +36,6 @@ class FriendsFragment :
             RecyclerView.VERTICAL,
             false
         )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerView.adapter = mViewModel.userAdapter
+        recyclerView.adapter = mViewModel.friendsAdapter
     }
 }
