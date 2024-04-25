@@ -2,10 +2,13 @@ package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.UserObj
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AddFriendViewModel : BaseViewModel() {
@@ -90,11 +93,21 @@ class AddFriendViewModel : BaseViewModel() {
 
     fun sendFriendRequest(userReceivingRequest: UserObj) {
         var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
+        var userReceivingRequestUid: String = userReceivingRequest.uid!!
 
-//        var userReceivingRequestUid: String = userReceivingRequest.uid
 
+        viewModelScope.launch(Dispatchers.IO) {
 
-        //databaseService.sendFriendRequest(, )
+            databaseService.sendFriendRequest(
+                userSendingRequestUid,
+                userReceivingRequestUid,
+                object :
+                    IOnCompleteListener {
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+
+                    }
+                })
+        }
     }
 
 }
