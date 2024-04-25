@@ -37,6 +37,8 @@ object RatingBarBindingAdapter {
     @BindingAdapter("numberOfStars")
     @JvmStatic
     fun RatingBarWithNumber.setNumStars(value: Float) {
+        if (value.isNaN())
+            return
         val doubleValue = (value * 100.0).roundToInt() / 100.0
         this.setText(doubleValue.toFloat())
         this.ratingBar?.rating = doubleValue.toFloat()

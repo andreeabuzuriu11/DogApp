@@ -54,6 +54,7 @@ class EditAccountViewModel : BaseViewModel() {
             "male"
 
         val user = UserObj(
+            currentUser!!.uid,
             user.value!!.email,
             user.value!!.name,
             user.value!!.phone,

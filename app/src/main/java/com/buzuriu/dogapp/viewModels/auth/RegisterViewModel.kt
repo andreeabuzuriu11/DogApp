@@ -48,10 +48,12 @@ class RegisterViewModel : BaseAuthViewModel() {
                             val user = databaseService.fireAuth.currentUser
                             if (user != null) {
                                 val userObj = UserObj(
+                                    user.uid,
                                     email.value,
                                     name.value,
                                     phone.value,
-                                    currentGenderString!!
+                                    currentGenderString!!,
+
                                 )
                                 showLoadingView(true)
                                 viewModelScope.launch(Dispatchers.IO) {

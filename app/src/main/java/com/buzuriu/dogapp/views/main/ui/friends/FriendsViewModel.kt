@@ -29,7 +29,7 @@ class FriendsViewModel : BaseViewModel() {
         userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
 
 
-        val user1 =UserObj("mail@mail.com", "Tommy", "1234567", "Male")
+        val user1 =UserObj("123456","mail@mail.com", "Tommy", "1234567", "Male")
         friendsList.add(user1)
         doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
         friendsAdapter = FriendsAdapter(friendsList,::showFriendProfile)
