@@ -1,13 +1,12 @@
 package com.buzuriu.dogapp.views.main.ui.friends
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.models.UserObj
-import com.buzuriu.dogapp.viewModels.AddFriendViewModel
 import com.buzuriu.dogapp.viewModels.BaseViewModel
-import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.AddFriendActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,13 +17,22 @@ class FriendsViewModel : BaseViewModel() {
     var foundUser: UserObj? = null
     var foundUsersList: ArrayList<UserObj> = ArrayList()
     var userAdapter: UserAdapter? = null
+
     var isFriendTabSelected = MutableLiveData(true)
     var doesUserHaveAnyFriends = MutableLiveData(false)
     var doesUserHaveAnyRequests = MutableLiveData(false)
+
+    var friendsList: ArrayList<UserObj> = ArrayList()
     var friendsAdapter: FriendsAdapter? = null
 
     init {
         userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
+
+
+        val user1 =UserObj("mail@mail.com", "Tommy", "1234567", "Male")
+        friendsList.add(user1)
+        doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
+        friendsAdapter = FriendsAdapter(friendsList,::showFriendProfile)
     }
 
     fun findUser(searchedUserText: String) {
@@ -96,6 +104,10 @@ class FriendsViewModel : BaseViewModel() {
         showLoadingView(isVisible)
     }
 
+    fun showFriendProfile(userObj: UserObj)
+    {
+        Log.d("click","show friend prfile")
+    }
     fun sendFriendRequest(userReceivingRequest: UserObj) {
         var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
 
@@ -106,20 +118,6 @@ class FriendsViewModel : BaseViewModel() {
     }
 
 
-//    var friends: UserObj? = null
-//    var friendsList: ArrayList<UserObj> = ArrayList()
-//
-
-
-    //    init {
-//
-//        friendsList.add(UserObj("mail@mail.com", "Tommy", "1234567", "Male"))
-//        friendsList.add(UserObj("mail@mail.com", "Jerry", "1234567", "Male"))
-//        doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
-//        friendsAdapter = FriendsAdapter(friendsList)
-//    }
-//
-//
     fun searchFriends() {
         navigationService.navigateToActivity(AddFriendActivity::class.java, false)
     }

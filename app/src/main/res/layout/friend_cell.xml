@@ -10,7 +10,7 @@
 
     </data>
     <LinearLayout
-        android:id="@+id/dog_cell"
+        android:id="@+id/friend_cell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

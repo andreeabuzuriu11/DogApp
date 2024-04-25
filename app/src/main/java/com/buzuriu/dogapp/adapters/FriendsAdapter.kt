@@ -4,10 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.FriendCellBinding
-import com.buzuriu.dogapp.databinding.FriendRequestSentCellBinding
 import com.buzuriu.dogapp.models.UserObj
 
-class FriendsAdapter(var userList: ArrayList<UserObj>) :
+class FriendsAdapter(var userList: ArrayList<UserObj>, var showFriendProfile: (UserObj) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
@@ -32,6 +31,9 @@ class FriendsAdapter(var userList: ArrayList<UserObj>) :
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(user: UserObj) {
             applicationBinding.user = user
+            applicationBinding.friendCell.setOnClickListener {
+                showFriendProfile(user)
+            }
         }
     }
 }
