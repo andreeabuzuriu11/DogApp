@@ -99,4 +99,5 @@
     <string name="friends_requests">Friend requests</string>
     <string name="you_have_no_friends_requests">You have no friend requests\n</string>
     <string name="you_have_no_friends_yet">You have no friends yet</string>
+    <string name="no_events">Your friend has not eventy planned</string>
 </resources>
