@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.FriendRequestAcceptDeclineCellBinding
 import com.buzuriu.dogapp.models.UserObj
 
-class FriendRequestAdapter(var friendsReqList: ArrayList<UserObj>, var showFriendProfile: (UserObj) -> Unit) :
+class FriendRequestAdapter(var friendsReqList: ArrayList<UserObj>, var cellPressed: (UserObj) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

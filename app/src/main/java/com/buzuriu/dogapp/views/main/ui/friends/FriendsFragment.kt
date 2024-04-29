@@ -2,8 +2,6 @@ package com.buzuriu.dogapp.views.main.ui.friends
 
 import android.os.Bundle
 import android.view.View
-import android.widget.RelativeLayout
-import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.FragmentFriendsBinding
@@ -26,10 +24,11 @@ class FriendsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
+        setupMyFriendsList()
+        setupFriendsRequestList()
     }
 
-    private fun setupRecyclerView() {
+    private fun setupMyFriendsList() {
         val recyclerView = currentBinding.usersFoundList
         recyclerView.layoutManager = LinearLayoutManager(
             activity,
@@ -38,4 +37,15 @@ class FriendsFragment :
         )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.friendsAdapter
     }
+
+    private fun setupFriendsRequestList() {
+        val recyclerView = currentBinding.requestsList
+        recyclerView.layoutManager = LinearLayoutManager(
+            activity,
+            RecyclerView.VERTICAL,
+            false
+        )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = mViewModel.friendsRequestAdapter
+    }
+
 }

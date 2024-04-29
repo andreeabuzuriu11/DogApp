@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.views.main.ui.friends
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.adapters.FriendRequestAdapter
 import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.models.UserObj
@@ -25,6 +26,7 @@ class FriendsViewModel : BaseViewModel() {
     var friendsList: ArrayList<UserObj> = ArrayList()
     var friendsRequestList: ArrayList<UserObj> = ArrayList()
     var friendsAdapter: FriendsAdapter? = null
+    var friendsRequestAdapter: FriendRequestAdapter? = null
 
     init {
         userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
@@ -41,10 +43,19 @@ class FriendsViewModel : BaseViewModel() {
                 friendRequestsUids.forEach {
                     val user = databaseService.fetchUserByUid(it)
                     friendsRequestList.add(user!!)
+                    doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
+
                 }
             }
         }
 
+//        doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
+        friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, ::friendRequestPressed)
+        friendsRequestAdapter!!.notifyDataSetChanged()
+    }
+
+    private fun friendRequestPressed(userObj: UserObj) {
+        println("Friends request cell presseed")
     }
 
     fun findUser(searchedUserText: String) {
