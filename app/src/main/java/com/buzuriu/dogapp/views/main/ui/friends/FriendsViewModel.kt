@@ -50,7 +50,7 @@ class FriendsViewModel : BaseViewModel() {
         }
 
 //        doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
-        friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, ::friendRequestPressed)
+        friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, this)
         friendsRequestAdapter!!.notifyDataSetChanged()
     }
 
@@ -134,14 +134,17 @@ class FriendsViewModel : BaseViewModel() {
     fun sendFriendRequest(userReceivingRequest: UserObj) {
         var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
 
-//        var userReceivingRequestUid: String = userReceivingRequest.uid
-
-
-        //databaseService.sendFriendRequest(, )
     }
 
 
     fun searchFriends() {
         navigationService.navigateToActivity(AddFriendActivity::class.java, false)
+    }
+
+    fun acceptRequest(userObj: UserObj) {
+        println("Accept req from" + userObj.name)
+    }
+    fun declineRequest(userObj: UserObj) {
+        println("Decline req from" + userObj.name)
     }
 }

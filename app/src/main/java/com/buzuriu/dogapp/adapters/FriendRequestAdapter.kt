@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.FriendRequestAcceptDeclineCellBinding
 import com.buzuriu.dogapp.models.UserObj
+import com.buzuriu.dogapp.views.main.ui.friends.FriendsViewModel
 
-class FriendRequestAdapter(var friendsReqList: ArrayList<UserObj>, var cellPressed: (UserObj) -> Unit) :
+class FriendRequestAdapter(var friendsReqList: ArrayList<UserObj>, var viewModel: FriendsViewModel) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -31,6 +32,12 @@ class FriendRequestAdapter(var friendsReqList: ArrayList<UserObj>, var cellPress
             applicationBinding.user = user
             applicationBinding.friendRequestCell.setOnClickListener {
                 println("Friend Req cell pressed")
+            }
+            applicationBinding.acceptRequest.setOnClickListener {
+                viewModel.acceptRequest(user)
+            }
+            applicationBinding.declineRequest.setOnClickListener {
+                viewModel.declineRequest(user)
             }
         }
     }
