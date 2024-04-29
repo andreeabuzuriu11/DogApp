@@ -264,8 +264,8 @@ class DatabaseService(
         userIdThatReceives: String,
         onCompleteListener: IOnCompleteListener
     ) {
-        val ownRequests = hashMapOf(ownRequests to userIdThatReceives);
-        val friendRequests = hashMapOf(friendRequests to userIdThatSends);
+        val ownRequests = hashMapOf(ownRequests to FieldValue.arrayUnion(userIdThatReceives));
+        val friendRequests = hashMapOf(friendRequests to FieldValue.arrayUnion(userIdThatSends))
 
         firestore.collection(friendRequestsCollection)
             .document(userIdThatSends)
