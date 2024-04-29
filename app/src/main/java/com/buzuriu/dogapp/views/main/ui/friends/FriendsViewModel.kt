@@ -23,11 +23,11 @@ class FriendsViewModel : BaseViewModel() {
     var doesUserHaveAnyRequests = MutableLiveData(false)
 
     var friendsList: ArrayList<UserObj> = ArrayList()
+    var friendsRequestList: ArrayList<UserObj> = ArrayList()
     var friendsAdapter: FriendsAdapter? = null
 
     init {
         userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
-
 
         val user1 =UserObj("123456","mail@mail.com", "Tommy", "1234567", "Male")
         friendsList.add(user1)
@@ -35,7 +35,14 @@ class FriendsViewModel : BaseViewModel() {
         friendsAdapter = FriendsAdapter(friendsList,::showFriendProfile)
 
         viewModelScope.launch {
-            var t = databaseService.fetchFriendRequests(currentUser!!.uid)
+            var friendRequestsUids = databaseService.fetchFriendRequests(currentUser!!.uid)
+            if (friendRequestsUids!=null)
+            {
+                friendRequestsUids.forEach {
+                    val user = databaseService.fetchUserByUid(it)
+                    friendsRequestList.add(user!!)
+                }
+            }
         }
 
     }
