@@ -12,6 +12,7 @@ import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
@@ -107,6 +108,9 @@ interface IDatabaseService {
         userUid: String
     ): ArrayList<MeetingObj>?
 
+    suspend fun fetchFriendRequests(
+        userUid: String
+    ): List<String>?
 
     suspend fun deleteDog(
         dogUid: String,
@@ -814,6 +818,37 @@ class DatabaseService(
         allTasks.await()
 
         return meetingsList
+    }
+
+    override suspend fun fetchFriendRequests(userUid: String): List<String>? {
+        // Fetch the document
+        var taskCompletionSource = TaskCompletionSource<List<String>>()
+
+        firestore.collection(friendRequestsCollection)
+            .document(userUid).
+            get().
+            addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // Document exists, access the array field
+                    val dataArray = document[friendRequests] as? List<String>
+                    if (dataArray != null) {
+                        // Use the array of strings
+                       taskCompletionSource.trySetResult(dataArray)
+                    } else {
+                        taskCompletionSource.trySetResult(null)
+                        println("Array field is null or not a List<String>")
+                    }
+                } else {
+                    taskCompletionSource.trySetResult(null)
+                    println("Document not found")
+                }
+            }.addOnFailureListener { exception ->
+                {
+                    taskCompletionSource.trySetResult(null)
+                    println("Error fetching document: $exception")
+                }
+            }
+        return taskCompletionSource.task.await()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

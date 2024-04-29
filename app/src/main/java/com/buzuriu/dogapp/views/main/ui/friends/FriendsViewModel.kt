@@ -33,6 +33,11 @@ class FriendsViewModel : BaseViewModel() {
         friendsList.add(user1)
         doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
         friendsAdapter = FriendsAdapter(friendsList,::showFriendProfile)
+
+        viewModelScope.launch {
+            var t = databaseService.fetchFriendRequests(currentUser!!.uid)
+        }
+
     }
 
     fun findUser(searchedUserText: String) {
