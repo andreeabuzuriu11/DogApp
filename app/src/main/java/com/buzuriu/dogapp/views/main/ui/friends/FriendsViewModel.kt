@@ -148,13 +148,22 @@ class FriendsViewModel : BaseViewModel() {
 
     fun acceptRequest(userObj: UserObj) {
         viewModelScope.launch {
-            databaseService.acceptFriendRequest(currentUser!!.uid, userObj.uid!!, object :
+            databaseService.deleteRequest(currentUser!!.uid, userObj.uid!!, object :
                 IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
+                    println("deletion complete")
                 }
             })
         }
-        println("Accept req from" + userObj.name)
+
+        viewModelScope.launch {
+            databaseService.addFriendToList(currentUser!!.uid, userObj.uid!!, object :
+                IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                    println("addition complete")
+                }
+            })
+        }
     }
 
     fun declineRequest(userObj: UserObj) {

@@ -141,7 +141,13 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
-    suspend fun acceptFriendRequest(
+    suspend fun deleteRequest(
+        userIdThatAccepts: String,
+        userIdThatSentRequest: String,
+        onCompleteListener: IOnCompleteListener
+    )
+
+    suspend fun addFriendToList(
         userIdThatAccepts: String,
         userIdThatSentRequest: String,
         onCompleteListener: IOnCompleteListener
@@ -292,7 +298,7 @@ class DatabaseService(
             .await()
     }
 
-    override suspend fun acceptFriendRequest(
+    override suspend fun deleteRequest(
         userIdThatAccepts: String,
         userIdThatSentRequest: String,
         onCompleteListener: IOnCompleteListener
@@ -320,7 +326,7 @@ class DatabaseService(
             .addOnFailureListener { exception ->
                 println("Didn't manage to delete $userIdThatSentRequest")
             }
-        
+
         firestore.collection(friendRequestsCollection)
             .document(userIdThatAccepts)
             .set(userThatAcceptsFriendReqHashMap)
@@ -332,22 +338,55 @@ class DatabaseService(
                 println("Didn't manage to delete $userIdThatAccepts")
             }
 
-        val idThatAccepts = hashMapOf(myFriends to FieldValue.arrayUnion(userIdThatAccepts));
-        val idThatSends = hashMapOf(myFriends to FieldValue.arrayUnion(userIdThatSentRequest))
+    }
 
-        // add new user to friends collection for both users
-        firestore.collection(friendRequestsCollection)
-            .document(userIdThatAccepts)
-            .set(idThatSends, SetOptions.merge())
-            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
-            .await()
+    override suspend fun addFriendToList(
+        userIdThatAccepts: String,
+        userIdThatSentRequest: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        var friendsOfUserThatSentRequest =
+            fetchFriendsOrRequestsUsersList(userIdThatSentRequest, myFriends)
+        var friendsOfUserThatAcceptedRequest =
+            fetchFriendsOrRequestsUsersList(userIdThatAccepts, myFriends)
+        if (friendsOfUserThatSentRequest == null)
+            friendsOfUserThatSentRequest = listOf()
+
+        if (friendsOfUserThatAcceptedRequest == null)
+            friendsOfUserThatAcceptedRequest = listOf()
+
+        friendsOfUserThatAcceptedRequest =
+            friendsOfUserThatAcceptedRequest!!.plus(userIdThatSentRequest)
+        friendsOfUserThatSentRequest = friendsOfUserThatSentRequest!!.plus(userIdThatAccepts)
+
+        var listUpdatedWithNewFriend1 = hashMapOf(myFriends to friendsOfUserThatAcceptedRequest);
+
+        var listUpdatedWithNewFriend2 = hashMapOf(myFriends to friendsOfUserThatSentRequest)
+
 
         firestore.collection(friendRequestsCollection)
             .document(userIdThatSentRequest)
-            .set(idThatAccepts, SetOptions.merge())
+            .set(listUpdatedWithNewFriend2)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
-            .await()
+            .addOnSuccessListener {
+                println("Successfully deleted $userIdThatSentRequest")
+            }
+            .addOnFailureListener { exception ->
+                println("Didn't manage to delete $userIdThatSentRequest")
+            }
+
+        firestore.collection(friendRequestsCollection)
+            .document(userIdThatAccepts)
+            .set(listUpdatedWithNewFriend1)
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .addOnSuccessListener {
+                println("Successfully deleted $userIdThatSentRequest")
+            }
+            .addOnFailureListener { exception ->
+                println("Didn't manage to delete $userIdThatSentRequest")
+            }
     }
+
 
     inline fun <reified T> Array<T>.removeValue(value: T) =
         filterNot { it == value }.toTypedArray()
