@@ -6,6 +6,7 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.models.RequestObj
 import com.buzuriu.dogapp.models.UserObj
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -98,16 +99,39 @@ class AddFriendViewModel : BaseViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            databaseService.sendFriendRequest(
-                userSendingRequestUid,
+
+            // todo read all reqs before
+
+            var userThatSendsReq = CreateNewReq()
+            userThatSendsReq.ownRequests!!.add(userReceivingRequestUid)
+
+            var userThatGetsReq = CreateNewReq()
+            userThatGetsReq.friendsRequests!!.add(userSendingRequestUid)
+
+            viewModelScope.launch {
+                databaseService.newSendFriendRequest(currentUser!!.uid, userThatSendsReq,
+                    object :
+                        IOnCompleteListener {
+                        override fun onComplete(successful: Boolean, exception: Exception?) {
+                        }
+                    })
+            }
+
+            databaseService.newSendFriendRequest(
                 userReceivingRequestUid,
+                userThatGetsReq,
                 object :
                     IOnCompleteListener {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
-
                     }
                 })
+
         }
     }
+
+    fun CreateNewReq(): RequestObj {
+        return RequestObj(arrayListOf(), arrayListOf(), arrayListOf())
+    }
+
 
 }

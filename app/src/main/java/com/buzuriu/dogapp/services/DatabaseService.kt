@@ -141,6 +141,12 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
+    suspend fun newSendFriendRequest(
+        userId: String,
+        requestObj: RequestObj,
+        onCompleteListener: IOnCompleteListener
+    )
+
     suspend fun deleteRequest(
         userIdThatAccepts: String,
         userIdThatSentRequest: String,
@@ -294,6 +300,18 @@ class DatabaseService(
         firestore.collection(friendRequestsCollection)
             .document(userIdThatReceives)
             .set(friendRequests, SetOptions.merge())
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    override suspend fun newSendFriendRequest(
+        userId: String,
+        requestObj: RequestObj,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        firestore.collection(friendRequestsCollection)
+            .document(userId)
+            .set(requestObj)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
