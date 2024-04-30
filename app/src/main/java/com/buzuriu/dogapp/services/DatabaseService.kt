@@ -297,23 +297,18 @@ class DatabaseService(
         userIdThatSentRequest: String,
         onCompleteListener: IOnCompleteListener
     ) {
-        // sterge userIdThatAccepts din OwnRequests a lui userIdThatSends
-        var userThatSentOwnReqList =
+        val userThatSentOwnReqList =
             fetchFriendsOrRequestsUsersList(userIdThatSentRequest, ownRequests)
-        var userThatAcceptsFriendReqList =
+        val userThatAcceptsFriendReqList =
             fetchFriendsOrRequestsUsersList(userIdThatAccepts, friendRequests)
-//        var userThatSendFriendsList = fetchFriendsOrRequestsUsersList(userIdThatSentRequest, myFriends)
-//        var userThatAcceptsFriendsList = fetchFriendsOrRequestsUsersList(userIdThatAccepts, myFriends)
 
-
-        // modify arrays
         userThatSentOwnReqList!!.filter { it != userIdThatAccepts }
         userThatAcceptsFriendReqList!!.filter { it != userIdThatSentRequest }
 
         val userThatSentOwnReqHashMap = hashMapOf(ownRequests to userThatSentOwnReqList);
         val userThatAcceptsFriendReqHashMap = hashMapOf(friendRequests to userThatAcceptsFriendReqList);
 
-        // update by deleting user
+        // todo fix deletion does not work
         firestore.collection(friendRequestsCollection)
             .document(userIdThatSentRequest)
             .set(userThatSentOwnReqHashMap, SetOptions.merge())
@@ -325,7 +320,7 @@ class DatabaseService(
                 println("Didn't manage to delete $userIdThatSentRequest")
             }
 
-        // update by deleting user
+        // todo fix deletion does not work
         firestore.collection(friendRequestsCollection)
             .document(userIdThatAccepts)
             .set(userThatAcceptsFriendReqHashMap, SetOptions.merge())
@@ -350,7 +345,8 @@ class DatabaseService(
 
         val idThatAccepts = hashMapOf(myFriends to FieldValue.arrayUnion(userIdThatAccepts));
         val idThatSends = hashMapOf(myFriends to FieldValue.arrayUnion(userIdThatSentRequest))
-        // add new user to friends collection
+
+        // add new user to friends collection for both users
         firestore.collection(friendRequestsCollection)
             .document(userIdThatAccepts)
             .set(idThatSends, SetOptions.merge())
