@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FriendRequestAdapter
 import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.UserObj
+import com.buzuriu.dogapp.services.DatabaseService
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.AddFriendActivity
 import kotlinx.coroutines.Dispatchers
@@ -28,18 +30,21 @@ class FriendsViewModel : BaseViewModel() {
     var friendsAdapter: FriendsAdapter? = null
     var friendsRequestAdapter: FriendRequestAdapter? = null
 
+    private val friendRequests = "FriendRequests"
+
+
     init {
         userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
 
-        val user1 =UserObj("123456","mail@mail.com", "Tommy", "1234567", "Male")
+        val user1 = UserObj("123456", "mail@mail.com", "Tommy", "1234567", "Male")
         friendsList.add(user1)
         doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
-        friendsAdapter = FriendsAdapter(friendsList,::showFriendProfile)
+        friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
 
         viewModelScope.launch {
-            var friendRequestsUids = databaseService.fetchFriendRequests(currentUser!!.uid)
-            if (friendRequestsUids!=null)
-            {
+            var friendRequestsUids =
+                databaseService.fetchFriendsOrRequestsUsersList(currentUser!!.uid, friendRequests)
+            if (friendRequestsUids != null) {
                 friendRequestsUids.forEach {
                     val user = databaseService.fetchUserByUid(it)
                     friendsRequestList.add(user!!)
@@ -127,10 +132,10 @@ class FriendsViewModel : BaseViewModel() {
         showLoadingView(isVisible)
     }
 
-    fun showFriendProfile(userObj: UserObj)
-    {
-        Log.d("click","show friend prfile")
+    fun showFriendProfile(userObj: UserObj) {
+        Log.d("click", "show friend prfile")
     }
+
     fun sendFriendRequest(userReceivingRequest: UserObj) {
         var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
 
@@ -142,8 +147,16 @@ class FriendsViewModel : BaseViewModel() {
     }
 
     fun acceptRequest(userObj: UserObj) {
+        viewModelScope.launch {
+            databaseService.acceptFriendRequest(currentUser!!.uid, userObj.uid!!, object :
+                IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                }
+            })
+        }
         println("Accept req from" + userObj.name)
     }
+
     fun declineRequest(userObj: UserObj) {
         println("Decline req from" + userObj.name)
     }

@@ -108,8 +108,9 @@ interface IDatabaseService {
         userUid: String
     ): ArrayList<MeetingObj>?
 
-    suspend fun fetchFriendRequests(
-        userUid: String
+    suspend fun fetchFriendsOrRequestsUsersList(
+        userUid: String,
+        listToFetch: String
     ): List<String>?
 
     suspend fun deleteDog(
@@ -139,6 +140,12 @@ interface IDatabaseService {
         userIdThatReceives: String,
         onCompleteListener: IOnCompleteListener
     )
+
+    suspend fun acceptFriendRequest(
+        userIdThatAccepts: String,
+        userIdThatSentRequest: String,
+        onCompleteListener: IOnCompleteListener
+    )
 }
 
 class DatabaseService(
@@ -152,6 +159,7 @@ class DatabaseService(
     private val friendRequestsCollection = "Requests"
     private val ownRequests = "OwnRequests"
     private val friendRequests = "FriendRequests"
+    private val myFriends = "MyFriends"
     private val meetingParticipants = "MeetingParticipants"
     private var meetingsQuery: Query? = null
     private var tasksQueryList = ArrayList<Task<QuerySnapshot>>()
@@ -283,6 +291,81 @@ class DatabaseService(
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
+
+    override suspend fun acceptFriendRequest(
+        userIdThatAccepts: String,
+        userIdThatSentRequest: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        // sterge userIdThatAccepts din OwnRequests a lui userIdThatSends
+        var userThatSentOwnReqList =
+            fetchFriendsOrRequestsUsersList(userIdThatSentRequest, ownRequests)
+        var userThatAcceptsFriendReqList =
+            fetchFriendsOrRequestsUsersList(userIdThatAccepts, friendRequests)
+//        var userThatSendFriendsList = fetchFriendsOrRequestsUsersList(userIdThatSentRequest, myFriends)
+//        var userThatAcceptsFriendsList = fetchFriendsOrRequestsUsersList(userIdThatAccepts, myFriends)
+
+
+        // modify arrays
+        userThatSentOwnReqList!!.filter { it != userIdThatAccepts }
+        userThatAcceptsFriendReqList!!.filter { it != userIdThatSentRequest }
+
+        val userThatSentOwnReqHashMap = hashMapOf(ownRequests to userThatSentOwnReqList);
+        val userThatAcceptsFriendReqHashMap = hashMapOf(friendRequests to userThatAcceptsFriendReqList);
+
+        // update by deleting user
+        firestore.collection(friendRequestsCollection)
+            .document(userIdThatSentRequest)
+            .set(userThatSentOwnReqHashMap, SetOptions.merge())
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .addOnSuccessListener {
+                println("Successfully deleted $userIdThatSentRequest")
+            }
+            .addOnFailureListener { exception ->
+                println("Didn't manage to delete $userIdThatSentRequest")
+            }
+
+        // update by deleting user
+        firestore.collection(friendRequestsCollection)
+            .document(userIdThatAccepts)
+            .set(userThatAcceptsFriendReqHashMap, SetOptions.merge())
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .addOnSuccessListener {
+                println("Successfully deleted $userIdThatAccepts")
+            }
+            .addOnFailureListener { exception ->
+                println("Didn't manage to delete $userIdThatAccepts")
+            }
+
+        firestore.collection(friendRequestsCollection)
+            .document(userIdThatAccepts)
+            .set(userThatAcceptsFriendReqHashMap, SetOptions.merge())
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .addOnSuccessListener {
+                println("Successfully deleted $userIdThatAccepts")
+            }
+            .addOnFailureListener { exception ->
+                println("Didn't manage to delete $userIdThatAccepts")
+            }
+
+        val idThatAccepts = hashMapOf(myFriends to FieldValue.arrayUnion(userIdThatAccepts));
+        val idThatSends = hashMapOf(myFriends to FieldValue.arrayUnion(userIdThatSentRequest))
+        // add new user to friends collection
+        firestore.collection(friendRequestsCollection)
+            .document(userIdThatAccepts)
+            .set(idThatSends, SetOptions.merge())
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+
+        firestore.collection(friendRequestsCollection)
+            .document(userIdThatSentRequest)
+            .set(idThatAccepts, SetOptions.merge())
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+            .await()
+    }
+
+    inline fun <reified T> Array<T>.removeValue(value: T) =
+        filterNot { it == value }.toTypedArray()
 
     override suspend fun leaveMeeting(
         meetingUid: String,
@@ -820,20 +903,21 @@ class DatabaseService(
         return meetingsList
     }
 
-    override suspend fun fetchFriendRequests(userUid: String): List<String>? {
+    override suspend fun fetchFriendsOrRequestsUsersList(
+        userUid: String,
+        listToFetch: String
+    ): List<String>? {
         // Fetch the document
         var taskCompletionSource = TaskCompletionSource<List<String>>()
 
         firestore.collection(friendRequestsCollection)
-            .document(userUid).
-            get().
-            addOnSuccessListener { document ->
+            .document(userUid).get().addOnSuccessListener { document ->
                 if (document.exists()) {
                     // Document exists, access the array field
-                    val dataArray = document[friendRequests] as? List<String>
+                    val dataArray = document[listToFetch] as? List<String>
                     if (dataArray != null) {
                         // Use the array of strings
-                       taskCompletionSource.trySetResult(dataArray)
+                        taskCompletionSource.trySetResult(dataArray)
                     } else {
                         taskCompletionSource.trySetResult(null)
                         println("Array field is null or not a List<String>")
