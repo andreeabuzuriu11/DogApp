@@ -93,44 +93,59 @@ class AddFriendViewModel : BaseViewModel() {
     }
 
     fun sendFriendRequest(userReceivingRequest: UserObj) {
-        var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
-        var userReceivingRequestUid: String = userReceivingRequest.uid!!
+        val userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
+        val userReceivingRequestUid: String = userReceivingRequest.uid!!
 
-        // todo read all requests before!!
+        // todo fix this duplicate code
+        viewModelScope.launch {
+            var currentUser = databaseService.fetchUserByUid(userSendingRequestUid)
+            var userThatReceive = databaseService.fetchUserByUid(userReceivingRequestUid)
 
-        val requestObjForUserThatSends = CreateNewReq()
-        requestObjForUserThatSends.ownRequests!!.add(userReceivingRequestUid)
+            var userThatSendsReq = currentUser!!.request
+            var userThatReceiveReq = userThatReceive!!.request
 
-        val requestObjForUserThatReceives = CreateNewReq()
-        requestObjForUserThatReceives.friendsRequests!!.add(userSendingRequestUid)
+            if (userThatSendsReq == null)
+                userThatSendsReq = CreateNewReq()
 
-        viewModelScope.launch(Dispatchers.IO) {
+            if (userThatReceiveReq == null)
+                userThatReceiveReq = CreateNewReq()
 
-            databaseService.updateRequestForUser(
-                userSendingRequestUid,
-                requestObjForUserThatSends,
-                object :
-                    IOnCompleteListener {
-                    override fun onComplete(successful: Boolean, exception: Exception?) {
-                    }
-                })
+            // add new info about the request
+            if (!userThatSendsReq.ownRequests!!.contains(userReceivingRequestUid))
+                userThatSendsReq.ownRequests!!.add(userReceivingRequestUid)
+
+            if (!userThatReceiveReq.friendsRequests!!.contains(userSendingRequestUid))
+                userThatReceiveReq.friendsRequests!!.add(userSendingRequestUid)
+
+            viewModelScope.launch(Dispatchers.IO) {
+
+                databaseService.updateRequestForUser(
+                    userSendingRequestUid,
+                    userThatSendsReq,
+                    object :
+                        IOnCompleteListener {
+                        override fun onComplete(successful: Boolean, exception: Exception?) {
+                        }
+                    })
+            }
+
+            viewModelScope.launch(Dispatchers.IO) {
+                databaseService.updateRequestForUser(
+                    userReceivingRequestUid,
+                    userThatReceiveReq,
+                    object :
+                        IOnCompleteListener {
+                        override fun onComplete(successful: Boolean, exception: Exception?) {
+                        }
+                    })
+            }
+
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
 
-            databaseService.updateRequestForUser(
-                userReceivingRequestUid,
-                requestObjForUserThatReceives,
-                object :
-                    IOnCompleteListener {
-                    override fun onComplete(successful: Boolean, exception: Exception?) {
-                    }
-                })
-        }
     }
 
-    fun CreateNewReq() : RequestObj
-    {
+    fun CreateNewReq(): RequestObj {
         return RequestObj(arrayListOf(), arrayListOf(), arrayListOf())
     }
 
