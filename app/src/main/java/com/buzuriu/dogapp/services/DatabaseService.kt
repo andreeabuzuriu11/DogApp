@@ -297,21 +297,22 @@ class DatabaseService(
         userIdThatSentRequest: String,
         onCompleteListener: IOnCompleteListener
     ) {
-        val userThatSentOwnReqList =
+        var userThatSentOwnReqList =
             fetchFriendsOrRequestsUsersList(userIdThatSentRequest, ownRequests)
-        val userThatAcceptsFriendReqList =
+        var userThatAcceptsFriendReqList =
             fetchFriendsOrRequestsUsersList(userIdThatAccepts, friendRequests)
 
-        userThatSentOwnReqList!!.filter { it != userIdThatAccepts }
-        userThatAcceptsFriendReqList!!.filter { it != userIdThatSentRequest }
+        userThatSentOwnReqList = userThatSentOwnReqList!!.filter { !it.equals(userIdThatAccepts) }
+        userThatAcceptsFriendReqList =
+            userThatAcceptsFriendReqList!!.filter { !it.equals(userIdThatSentRequest) }
 
         val userThatSentOwnReqHashMap = hashMapOf(ownRequests to userThatSentOwnReqList);
-        val userThatAcceptsFriendReqHashMap = hashMapOf(friendRequests to userThatAcceptsFriendReqList);
+        val userThatAcceptsFriendReqHashMap =
+            hashMapOf(friendRequests to userThatAcceptsFriendReqList);
 
-        // todo fix deletion does not work
         firestore.collection(friendRequestsCollection)
             .document(userIdThatSentRequest)
-            .set(userThatSentOwnReqHashMap, SetOptions.merge())
+            .set(userThatSentOwnReqHashMap)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .addOnSuccessListener {
                 println("Successfully deleted $userIdThatSentRequest")
@@ -319,22 +320,10 @@ class DatabaseService(
             .addOnFailureListener { exception ->
                 println("Didn't manage to delete $userIdThatSentRequest")
             }
-
-        // todo fix deletion does not work
+        
         firestore.collection(friendRequestsCollection)
             .document(userIdThatAccepts)
-            .set(userThatAcceptsFriendReqHashMap, SetOptions.merge())
-            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
-            .addOnSuccessListener {
-                println("Successfully deleted $userIdThatAccepts")
-            }
-            .addOnFailureListener { exception ->
-                println("Didn't manage to delete $userIdThatAccepts")
-            }
-
-        firestore.collection(friendRequestsCollection)
-            .document(userIdThatAccepts)
-            .set(userThatAcceptsFriendReqHashMap, SetOptions.merge())
+            .set(userThatAcceptsFriendReqHashMap)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .addOnSuccessListener {
                 println("Successfully deleted $userIdThatAccepts")
