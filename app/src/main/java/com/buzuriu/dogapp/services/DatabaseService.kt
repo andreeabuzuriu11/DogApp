@@ -135,9 +135,9 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
-    suspend fun sendFriendRequest(
-        userIdThatSends: String,
-        userIdThatReceives: String,
+    suspend fun updateRequestForUser(
+        userId: String,
+        requestObj: RequestObj,
         onCompleteListener: IOnCompleteListener
     )
 
@@ -277,23 +277,14 @@ class DatabaseService(
             .await()
     }
 
-    override suspend fun sendFriendRequest(
-        userIdThatSends: String,
-        userIdThatReceives: String,
+    override suspend fun updateRequestForUser(
+        userId: String,
+        requestObj: RequestObj,
         onCompleteListener: IOnCompleteListener
     ) {
-        val ownRequests = hashMapOf(ownRequests to FieldValue.arrayUnion(userIdThatReceives));
-        val friendRequests = hashMapOf(friendRequests to FieldValue.arrayUnion(userIdThatSends))
-
-        firestore.collection(friendRequestsCollection)
-            .document(userIdThatSends)
-            .set(ownRequests, SetOptions.merge())
-            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
-            .await()
-
-        firestore.collection(friendRequestsCollection)
-            .document(userIdThatReceives)
-            .set(friendRequests, SetOptions.merge())
+        firestore.collection(userCollection)
+            .document(userId)
+            .update(friendRequestsCollection, requestObj)
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }

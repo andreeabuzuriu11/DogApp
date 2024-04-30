@@ -8,4 +8,5 @@ data class UserObj(
     var gender: String? = null,
     var rating: Float? = null,
     var imageUrl: String = "",
+    var request: RequestObj? = null
 )

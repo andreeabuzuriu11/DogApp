@@ -6,6 +6,7 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.models.RequestObj
 import com.buzuriu.dogapp.models.UserObj
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -95,19 +96,42 @@ class AddFriendViewModel : BaseViewModel() {
         var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
         var userReceivingRequestUid: String = userReceivingRequest.uid!!
 
+        // todo read all requests before!!
+
+        val requestObjForUserThatSends = CreateNewReq()
+        requestObjForUserThatSends.ownRequests!!.add(userReceivingRequestUid)
+
+        val requestObjForUserThatReceives = CreateNewReq()
+        requestObjForUserThatReceives.friendsRequests!!.add(userSendingRequestUid)
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            databaseService.sendFriendRequest(
+            databaseService.updateRequestForUser(
                 userSendingRequestUid,
-                userReceivingRequestUid,
+                requestObjForUserThatSends,
                 object :
                     IOnCompleteListener {
                     override fun onComplete(successful: Boolean, exception: Exception?) {
-
                     }
                 })
         }
+
+        viewModelScope.launch(Dispatchers.IO) {
+
+            databaseService.updateRequestForUser(
+                userReceivingRequestUid,
+                requestObjForUserThatReceives,
+                object :
+                    IOnCompleteListener {
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+                    }
+                })
+        }
+    }
+
+    fun CreateNewReq() : RequestObj
+    {
+        return RequestObj(arrayListOf(), arrayListOf(), arrayListOf())
     }
 
 }
