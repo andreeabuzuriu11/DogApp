@@ -70,7 +70,7 @@ class FriendsViewModel : BaseViewModel() {
     }
 
     private fun friendRequestPressed(userObj: UserObj) {
-        println("Friends request cell presseed")
+        println("Friends request cell pressed")
     }
 
     fun findUser(searchedUserText: String) {

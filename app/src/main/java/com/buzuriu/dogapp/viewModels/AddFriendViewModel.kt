@@ -99,14 +99,17 @@ class AddFriendViewModel : BaseViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
 
-
             // todo read all reqs before
 
-            var userThatSendsReq = CreateNewReq()
-            userThatSendsReq.ownRequests!!.add(userReceivingRequestUid)
+            var userThatSendsReq = databaseService.fetchRequestObj(userSendingRequestUid)
+            if (userThatSendsReq== null)
+                userThatSendsReq = CreateNewReq()
+            userThatSendsReq!!.ownRequests!!.add(userReceivingRequestUid)
 
-            var userThatGetsReq = CreateNewReq()
-            userThatGetsReq.friendsRequests!!.add(userSendingRequestUid)
+            var userThatGetsReq = databaseService.fetchRequestObj(userReceivingRequestUid)
+            if (userThatGetsReq== null)
+                userThatGetsReq = CreateNewReq()
+            userThatGetsReq!!.friendsRequests!!.add(userSendingRequestUid)
 
             viewModelScope.launch {
                 databaseService.newSendFriendRequest(currentUser!!.uid, userThatSendsReq,
