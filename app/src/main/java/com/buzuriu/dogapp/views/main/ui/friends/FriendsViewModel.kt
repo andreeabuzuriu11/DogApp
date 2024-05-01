@@ -7,6 +7,7 @@ import com.buzuriu.dogapp.adapters.FriendRequestAdapter
 import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.models.RequestObj
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.services.DatabaseService
 import com.buzuriu.dogapp.viewModels.BaseViewModel
@@ -30,6 +31,9 @@ class FriendsViewModel : BaseViewModel() {
     var friendsAdapter: FriendsAdapter? = null
     var friendsRequestAdapter: FriendRequestAdapter? = null
 
+
+    var currentUserReqObj: RequestObj? = null
+
     private val friendRequests = "FriendRequests"
 
 
@@ -42,21 +46,20 @@ class FriendsViewModel : BaseViewModel() {
         friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
 
         viewModelScope.launch {
-//            var friendRequestsUids =
-//                databaseService.fetchFriendsOrRequestsUsersList(currentUser!!.uid, friendRequests)
-//            if (friendRequestsUids != null) {
-//                friendRequestsUids.forEach {
-//                    val user = databaseService.fetchUserByUid(it)
-//                    friendsRequestList.add(user!!)
-//                    doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
-//
-//                }
-//            }
+            currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid)
+            var currentUserFriendsReq = currentUserReqObj!!.friendsRequests
+            if (currentUserFriendsReq != null) {
+                currentUserFriendsReq.forEach {
+                    val user = databaseService.fetchUserByUid(it)
+                    friendsRequestList.add(user!!)
+                    doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
 
-            databaseService.fetchRequestObj(currentUser!!.uid)
+                }
+            }
+
         }
 
-//        doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
+        doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
         friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, this)
         friendsRequestAdapter!!.notifyDataSetChanged()
     }

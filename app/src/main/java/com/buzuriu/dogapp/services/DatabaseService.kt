@@ -161,7 +161,7 @@ interface IDatabaseService {
 
     suspend fun fetchRequestObj(
         userId: String
-    )
+    ): RequestObj?
 }
 
 class DatabaseService(
@@ -409,25 +409,31 @@ class DatabaseService(
             }
     }
 
-    override suspend fun fetchRequestObj(userId: String) {
+    override suspend fun fetchRequestObj(userId: String): RequestObj? {
         var requestObj: RequestObj? = null
         val documentSnapshot =
             firestore.collection(friendRequestsCollection)
                 .document(userId)
                 .get()
-                .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        requestObj = document.toObject(RequestObj::class.java)
+                .await()
 
-                        println("user " + userId + " ownRequests: ${requestObj?.ownRequests}")
-                        println("user " + userId + " friendsRequests: ${requestObj?.friendsRequests}")
-                        println("user " + userId + " myFriends: ${requestObj?.myFriends}")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    println("Error getting document: $exception")
-                }
+        if (documentSnapshot != null && documentSnapshot.exists()) {
+            try {
+                requestObj = documentSnapshot.toObject(RequestObj::class.java)
 
+                println("user " + userId + " ownRequests: ${requestObj?.ownRequests}")
+                println("user " + userId + " friendsRequests: ${requestObj?.friendsRequests}")
+                println("user " + userId + " myFriends: ${requestObj?.myFriends}")
+
+                return requestObj
+
+            } catch (e: Exception) {
+                Log.d("Error", e.message.toString())
+                return null
+            }
+        }
+
+        return null
     }
 
 
