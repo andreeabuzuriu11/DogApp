@@ -47,14 +47,19 @@ class FriendsViewModel : BaseViewModel() {
 
         viewModelScope.launch {
             currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid)
-            var currentUserFriendsReq = currentUserReqObj!!.friendsRequests
-            if (currentUserFriendsReq != null) {
-                currentUserFriendsReq.forEach {
-                    val user = databaseService.fetchUserByUid(it)
-                    friendsRequestList.add(user!!)
-                    doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
+            if (currentUserReqObj != null) {
+                if (currentUserReqObj!!.friendsRequests != null) {
+                    var currentUserFriendsReq = currentUserReqObj!!.friendsRequests
+                    if (currentUserFriendsReq != null) {
+                        currentUserFriendsReq.forEach {
+                            val user = databaseService.fetchUserByUid(it)
+                            friendsRequestList.add(user!!)
+                            doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
 
+                        }
+                    }
                 }
+
             }
 
         }
@@ -153,21 +158,7 @@ class FriendsViewModel : BaseViewModel() {
 
     fun acceptRequest(userObj: UserObj) {
         viewModelScope.launch {
-            databaseService.deleteRequest(currentUser!!.uid, userObj.uid!!, object :
-                IOnCompleteListener {
-                override fun onComplete(successful: Boolean, exception: Exception?) {
-                    println("deletion complete")
-                }
-            })
-        }
-
-        viewModelScope.launch {
-            databaseService.addFriendToList(currentUser!!.uid, userObj.uid!!, object :
-                IOnCompleteListener {
-                override fun onComplete(successful: Boolean, exception: Exception?) {
-                    println("addition complete")
-                }
-            })
+            databaseService.acceptRequest(currentUser!!.uid, userObj.uid!!)
         }
     }
 

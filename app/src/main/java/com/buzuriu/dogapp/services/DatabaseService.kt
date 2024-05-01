@@ -10,20 +10,17 @@ import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.tasks.await
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.temporal.TemporalAdjusters
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 interface IDatabaseService {
@@ -135,6 +132,7 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
+    // to delete
     suspend fun sendFriendRequest(
         userIdThatSends: String,
         userIdThatReceives: String,
@@ -147,12 +145,14 @@ interface IDatabaseService {
         onCompleteListener: IOnCompleteListener
     )
 
+    // to delete
     suspend fun deleteRequest(
         userIdThatAccepts: String,
         userIdThatSentRequest: String,
         onCompleteListener: IOnCompleteListener
     )
 
+    // to delete
     suspend fun addFriendToList(
         userIdThatAccepts: String,
         userIdThatSentRequest: String,
@@ -162,6 +162,11 @@ interface IDatabaseService {
     suspend fun fetchRequestObj(
         userId: String
     ): RequestObj?
+
+    suspend fun acceptRequest(
+        userAccepting: String,
+        userRequesting: String
+    )
 }
 
 class DatabaseService(
@@ -434,6 +439,40 @@ class DatabaseService(
         }
 
         return null
+    }
+
+    override suspend fun acceptRequest(userAccepting: String, userRequesting: String) {
+        // delete req from both lists + update
+
+        var userRequestingReq = fetchRequestObj(userRequesting)
+        var userRequestingOwnRequests = userRequestingReq!!.ownRequests
+        var userRequestingMyFriends = userRequestingReq!!.myFriends
+
+        // delete user accepting from  "own requests" user requesting
+        userRequestingOwnRequests!!.remove(userAccepting)
+
+        // add user accepting to "my friends" user requesting
+        userRequestingMyFriends!!.add(userAccepting)
+
+        var userAcceptingReq = fetchRequestObj(userAccepting)
+        var userAcceptingFriendRequests = userAcceptingReq!!.friendsRequests
+        var userAcceptingMyFriends = userAcceptingReq!!.myFriends
+
+        // delete user requesting from "friend requests" user accepting
+        userAcceptingFriendRequests!!.remove(userRequesting)
+
+        // add requesting to "my friends" user accepting
+        userAcceptingMyFriends!!.add(userRequesting)
+
+
+        // update the new req
+        newSendFriendRequest(userAccepting, userAcceptingReq, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+        })
+        newSendFriendRequest(userRequesting, userRequestingReq, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+        })
+
     }
 
 
