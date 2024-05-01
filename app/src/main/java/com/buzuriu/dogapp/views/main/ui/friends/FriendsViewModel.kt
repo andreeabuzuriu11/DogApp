@@ -42,16 +42,18 @@ class FriendsViewModel : BaseViewModel() {
         friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
 
         viewModelScope.launch {
-            var friendRequestsUids =
-                databaseService.fetchFriendsOrRequestsUsersList(currentUser!!.uid, friendRequests)
-            if (friendRequestsUids != null) {
-                friendRequestsUids.forEach {
-                    val user = databaseService.fetchUserByUid(it)
-                    friendsRequestList.add(user!!)
-                    doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
+//            var friendRequestsUids =
+//                databaseService.fetchFriendsOrRequestsUsersList(currentUser!!.uid, friendRequests)
+//            if (friendRequestsUids != null) {
+//                friendRequestsUids.forEach {
+//                    val user = databaseService.fetchUserByUid(it)
+//                    friendsRequestList.add(user!!)
+//                    doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
+//
+//                }
+//            }
 
-                }
-            }
+            databaseService.fetchRequestObj(currentUser!!.uid)
         }
 
 //        doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()

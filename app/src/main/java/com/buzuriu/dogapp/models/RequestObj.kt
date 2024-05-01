@@ -14,4 +14,6 @@ class RequestObj {
         this.friendsRequests = friendsRequests
         this.myFriends = myFriends
     }
+
+    constructor()
 }

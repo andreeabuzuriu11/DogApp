@@ -158,6 +158,10 @@ interface IDatabaseService {
         userIdThatSentRequest: String,
         onCompleteListener: IOnCompleteListener
     )
+
+    suspend fun fetchRequestObj(
+        userId: String
+    )
 }
 
 class DatabaseService(
@@ -403,6 +407,27 @@ class DatabaseService(
             .addOnFailureListener { exception ->
                 println("Didn't manage to delete $userIdThatSentRequest")
             }
+    }
+
+    override suspend fun fetchRequestObj(userId: String) {
+        var requestObj: RequestObj? = null
+        val documentSnapshot =
+            firestore.collection(friendRequestsCollection)
+                .document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        requestObj = document.toObject(RequestObj::class.java)
+
+                        println("user " + userId + " ownRequests: ${requestObj?.ownRequests}")
+                        println("user " + userId + " friendsRequests: ${requestObj?.friendsRequests}")
+                        println("user " + userId + " myFriends: ${requestObj?.myFriends}")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    println("Error getting document: $exception")
+                }
+
     }
 
 
