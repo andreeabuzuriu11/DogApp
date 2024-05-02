@@ -26,15 +26,12 @@ class FriendsViewModel : BaseViewModel() {
     var doesUserHaveAnyFriends = MutableLiveData(false)
     var doesUserHaveAnyRequests = MutableLiveData(false)
 
-    var friendsList: ArrayList<UserObj> = ArrayList()
+    private var friendsList: ArrayList<UserObj> = ArrayList()
     var friendsRequestList: ArrayList<UserObj> = ArrayList()
     var friendsAdapter: FriendsAdapter? = null
     var friendsRequestAdapter: FriendRequestAdapter? = null
 
-
-    var currentUserReqObj: RequestObj? = null
-
-    private val friendRequests = "FriendRequests"
+    private var currentUserReqObj: RequestObj? = null
 
 
     init {
