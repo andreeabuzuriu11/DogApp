@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/navigation_meetings"
-        android:icon="@drawable/my_meeting_icon"
+        android:icon="@drawable/dog_walker_person_walk_pet_svgrepo_com"
         android:title="@string/title_my_meetings" />
 
     <item
