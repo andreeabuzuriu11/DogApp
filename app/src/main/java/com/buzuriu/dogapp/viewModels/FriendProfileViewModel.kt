@@ -26,11 +26,8 @@ class FriendProfileViewModel : BaseViewModel() {
 
     var eventsAdapter : FriendMeetingAdapter? = null
     init {
-
         user = exchangeInfoService.get<UserObj>(this::class.qualifiedName!!)!!
         eventsAdapter = FriendMeetingAdapter(meetingsList, ::selectedMeeting, this)
-
-
     }
 
 

@@ -11,16 +11,14 @@ import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.RequestObj
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.viewModels.BaseViewModel
+import com.buzuriu.dogapp.viewModels.FriendProfileViewModel
 import com.buzuriu.dogapp.views.AddFriendActivity
+import com.buzuriu.dogapp.views.FriendProfileActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
 class FriendsViewModel : BaseViewModel() {
-
-    var foundUser: UserObj? = null
-    var foundUsersList: ArrayList<UserObj> = ArrayList()
-    var userAdapter: UserAdapter? = null
 
     var isFriendTabSelected = MutableLiveData(true)
     var doesUserHaveAnyFriends = MutableLiveData(false)
@@ -48,7 +46,7 @@ class FriendsViewModel : BaseViewModel() {
     private suspend fun fetchMyFriendAndFriendsRequest() {
         showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
-            currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid,object :
+            currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid, object :
                 IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
                 }
@@ -58,11 +56,15 @@ class FriendsViewModel : BaseViewModel() {
                 if (currentUserReqObj != null) {
                     if (currentUserReqObj!!.friendsRequests != null) {
                         currentUserReqObj!!.friendsRequests?.forEach {
-                            val user = databaseService.fetchUserByUid(it, object : IOnCompleteListener{
-                                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
-                                    showLoadingView(false)
-                                }
-                            })
+                            val user =
+                                databaseService.fetchUserByUid(it, object : IOnCompleteListener {
+                                    override fun onComplete(
+                                        successful: Boolean,
+                                        exception: java.lang.Exception?
+                                    ) {
+                                        showLoadingView(false)
+                                    }
+                                })
                             friendsRequestList.add(user!!)
                             doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
 
@@ -70,12 +72,16 @@ class FriendsViewModel : BaseViewModel() {
                     }
                     if (currentUserReqObj!!.myFriends != null) {
                         currentUserReqObj!!.myFriends?.forEach {
-                            val user = databaseService.fetchUserByUid(it, object : IOnCompleteListener{
-                                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
-                                    showLoadingView(false)
+                            val user =
+                                databaseService.fetchUserByUid(it, object : IOnCompleteListener {
+                                    override fun onComplete(
+                                        successful: Boolean,
+                                        exception: java.lang.Exception?
+                                    ) {
+                                        showLoadingView(false)
 
-                                }
-                            })
+                                    }
+                                })
                             friendsList.add(user!!)
                             doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
                         }
@@ -100,6 +106,8 @@ class FriendsViewModel : BaseViewModel() {
 
     private fun showFriendProfile(userObj: UserObj) {
         Log.d("click", "show friend profile")
+        exchangeInfoService.put(FriendProfileViewModel::class.java.name, userObj)
+        navigationService.navigateToActivity(FriendProfileActivity::class.java, false)
     }
 
     fun searchFriends() {
