@@ -12,21 +12,22 @@ import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FriendProfileViewModel : BaseViewModel() {
 
-    var user : UserObj
+    var user = MutableLiveData<UserObj>()
 
-    var userName = MutableLiveData<String>("")
-    var userImage = MutableLiveData<String>("")
+    var userName = MutableLiveData("")
+    var userImage = MutableLiveData("")
     var isPlaceholderVisible = MutableLiveData(false)
     private var meetingsList = ArrayList<MyCustomMeetingObj>()
 
     var eventsAdapter : FriendMeetingAdapter? = null
     init {
-        user = exchangeInfoService.get<UserObj>(this::class.qualifiedName!!)!!
+        user.value = exchangeInfoService.get<UserObj>(this::class.qualifiedName!!)!!
         eventsAdapter = FriendMeetingAdapter(meetingsList, ::selectedMeeting, this)
     }
 
@@ -35,7 +36,5 @@ class FriendProfileViewModel : BaseViewModel() {
         exchangeInfoService.put(MeetingDetailViewModel::class.java.name, myCustomMeetingObj)
         navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
     }
-
-
 
 }
