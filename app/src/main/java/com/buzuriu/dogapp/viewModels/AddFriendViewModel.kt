@@ -1,16 +1,11 @@
 package com.buzuriu.dogapp.viewModels
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.adapters.FriendsAdapter
 import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.RequestObj
 import com.buzuriu.dogapp.models.UserObj
-import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class AddFriendViewModel : BaseViewModel() {

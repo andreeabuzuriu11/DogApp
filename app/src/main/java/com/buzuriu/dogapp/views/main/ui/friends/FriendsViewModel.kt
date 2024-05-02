@@ -35,8 +35,6 @@ class FriendsViewModel : BaseViewModel() {
 
 
     init {
-        userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
-
         friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
         friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, this)
 
@@ -95,10 +93,6 @@ class FriendsViewModel : BaseViewModel() {
         }
     }
 
-    private fun friendRequestPressed(userObj: UserObj) {
-        println("Friends request cell pressed")
-    }
-
 
     private fun showLoading(isVisible: Boolean) {
         showLoadingView(isVisible)
@@ -106,11 +100,6 @@ class FriendsViewModel : BaseViewModel() {
 
     private fun showFriendProfile(userObj: UserObj) {
         Log.d("click", "show friend profile")
-    }
-
-    private fun sendFriendRequest(userReceivingRequest: UserObj) {
-        var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
-
     }
 
     fun searchFriends() {
