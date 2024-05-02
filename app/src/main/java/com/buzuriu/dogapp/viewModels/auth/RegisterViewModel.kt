@@ -191,7 +191,11 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
     private suspend fun getUserAccountInfo() {
-        val userObj : UserObj? = databaseService.fetchUserByUid(currentUser!!.uid)
+        val userObj : UserObj? = databaseService.fetchUserByUid(currentUser!!.uid, object : IOnCompleteListener{
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+
+            }
+        })
 
         if (userObj!=null)
             localDatabaseService.add(LocalDBItems.currentUser, userObj)

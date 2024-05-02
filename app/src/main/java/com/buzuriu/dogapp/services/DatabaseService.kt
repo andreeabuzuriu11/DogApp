@@ -79,7 +79,7 @@ interface IDatabaseService {
 
     suspend fun fetchMeetingByUid(meetingUid: String): MeetingObj?
     suspend fun fetchDogByUid(dogUid: String): DogObj?
-    suspend fun fetchUserByUid(userUid: String): UserObj?
+    suspend fun fetchUserByUid(userUid: String, onCompleteListener: IOnCompleteListener): UserObj?
     suspend fun fetchUsers(): List<UserObj>?
     suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj>?
     suspend fun fetchReviewsFor(field: String, userUid: String): ArrayList<ReviewObj>?
@@ -160,7 +160,8 @@ interface IDatabaseService {
     )
 
     suspend fun fetchRequestObj(
-        userId: String
+        userId: String,
+        onCompleteListener: IOnCompleteListener
     ): RequestObj?
 
     suspend fun acceptRequest(
@@ -414,7 +415,10 @@ class DatabaseService(
             }
     }
 
-    override suspend fun fetchRequestObj(userId: String): RequestObj? {
+    override suspend fun fetchRequestObj(
+        userId: String,
+        onCompleteListener: IOnCompleteListener
+    ): RequestObj? {
         var requestObj: RequestObj? = null
         val documentSnapshot =
             firestore.collection(friendRequestsCollection)
@@ -444,7 +448,10 @@ class DatabaseService(
     override suspend fun acceptRequest(userAccepting: String, userRequesting: String) {
         // delete req from both lists + update
 
-        var userRequestingReq = fetchRequestObj(userRequesting)
+        var userRequestingReq = fetchRequestObj(userRequesting, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: Exception?) {
+            }
+        })
         var userRequestingOwnRequests = userRequestingReq!!.ownRequests
         var userRequestingMyFriends = userRequestingReq!!.myFriends
 
@@ -454,7 +461,10 @@ class DatabaseService(
         // add user accepting to "my friends" user requesting
         userRequestingMyFriends!!.add(userAccepting)
 
-        var userAcceptingReq = fetchRequestObj(userAccepting)
+        var userAcceptingReq = fetchRequestObj(userAccepting, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: Exception?) {
+            }
+        })
         var userAcceptingFriendRequests = userAcceptingReq!!.friendsRequests
         var userAcceptingMyFriends = userAcceptingReq!!.myFriends
 
@@ -531,7 +541,7 @@ class DatabaseService(
         return meetingObj
     }
 
-    override suspend fun fetchUserByUid(userUid: String): UserObj? {
+    override suspend fun fetchUserByUid(userUid: String, onCompleteListener: IOnCompleteListener): UserObj? {
         var userObj: UserObj? = null
         val documentSnapshot =
             firestore.collection(userCollection)

@@ -101,12 +101,18 @@ class AddFriendViewModel : BaseViewModel() {
 
             // todo read all reqs before
 
-            var userThatSendsReq = databaseService.fetchRequestObj(userSendingRequestUid)
+            var userThatSendsReq = databaseService.fetchRequestObj(userSendingRequestUid,object : IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                }
+            })
             if (userThatSendsReq== null)
                 userThatSendsReq = CreateNewReq()
             userThatSendsReq!!.ownRequests!!.add(userReceivingRequestUid)
 
-            var userThatGetsReq = databaseService.fetchRequestObj(userReceivingRequestUid)
+            var userThatGetsReq = databaseService.fetchRequestObj(userReceivingRequestUid,object : IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                }
+            })
             if (userThatGetsReq== null)
                 userThatGetsReq = CreateNewReq()
             userThatGetsReq!!.friendsRequests!!.add(userSendingRequestUid)

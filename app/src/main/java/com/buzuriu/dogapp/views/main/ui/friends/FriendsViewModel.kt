@@ -1,5 +1,6 @@
 package com.buzuriu.dogapp.views.main.ui.friends
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,7 +10,6 @@ import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.RequestObj
 import com.buzuriu.dogapp.models.UserObj
-import com.buzuriu.dogapp.services.DatabaseService
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.views.AddFriendActivity
 import kotlinx.coroutines.Dispatchers
@@ -40,45 +40,62 @@ class FriendsViewModel : BaseViewModel() {
     init {
         userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
 
-//        friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
+        friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
+        friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, this)
 
         viewModelScope.launch {
-            currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid)
-            if (currentUserReqObj != null) {
-                if (currentUserReqObj!!.friendsRequests != null) {
-                    var currentUserFriendsReq = currentUserReqObj!!.friendsRequests
-                    if (currentUserFriendsReq != null) {
-                        currentUserFriendsReq.forEach {
-                            val user = databaseService.fetchUserByUid(it)
+            fetchMyFriendAndFriendsRequest()
+        }
+
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private suspend fun fetchMyFriendAndFriendsRequest() {
+        showLoadingView(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid,object :
+                IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                }
+            })
+
+            viewModelScope.launch(Dispatchers.Main) {
+                if (currentUserReqObj != null) {
+                    if (currentUserReqObj!!.friendsRequests != null) {
+                        currentUserReqObj!!.friendsRequests?.forEach {
+                            val user = databaseService.fetchUserByUid(it, object : IOnCompleteListener{
+                                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                                    showLoadingView(false)
+                                }
+                            })
                             friendsRequestList.add(user!!)
                             doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
 
                         }
                     }
-                }
-                if (currentUserReqObj!!.myFriends != null) {
-                    var currentUserMyFriends = currentUserReqObj!!.myFriends
-                    if (currentUserMyFriends != null) {
-                        currentUserMyFriends.forEach {
-                            val user = databaseService.fetchUserByUid(it)
+                    if (currentUserReqObj!!.myFriends != null) {
+                        currentUserReqObj!!.myFriends?.forEach {
+                            val user = databaseService.fetchUserByUid(it, object : IOnCompleteListener{
+                                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                                    showLoadingView(false)
+
+                                }
+                            })
                             friendsList.add(user!!)
                             doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
-
                         }
                     }
-                }
 
+                }
+                doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
+                friendsAdapter!!.notifyDataSetChanged()
+
+                doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
+                friendsRequestAdapter!!.notifyDataSetChanged()
             }
 
+            showLoading(false)
         }
-
-        doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
-        friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
-        friendsAdapter!!.notifyDataSetChanged()
-
-        doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
-        friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, this)
-        friendsRequestAdapter!!.notifyDataSetChanged()
     }
 
     private fun friendRequestPressed(userObj: UserObj) {

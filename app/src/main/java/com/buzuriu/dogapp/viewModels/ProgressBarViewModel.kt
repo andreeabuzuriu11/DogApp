@@ -52,7 +52,11 @@ class ProgressBarViewModel : BaseViewModel() {
 
         if (userMeetings != null) {
             for (meeting in userMeetings) {
-                user = databaseService.fetchUserByUid(meeting.userUid!!)
+                user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+
+                    }
+                })
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 if (dog != null) {
@@ -79,7 +83,11 @@ class ProgressBarViewModel : BaseViewModel() {
                 databaseService.fetchAllMeetingParticipants(meeting.uid!!)!!
             for (participant in allMeetingsParticipants)
                 if (participant.userUid == currentUser!!.uid) {
-                    user = databaseService.fetchUserByUid(meeting.userUid!!)
+                    user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
+                        override fun onComplete(successful: Boolean, exception: Exception?) {
+
+                        }
+                    })
                     dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                     if (dog != null) {
@@ -92,7 +100,11 @@ class ProgressBarViewModel : BaseViewModel() {
     }
 
     private suspend fun getUserAccountInfo() {
-        val userObj: UserObj? = databaseService.fetchUserByUid(currentUser!!.uid)
+        val userObj: UserObj? = databaseService.fetchUserByUid(currentUser!!.uid, object : IOnCompleteListener{
+            override fun onComplete(successful: Boolean, exception: Exception?) {
+
+            }
+        })
 
         if (userObj!=null) {
             localDatabaseService.add(LocalDBItems.currentUser, userObj)

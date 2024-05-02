@@ -6,11 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.ParticipantAdapter
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.MapUtils
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class PastMeetingDetailViewModel : BaseViewModel() {
 
@@ -63,7 +65,11 @@ class PastMeetingDetailViewModel : BaseViewModel() {
 
         if (allParticipantsList != null) {
             for (participant in allParticipantsList) {
-                user = databaseService.fetchUserByUid(participant.userUid!!)
+                user = databaseService.fetchUserByUid(participant.userUid!!, object : IOnCompleteListener{
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+
+                    }
+                })
                 if (user != null && participant.userUid != currentUser!!.uid) {
                     // check for user to be different of current user because current user
                     // will not be displayed here

@@ -327,7 +327,11 @@ class MapViewModel : BaseViewModel() {
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
-                user = databaseService.fetchUserByUid(meeting.userUid!!)
+                user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
+                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+
+                    }
+                })
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 if (user != null && dog != null) {
@@ -454,7 +458,11 @@ class MapViewModel : BaseViewModel() {
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
-                user = databaseService.fetchUserByUid(meeting.userUid!!)
+                user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
+                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+
+                    }
+                })
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 val reviews = fetchUserReviews(meeting.userUid!!)!!
@@ -496,7 +504,11 @@ class MapViewModel : BaseViewModel() {
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
-                user = databaseService.fetchUserByUid(meeting.userUid!!)
+                user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
+                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+
+                    }
+                })
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 val reviews = fetchUserReviews(meeting.userUid!!)

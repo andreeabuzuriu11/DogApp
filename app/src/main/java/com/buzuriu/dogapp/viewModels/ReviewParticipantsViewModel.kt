@@ -159,7 +159,11 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         allParticipantsList.add(creatorMeetingAsParticipant)
 
         for (participant in allParticipantsList) {
-            user = databaseService.fetchUserByUid(participant.userUid!!)
+            user = databaseService.fetchUserByUid(participant.userUid!!, object : IOnCompleteListener{
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+
+                }
+            })
             if (user != null && participant.userUid != currentUser!!.uid) {
                 // check for user to be different of current user because current user
                 // will not be displayed here
