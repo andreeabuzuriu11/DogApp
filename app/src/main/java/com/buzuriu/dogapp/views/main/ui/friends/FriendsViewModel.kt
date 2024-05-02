@@ -124,6 +124,9 @@ class FriendsViewModel : BaseViewModel() {
     }
 
     fun declineRequest(userObj: UserObj) {
-        println("Decline req from" + userObj.name)
+        viewModelScope.launch {
+            println("request declined")
+            databaseService.declineRequest(currentUser!!.uid, userObj.uid!!)
+        }
     }
 }

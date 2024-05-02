@@ -168,6 +168,11 @@ interface IDatabaseService {
         userAccepting: String,
         userRequesting: String
     )
+
+    suspend fun declineRequest(
+        userDeclining: String,
+        userRequesting: String
+    )
 }
 
 class DatabaseService(
@@ -485,6 +490,37 @@ class DatabaseService(
 
     }
 
+    override suspend fun declineRequest(userDeclining: String, userRequesting: String) {
+        // delete req from both lists + update
+        // todo this logic is duplicated also for accept req
+
+        var userRequestingReq = fetchRequestObj(userRequesting, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: Exception?) {
+            }
+        })
+        var userRequestingOwnRequests = userRequestingReq!!.ownRequests
+
+        // delete user declining from  "own requests" user requesting
+        userRequestingOwnRequests!!.remove(userDeclining)
+
+        var userDecliningReq = fetchRequestObj(userDeclining, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: Exception?) {
+            }
+        })
+        var userDecliningFriendRequests = userDecliningReq!!.friendsRequests
+
+        // delete user requesting from "friend requests" user declining
+        userDecliningFriendRequests!!.remove(userRequesting)
+
+        // update the new req
+        newSendFriendRequest(userDeclining, userDecliningReq, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+        })
+        newSendFriendRequest(userRequesting, userRequestingReq, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+        })
+    }
+
 
     inline fun <reified T> Array<T>.removeValue(value: T) =
         filterNot { it == value }.toTypedArray()
@@ -541,7 +577,10 @@ class DatabaseService(
         return meetingObj
     }
 
-    override suspend fun fetchUserByUid(userUid: String, onCompleteListener: IOnCompleteListener): UserObj? {
+    override suspend fun fetchUserByUid(
+        userUid: String,
+        onCompleteListener: IOnCompleteListener
+    ): UserObj? {
         var userObj: UserObj? = null
         val documentSnapshot =
             firestore.collection(userCollection)
