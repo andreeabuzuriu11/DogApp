@@ -40,10 +40,7 @@ class FriendsViewModel : BaseViewModel() {
     init {
         userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
 
-        val user1 = UserObj("123456", "mail@mail.com", "Tommy", "1234567", "Male")
-        friendsList.add(user1)
-        doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
-        friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
+//        friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
 
         viewModelScope.launch {
             currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid)
@@ -59,10 +56,25 @@ class FriendsViewModel : BaseViewModel() {
                         }
                     }
                 }
+                if (currentUserReqObj!!.myFriends != null) {
+                    var currentUserMyFriends = currentUserReqObj!!.myFriends
+                    if (currentUserMyFriends != null) {
+                        currentUserMyFriends.forEach {
+                            val user = databaseService.fetchUserByUid(it)
+                            friendsList.add(user!!)
+                            doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
+
+                        }
+                    }
+                }
 
             }
 
         }
+
+        doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
+        friendsAdapter = FriendsAdapter(friendsList, ::showFriendProfile)
+        friendsAdapter!!.notifyDataSetChanged()
 
         doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
         friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, this)
