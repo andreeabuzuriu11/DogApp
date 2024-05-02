@@ -50,6 +50,9 @@ class AddFriendViewModel : BaseViewModel() {
                                 foundUser = user
 
                     if (foundUser != null) {
+
+                        if (foundUser!!.uid == currentUser!!.uid)
+                            return@launch
                         if (!isUserAlreadyFound(foundUser!!)) {
                             foundUsersList.add(foundUser!!)
                         }
@@ -63,10 +66,11 @@ class AddFriendViewModel : BaseViewModel() {
                         }
                     }
                 }
-                userAdapter!!.notifyDataSetChanged()
 
             }
         }
+        userAdapter!!.notifyDataSetChanged()
+
     }
 
 
