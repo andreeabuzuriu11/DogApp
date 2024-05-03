@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.UserAdapter
+import com.buzuriu.dogapp.enums.FriendshipStateEnum
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.RequestObj
 import com.buzuriu.dogapp.models.UserObj
@@ -108,8 +109,8 @@ class AddFriendViewModel : BaseViewModel() {
     }
 
     fun sendFriendRequest(userReceivingRequest: UserObj) {
-        var userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
-        var userReceivingRequestUid: String = userReceivingRequest.uid!!
+        val userSendingRequestUid: String = firebaseAuthService.getCurrentUser()!!.uid
+        val userReceivingRequestUid: String = userReceivingRequest.uid!!
 
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -120,7 +121,8 @@ class AddFriendViewModel : BaseViewModel() {
                 })
             if (userThatSendsReq == null)
                 userThatSendsReq = CreateNewReq()
-            userThatSendsReq!!.ownRequests!!.add(userReceivingRequestUid)
+            userThatSendsReq.ownRequests!!.add(userReceivingRequestUid)
+            userThatSendsReq.friendshipStateEnum = FriendshipStateEnum.REQUESTED;
 
             var userThatGetsReq = databaseService.fetchRequestObj(userReceivingRequestUid,
                 object : IOnCompleteListener {
@@ -129,7 +131,8 @@ class AddFriendViewModel : BaseViewModel() {
                 })
             if (userThatGetsReq == null)
                 userThatGetsReq = CreateNewReq()
-            userThatGetsReq!!.friendsRequests!!.add(userSendingRequestUid)
+            userThatGetsReq.friendsRequests!!.add(userSendingRequestUid)
+            userThatGetsReq.friendshipStateEnum = FriendshipStateEnum.REQUESTED;
 
             viewModelScope.launch {
                 databaseService.newSendFriendRequest(currentUser!!.uid, userThatSendsReq,
@@ -154,7 +157,7 @@ class AddFriendViewModel : BaseViewModel() {
     }
 
     private fun CreateNewReq(): RequestObj {
-        return RequestObj(arrayListOf(), arrayListOf(), arrayListOf())
+        return RequestObj(arrayListOf(), arrayListOf(), arrayListOf(), FriendshipStateEnum.REQUESTED)
     }
 
 

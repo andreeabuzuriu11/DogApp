@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.services
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.buzuriu.dogapp.enums.FriendshipStateEnum
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.FieldsItems
@@ -489,6 +490,8 @@ class DatabaseService(
         // add requesting to "my friends" user accepting
         userAcceptingMyFriends!!.add(userRequesting)
 
+        userAcceptingReq.friendshipStateEnum = FriendshipStateEnum.ACCEPTED
+        userRequestingReq.friendshipStateEnum = FriendshipStateEnum.ACCEPTED
 
         // update the new req
         newSendFriendRequest(userAccepting, userAcceptingReq, object : IOnCompleteListener {
@@ -525,6 +528,8 @@ class DatabaseService(
             override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
         })
         newSendFriendRequest(userRequesting, userRequestingReq, onCompleteListener)
+
+        // this is anyway deleted so no status should be set here
     }
 
     override suspend fun deleteFriend(
