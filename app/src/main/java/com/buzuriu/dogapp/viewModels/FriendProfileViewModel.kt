@@ -1,5 +1,7 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FriendMeetingAdapter
@@ -7,6 +9,7 @@ import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.FieldsItems
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import kotlinx.coroutines.Dispatchers
@@ -107,7 +110,21 @@ class FriendProfileViewModel : BaseViewModel() {
                 IClickListener {
                 override fun clicked() {
                     //
+                    deleteFriendFromDatabase()
                 }
             })
+    }
+
+    fun deleteFriendFromDatabase() {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseService.deleteFriend(currentUser!!.uid, user.value!!.uid!!, object :
+                IOnCompleteListener {
+                @RequiresApi(Build.VERSION_CODES.N)
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                    navigationService.closeCurrentActivity()
+
+                }
+            })
+        }
     }
 }

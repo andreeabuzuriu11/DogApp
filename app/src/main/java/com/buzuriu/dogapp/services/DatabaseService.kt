@@ -174,6 +174,12 @@ interface IDatabaseService {
         userDeclining: String,
         userRequesting: String
     )
+
+    suspend fun deleteFriend(
+        userDeleting: String,
+        userDeleted: String,
+        onCompleteListener: IOnCompleteListener
+    )
 }
 
 class DatabaseService(
@@ -518,6 +524,41 @@ class DatabaseService(
             override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
         })
         newSendFriendRequest(userRequesting, userRequestingReq, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+        })
+    }
+
+    override suspend fun deleteFriend(
+        userDeleting: String,
+        userDeleted: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
+        // delete req from both lists + update
+        // todo this logic is duplicated also for accept req
+
+        var userDeletedReq = fetchRequestObj(userDeleted, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: Exception?) {
+            }
+        })
+        var userDeletedFriends = userDeletedReq!!.myFriends
+
+        // delete user declining from  "own requests" user requesting
+        userDeletedFriends!!.remove(userDeleting)
+
+        var userDeletingFriend = fetchRequestObj(userDeleting, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: Exception?) {
+            }
+        })
+        var userDeletingFriendReq = userDeletingFriend!!.myFriends
+
+        // delete user requesting from "friend requests" user declining
+        userDeletingFriendReq!!.remove(userDeleted)
+
+        // update the new req
+        newSendFriendRequest(userDeleting, userDeletingFriend, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
+        })
+        newSendFriendRequest(userDeleted, userDeletedReq, object : IOnCompleteListener {
             override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
         })
     }
