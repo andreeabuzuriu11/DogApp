@@ -63,11 +63,16 @@ class FriendProfileViewModel : BaseViewModel() {
                             allCustomMeetings.add(meetingObj)
                         }
                     }
+                    meetingsAdapter!!.notifyDataSetChanged()
+
                 }
+
             }
-            meetingsAdapter!!.notifyDataSetChanged()
-            showLoadingView(false)
+
         }
+        meetingsAdapter!!.notifyDataSetChanged()
+
+        showLoadingView(false)
     }
 
 
@@ -89,4 +94,9 @@ class FriendProfileViewModel : BaseViewModel() {
         navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
     }
 
+
+    internal fun deleteFriend()
+    {
+
+    }
 }
