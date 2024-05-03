@@ -3,10 +3,12 @@ package com.buzuriu.dogapp.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FriendMeetingAdapter
+import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.FieldsItems
 import com.buzuriu.dogapp.views.MeetingDetailActivity
+import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -57,20 +59,20 @@ class FriendProfileViewModel : BaseViewModel() {
                             val meanOfReviews = getMeanOfReviews(reviews)
                             user.value!!.rating = meanOfReviews
                             val meetingObj = MyCustomMeetingObj(meeting, user.value!!, dog!!)
-                            allCustomMeetings.add(meetingObj)
+                            meetingsList.add(meetingObj)
                         } else {
                             val meetingObj = MyCustomMeetingObj(meeting, user.value!!, dog!!)
-                            allCustomMeetings.add(meetingObj)
+                            meetingsList.add(meetingObj)
                         }
                     }
-                    meetingsAdapter!!.notifyDataSetChanged()
-
                 }
+                meetingsAdapter!!.notifyDataSetChanged()
 
             }
 
+
+
         }
-        meetingsAdapter!!.notifyDataSetChanged()
 
         showLoadingView(false)
     }
@@ -97,6 +99,15 @@ class FriendProfileViewModel : BaseViewModel() {
 
     internal fun deleteFriend()
     {
-
+        alertMessageService.displayAlertDialog(
+            "Delete user?",
+            "Are you sure you want to delete ${user.value!!.name} from your friends list?",
+            "Yes, delete it",
+            object :
+                IClickListener {
+                override fun clicked() {
+                    //
+                }
+            })
     }
 }

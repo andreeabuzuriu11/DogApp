@@ -790,6 +790,9 @@ class DatabaseService(
             .addOnFailureListener {
                 println("the reading is not successful")
             }
+            .addOnCompleteListener{
+                println ("got meetings for " + userUid)
+            }
 
         allTasks.await()
 
