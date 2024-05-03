@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.views.main.ui.friends
 
 import android.annotation.SuppressLint
+import android.media.MediaPlayer.OnCompletionListener
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -117,7 +118,15 @@ class FriendsViewModel : BaseViewModel() {
 
     fun acceptRequest(userObj: UserObj) {
         viewModelScope.launch {
-            databaseService.acceptRequest(currentUser!!.uid, userObj.uid!!)
+            var wasRequestAcceptedListener = object : IOnCompleteListener{
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                    snackMessageService.displaySnackBar(userObj.name + " was successfully added to your list" )
+                    friendsRequestList.remove(userObj)
+                    friendsRequestAdapter!!.notifyDataSetChanged()
+                }
+            }
+            databaseService.acceptRequest(currentUser!!.uid, userObj.uid!!, wasRequestAcceptedListener)
+
         }
     }
 

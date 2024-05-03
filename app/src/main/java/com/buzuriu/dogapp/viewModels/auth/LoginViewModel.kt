@@ -114,8 +114,17 @@ class LoginViewModel : BaseViewModel() {
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 if (dog != null) {
-                    val meetingObj = MyCustomMeetingObj(meeting, user!!, dog)
-                    allCustomMeetings.add(meetingObj)
+                    try {
+                        val meetingObj = MyCustomMeetingObj(meeting, user!!, dog)
+                        allCustomMeetings.add(meetingObj)
+                    }
+                    catch (ex:Exception)
+                    {
+                        println("Exception was caught. ")
+                        println("Exception user = " + user!!.name)
+                        println("Exception dog = " + user!!.name)
+                    }
+
                 }
             }
 

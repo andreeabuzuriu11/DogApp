@@ -136,6 +136,7 @@ class AddFriendViewModel : BaseViewModel() {
                     object :
                         IOnCompleteListener {
                         override fun onComplete(successful: Boolean, exception: Exception?) {
+                            snackMessageService.displaySnackBar("Request successfully sent to " + userReceivingRequest.name)
                         }
                     })
             }
@@ -152,7 +153,7 @@ class AddFriendViewModel : BaseViewModel() {
         }
     }
 
-    fun CreateNewReq(): RequestObj {
+    private fun CreateNewReq(): RequestObj {
         return RequestObj(arrayListOf(), arrayListOf(), arrayListOf())
     }
 

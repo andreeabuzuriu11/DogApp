@@ -43,7 +43,7 @@ class FriendProfileActivity :
     }
 
     private fun setupRecyclerView() {
-        val recyclerView = activityAddFriendBinding!!.friendEvents
+        val recyclerView = activityAddFriendBinding!!.meetingsList
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.meetingsAdapter
     }

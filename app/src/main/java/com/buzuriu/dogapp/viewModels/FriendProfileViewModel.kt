@@ -29,15 +29,14 @@ class FriendProfileViewModel : BaseViewModel() {
         user.value = exchangeInfoService.get<UserObj>(this::class.qualifiedName!!)!!
         meetingsAdapter = FriendMeetingAdapter(meetingsList, ::selectedMeeting, this)
 
-// todo fix this logic
         viewModelScope.launch {
             fetchMeetingsForUser()
         }
 
     }
+
     private suspend fun fetchMeetingsForUser() {
         var dog: DogObj?
-        val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
         showLoadingView(true)
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -51,10 +50,15 @@ class FriendProfileViewModel : BaseViewModel() {
                 if (allMeetings != null) {
                     for (meeting in allMeetings) {
 
-                        dog = databaseService.fetchDogByUid(meeting.dogUid!!, object: IOnCompleteListener{
-                            override fun onComplete(successful: Boolean, exception: Exception?) {
-                            }
-                        })
+                        dog = databaseService.fetchDogByUid(
+                            meeting.dogUid!!,
+                            object : IOnCompleteListener {
+                                override fun onComplete(
+                                    successful: Boolean,
+                                    exception: Exception?
+                                ) {
+                                }
+                            })
 
                         println("dog = " + dog!!.name)
                         val reviews = fetchUserReviews(meeting.userUid!!)
@@ -72,7 +76,6 @@ class FriendProfileViewModel : BaseViewModel() {
                 meetingsAdapter!!.notifyDataSetChanged()
 
             }
-
 
 
         }
@@ -100,8 +103,7 @@ class FriendProfileViewModel : BaseViewModel() {
     }
 
 
-    internal fun deleteFriend()
-    {
+    internal fun deleteFriend() {
         alertMessageService.displayAlertDialog(
             "Delete user?",
             "Are you sure you want to delete ${user.value!!.name} from your friends list?",
@@ -121,8 +123,9 @@ class FriendProfileViewModel : BaseViewModel() {
                 IOnCompleteListener {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(successful: Boolean, exception: Exception?) {
-                    navigationService.closeCurrentActivity()
 
+                    snackMessageService.displaySnackBar("Your friend " + user.value!!.name + " was successfully deleted")
+                    navigationService.closeCurrentActivity()
                 }
             })
         }

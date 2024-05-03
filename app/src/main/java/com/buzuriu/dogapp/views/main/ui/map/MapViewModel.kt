@@ -280,15 +280,23 @@ class MapViewModel : BaseViewModel() {
                 pastMeetingsListUserJoined.clear()
                 for (item in list) {
                     // todo fix crash here
-                    if (item.meetingObj!!.userUid == currentUser!!.uid) {
-                        // if meeting has user uid same id as current, it means that the user created
-                        // that particular meeting
-                        pastMeetingsListUserCreated.add(item)
-                    } else // we should check that this user id is among the participant ids
-                    {
-                        if (wasUserParticipant(item))
-                            pastMeetingsListUserJoined.add(item)
+                    try{
+                        if (item.meetingObj!!.userUid == currentUser!!.uid) {
+                            // if meeting has user uid same id as current, it means that the user created
+                            // that particular meeting
+                            pastMeetingsListUserCreated.add(item)
+                        } else // we should check that this user id is among the participant ids
+                        {
+                            if (wasUserParticipant(item))
+                                pastMeetingsListUserJoined.add(item)
+                        }
                     }
+                    catch (ex:Exception)
+                    {
+                        println("User might be deleted, user = " + item.meetingObj!!.userUid)
+                        println("Current user might be null, user = " + currentUser!!.uid)
+                    }
+
                 }
                 localDatabaseService.add(
                     LocalDBItems.pastMeetingsUserCreated,

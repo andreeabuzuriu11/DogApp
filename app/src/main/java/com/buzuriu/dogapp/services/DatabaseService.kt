@@ -167,7 +167,8 @@ interface IDatabaseService {
 
     suspend fun acceptRequest(
         userAccepting: String,
-        userRequesting: String
+        userRequesting: String,
+        onCompleteListener: IOnCompleteListener
     )
 
     suspend fun declineRequest(
@@ -436,6 +437,7 @@ class DatabaseService(
             firestore.collection(friendRequestsCollection)
                 .document(userId)
                 .get()
+                .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
                 .await()
 
         if (documentSnapshot != null && documentSnapshot.exists()) {
@@ -457,7 +459,7 @@ class DatabaseService(
         return null
     }
 
-    override suspend fun acceptRequest(userAccepting: String, userRequesting: String) {
+    override suspend fun acceptRequest(userAccepting: String, userRequesting: String, onCompleteListener: IOnCompleteListener) {
         // delete req from both lists + update
 
         var userRequestingReq = fetchRequestObj(userRequesting, object : IOnCompleteListener {
@@ -491,9 +493,7 @@ class DatabaseService(
         newSendFriendRequest(userAccepting, userAcceptingReq, object : IOnCompleteListener {
             override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
         })
-        newSendFriendRequest(userRequesting, userRequestingReq, object : IOnCompleteListener {
-            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
-        })
+        newSendFriendRequest(userRequesting, userRequestingReq, onCompleteListener)
 
     }
 
@@ -558,9 +558,7 @@ class DatabaseService(
         newSendFriendRequest(userDeleting, userDeletingFriend, object : IOnCompleteListener {
             override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
         })
-        newSendFriendRequest(userDeleted, userDeletedReq, object : IOnCompleteListener {
-            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
-        })
+        newSendFriendRequest(userDeleted, userDeletedReq, onCompleteListener)
     }
 
 
