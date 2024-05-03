@@ -173,7 +173,8 @@ interface IDatabaseService {
 
     suspend fun declineRequest(
         userDeclining: String,
-        userRequesting: String
+        userRequesting: String,
+        onCompleteListener: IOnCompleteListener
     )
 
     suspend fun deleteFriend(
@@ -497,7 +498,7 @@ class DatabaseService(
 
     }
 
-    override suspend fun declineRequest(userDeclining: String, userRequesting: String) {
+    override suspend fun declineRequest(userDeclining: String, userRequesting: String, onCompleteListener: IOnCompleteListener) {
         // delete req from both lists + update
         // todo this logic is duplicated also for accept req
 
@@ -523,9 +524,7 @@ class DatabaseService(
         newSendFriendRequest(userDeclining, userDecliningReq, object : IOnCompleteListener {
             override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
         })
-        newSendFriendRequest(userRequesting, userRequestingReq, object : IOnCompleteListener {
-            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {}
-        })
+        newSendFriendRequest(userRequesting, userRequestingReq, onCompleteListener)
     }
 
     override suspend fun deleteFriend(

@@ -118,22 +118,32 @@ class FriendsViewModel : BaseViewModel() {
 
     fun acceptRequest(userObj: UserObj) {
         viewModelScope.launch {
-            var wasRequestAcceptedListener = object : IOnCompleteListener{
+            var wasRequestAcceptedListener = object : IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
-                    snackMessageService.displaySnackBar(userObj.name + " was successfully added to your list" )
+                    snackMessageService.displaySnackBar(userObj.name + " was successfully added to your list")
                     friendsRequestList.remove(userObj)
                     friendsRequestAdapter!!.notifyDataSetChanged()
                 }
             }
-            databaseService.acceptRequest(currentUser!!.uid, userObj.uid!!, wasRequestAcceptedListener)
+            databaseService.acceptRequest(
+                currentUser!!.uid,
+                userObj.uid!!,
+                wasRequestAcceptedListener
+            )
 
         }
     }
 
     fun declineRequest(userObj: UserObj) {
+        var wasRequestDeclinedListener = object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                snackMessageService.displaySnackBar("Request from " + userObj.name + " successfuly declined")
+                friendsRequestList.remove(userObj)
+                friendsRequestAdapter!!.notifyDataSetChanged()
+            }
+        }
         viewModelScope.launch {
-            println("request declined")
-            databaseService.declineRequest(currentUser!!.uid, userObj.uid!!)
+            databaseService.declineRequest(currentUser!!.uid, userObj.uid!!, wasRequestDeclinedListener)
         }
     }
 }
