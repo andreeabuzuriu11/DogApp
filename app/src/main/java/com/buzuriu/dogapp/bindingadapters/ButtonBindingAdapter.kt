@@ -29,4 +29,15 @@ object ButtonBindingAdapter {
             FriendshipStateEnum.ACCEPTED -> this.text = "ALREADY FRIENDS"
         }
     }
+
+    @SuppressLint("SetTextI18n")
+    @BindingAdapter("enabledBasedOnFriendshipButtonBinding")
+    @JvmStatic
+    fun Button.setEnableBasedOnFriendship(friendshipStateEnum: FriendshipStateEnum?) {
+        when (friendshipStateEnum) {
+            FriendshipStateEnum.NOT_REQUESTED -> this.isEnabled = true
+            FriendshipStateEnum.REQUESTED -> this.isEnabled = false
+            FriendshipStateEnum.ACCEPTED -> this.isEnabled = false
+        }
+    }
 }

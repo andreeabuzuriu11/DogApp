@@ -80,8 +80,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:width="5dp"
+                    android:width="100dp"
+                    android:textSize="12dp"
                     friendshipButtonBinding="@{friendshipState}"
+                    enabledBasedOnFriendshipButtonBinding="@{friendshipState}"
                     android:text="Send" />
 
             </LinearLayout>
