@@ -7,7 +7,7 @@ class RequestObj {
     var ownRequests: ArrayList<String>? = null
     var friendsRequests: ArrayList<String>? = null
     var myFriends: ArrayList<String>? = null
-    var friendshipStateEnum = FriendshipStateEnum.REQUESTED
+    var friendshipStateEnum = FriendshipStateEnum.NOT_REQUESTED
 
 
     constructor(
