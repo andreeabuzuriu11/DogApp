@@ -15,6 +15,7 @@ class AddFriendViewModel : BaseViewModel() {
     var foundUsersList: ArrayList<UserObj> = ArrayList()
     var userAdapter: UserAdapter? = null
 
+    var friendshipStateEnum: FriendshipStateEnum = FriendshipStateEnum.NOT_REQUESTED
 
     init {
         userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
@@ -49,6 +50,12 @@ class AddFriendViewModel : BaseViewModel() {
 
                         if (foundUser!!.uid == currentUser!!.uid)
                             return@launch
+
+                        // set correct friendship state
+                        var stateWithCurrentUser =
+                            databaseService.fetchRelationBetweenUsers(foundUser!!.uid!!)
+                        foundUser!!.relationWithCurrentUser = stateWithCurrentUser
+                        
                         if (!isUserAlreadyFound(foundUser!!)) {
                             foundUsersList.add(foundUser!!)
                         }
@@ -157,7 +164,12 @@ class AddFriendViewModel : BaseViewModel() {
     }
 
     private fun CreateNewReq(): RequestObj {
-        return RequestObj(arrayListOf(), arrayListOf(), arrayListOf(), FriendshipStateEnum.REQUESTED)
+        return RequestObj(
+            arrayListOf(),
+            arrayListOf(),
+            arrayListOf(),
+            FriendshipStateEnum.REQUESTED
+        )
     }
 
 

@@ -3,10 +3,17 @@
     xmlns:tool="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="friendshipState"
+            type="com.buzuriu.dogapp.enums.FriendshipStateEnum" />
 
         <variable
             name="user"
             type="com.buzuriu.dogapp.models.UserObj" />
+
+        <variable
+            name="request"
+            type="com.buzuriu.dogapp.models.RequestObj" />
 
         <variable
             name="viewModel"
@@ -74,6 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:width="5dp"
+                    friendshipButtonBinding="@{friendshipState}"
                     android:text="Send" />
 
             </LinearLayout>

@@ -1,5 +1,7 @@
 package com.buzuriu.dogapp.models
 
+import com.buzuriu.dogapp.enums.FriendshipStateEnum
+
 data class UserObj(
     var uid: String? = null,
     var email: String? = null,
@@ -8,4 +10,5 @@ data class UserObj(
     var gender: String? = null,
     var rating: Float? = null,
     var imageUrl: String = "",
+    var relationWithCurrentUser : FriendshipStateEnum = FriendshipStateEnum.NOT_REQUESTED
 )

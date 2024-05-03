@@ -79,7 +79,11 @@ interface IDatabaseService {
     )
 
     suspend fun fetchMeetingByUid(meetingUid: String): MeetingObj?
-    suspend fun fetchDogByUid(dogUid: String, onCompleteListener: IOnCompleteListener? = null): DogObj?
+    suspend fun fetchDogByUid(
+        dogUid: String,
+        onCompleteListener: IOnCompleteListener? = null
+    ): DogObj?
+
     suspend fun fetchUserByUid(userUid: String, onCompleteListener: IOnCompleteListener): UserObj?
     suspend fun fetchUsers(onCompleteListener: IOnCompleteListener): List<UserObj>?
     suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj>?
@@ -100,7 +104,11 @@ interface IDatabaseService {
 
     suspend fun fetchAllOtherPastMeetings(userUid: String): ArrayList<MeetingObj>?
     suspend fun fetchAllPastMeetings(userUid: String): ArrayList<MeetingObj>?
-    suspend fun fetchUserMeetings(userUid: String, onCompleteListener: IOnCompleteListener) : ArrayList<MeetingObj>?
+    suspend fun fetchUserMeetings(
+        userUid: String,
+        onCompleteListener: IOnCompleteListener
+    ): ArrayList<MeetingObj>?
+
     suspend fun fetchDogMeetings(dogUid: String): ArrayList<MeetingObj>?
     suspend fun fetchMeetingsByFilters(
         filters: ArrayList<IFilterObj>,
@@ -165,6 +173,11 @@ interface IDatabaseService {
         userId: String,
         onCompleteListener: IOnCompleteListener
     ): RequestObj?
+
+    suspend fun fetchRelationBetweenUsers(
+        userId: String
+    ): FriendshipStateEnum
+
 
     suspend fun acceptRequest(
         userAccepting: String,
@@ -439,7 +452,12 @@ class DatabaseService(
             firestore.collection(friendRequestsCollection)
                 .document(userId)
                 .get()
-                .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
+                .addOnCompleteListener {
+                    onCompleteListener.onComplete(
+                        it.isSuccessful,
+                        it.exception
+                    )
+                }
                 .await()
 
         if (documentSnapshot != null && documentSnapshot.exists()) {
@@ -461,7 +479,28 @@ class DatabaseService(
         return null
     }
 
-    override suspend fun acceptRequest(userAccepting: String, userRequesting: String, onCompleteListener: IOnCompleteListener) {
+    override suspend fun fetchRelationBetweenUsers(userId: String): FriendshipStateEnum {
+
+        var friendshipState = FriendshipStateEnum.NOT_REQUESTED
+        var reqObj = fetchRequestObj(userId, object : IOnCompleteListener {
+            override fun onComplete(successful: Boolean, exception: Exception?) {
+            }
+        })
+
+        try {
+            friendshipState = reqObj!!.friendshipStateEnum
+        } catch (_: Exception) {
+
+        }
+
+        return friendshipState
+    }
+
+    override suspend fun acceptRequest(
+        userAccepting: String,
+        userRequesting: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
         // delete req from both lists + update
 
         var userRequestingReq = fetchRequestObj(userRequesting, object : IOnCompleteListener {
@@ -501,7 +540,11 @@ class DatabaseService(
 
     }
 
-    override suspend fun declineRequest(userDeclining: String, userRequesting: String, onCompleteListener: IOnCompleteListener) {
+    override suspend fun declineRequest(
+        userDeclining: String,
+        userRequesting: String,
+        onCompleteListener: IOnCompleteListener
+    ) {
         // delete req from both lists + update
         // todo this logic is duplicated also for accept req
 
@@ -583,7 +626,10 @@ class DatabaseService(
             .await()
     }
 
-    override suspend fun fetchDogByUid(dogUid: String, onCompleteListener: IOnCompleteListener?): DogObj? {
+    override suspend fun fetchDogByUid(
+        dogUid: String,
+        onCompleteListener: IOnCompleteListener?
+    ): DogObj? {
         var dogObj: DogObj? = null
         val documentSnapshot =
             firestore.collection(dogCollection)
@@ -805,7 +851,10 @@ class DatabaseService(
         return meetingsList
     }
 
-    override suspend fun fetchUserMeetings(userUid: String, onCompleteListener: IOnCompleteListener): ArrayList<MeetingObj> {
+    override suspend fun fetchUserMeetings(
+        userUid: String,
+        onCompleteListener: IOnCompleteListener
+    ): ArrayList<MeetingObj> {
         val meetingsList = ArrayList<MeetingObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(meetingsCollection)
@@ -833,8 +882,8 @@ class DatabaseService(
             .addOnFailureListener {
                 println("the reading is not successful")
             }
-            .addOnCompleteListener{
-                println ("got meetings for " + userUid)
+            .addOnCompleteListener {
+                println("got meetings for " + userUid)
             }
 
         allTasks.await()
@@ -1021,7 +1070,7 @@ class DatabaseService(
     }
 
     private fun setMeetingsDistanceQuery(radiusInKM: Int) {
-        val myCurrentUserLocation = localDatabaseService.get<LatLng>(LocalDBItems.userLocation)
+        val myCurrentUserLocation = localDatabaseService!!.get<LatLng>(LocalDBItems.userLocation)
         if (myCurrentUserLocation == null) {
             Log.d("Error", "User's location does not exits. Check LocalDbService")
         }

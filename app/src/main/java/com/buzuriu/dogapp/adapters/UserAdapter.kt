@@ -4,10 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.databinding.FriendRequestSentCellBinding
+import com.buzuriu.dogapp.enums.FriendshipStateEnum
 import com.buzuriu.dogapp.models.UserObj
 import kotlin.reflect.KFunction1
 
-class UserAdapter(var userList: ArrayList<UserObj>, var sendRequest: KFunction1<UserObj, Unit>) :
+class UserAdapter(
+    var userList: ArrayList<UserObj>,
+    var sendRequest: KFunction1<UserObj, Unit>
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
@@ -35,6 +39,7 @@ class UserAdapter(var userList: ArrayList<UserObj>, var sendRequest: KFunction1<
             applicationBinding.sendReq.setOnClickListener {
                 sendRequest(user)
             }
+            applicationBinding.friendshipState = user.relationWithCurrentUser
         }
     }
 }
