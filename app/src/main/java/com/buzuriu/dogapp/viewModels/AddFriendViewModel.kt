@@ -1,7 +1,7 @@
 package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.viewModelScope
-import com.buzuriu.dogapp.adapters.UserAdapter
+import com.buzuriu.dogapp.adapters.FriendRequestSentAdapter
 import com.buzuriu.dogapp.enums.FriendshipStateEnum
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.RequestObj
@@ -13,12 +13,12 @@ class AddFriendViewModel : BaseViewModel() {
 
     var foundUser: UserObj? = null
     var foundUsersList: ArrayList<UserObj> = ArrayList()
-    var userAdapter: UserAdapter? = null
+    var userAdapter: FriendRequestSentAdapter? = null
 
     var friendshipStateEnum: FriendshipStateEnum = FriendshipStateEnum.NOT_REQUESTED
 
     init {
-        userAdapter = UserAdapter(foundUsersList, ::sendFriendRequest)
+        userAdapter = FriendRequestSentAdapter(foundUsersList, ::sendFriendRequest)
     }
 
     fun findUser(searchedUserText: String) {
@@ -55,7 +55,7 @@ class AddFriendViewModel : BaseViewModel() {
                         var stateWithCurrentUser =
                             databaseService.fetchRelationBetweenUsers(foundUser!!.uid!!)
                         foundUser!!.relationWithCurrentUser = stateWithCurrentUser
-                        
+
                         if (!isUserAlreadyFound(foundUser!!)) {
                             foundUsersList.add(foundUser!!)
                         }

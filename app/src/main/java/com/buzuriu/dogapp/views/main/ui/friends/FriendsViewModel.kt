@@ -1,13 +1,11 @@
 package com.buzuriu.dogapp.views.main.ui.friends
 
 import android.annotation.SuppressLint
-import android.media.MediaPlayer.OnCompletionListener
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FriendRequestAdapter
 import com.buzuriu.dogapp.adapters.FriendsAdapter
-import com.buzuriu.dogapp.adapters.UserAdapter
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.RequestObj
 import com.buzuriu.dogapp.models.UserObj
