@@ -97,7 +97,11 @@ class LoginViewModel : BaseViewModel() {
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
         val userMeetings: ArrayList<MeetingObj>? =
-            databaseService.fetchUserMeetings(currentUser!!.uid)
+            databaseService.fetchUserMeetings(currentUser!!.uid, object : IOnCompleteListener{
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+
+                }
+            })
 
         if (userMeetings != null) {
             for (meeting in userMeetings) {

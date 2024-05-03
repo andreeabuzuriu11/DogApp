@@ -29,7 +29,7 @@ class FriendProfileActivity : BaseBoundActivity<FriendProfileViewModel, Activity
     private fun setupRecyclerView(binding: ActivityFriendProfileBinding) {
 
         binding.friendEvents.layoutManager  = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        binding.friendEvents.adapter = mViewModel.eventsAdapter
+        binding.friendEvents.adapter = mViewModel.meetingsAdapter
     }
 
 }

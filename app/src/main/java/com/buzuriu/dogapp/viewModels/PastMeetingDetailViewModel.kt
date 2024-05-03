@@ -1,10 +1,8 @@
 package com.buzuriu.dogapp.viewModels
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.ParticipantAdapter
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*

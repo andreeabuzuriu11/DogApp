@@ -103,7 +103,12 @@ class EditAccountViewModel : BaseViewModel() {
     fun changeMeetingInfoRelatedToThisUser() {
         var meetings = ArrayList<MeetingObj>()
         viewModelScope.launch(Dispatchers.IO) {
-            meetings = databaseService.fetchUserMeetings(currentUser!!.uid)!!
+            meetings = databaseService.fetchUserMeetings(currentUser!!.uid, object : IOnCompleteListener{
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+
+                }
+            })!!
+
 
             viewModelScope.launch(Dispatchers.Main) {
                 for (meeting in meetings) {

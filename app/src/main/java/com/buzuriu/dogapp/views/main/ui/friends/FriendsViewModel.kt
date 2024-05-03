@@ -49,6 +49,7 @@ class FriendsViewModel : BaseViewModel() {
             currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid, object :
                 IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
+                    println("does this gets called")
                 }
             })
 

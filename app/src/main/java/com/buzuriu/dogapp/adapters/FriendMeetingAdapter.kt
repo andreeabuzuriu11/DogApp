@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.buzuriu.dogapp.databinding.FriendsMeetingCellBinding
 import com.buzuriu.dogapp.databinding.MeetingCellBinding
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.viewModels.FriendProfileViewModel
@@ -18,7 +19,7 @@ class FriendMeetingAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val applicationBinding =
-            MeetingCellBinding.inflate(layoutInflater, parent, false)
+            FriendsMeetingCellBinding.inflate(layoutInflater, parent, false)
         return MeetingViewHolder(applicationBinding)
     }
 
@@ -33,7 +34,7 @@ class FriendMeetingAdapter(
         return meetingList.size
     }
 
-    inner class MeetingViewHolder(private var applicationBinding: MeetingCellBinding) :
+    inner class MeetingViewHolder(private var applicationBinding: FriendsMeetingCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(meeting: MyCustomMeetingObj) {
             applicationBinding.meeting = meeting
