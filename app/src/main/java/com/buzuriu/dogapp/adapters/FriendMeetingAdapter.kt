@@ -25,7 +25,7 @@ class FriendMeetingAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val meeting = meetingList[position]
-        if (holder is MeetingAdapter.MeetingViewHolder) {
+        if (holder is FriendMeetingAdapter.MeetingViewHolder) {
             (holder).bind(meeting)
         }
     }
