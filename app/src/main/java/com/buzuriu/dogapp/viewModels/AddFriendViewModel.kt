@@ -53,7 +53,7 @@ class AddFriendViewModel : BaseViewModel() {
 
                         // set correct friendship state
                         var stateWithCurrentUser =
-                            databaseService.fetchRelationBetweenUsers(foundUser!!.uid!!)
+                            databaseService.fetchRelationBetweenUsers(currentUser!!.uid, foundUser!!.uid!!)
                         foundUser!!.relationWithCurrentUser = stateWithCurrentUser
 
                         if (!isUserAlreadyFound(foundUser!!)) {
@@ -147,6 +147,7 @@ class AddFriendViewModel : BaseViewModel() {
                         IOnCompleteListener {
                         override fun onComplete(successful: Boolean, exception: Exception?) {
                             snackMessageService.displaySnackBar("Request successfully sent to " + userReceivingRequest.name)
+
                         }
                     })
             }
@@ -160,7 +161,17 @@ class AddFriendViewModel : BaseViewModel() {
                     }
                 })
 
+            viewModelScope.launch {
+                var stateWithCurrentUser =
+                    databaseService.fetchRelationBetweenUsers(currentUser!!.uid, foundUser!!.uid!!)
+                foundUser!!.relationWithCurrentUser = stateWithCurrentUser
+
+                userAdapter!!.notifyItemChanged(userAdapter!!.position)
+            }
+
+
         }
+
     }
 
     private fun CreateNewReq(): RequestObj {

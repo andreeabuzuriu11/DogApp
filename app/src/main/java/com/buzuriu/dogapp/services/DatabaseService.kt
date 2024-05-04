@@ -175,7 +175,8 @@ interface IDatabaseService {
     ): RequestObj?
 
     suspend fun fetchRelationBetweenUsers(
-        userId: String
+        userId: String,
+        foundUserId: String
     ): FriendshipStateEnum
 
 
@@ -479,7 +480,7 @@ class DatabaseService(
         return null
     }
 
-    override suspend fun fetchRelationBetweenUsers(userId: String): FriendshipStateEnum {
+    override suspend fun fetchRelationBetweenUsers(userId: String, foundUserId: String): FriendshipStateEnum {
 
         var friendshipState = FriendshipStateEnum.NOT_REQUESTED
         var reqObj = fetchRequestObj(userId, object : IOnCompleteListener {
@@ -488,7 +489,14 @@ class DatabaseService(
         })
 
         try {
-            friendshipState = reqObj!!.friendshipStateEnum
+            return if (reqObj!!.myFriends!!.contains(foundUserId))
+                FriendshipStateEnum.ACCEPTED
+            else if (reqObj.ownRequests!!.contains(foundUserId))
+                FriendshipStateEnum.REQUESTED
+            else if (reqObj.friendsRequests!!.contains(foundUserId))
+                FriendshipStateEnum.WAITING_FOR_YOUR_ACCEPT
+            else
+                FriendshipStateEnum.NOT_REQUESTED
         } catch (_: Exception) {
 
         }

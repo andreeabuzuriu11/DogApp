@@ -26,6 +26,7 @@ object ButtonBindingAdapter {
         when (friendshipStateEnum) {
             FriendshipStateEnum.REQUESTED -> this.text = "FRIEND REQUEST SENT"
             FriendshipStateEnum.NOT_REQUESTED -> this.text = "SEND"
+            FriendshipStateEnum.WAITING_FOR_YOUR_ACCEPT -> this.text = "WAITING FOR YOUR ACCEPT"
             FriendshipStateEnum.ACCEPTED -> this.text = "ALREADY FRIENDS"
         }
     }
@@ -37,6 +38,7 @@ object ButtonBindingAdapter {
         when (friendshipStateEnum) {
             FriendshipStateEnum.NOT_REQUESTED -> this.isEnabled = true
             FriendshipStateEnum.REQUESTED -> this.isEnabled = false
+            FriendshipStateEnum.WAITING_FOR_YOUR_ACCEPT -> this.isEnabled = false
             FriendshipStateEnum.ACCEPTED -> this.isEnabled = false
         }
     }

@@ -27,6 +27,15 @@ class FriendRequestSentAdapter(
         }
     }
 
+    public var position : Int = 0
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+
+        position = holder.layoutPosition
+
+    }
+
+
     override fun getItemCount(): Int {
         return userList.size
     }
