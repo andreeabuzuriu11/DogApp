@@ -48,7 +48,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/dogProfileImage"
-                        imageBinding="@{viewModel.user.imageUrl}"
+                        userImageBinding="@{viewModel.user}"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:src="@drawable/ic_user_account" />

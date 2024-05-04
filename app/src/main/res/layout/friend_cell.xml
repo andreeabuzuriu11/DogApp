@@ -38,7 +38,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:layout_height="@dimen/cell_image_height"
-                    imageBinding="@{user.imageUrl}"
+                    userImageBinding="@{user}"
                     />
 
                 <TextView
