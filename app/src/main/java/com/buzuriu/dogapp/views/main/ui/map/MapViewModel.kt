@@ -138,15 +138,6 @@ class MapViewModel : BaseViewModel() {
         }
     }
 
-    fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj) {
-        val allMeetingsThatUserJoinedList =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.meetingsUserJoined)
-        val toBeRemoved =
-            allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
-        allMeetingsThatUserJoinedList.remove(toBeRemoved)
-        localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoinedList)
-    }
-
     private fun hasUserAlreadyJoinedMeeting(meeting: MyCustomMeetingObj): Boolean {
         var meetingsThatUserAlreadyJoined = ArrayList<MyCustomMeetingObj>()
         viewModelScope.launch {

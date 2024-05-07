@@ -1,10 +1,8 @@
 package com.buzuriu.dogapp.utils
 
-import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.services.ILocalDatabaseService
-import kotlinx.coroutines.launch
 
 class MyCustomMeetingUtils {
     companion object {

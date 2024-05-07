@@ -27,7 +27,6 @@ class FriendProfileViewModel : BaseViewModel() {
 
     var isPlaceholderVisible = MutableLiveData(false)
     private var meetingsList = ArrayList<MyCustomMeetingObj>()
-    private var breedsList = ArrayList<String>()
     private val userJoinedMeetings = ArrayList<MyCustomMeetingObj>()
     var mapOfMeetingUidAndCurrentUserAsParticipant: MutableMap<String, ParticipantObj> =
         mutableMapOf()
@@ -40,9 +39,25 @@ class FriendProfileViewModel : BaseViewModel() {
 
         viewModelScope.launch {
             fetchMeetingsForUser()
+            getAllMeetingsThatUserJoined()
         }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        getMeetingChangedDueToJoin()
+    }
+
+    private fun getMeetingChangedDueToJoin() {
+        val changedMeeting = exchangeInfoService.get<MyCustomMeetingObj>(this::class.java.name)
+        if (changedMeeting != null) {
+            changedMeeting.meetingStateEnum = MeetingStateEnum.JOINED
+            meetingsAdapter!!.notifyItemChanged(meetingsList.indexOf(changedMeeting))
+        }
+    }
+
 
     private suspend fun fetchMeetingsForUser() {
         var dog: DogObj?
@@ -69,17 +84,9 @@ class FriendProfileViewModel : BaseViewModel() {
                                 }
                             })
 
-                        println("dog = " + dog!!.name)
-                        val reviews = fetchUserReviews(meeting.userUid!!)
-                        if (reviews != null) {
-                            val meanOfReviews = getMeanOfReviews(reviews)
-                            user.value!!.rating = meanOfReviews
-                            val meetingObj = MyCustomMeetingObj(meeting, user.value!!, dog!!)
-                            meetingsList.add(meetingObj)
-                        } else {
-                            val meetingObj = MyCustomMeetingObj(meeting, user.value!!, dog!!)
-                            meetingsList.add(meetingObj)
-                        }
+                        val meetingObj = MyCustomMeetingObj(meeting, user.value!!, dog!!)
+                        meetingsList.add(meetingObj)
+
                     }
                 }
                 meetingsAdapter!!.notifyDataSetChanged()
@@ -185,7 +192,10 @@ class FriendProfileViewModel : BaseViewModel() {
                                                 successful: Boolean,
                                                 exception: Exception?
                                             ) {
-                                                MyCustomMeetingUtils.removeMeetFromUserJoinedMeetings(meeting, localDatabaseService)
+                                                MyCustomMeetingUtils.removeMeetFromUserJoinedMeetings(
+                                                    meeting,
+                                                    localDatabaseService
+                                                )
                                                 snackMessageService.displaySnackBar("Your intention of not attending this walk with ${meeting.user!!.name} successfully saved")
                                             }
                                         })
