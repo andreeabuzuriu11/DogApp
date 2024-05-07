@@ -43,6 +43,8 @@ class FriendsViewModel : BaseViewModel() {
 
     @SuppressLint("NotifyDataSetChanged")
     public suspend fun fetchMyFriendAndFriendsRequest() {
+        friendsList.clear()
+        friendsRequestList.clear()
         showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
             currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid, object :
