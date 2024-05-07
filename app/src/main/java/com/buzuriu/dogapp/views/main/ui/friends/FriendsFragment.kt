@@ -1,9 +1,7 @@
 package com.buzuriu.dogapp.views.main.ui.friends
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +16,6 @@ class FriendsFragment :
     BaseBoundFragment<FriendsViewModel, FragmentFriendsBinding>(FriendsViewModel::class.java) {
 
     private lateinit var currentBinding: FragmentFriendsBinding
-    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
-    protected var mView: View? = null
 
     override fun setupDataBinding(binding: FragmentFriendsBinding) {
         binding.viewModel = mViewModel
@@ -35,23 +31,46 @@ class FriendsFragment :
         setupMyFriendsList()
         setupFriendsRequestList()
 
-        var swipeRefreshLayout =
-            view.findViewById<SwipeRefreshLayout>(R.id.listSwipeRefreshContainer)
 
-        swipeRefreshLayout.setOnRefreshListener {
+        setupRefreshMyFriendsList(view)
+        setupRefreshFriendsRequest(view)
+
+    }
+
+    private fun setupRefreshMyFriendsList(view: View) {
+        var myFriendsRefreshLayout =
+            view.findViewById<SwipeRefreshLayout>(R.id.myFriendsRefreshLayout)
+
+        myFriendsRefreshLayout.setOnRefreshListener {
             // set the is refreshing to false so the loading view stops
-            swipeRefreshLayout.isRefreshing = false
+            myFriendsRefreshLayout.isRefreshing = false
 
             // read data again
             viewLifecycleOwner.lifecycleScope.launch {
-                mViewModel.fetchMyFriendAndFriendsRequest()
+                mViewModel.fetchMyFriends()
             }
 
             // notify the adapter
             currentBinding.usersFoundList.adapter!!.notifyDataSetChanged()
         }
+    }
 
+    private fun setupRefreshFriendsRequest(view: View) {
+        var friendsRequestRefreshLayout =
+            view.findViewById<SwipeRefreshLayout>(R.id.friendsRequestRefreshLayout)
 
+        friendsRequestRefreshLayout.setOnRefreshListener {
+            // set the is refreshing to false so the loading view stops
+            friendsRequestRefreshLayout.isRefreshing = false
+
+            // read data again
+            viewLifecycleOwner.lifecycleScope.launch {
+                mViewModel.fetchFriendsRequest()
+            }
+
+            // notify the adapter
+            currentBinding.requestsList.adapter!!.notifyDataSetChanged()
+        }
     }
 
 

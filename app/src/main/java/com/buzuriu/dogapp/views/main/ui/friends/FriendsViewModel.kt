@@ -36,14 +36,55 @@ class FriendsViewModel : BaseViewModel() {
         friendsRequestAdapter = FriendRequestAdapter(friendsRequestList, this)
 
         viewModelScope.launch {
-            fetchMyFriendAndFriendsRequest()
+            fetchMyFriends()
+            fetchFriendsRequest()
         }
 
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public suspend fun fetchMyFriendAndFriendsRequest() {
+    public suspend fun fetchMyFriends() {
         friendsList.clear()
+        showLoadingView(true)
+        viewModelScope.launch(Dispatchers.IO) {
+            currentUserReqObj = databaseService.fetchRequestObj(currentUser!!.uid, object :
+                IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: Exception?) {
+                    println("does this gets called")
+                }
+            })
+
+            viewModelScope.launch(Dispatchers.Main) {
+                if (currentUserReqObj != null) {
+
+                    if (currentUserReqObj!!.myFriends != null) {
+                        currentUserReqObj!!.myFriends?.forEach {
+                            val user =
+                                databaseService.fetchUserByUid(it, object : IOnCompleteListener {
+                                    override fun onComplete(
+                                        successful: Boolean,
+                                        exception: java.lang.Exception?
+                                    ) {
+                                        showLoadingView(false)
+
+                                    }
+                                })
+                            friendsList.add(user!!)
+                            doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
+                        }
+                    }
+
+                }
+                doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
+                friendsAdapter!!.notifyDataSetChanged()
+
+            }
+
+            showLoading(false)
+        }
+    }
+
+    public suspend fun fetchFriendsRequest() {
         friendsRequestList.clear()
         showLoadingView(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -72,26 +113,10 @@ class FriendsViewModel : BaseViewModel() {
 
                         }
                     }
-                    if (currentUserReqObj!!.myFriends != null) {
-                        currentUserReqObj!!.myFriends?.forEach {
-                            val user =
-                                databaseService.fetchUserByUid(it, object : IOnCompleteListener {
-                                    override fun onComplete(
-                                        successful: Boolean,
-                                        exception: java.lang.Exception?
-                                    ) {
-                                        showLoadingView(false)
 
-                                    }
-                                })
-                            friendsList.add(user!!)
-                            doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
-                        }
-                    }
 
                 }
-                doesUserHaveAnyFriends.value = friendsList.isNotEmpty()
-                friendsAdapter!!.notifyDataSetChanged()
+
 
                 doesUserHaveAnyRequests.value = friendsRequestList.isNotEmpty()
                 friendsRequestAdapter!!.notifyDataSetChanged()
@@ -143,7 +168,11 @@ class FriendsViewModel : BaseViewModel() {
             }
         }
         viewModelScope.launch {
-            databaseService.declineRequest(currentUser!!.uid, userObj.uid!!, wasRequestDeclinedListener)
+            databaseService.declineRequest(
+                currentUser!!.uid,
+                userObj.uid!!,
+                wasRequestDeclinedListener
+            )
         }
     }
 }

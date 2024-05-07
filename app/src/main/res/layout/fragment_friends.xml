@@ -60,7 +60,7 @@
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/listSwipeRefreshContainer"
+                android:id="@+id/myFriendsRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -102,12 +102,23 @@
             android:layout_below="@id/tabBar"
             android:visibility="@{viewModel.isFriendTabSelected ? View.GONE : View.VISIBLE}">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/requests_list"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/friendsRequestRefreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:visibility="@{viewModel.doesUserHaveAnyRequests ? View.VISIBLE : View.GONE}" />
+                android:orientation="vertical"
+                tools:context=".MainActivity">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/requests_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:visibility="@{viewModel.doesUserHaveAnyRequests ? View.VISIBLE : View.GONE}" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
             <TextView
                 android:layout_width="wrap_content"
