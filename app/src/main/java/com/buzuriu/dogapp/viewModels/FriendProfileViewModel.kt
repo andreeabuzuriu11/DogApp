@@ -11,6 +11,7 @@ import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.FieldsItems
 import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.utils.MyCustomMeetingUtils
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
@@ -242,7 +243,7 @@ class FriendProfileViewModel : BaseViewModel() {
             for (meet in allMeetingsParticipants)
                 if (meet.userUid == currentUser!!.uid) {
                     userJoinedMeetings.add(meeting)
-                    changeStateOfMeeting(meeting)
+                    MyCustomMeetingUtils.changeStateOfMeeting(meeting, userJoinedMeetings)
                     mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj?.uid!!] =
                         meet
                 }
@@ -250,31 +251,5 @@ class FriendProfileViewModel : BaseViewModel() {
         return userJoinedMeetings
     }
 
-    // todo fix duplicated
-
-    private fun changeStateOfMeeting(meeting: MyCustomMeetingObj) {
-        if (hasUserJoinedThisMeeting(meeting)) {
-            changeStateAccordingly(meeting, MeetingStateEnum.JOINED)
-        } else {
-            changeStateAccordingly(meeting, MeetingStateEnum.NOT_JOINED)
-        }
-    }
-
-    // todo fix duplicated
-
-    private fun hasUserJoinedThisMeeting(meeting: MyCustomMeetingObj): Boolean {
-        for (userJoinMeeting in userJoinedMeetings)
-            if (meeting.meetingObj!!.uid == userJoinMeeting.meetingObj!!.uid)
-                return true
-        return false
-    }
-
-    // todo fix duplicated
-    private fun changeStateAccordingly(
-        meeting: MyCustomMeetingObj,
-        meetingStateEnum: MeetingStateEnum
-    ) {
-        meeting.meetingStateEnum = meetingStateEnum
-    }
 
 }

@@ -12,6 +12,7 @@ import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.FieldsItems
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.MapUtils
+import com.buzuriu.dogapp.utils.MyCustomMeetingUtils
 import com.buzuriu.dogapp.viewModels.*
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
 import com.buzuriu.dogapp.views.MeetingDetailActivity
@@ -195,34 +196,12 @@ class MapViewModel : BaseViewModel() {
             for (meet in allMeetingsParticipants)
                 if (meet.userUid == currentUser!!.uid) {
                     userJoinedMeetings.add(meeting)
-                    changeStateOfMeeting(meeting)
+                    MyCustomMeetingUtils.changeStateOfMeeting(meeting,userJoinedMeetings)
                     mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj?.uid!!] =
                         meet
                 }
         }
         return userJoinedMeetings
-    }
-
-    private fun changeStateOfMeeting(meeting: MyCustomMeetingObj) {
-        if (hasUserJoinedThisMeeting(meeting)) {
-            changeStateAccordingly(meeting, MeetingStateEnum.JOINED)
-        } else {
-            changeStateAccordingly(meeting, MeetingStateEnum.NOT_JOINED)
-        }
-    }
-
-    private fun changeStateAccordingly(
-        meeting: MyCustomMeetingObj,
-        meetingStateEnum: MeetingStateEnum
-    ) {
-        meeting.meetingStateEnum = meetingStateEnum
-    }
-
-    private fun hasUserJoinedThisMeeting(meeting: MyCustomMeetingObj): Boolean {
-        for (userJoinMeeting in userJoinedMeetings)
-            if (meeting.meetingObj!!.uid == userJoinMeeting.meetingObj!!.uid)
-                return true
-        return false
     }
 
     @SuppressLint("NotifyDataSetChanged")
