@@ -10,6 +10,7 @@ import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.utils.LocalDataUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
@@ -98,7 +99,7 @@ class MyMeetingsViewModel : BaseViewModel() {
     }
 
     fun addMeeting() {
-        if (!doesUserHaveAtLeastOneDog()) {
+        if (!LocalDataUtils.doesUserHaveAtLeastOneDog(localDatabaseService)) {
             snackMessageService.displaySnackBar("Please add your pet before participating to a meeting")
             return
         }
@@ -205,9 +206,4 @@ class MyMeetingsViewModel : BaseViewModel() {
         return meeting.meetingObj!!.userUid == currentUser!!.uid
     }
 
-    private fun doesUserHaveAtLeastOneDog(): Boolean {
-        if (localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)!!.size < 1)
-            return false
-        return true
-    }
 }

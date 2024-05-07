@@ -11,6 +11,7 @@ import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.FieldsItems
 import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.utils.LocalDataUtils
 import com.buzuriu.dogapp.utils.MyCustomMeetingUtils
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
@@ -142,7 +143,7 @@ class FriendProfileViewModel : BaseViewModel() {
     // todo fix duplicated
 
     fun joinOrLeaveMeeting(meeting: MyCustomMeetingObj) {
-        if (!doesUserHaveAtLeastOneDog()) {
+        if (!LocalDataUtils.doesUserHaveAtLeastOneDog(localDatabaseService)) {
             snackMessageService.displaySnackBar("Please add your pet before participating to a meeting")
             return
         }
@@ -221,16 +222,6 @@ class FriendProfileViewModel : BaseViewModel() {
         return false
     }
 
-
-    // todo fix duplicated
-    private fun doesUserHaveAtLeastOneDog(): Boolean {
-        val listOfDogs = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
-        if (listOfDogs != null) {
-            if (listOfDogs.size < 1)
-                return false
-        }
-        return true
-    }
 
     // todo fix duplicated
 

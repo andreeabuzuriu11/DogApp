@@ -9,10 +9,7 @@ import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
-import com.buzuriu.dogapp.utils.FieldsItems
-import com.buzuriu.dogapp.utils.LocalDBItems
-import com.buzuriu.dogapp.utils.MapUtils
-import com.buzuriu.dogapp.utils.MyCustomMeetingUtils
+import com.buzuriu.dogapp.utils.*
 import com.buzuriu.dogapp.viewModels.*
 import com.buzuriu.dogapp.views.FilterMeetingsFragment
 import com.buzuriu.dogapp.views.MeetingDetailActivity
@@ -87,7 +84,7 @@ class MapViewModel : BaseViewModel() {
     }
 
     fun joinOrLeaveMeeting(meeting: MyCustomMeetingObj) {
-        if (!doesUserHaveAtLeastOneDog()) {
+        if (!LocalDataUtils.doesUserHaveAtLeastOneDog(localDatabaseService)) {
             snackMessageService.displaySnackBar("Please add your pet before participating to a meeting")
             return
         }
@@ -529,15 +526,6 @@ class MapViewModel : BaseViewModel() {
                 return
             }
         }
-    }
-
-    private fun doesUserHaveAtLeastOneDog(): Boolean {
-        val listOfDogs = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
-        if (listOfDogs != null) {
-            if (listOfDogs.size < 1)
-                return false
-        }
-        return true
     }
 
 }
