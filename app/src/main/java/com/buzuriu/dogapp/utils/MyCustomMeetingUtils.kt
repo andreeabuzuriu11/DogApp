@@ -1,7 +1,10 @@
 package com.buzuriu.dogapp.utils
 
+import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.models.MyCustomMeetingObj
+import com.buzuriu.dogapp.services.ILocalDatabaseService
+import kotlinx.coroutines.launch
 
 class MyCustomMeetingUtils {
     companion object {
@@ -33,6 +36,17 @@ class MyCustomMeetingUtils {
                     return true
             return false
         }
+
+        fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj, localDatabaseService: ILocalDatabaseService) {
+            val allMeetingsThatUserJoinedList =
+                localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.meetingsUserJoined)
+            val toBeRemoved =
+                allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
+            allMeetingsThatUserJoinedList.remove(toBeRemoved)
+            localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoinedList)
+        }
+
+
     }
 
 

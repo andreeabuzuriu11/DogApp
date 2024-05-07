@@ -12,6 +12,7 @@ import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.LocalDataUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
+import com.buzuriu.dogapp.utils.MyCustomMeetingUtils.Companion.removeMeetFromUserJoinedMeetings
 import com.buzuriu.dogapp.viewModels.BaseViewModel
 import com.buzuriu.dogapp.viewModels.MeetingDetailViewModel
 import com.buzuriu.dogapp.viewModels.MyMeetingDetailViewModel
@@ -150,15 +151,6 @@ class MyMeetingsViewModel : BaseViewModel() {
         }
     }
 
-    fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj) {
-        val allMeetingsThatUserJoinedList =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.meetingsUserJoined)
-        val toBeRemoved =
-            allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
-        allMeetingsThatUserJoinedList.remove(toBeRemoved)
-        localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoinedList)
-    }
-
     fun leaveMeeting(meeting: MyCustomMeetingObj) {
         alertMessageService.displayAlertDialog(
             "Leave?",
@@ -183,7 +175,7 @@ class MyMeetingsViewModel : BaseViewModel() {
                                             successful: Boolean,
                                             exception: Exception?
                                         ) {
-                                            removeMeetFromUserJoinedMeetings(meeting)
+                                            removeMeetFromUserJoinedMeetings(meeting, localDatabaseService)
                                             refreshList()
                                             snackMessageService.displaySnackBar("Success")
                                         }

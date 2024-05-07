@@ -126,7 +126,7 @@ class MapViewModel : BaseViewModel() {
                                                 successful: Boolean,
                                                 exception: Exception?
                                             ) {
-                                                removeMeetFromUserJoinedMeetings(meeting)
+                                                MyCustomMeetingUtils.removeMeetFromUserJoinedMeetings(meeting, localDatabaseService)
                                                 snackMessageService.displaySnackBar("Your intention of not attending this walk with ${meeting.user!!.name} successfully saved")
                                             }
                                         })

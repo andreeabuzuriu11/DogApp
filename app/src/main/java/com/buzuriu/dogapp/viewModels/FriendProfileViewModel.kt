@@ -185,7 +185,7 @@ class FriendProfileViewModel : BaseViewModel() {
                                                 successful: Boolean,
                                                 exception: Exception?
                                             ) {
-                                                removeMeetFromUserJoinedMeetings(meeting)
+                                                MyCustomMeetingUtils.removeMeetFromUserJoinedMeetings(meeting, localDatabaseService)
                                                 snackMessageService.displaySnackBar("Your intention of not attending this walk with ${meeting.user!!.name} successfully saved")
                                             }
                                         })
@@ -197,16 +197,6 @@ class FriendProfileViewModel : BaseViewModel() {
         }
     }
 
-    // todo fix duplicated
-
-    fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj) {
-        val allMeetingsThatUserJoinedList =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.meetingsUserJoined)
-        val toBeRemoved =
-            allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
-        allMeetingsThatUserJoinedList.remove(toBeRemoved)
-        localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoinedList)
-    }
 
     // todo fix duplicated
 
