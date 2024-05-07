@@ -21,83 +21,93 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:gravity="center_horizontal"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/dogTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:checked="@={viewModel.isFriendTabSelected}"
-                android:text="@string/title_my_friends"
                 android:background="@drawable/radio_flat_selector"
                 android:button="@android:color/transparent"
+                android:checked="@={viewModel.isFriendTabSelected}"
+                android:gravity="center"
                 android:paddingHorizontal="50dp"
-                android:gravity="center" />
+                android:text="@string/title_my_friends" />
 
             <RadioButton
                 android:id="@+id/friendsTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:checked="@={!viewModel.isFriendTabSelected}"
-                android:text="@string/friends_requests"
                 android:background="@drawable/radio_flat_selector"
                 android:button="@android:color/transparent"
+                android:checked="@={!viewModel.isFriendTabSelected}"
+                android:gravity="center"
                 android:paddingHorizontal="50dp"
-                android:gravity="center" />
+                android:text="@string/friends_requests" />
 
         </RadioGroup>
 
-    <RelativeLayout
-        android:id="@+id/friendsView"
-        android:layout_width="match_parent"
-        android:layout_below="@id/tabBar"
-        android:visibility="@{viewModel.isFriendTabSelected ? View.VISIBLE : View.GONE}"
-    android:layout_height="match_parent">
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/users_found_list"
+        <RelativeLayout
+            android:id="@+id/friendsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="@{viewModel.doesUserHaveAnyFriends ? View.VISIBLE : View.GONE}"
-            android:layout_marginTop="10dp" />
+            android:layout_below="@id/tabBar"
+            android:visibility="@{viewModel.isFriendTabSelected ? View.VISIBLE : View.GONE}">
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/you_have_no_friends_yet"
-            android:textSize="18sp"
-            android:visibility="@{viewModel.doesUserHaveAnyFriends ? View.GONE : View.VISIBLE}"/>
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/listSwipeRefreshContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:context=".MainActivity">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:onClick="@{()->viewModel.searchFriends()}"
-            android:src="@drawable/ic_baseline_search_24"
-            android:tint="@color/white" />
-    </RelativeLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/users_found_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:visibility="@{viewModel.doesUserHaveAnyFriends ? View.VISIBLE : View.GONE}" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/you_have_no_friends_yet"
+                android:textSize="18sp"
+                android:visibility="@{viewModel.doesUserHaveAnyFriends ? View.GONE : View.VISIBLE}" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:onClick="@{()->viewModel.searchFriends()}"
+                android:src="@drawable/ic_baseline_search_24"
+                android:tint="@color/white" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/requests_view"
-            android:layout_below="@id/tabBar"
             android:layout_width="match_parent"
-            android:visibility="@{viewModel.isFriendTabSelected ? View.GONE : View.VISIBLE}"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_below="@id/tabBar"
+            android:visibility="@{viewModel.isFriendTabSelected ? View.GONE : View.VISIBLE}">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/requests_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="@{viewModel.doesUserHaveAnyRequests ? View.VISIBLE : View.GONE}"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:visibility="@{viewModel.doesUserHaveAnyRequests ? View.VISIBLE : View.GONE}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -105,25 +115,25 @@
                 android:layout_centerInParent="true"
                 android:text="@string/you_have_no_friends_requests"
                 android:textSize="18sp"
-                android:visibility="@{viewModel.doesUserHaveAnyRequests ? View.GONE : View.VISIBLE}"/>
+                android:visibility="@{viewModel.doesUserHaveAnyRequests ? View.GONE : View.VISIBLE}" />
 
         </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/loadingView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white_overlay"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="@{viewModel.isLoadingViewVisible ? View.VISIBLE : View.GONE}">
+        <RelativeLayout
+            android:id="@+id/loadingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_overlay"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="@{viewModel.isLoadingViewVisible ? View.VISIBLE : View.GONE}">
 
 
-        <ProgressBar
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
+            <ProgressBar
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
 
     </RelativeLayout>
 </layout>
