@@ -9,17 +9,17 @@ import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
-import com.buzuriu.dogapp.utils.FieldsItems
-import com.buzuriu.dogapp.utils.LocalDBItems
-import com.buzuriu.dogapp.utils.LocalDataUtils
-import com.buzuriu.dogapp.utils.MyCustomMeetingUtils
+import com.buzuriu.dogapp.utils.*
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
+import com.google.type.Date
+import com.google.type.DateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.time.LocalDate
 
 class FriendProfileViewModel : BaseViewModel() {
 
@@ -84,8 +84,11 @@ class FriendProfileViewModel : BaseViewModel() {
                                 }
                             })
 
-                        val meetingObj = MyCustomMeetingObj(meeting, user.value!!, dog!!)
-                        meetingsList.add(meetingObj)
+
+                        if (!MeetingUtils.isMeetingInThePast(meeting)) {
+                            val meetingObj = MyCustomMeetingObj(meeting, user.value!!, dog!!)
+                            meetingsList.add(meetingObj)
+                        }
 
                     }
                 }
