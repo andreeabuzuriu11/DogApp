@@ -5,12 +5,15 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FriendMeetingAdapter
+import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.FieldsItems
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.MeetingDetailActivity
+import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +25,10 @@ class FriendProfileViewModel : BaseViewModel() {
 
     var isPlaceholderVisible = MutableLiveData(false)
     private var meetingsList = ArrayList<MyCustomMeetingObj>()
+    private var breedsList = ArrayList<String>()
+    private val userJoinedMeetings = ArrayList<MyCustomMeetingObj>()
+    var mapOfMeetingUidAndCurrentUserAsParticipant: MutableMap<String, ParticipantObj> =
+        mutableMapOf()
 
     var meetingsAdapter: FriendMeetingAdapter? = null
 
@@ -130,4 +137,144 @@ class FriendProfileViewModel : BaseViewModel() {
             })
         }
     }
+
+    // todo fix duplicated
+
+    fun joinOrLeaveMeeting(meeting: MyCustomMeetingObj) {
+        if (!doesUserHaveAtLeastOneDog()) {
+            snackMessageService.displaySnackBar("Please add your pet before participating to a meeting")
+            return
+        }
+
+        when {
+            meeting.meetingStateEnum == MeetingStateEnum.NOT_JOINED -> {
+                exchangeInfoService.put(SelectDogForJoinMeetViewModel::class.java.name, meeting)
+
+                navigationService.showOverlay(
+                    OverlayActivity::class.java,
+                    false,
+                    LocalDBItems.fragmentName,
+                    SelectDogForJoinMeetFragment::class.qualifiedName
+                )
+
+            }
+            hasUserAlreadyJoinedMeeting(meeting) -> {
+                return
+            }
+            meeting.meetingStateEnum == MeetingStateEnum.JOINED -> {
+                alertMessageService.displayAlertDialog(
+                    "Leave?",
+                    "Are you sure you don't want to join this meeting with ${meeting.user!!.name}?",
+                    "Yes",
+                    object :
+                        IClickListener {
+                        override fun clicked() {
+                            meeting.meetingStateEnum = MeetingStateEnum.NOT_JOINED
+                            meetingsAdapter!!.notifyItemChanged(meetingsList.indexOf(meeting))
+                            val participant =
+                                mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj!!.uid]
+                            if (participant != null) {
+                                viewModelScope.launch(Dispatchers.IO)
+                                {
+                                    databaseService.leaveMeeting(meeting.meetingObj!!.uid!!,
+                                        participant.uid!!,
+                                        object : IOnCompleteListener {
+                                            override fun onComplete(
+                                                successful: Boolean,
+                                                exception: Exception?
+                                            ) {
+                                                removeMeetFromUserJoinedMeetings(meeting)
+                                                snackMessageService.displaySnackBar("Your intention of not attending this walk with ${meeting.user!!.name} successfully saved")
+                                            }
+                                        })
+                                }
+                            }
+                        }
+                    })
+            }
+        }
+    }
+
+    // todo fix duplicated
+
+    fun removeMeetFromUserJoinedMeetings(meeting: MyCustomMeetingObj) {
+        val allMeetingsThatUserJoinedList =
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.meetingsUserJoined)
+        val toBeRemoved =
+            allMeetingsThatUserJoinedList!!.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid }
+        allMeetingsThatUserJoinedList.remove(toBeRemoved)
+        localDatabaseService.add(LocalDBItems.meetingsUserJoined, allMeetingsThatUserJoinedList)
+    }
+
+    // todo fix duplicated
+
+    private fun hasUserAlreadyJoinedMeeting(meeting: MyCustomMeetingObj): Boolean {
+        var meetingsThatUserAlreadyJoined = ArrayList<MyCustomMeetingObj>()
+        viewModelScope.launch {
+            meetingsThatUserAlreadyJoined = getAllMeetingsThatUserJoined()
+        }
+
+        if (meetingsThatUserAlreadyJoined.find { it.meetingObj!!.uid == meeting.meetingObj!!.uid } != null) {
+            return true
+        }
+        return false
+    }
+
+
+    // todo fix duplicated
+    private fun doesUserHaveAtLeastOneDog(): Boolean {
+        val listOfDogs = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
+        if (listOfDogs != null) {
+            if (listOfDogs.size < 1)
+                return false
+        }
+        return true
+    }
+
+    // todo fix duplicated
+
+    private suspend fun getAllMeetingsThatUserJoined(): ArrayList<MyCustomMeetingObj> {
+        var allMeetingsParticipants: ArrayList<ParticipantObj>
+
+        for (meeting in meetingsList) {
+            allMeetingsParticipants =
+                databaseService.fetchAllMeetingParticipants(meeting.meetingObj?.uid!!)!!
+            for (meet in allMeetingsParticipants)
+                if (meet.userUid == currentUser!!.uid) {
+                    userJoinedMeetings.add(meeting)
+                    changeStateOfMeeting(meeting)
+                    mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj?.uid!!] =
+                        meet
+                }
+        }
+        return userJoinedMeetings
+    }
+
+    // todo fix duplicated
+
+    private fun changeStateOfMeeting(meeting: MyCustomMeetingObj) {
+        if (hasUserJoinedThisMeeting(meeting)) {
+            changeStateAccordingly(meeting, MeetingStateEnum.JOINED)
+        } else {
+            changeStateAccordingly(meeting, MeetingStateEnum.NOT_JOINED)
+        }
+    }
+
+    // todo fix duplicated
+
+    private fun hasUserJoinedThisMeeting(meeting: MyCustomMeetingObj): Boolean {
+        for (userJoinMeeting in userJoinedMeetings)
+            if (meeting.meetingObj!!.uid == userJoinMeeting.meetingObj!!.uid)
+                return true
+        return false
+    }
+
+    // todo fix duplicated
+    private fun changeStateAccordingly(
+        meeting: MyCustomMeetingObj,
+        meetingStateEnum: MeetingStateEnum
+    ) {
+        meeting.meetingStateEnum = meetingStateEnum
+    }
+
 }

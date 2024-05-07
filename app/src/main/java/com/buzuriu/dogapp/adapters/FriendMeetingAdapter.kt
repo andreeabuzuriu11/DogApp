@@ -41,10 +41,9 @@ class FriendMeetingAdapter(
             applicationBinding.meetingCell.setOnClickListener {
                 selectedMeeting(meeting)
             }
-            // TODO fix join logic
-            //applicationBinding.joinButton.setOnClickListener {
-            //    viewModel.joinOrLeaveMeeting(meeting)
-            //}
+            applicationBinding.joinButton.setOnClickListener {
+                viewModel.joinOrLeaveMeeting(meeting)
+            }
             applicationBinding.meetingState = meeting.meetingStateEnum
         }
     }
