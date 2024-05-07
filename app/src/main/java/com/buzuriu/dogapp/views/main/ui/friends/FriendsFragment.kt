@@ -26,7 +26,7 @@ class FriendsFragment :
         currentBinding = binding
     }
 
-    override val layoutId: Int = com.buzuriu.dogapp.R.layout.fragment_friends
+    override val layoutId: Int = R.layout.fragment_friends
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,27 +35,19 @@ class FriendsFragment :
         setupMyFriendsList()
         setupFriendsRequestList()
 
-//        val view = inflater!!.inflate(R.layout.fragment_friends, container, false)
-
         var swipeRefreshLayout =
             view.findViewById<SwipeRefreshLayout>(R.id.listSwipeRefreshContainer)
 
-
-
         swipeRefreshLayout.setOnRefreshListener {
-
-            // on below line we are setting is refreshing to false.
+            // set the is refreshing to false so the loading view stops
             swipeRefreshLayout.isRefreshing = false
-
-            // on below line we are shuffling our list using random
 
             // read data again
             viewLifecycleOwner.lifecycleScope.launch {
                 mViewModel.fetchMyFriendAndFriendsRequest()
             }
-            // on below line we are notifying adapter
 
-            // that data has changed in recycler view.
+            // notify the adapter
             currentBinding.usersFoundList.adapter!!.notifyDataSetChanged()
         }
 
