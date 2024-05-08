@@ -1,15 +1,22 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.result.ActivityResult
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.FriendMeetingAdapter
 import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.listeners.IClickListener
+import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.*
@@ -21,6 +28,7 @@ import com.google.type.Date
 import com.google.type.DateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import java.time.LocalDate
 
@@ -249,10 +257,33 @@ class FriendProfileViewModel : BaseViewModel() {
     }
 
     public fun callFriend() {
-        val intent = Intent(Intent.ACTION_CALL);
-        intent.data = Uri.parse("tel:${user.value!!.name}")
-        var activity = activityService.activity
-        activity!!.startActivity(intent, null)
+
+        viewModelScope.launch(Dispatchers.Main) {
+
+            val hasPermission =
+                requestPermissionKind(listOf(Manifest.permission.CALL_PHONE)).await()
+            if (!hasPermission) {
+                snackMessageService.displaySnackBar(R.string.err_call_phone_permission_needed)
+                return@launch
+            }
+
+            val intent = Intent(Intent.ACTION_CALL)
+            intent.data = Uri.parse("tel:${user.value!!.name}")
+            viewModelScope.launch(Dispatchers.Main) {
+
+                activityForResultService.launchCurrentActivityResultLauncher(
+                    intent,
+                    object : IGetActivityForResultListener {
+                        override fun activityForResult(activityResult: ActivityResult) {
+                            if (activityResult.resultCode == Activity.RESULT_OK) {
+                                var activity = activityService.activity
+                                activity!!.startActivity(intent, null)
+
+                            }
+                        }
+                    })
+            }
+        }
     }
 
 

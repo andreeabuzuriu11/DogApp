@@ -33,6 +33,7 @@
     <string name="email_hint">Email</string>
     <string name="email_missing_message">Please add an email</string>
     <string name="err_camera_permission_needed">Please grant camera access</string>
+    <string name="err_call_phone_permission_needed">Please grant phone access</string>
     <string name="female_gender">Female</string>
     <string name="filter_meetings">Filter meetings</string>
     <string name="forget_password">Forgot Password?</string>
