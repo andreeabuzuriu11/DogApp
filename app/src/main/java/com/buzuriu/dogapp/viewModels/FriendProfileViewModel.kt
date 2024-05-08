@@ -1,7 +1,10 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.FriendMeetingAdapter
@@ -243,6 +246,13 @@ class FriendProfileViewModel : BaseViewModel() {
                 }
         }
         return userJoinedMeetings
+    }
+
+    public fun callFriend() {
+        val intent = Intent(Intent.ACTION_CALL);
+        intent.data = Uri.parse("tel:${user.value!!.name}")
+        var activity = activityService.activity
+        activity!!.startActivity(intent, null)
     }
 
 
