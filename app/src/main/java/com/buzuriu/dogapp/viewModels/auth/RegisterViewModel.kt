@@ -19,12 +19,12 @@ class RegisterViewModel : BaseAuthViewModel() {
 
     var name = MutableLiveData<String>()
     var phone = MutableLiveData<String>()
+    var city = MutableLiveData<String>()
     var passwordRepeat = MutableLiveData<String>()
     var isFemaleGenderSelected = MutableLiveData<Boolean>()
     private var currentGenderString: String? = null
 
-    fun loginClick()
-    {
+    fun loginClick() {
         navigationService.navigateToActivity(LoginActivity::class.java, true)
     }
 
@@ -54,7 +54,7 @@ class RegisterViewModel : BaseAuthViewModel() {
                                     phone.value,
                                     currentGenderString!!,
 
-                                )
+                                    )
                                 showLoadingView(true)
                                 viewModelScope.launch(Dispatchers.IO) {
 
@@ -62,20 +62,31 @@ class RegisterViewModel : BaseAuthViewModel() {
                                         user.uid,
                                         userObj,
                                         object : IOnCompleteListener {
-                                            override fun onComplete(successful: Boolean, exception: Exception?) {
+                                            override fun onComplete(
+                                                successful: Boolean,
+                                                exception: Exception?
+                                            ) {
                                                 showLoadingView(false)
 
                                                 if (successful) {
                                                     snackMessageService.displaySnackBar(R.string.info_added)
                                                     viewModelScope.launch(Dispatchers.Main) {
                                                         getUserAccountInfo()
-                                                        localDatabaseService.add(LocalDBItems.localDogsList, ArrayList<DogObj>())
+                                                        localDatabaseService.add(
+                                                            LocalDBItems.localDogsList,
+                                                            ArrayList<DogObj>()
+                                                        )
                                                         delay(1000)
-                                                        navigationService.navigateToActivity(MainActivity::class.java, true)
+                                                        navigationService.navigateToActivity(
+                                                            MainActivity::class.java,
+                                                            true
+                                                        )
                                                     }
                                                 } else {
                                                     if (!exception?.message.isNullOrEmpty())
-                                                        snackMessageService.displaySnackBar(exception!!.message!!)
+                                                        snackMessageService.displaySnackBar(
+                                                            exception!!.message!!
+                                                        )
                                                     else snackMessageService.displaySnackBar(R.string.unknown_error)
                                                 }
                                             }
@@ -83,8 +94,7 @@ class RegisterViewModel : BaseAuthViewModel() {
                                 }
                             }
 
-                        }
-                        else {
+                        } else {
                             if (!exception?.message.isNullOrEmpty())
                                 snackMessageService.displaySnackBar(exception!!.message!!)
                             snackMessageService.displaySnackBar(R.string.unknown_error)
@@ -116,34 +126,31 @@ class RegisterViewModel : BaseAuthViewModel() {
         return true
     }
 
-    private fun checkNameIsValid() : Boolean {
-        if(!StringUtils.isLetters(name.value!!) && !name.value!!.contains(' '))
-        {
+    private fun checkNameIsValid(): Boolean {
+        if (!StringUtils.isLetters(name.value!!) && !name.value!!.contains(' ')) {
             snackMessageService.displaySnackBar("Name cannot contain digits")
             return false
         }
         return true
     }
 
-    private fun checkPhoneIsValid() : Boolean {
-        if(phone.value!!.length < 10)
-        {
+    private fun checkPhoneIsValid(): Boolean {
+        if (phone.value!!.length < 10) {
             snackMessageService.displaySnackBar("Phone number cannot be this short")
             return false
         }
         return true
     }
 
-    private fun checkInternetConnection() : Boolean {
-        if(!internetService.isInternetAvailable())
-        {
+    private fun checkInternetConnection(): Boolean {
+        if (!internetService.isInternetAvailable()) {
             snackMessageService.displaySnackBar(R.string.no_internet_message)
             return false
         }
         return true
     }
 
-    private fun checkIfFieldsAreFilledOut() : Boolean {
+    private fun checkIfFieldsAreFilledOut(): Boolean {
         if (email.value.isNullOrEmpty()) {
             snackMessageService.displaySnackBar(R.string.email_missing_message)
             return false
@@ -154,35 +161,32 @@ class RegisterViewModel : BaseAuthViewModel() {
             return false
         }
 
-        if(name.value.isNullOrEmpty())
-        {
+        if (name.value.isNullOrEmpty()) {
             snackMessageService.displaySnackBar("Name field is mandatory")
             return false
         }
 
-        if(phone.value.isNullOrEmpty())
-        {
+        if (phone.value.isNullOrEmpty()) {
             snackMessageService.displaySnackBar("Phone field is mandatory")
             return false
         }
         return true
     }
 
-    private fun checkPasswordIsMatching() : Boolean {
+    private fun checkPasswordIsMatching(): Boolean {
         if (!password.value.equals(passwordRepeat.value)) {
             snackMessageService.displaySnackBar(R.string.password_does_not_match_message)
             return false
         }
 
-        if(password.value!!.length < minPasswordLength)
-        {
+        if (password.value!!.length < minPasswordLength) {
             snackMessageService.displaySnackBar(R.string.password_short_message)
             return false
         }
         return true
     }
 
-    private fun checkEmailIsValid() : Boolean {
+    private fun checkEmailIsValid(): Boolean {
         if (!StringUtils.isEmailValid(email.value!!)) {
             snackMessageService.displaySnackBar(R.string.wrong_email_format_message)
             return false
@@ -191,13 +195,14 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
     private suspend fun getUserAccountInfo() {
-        val userObj : UserObj? = databaseService.fetchUserByUid(currentUser!!.uid, object : IOnCompleteListener{
-            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+        val userObj: UserObj? =
+            databaseService.fetchUserByUid(currentUser!!.uid, object : IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
 
-            }
-        })
+                }
+            })
 
-        if (userObj!=null)
+        if (userObj != null)
             localDatabaseService.add(LocalDBItems.currentUser, userObj)
         else {
             snackMessageService.displaySnackBar("Error, this user has been deleted!")
@@ -205,4 +210,9 @@ class RegisterViewModel : BaseAuthViewModel() {
             navigationService.navigateToActivity(RegisterActivity::class.java, true)
         }
     }
+
+    fun selectCity() {
+
+    }
+
 }

@@ -6,10 +6,8 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
@@ -19,12 +17,10 @@ import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
-import com.buzuriu.dogapp.services.AlertMessageService
 import com.buzuriu.dogapp.utils.*
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
-import com.google.protobuf.LazyStringArrayList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
