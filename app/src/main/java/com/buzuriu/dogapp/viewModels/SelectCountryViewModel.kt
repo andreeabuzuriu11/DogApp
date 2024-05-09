@@ -4,36 +4,36 @@ import android.os.Handler
 import android.os.Looper
 import com.beastwall.localisation.Localisation
 import com.buzuriu.dogapp.adapters.CityAdapter
-import com.buzuriu.dogapp.models.CityObj
+import com.buzuriu.dogapp.models.CountryObj
 
 
-class SelectCityViewModel : BaseViewModel() {
+class SelectCountryViewModel : BaseViewModel() {
 
-    var cityAdapter: CityAdapter? = null
-    private var citiesList: ArrayList<CityObj> = ArrayList()
+    var countryAdapter: CityAdapter? = null
+    private var countriesList: ArrayList<CountryObj> = ArrayList()
 
     init {
-        cityAdapter = CityAdapter(citiesList, this)
-        initCitiesList()
+        countryAdapter = CityAdapter(countriesList, this)
+        initCountriesList()
     }
 
     fun saveCity() {
 
     }
 
-    fun selectCity(cityObj: CityObj) {
+    fun selectCountry(countryObj: CountryObj) {
 
     }
 
-    private fun initCitiesList() {
+    private fun initCountriesList() {
         Thread {
             val countries =
                 Localisation.getAllCountriesStatesAndCities()
             Handler(Looper.getMainLooper()).post {
                 for (country in countries) {
-                    citiesList.add(CityObj(country.name, false))
+                    countriesList.add(CountryObj(country.name, false))
                 }
-                cityAdapter!!.notifyDataSetChanged()
+                countryAdapter!!.notifyDataSetChanged()
             }
         }.start()
     }

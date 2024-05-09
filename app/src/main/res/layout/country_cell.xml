@@ -7,16 +7,16 @@
 
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.viewModels.SelectCityViewModel" />
+            type="com.buzuriu.dogapp.viewModels.SelectCountryViewModel" />
 
         <variable
-            name="cityObj"
-            type="com.buzuriu.dogapp.models.CityObj" />
+            name="countryObj"
+            type="com.buzuriu.dogapp.models.CountryObj" />
 
     </data>
 
     <RelativeLayout
-        android:id="@+id/city_cell_layout"
+        android:id="@+id/country_cell_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:padding="10dp">
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="@{cityObj.cityName}"
+            android:text="@{countryObj.cityName}"
             android:textSize="@dimen/normal_size"
             tools:text="Romania" />
 
@@ -35,7 +35,7 @@
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_baseline_check_24"
-            android:visibility="@{cityObj.isSelected ? View.VISIBLE:View.GONE }" />
+            android:visibility="@{countryObj.isSelected ? View.VISIBLE:View.GONE }" />
 
 
     </RelativeLayout>
