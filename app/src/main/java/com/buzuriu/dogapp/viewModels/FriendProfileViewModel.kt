@@ -24,6 +24,7 @@ import com.buzuriu.dogapp.utils.*
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import com.google.protobuf.LazyStringArrayList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -286,9 +287,17 @@ class FriendProfileViewModel : BaseViewModel() {
     public fun sendMail() {
         try {
             val activity = activityService.activity
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_APP_EMAIL)
-            activity!!.startActivity(intent, null)
+            val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"+ user.value!!.email))
+//            intent.addCategory(Intent.CATEGORY_APP_EMAIL)
+
+            /* Fill it with Data */
+//            intent.setType("plain/text");
+//            intent.putExtra(Intent.EXTRA_EMAIL, user.value!!.email);
+//            intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+//            intent.putExtra(Intent.EXTRA_TEXT, "Text");
+
+
+            activity!!.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
 
             alertMessageService.displayAlertDialog(
