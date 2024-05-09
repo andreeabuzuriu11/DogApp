@@ -2,11 +2,11 @@ package com.buzuriu.dogapp.viewModels
 
 import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.startActivity
@@ -19,18 +19,15 @@ import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.services.AlertMessageService
 import com.buzuriu.dogapp.utils.*
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
-import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
-import com.google.type.Date
-import com.google.type.DateTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
-import java.time.LocalDate
+
 
 class FriendProfileViewModel : BaseViewModel() {
 
@@ -286,9 +283,25 @@ class FriendProfileViewModel : BaseViewModel() {
         }
     }
 
-    public fun sendMail()
-    {
+    public fun sendMail() {
+        try {
+            val activity = activityService.activity
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.addCategory(Intent.CATEGORY_APP_EMAIL)
+            activity!!.startActivity(intent, null)
+        } catch (e: ActivityNotFoundException) {
 
+            alertMessageService.displayAlertDialog(
+                "Error",
+                "There is no email client installed.",
+                "Ok",
+                object :
+                    IClickListener {
+                    override fun clicked() {
+
+                    }
+                })
+        }
     }
 
 
