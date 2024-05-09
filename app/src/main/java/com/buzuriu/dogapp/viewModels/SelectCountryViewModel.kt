@@ -43,7 +43,7 @@ class SelectCountryViewModel : BaseViewModel() {
         if (selectedCountry != null)
             exchangeInfoService.put(
                 SelectCityViewModel::class.qualifiedName!!,
-                selectedCountry!!
+                selectedCountry!!.country!!
             )
     }
 
@@ -53,7 +53,7 @@ class SelectCountryViewModel : BaseViewModel() {
                 Localisation.getAllCountriesStatesAndCities()
             Handler(Looper.getMainLooper()).post {
                 for (country in countries) {
-                    countriesList.add(CountryObj(country.name, false))
+                    countriesList.add(CountryObj(country, false))
                 }
                 countryAdapter!!.notifyDataSetChanged()
             }

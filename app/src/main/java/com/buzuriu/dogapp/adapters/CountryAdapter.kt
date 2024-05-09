@@ -3,6 +3,7 @@ package com.buzuriu.dogapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.beastwall.localisation.model.Country
 import com.buzuriu.dogapp.databinding.CountryCellBinding
 import com.buzuriu.dogapp.models.CountryObj
 import com.buzuriu.dogapp.viewModels.SelectCountryViewModel

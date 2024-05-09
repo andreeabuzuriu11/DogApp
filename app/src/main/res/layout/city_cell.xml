@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="@{cityObj.cityName}"
+            android:text="@{cityObj.city.name}"
             android:textSize="@dimen/normal_size"
             tools:text="Romania" />
 

@@ -1,12 +1,14 @@
 package com.buzuriu.dogapp.models
 
+import com.beastwall.localisation.model.Country
+
 class CountryObj {
-    var countryName: String? = null
+    var country: Country? = null
     var isSelected: Boolean? = false
 
 
-    constructor(countryName: String?, isSelected : Boolean) {
-        this.countryName = countryName
+    constructor(country: Country?, isSelected : Boolean) {
+        this.country = country
         this.isSelected = isSelected
     }
 }
