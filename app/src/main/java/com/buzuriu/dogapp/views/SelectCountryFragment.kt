@@ -5,22 +5,23 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
-import com.buzuriu.dogapp.databinding.FragmentSelectCityBinding
-import com.buzuriu.dogapp.viewModels.SelectCityViewModel
+import com.buzuriu.dogapp.databinding.FragmentSelectCountryBinding
+import com.buzuriu.dogapp.viewModels.SelectCountryViewModel
 import com.buzuriu.dogapp.views.base.BaseBoundFragment
 
-class SelectCityFragment : BaseBoundFragment<SelectCityViewModel, FragmentSelectCityBinding>(
-    SelectCityViewModel::class.java
-) {
-    private lateinit var currentBinding: FragmentSelectCityBinding
+class SelectCountryFragment :
+    BaseBoundFragment<SelectCountryViewModel, FragmentSelectCountryBinding>(
+        SelectCountryViewModel::class.java
+    ) {
+    private lateinit var currentBinding: FragmentSelectCountryBinding
 
-    override fun setupDataBinding(binding: FragmentSelectCityBinding) {
+    override fun setupDataBinding(binding: FragmentSelectCountryBinding) {
         currentBinding = binding
         binding.viewModel = mViewModel
     }
 
     override val layoutId: Int
-        get() = R.layout.fragment_select_city
+        get() = R.layout.fragment_select_country
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,14 +30,14 @@ class SelectCityFragment : BaseBoundFragment<SelectCityViewModel, FragmentSelect
     }
 
     private fun setupRecyclerView() {
-        val recyclerView = currentBinding.cityList
+        val recyclerView = currentBinding.countryList
         recyclerView.layoutManager = LinearLayoutManager(
             activity,
             RecyclerView.VERTICAL,
             false
         )
-        recyclerView.adapter = mViewModel.cityAdapter
+        recyclerView.adapter = mViewModel.countryAdapter
     }
-
-
 }
+
+

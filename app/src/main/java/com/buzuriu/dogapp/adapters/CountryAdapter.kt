@@ -8,12 +8,12 @@ import com.buzuriu.dogapp.models.CountryObj
 import com.buzuriu.dogapp.viewModels.SelectCountryViewModel
 
 class CountryAdapter(
-    private var citiesList: ArrayList<CountryObj>,
+    var countriesList: ArrayList<CountryObj>,
     private var viewModel: SelectCountryViewModel? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount(): Int {
-        return citiesList.size
+        return countriesList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -24,7 +24,7 @@ class CountryAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val countryObj = citiesList[position];
+        val countryObj = countriesList[position];
         (holder as CityCellViewHolder).bind(countryObj)
     }
 
@@ -39,7 +39,7 @@ class CountryAdapter(
     }
 
     fun filterList(auxList: ArrayList<CountryObj>) {
-        citiesList = auxList
+        countriesList = auxList
         notifyDataSetChanged()
     }
 

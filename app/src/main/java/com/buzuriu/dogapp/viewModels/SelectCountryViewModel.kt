@@ -5,10 +5,14 @@ import android.os.Looper
 import com.beastwall.localisation.Localisation
 import com.buzuriu.dogapp.adapters.CountryAdapter
 import com.buzuriu.dogapp.models.CountryObj
+import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.views.SelectCityFragment
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 
 
 class SelectCountryViewModel : BaseViewModel() {
 
+    var selectedCountry: CountryObj? = null
     var countryAdapter: CountryAdapter? = null
     private var countriesList: ArrayList<CountryObj> = ArrayList()
 
@@ -17,12 +21,30 @@ class SelectCountryViewModel : BaseViewModel() {
         initCountriesList()
     }
 
-    fun saveCity() {
+    fun saveCountry()
+    {
 
     }
 
     fun selectCountry(countryObj: CountryObj) {
 
+        countryObj.isSelected = true
+        selectedCountry = countryObj
+
+        countryAdapter?.notifyItemChanged(countryAdapter?.countriesList!!.indexOf(countryObj))
+
+        navigationService.showOverlay(
+            OverlayActivity::class.java,
+            false,
+            LocalDBItems.fragmentName,
+            SelectCityFragment::class.qualifiedName
+        )
+
+        if (selectedCountry != null)
+            exchangeInfoService.put(
+                SelectCityViewModel::class.qualifiedName!!,
+                selectedCountry!!
+            )
     }
 
     private fun initCountriesList() {
