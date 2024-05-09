@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.SelectCityViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_marginTop="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/select_city_close_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:onClick="@{()->viewModel.close()}"
+            android:src="@drawable/ic_baseline_close_24"
+            />
+
+        <TextView
+            android:id="@+id/select_dog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/select_city"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/select_city_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_below="@id/select_dog_title"
+            android:hint="@string/start_typing_a_city_name"
+            android:inputType="text" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/dog_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/select_city_edit_text"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/select_dog_save_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@drawable/rounded_button"
+            android:onClick="@{()->viewModel.saveCity()}"
+            android:text="@string/save_button_text"
+            android:textColor="@color/white" />
+
+    </RelativeLayout>
+</layout>

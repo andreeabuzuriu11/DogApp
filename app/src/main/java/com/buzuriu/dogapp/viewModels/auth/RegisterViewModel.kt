@@ -1,19 +1,27 @@
 package com.buzuriu.dogapp.viewModels.auth
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.beastwall.localisation.Localisation
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
+import com.buzuriu.dogapp.views.AddDogActivity
+import com.buzuriu.dogapp.views.SelectCityFragment
+import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.auth.RegisterActivity
 import com.buzuriu.dogapp.views.main.MainActivity
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 
 class RegisterViewModel : BaseAuthViewModel() {
 
@@ -212,7 +220,22 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
     fun selectCity() {
+//        Thread {
+//            val countries = Localisation.getAllCountriesStatesAndCities()
+//            Handler(Looper.getMainLooper()).post(Runnable {
+//
+//            })
+//        }.start()
 
+        // navigate to select city
+
+
+        navigationService.showOverlay(
+            OverlayActivity::class.java,
+            false,
+            LocalDBItems.fragmentName,
+            SelectCityFragment::class.qualifiedName
+        )
     }
 
 }
