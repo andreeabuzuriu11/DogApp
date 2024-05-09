@@ -3,9 +3,9 @@ package com.buzuriu.dogapp.viewModels
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import android.graphics.Bitmap
+import android.media.ThumbnailUtils
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
@@ -18,13 +18,11 @@ import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.ml.ModelUnquant
 import com.buzuriu.dogapp.models.*
-import com.buzuriu.dogapp.services.AlertMessageService
 import com.buzuriu.dogapp.utils.BreedsFile
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
 import com.buzuriu.dogapp.views.SelectBreedFragment
-import com.buzuriu.dogapp.views.auth.LoginActivity
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
@@ -33,15 +31,17 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import org.tensorflow.lite.DataType
-import org.tensorflow.lite.support.common.ops.NormalizeOp
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.ResizeOp
-import org.tensorflow.lite.support.image.ops.TransformToGrayscaleOp
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 
 
 class AddDogViewModel : BaseViewModel() {
+
+    var imageSize = 224
 
     var dogBitmapImage = MutableLiveData<Bitmap>()
     var name = MutableLiveData("")
@@ -377,6 +377,11 @@ class AddDogViewModel : BaseViewModel() {
 
         var bmp = dogBitmapImage.value?.copy(Bitmap.Config.ARGB_8888, true);
 
+        var dimension = bmp?.let { Math.min(it.width, bmp!!.height) }
+        bmp = ThumbnailUtils.extractThumbnail(bmp, dimension!!, dimension)
+
+        var image = Bitmap.createScaledBitmap(bmp, imageSize, imageSize, false)
+
         tensorImage.load(bmp)
 
         tensorImage = ImageProcessor.Builder()
@@ -392,21 +397,45 @@ class AddDogViewModel : BaseViewModel() {
         // Creates inputs for reference.
         val inputFeature0 =
             TensorBuffer.createFixedSize(intArrayOf(1, 224, 224, 3), DataType.FLOAT32)
-        inputFeature0.loadBuffer(tensorImage.buffer)
+        val byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3)
+        byteBuffer.order(ByteOrder.nativeOrder())
 
-        // Runs model inference and gets result.
-        val outputs = model.process(inputFeature0)
-        val outputFeature0 = outputs.outputFeature0AsTensorBuffer.floatArray
 
-        var maxIdx = 0
-        outputFeature0.forEachIndexed { index, fl ->
-            if (outputFeature0[maxIdx] < fl) {
-                maxIdx = index
+        // get 1D array of 224 * 224 pixels in image
+        val intValues = IntArray(imageSize * imageSize)
+        image?.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height);
+
+        // iterate over pixels and extract R, G, and B values. Add to bytebuffer.
+        // iterate over pixels and extract R, G, and B values. Add to bytebuffer.
+        var pixel = 0
+        for (i in 0 until imageSize) {
+            for (j in 0 until imageSize) {
+                val `val` = intValues[pixel++] // RGB
+                byteBuffer.putFloat((`val` shr 16 and 0xFF) * (1f / 255f))
+                byteBuffer.putFloat((`val` shr 8 and 0xFF) * (1f / 255f))
+                byteBuffer.putFloat((`val` and 0xFF) * (1f / 255f))
             }
         }
 
-        // TODO select the breed based on this prediction or show it somewhere at least
-        var resultText = labels[maxIdx]
+
+        inputFeature0.loadBuffer(byteBuffer)
+
+        // The model runs, then predicts the result
+        val outputs = model.process(inputFeature0)
+        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+
+        val confidences: FloatArray = outputFeature0.floatArray
+
+        var maxPos = 0
+        var maxConfidence = 0f
+        for (i in confidences.indices) {
+            if (confidences[i] > maxConfidence) {
+                maxConfidence = confidences[i]
+                maxPos = i
+            }
+        }
+
+        val resultText = labels[maxPos]
 
         setBreedBasedOnResult(resultText)
 
