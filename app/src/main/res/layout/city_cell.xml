@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.SelectCityViewModel" />
+
+        <variable
+            name="cityObj"
+            type="com.buzuriu.dogapp.models.CityObj" />
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/city_cell_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="@{cityObj.cityName}"
+            android:textSize="@dimen/normal_size"
+            tools:text="Romania" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_baseline_check_24"
+            android:visibility="@{cityObj.isSelected ? View.VISIBLE:View.GONE }" />
+
+
+    </RelativeLayout>
+
+</layout>

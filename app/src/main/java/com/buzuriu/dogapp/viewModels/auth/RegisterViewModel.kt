@@ -220,16 +220,6 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
     fun selectCity() {
-//        Thread {
-//            val countries = Localisation.getAllCountriesStatesAndCities()
-//            Handler(Looper.getMainLooper()).post(Runnable {
-//
-//            })
-//        }.start()
-
-        // navigate to select city
-
-
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
