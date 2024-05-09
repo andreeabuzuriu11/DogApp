@@ -286,5 +286,10 @@ class FriendProfileViewModel : BaseViewModel() {
         }
     }
 
+    public fun sendMail()
+    {
+
+    }
+
 
 }

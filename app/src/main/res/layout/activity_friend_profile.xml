@@ -83,8 +83,39 @@
                         android:background="@drawable/rounded_button"
                         android:onClick="@{()->viewModel.callFriend()}"
                         android:padding="0dp"
-
                         android:text="Call"
+                        android:textSize="17dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sendEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/phoneNumber"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:width="150dp"
+                        android:text="@{viewModel.user.email}"
+                        android:textAlignment="center"
+                        android:textSize="20dp" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:background="@drawable/rounded_button"
+                        android:onClick="@{()->viewModel.sendMail()}"
+                        android:padding="0dp"
+                        android:text="Write"
                         android:textSize="17dp" />
 
                 </LinearLayout>
@@ -93,7 +124,7 @@
                     android:id="@+id/placeHolder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/phoneNumber"
+                    android:layout_below="@+id/sendEmail"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:text="@string/no_events"
@@ -103,9 +134,10 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/meetings_list"
+                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/phoneNumber"
+                    android:layout_below="@+id/sendEmail"
                     android:visibility="@{viewModel.isLoadingViewVisible ? View.GONE : View.VISIBLE}" />
 
                 <ProgressBar
