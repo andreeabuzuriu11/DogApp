@@ -254,7 +254,7 @@ class FriendProfileViewModel : BaseViewModel() {
         return userJoinedMeetings
     }
 
-    public fun callFriend() {
+    fun callFriend() {
 
         viewModelScope.launch(Dispatchers.Main) {
 
@@ -284,18 +284,10 @@ class FriendProfileViewModel : BaseViewModel() {
         }
     }
 
-    public fun sendMail() {
+    fun sendMail() {
         try {
             val activity = activityService.activity
-            val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"+ user.value!!.email))
-//            intent.addCategory(Intent.CATEGORY_APP_EMAIL)
-
-            /* Fill it with Data */
-//            intent.setType("plain/text");
-//            intent.putExtra(Intent.EXTRA_EMAIL, user.value!!.email);
-//            intent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
-//            intent.putExtra(Intent.EXTRA_TEXT, "Text");
-
+            val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + user.value!!.email))
 
             activity!!.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
