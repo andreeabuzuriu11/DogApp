@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.buzuriu.dogapp.viewModels.SelectCountryViewModel" />
+            type="com.buzuriu.dogapp.viewModels.SelectCityViewModel" />
     </data>
 
     <RelativeLayout
@@ -17,7 +17,7 @@
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/select_country_close_image"
+            android:id="@+id/select_city_close_image"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"
@@ -34,20 +34,20 @@
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/select_country_edit_text"
+            android:id="@+id/select_city_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_below="@id/select_dog_title"
-            android:hint="@string/start_typing_a_country_name"
+            android:hint="@string/start_typing_a_city_name"
             android:inputType="text" />
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/country_list"
+            android:id="@+id/city_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/select_country_edit_text"
+            android:layout_below="@+id/select_city_edit_text"
             android:layout_marginTop="16dp" />
 
         <Button

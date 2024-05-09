@@ -3,17 +3,17 @@ package com.buzuriu.dogapp.viewModels
 import android.os.Handler
 import android.os.Looper
 import com.beastwall.localisation.Localisation
-import com.buzuriu.dogapp.adapters.CityAdapter
+import com.buzuriu.dogapp.adapters.CountryAdapter
 import com.buzuriu.dogapp.models.CountryObj
 
 
 class SelectCountryViewModel : BaseViewModel() {
 
-    var countryAdapter: CityAdapter? = null
+    var countryAdapter: CountryAdapter? = null
     private var countriesList: ArrayList<CountryObj> = ArrayList()
 
     init {
-        countryAdapter = CityAdapter(countriesList, this)
+        countryAdapter = CountryAdapter(countriesList, this)
         initCountriesList()
     }
 

@@ -29,7 +29,7 @@ class SelectCityFragment : BaseBoundFragment<SelectCountryViewModel, FragmentSel
     }
 
     private fun setupRecyclerView() {
-        val recyclerView = currentBinding.cityList
+        val recyclerView = currentBinding.countryList
         recyclerView.layoutManager = LinearLayoutManager(
             activity,
             RecyclerView.VERTICAL,

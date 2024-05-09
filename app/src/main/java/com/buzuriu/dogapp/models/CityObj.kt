@@ -1,12 +1,12 @@
 package com.buzuriu.dogapp.models
 
-class CountryObj {
-    var countryName: String? = null
+class CityObj {
+    var cityName: String? = null
     var isSelected: Boolean? = false
 
 
     constructor(countryName: String?, isSelected : Boolean) {
-        this.countryName = countryName
+        this.cityName = countryName
         this.isSelected = isSelected
     }
 }

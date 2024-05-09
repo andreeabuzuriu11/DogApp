@@ -3,13 +3,13 @@ package com.buzuriu.dogapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.buzuriu.dogapp.databinding.CountryCellBinding
-import com.buzuriu.dogapp.models.CountryObj
-import com.buzuriu.dogapp.viewModels.SelectCountryViewModel
+import com.buzuriu.dogapp.databinding.CityCellBinding
+import com.buzuriu.dogapp.models.CityObj
+import com.buzuriu.dogapp.viewModels.SelectCityViewModel
 
 class CityAdapter(
-    private var citiesList: ArrayList<CountryObj>,
-    private var viewModel: SelectCountryViewModel? = null
+    private var citiesList: ArrayList<CityObj>,
+    private var viewModel: SelectCityViewModel? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemCount(): Int {
@@ -19,26 +19,26 @@ class CityAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val applicationBinding =
-            CountryCellBinding.inflate(layoutInflater, parent, false)
+            CityCellBinding.inflate(layoutInflater, parent, false)
         return CityCellViewHolder(applicationBinding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val countryObj = citiesList[position];
-        (holder as CityCellViewHolder).bind(countryObj)
+        val cityObj = citiesList[position];
+        (holder as CityCellViewHolder).bind(cityObj)
     }
 
-    inner class CityCellViewHolder(var applicationBinding: CountryCellBinding) :
+    inner class CityCellViewHolder(var applicationBinding: CityCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
-        fun bind(item: CountryObj) {
-            applicationBinding.countryObj = item
-            applicationBinding.countryCellLayout.setOnClickListener {
-                viewModel?.selectCountry(item)
+        fun bind(item: CityObj) {
+            applicationBinding.cityObj = item
+            applicationBinding.cityCellLayout.setOnClickListener {
+                viewModel?.selectCity(item)
             }
         }
     }
 
-    fun filterList(auxList: ArrayList<CountryObj>) {
+    fun filterList(auxList: ArrayList<CityObj>) {
         citiesList = auxList
         notifyDataSetChanged()
     }
