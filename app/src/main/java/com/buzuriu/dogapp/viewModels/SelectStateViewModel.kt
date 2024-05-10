@@ -2,26 +2,27 @@ package com.buzuriu.dogapp.viewModels
 
 import com.beastwall.localisation.model.State
 import com.buzuriu.dogapp.adapters.StateAdapter
-import com.buzuriu.dogapp.models.CountryObj
+import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.models.StateObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.SelectCityFragment
-import com.buzuriu.dogapp.views.SelectStateFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SelectStateViewModel : BaseViewModel() {
 
+    var currentLocationObj : LocationObj? = null
     var selectedState: StateObj? = null
     var stateAdapter: StateAdapter? = null
+    var locationObj: LocationObj? = null
     private var statesList: ArrayList<StateObj> = ArrayList()
 
 
     init {
         stateAdapter = StateAdapter(statesList, this)
-        var states =
-            exchangeInfoService.get<List<State>>(this::class.java.name)!!
+         locationObj =
+            exchangeInfoService.get<LocationObj>(this::class.java.name)!!
+        var states = locationObj!!.country!!.states
         for (state in states) {
             statesList.add(StateObj(state, false))
         }
@@ -36,6 +37,7 @@ class SelectStateViewModel : BaseViewModel() {
         unselectPreviousState()
         stateObj.isSelected = true
         selectedState = stateObj
+        locationObj!!.state = stateObj.state
 
         stateAdapter?.notifyItemChanged(stateAdapter?.statesList!!.indexOf(stateObj))
 
@@ -50,7 +52,7 @@ class SelectStateViewModel : BaseViewModel() {
 
             exchangeInfoService.put(
                 SelectCityViewModel::class.qualifiedName!!,
-                stateObj.state!!.cities
+                locationObj!!
             )
 
 

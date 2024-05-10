@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.DogObj
+import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils
@@ -30,6 +31,15 @@ class RegisterViewModel : BaseAuthViewModel() {
     fun loginClick() {
         navigationService.navigateToActivity(LoginActivity::class.java, true)
     }
+
+    override fun onResume() {
+        val selectedCity = exchangeInfoService.get<LocationObj>(this::class.qualifiedName!!)
+        if (selectedCity != null) {
+            city.value = selectedCity.toString()
+        }
+    }
+
+
 
     fun registerClick() {
         if (!fieldsAreCompleted()) return

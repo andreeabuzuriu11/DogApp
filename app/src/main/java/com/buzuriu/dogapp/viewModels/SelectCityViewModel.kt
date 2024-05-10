@@ -1,13 +1,11 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.os.Handler
-import android.os.Looper
-import com.beastwall.localisation.Localisation
 import com.beastwall.localisation.model.City
 import com.beastwall.localisation.model.Country
 import com.buzuriu.dogapp.adapters.CityAdapter
 import com.buzuriu.dogapp.models.CityObj
-import com.buzuriu.dogapp.models.CountryObj
+import com.buzuriu.dogapp.models.LocationObj
+import com.buzuriu.dogapp.viewModels.auth.RegisterViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -16,12 +14,14 @@ class SelectCityViewModel : BaseViewModel() {
     var cityAdapter: CityAdapter? = null
     var selectedCountry: Country? = null
     var selectedCity: CityObj? = null
+    var locationObj: LocationObj? = null
     private var citiesList: ArrayList<CityObj> = ArrayList()
 
     init {
         cityAdapter = CityAdapter(citiesList, this)
-        val cities =
-            exchangeInfoService.get<List<City>>(this::class.java.name)!!
+        locationObj =
+            exchangeInfoService.get<LocationObj>(this::class.java.name)!!
+        var cities = locationObj!!.state!!.cities
         for (city in cities) {
             citiesList.add(CityObj(city, false))
         }
@@ -42,7 +42,14 @@ class SelectCityViewModel : BaseViewModel() {
     }
 
     fun saveCity() {
+        if (selectedCity == null) {
+            snackMessageService.displaySnackBar("Please select a city")
+            return
+        }
+        locationObj!!.city = selectedCity!!.city
 
+        exchangeInfoService.put(RegisterViewModel::class.qualifiedName!!, locationObj!!)
+        close()
     }
 
     fun searchByName(searchedString: String) {
@@ -69,4 +76,6 @@ class SelectCityViewModel : BaseViewModel() {
             }
         }
     }
+
+
 }

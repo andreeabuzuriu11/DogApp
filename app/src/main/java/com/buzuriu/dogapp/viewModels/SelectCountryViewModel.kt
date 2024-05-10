@@ -1,13 +1,9 @@
 package com.buzuriu.dogapp.viewModels
 
-import android.os.Handler
-import android.os.Looper
-import com.beastwall.localisation.Localisation
 import com.buzuriu.dogapp.adapters.CountryAdapter
-import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.CountryObj
+import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.utils.LocalDBItems
-import com.buzuriu.dogapp.views.SelectCityFragment
 import com.buzuriu.dogapp.views.SelectStateFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import java.util.*
@@ -17,6 +13,7 @@ import kotlin.collections.ArrayList
 class SelectCountryViewModel : BaseViewModel() {
 
     var selectedCountry: CountryObj? = null
+    var locationObj: LocationObj? = null
     var countryAdapter: CountryAdapter? = null
     private var countriesList: ArrayList<CountryObj> = ArrayList()
 
@@ -34,6 +31,7 @@ class SelectCountryViewModel : BaseViewModel() {
         unselectPreviousCountry()
         countryObj.isSelected = true
         selectedCountry = countryObj
+        locationObj = LocationObj(countryObj.country!!, null, null)
 
         countryAdapter?.notifyItemChanged(countryAdapter?.countriesList!!.indexOf(countryObj))
 
@@ -49,7 +47,7 @@ class SelectCountryViewModel : BaseViewModel() {
             if (selectedCountry != null)
                 exchangeInfoService.put(
                     SelectStateViewModel::class.qualifiedName!!,
-                    selectedCountry!!.country!!.states
+                    locationObj!!
                 )
 
         } else {
