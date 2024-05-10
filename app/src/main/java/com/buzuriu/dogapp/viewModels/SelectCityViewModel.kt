@@ -30,9 +30,6 @@ class SelectCityViewModel : BaseViewModel() {
             val states =
                 selectedCountry!!.states
 
-            for (state in states) {
-                cities.plus(state.cities)
-            }
             Handler(Looper.getMainLooper()).post {
 
                 for (city in cities) {

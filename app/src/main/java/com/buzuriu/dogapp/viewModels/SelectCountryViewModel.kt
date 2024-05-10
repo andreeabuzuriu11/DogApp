@@ -7,6 +7,7 @@ import com.buzuriu.dogapp.adapters.CountryAdapter
 import com.buzuriu.dogapp.models.CountryObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.SelectCityFragment
+import com.buzuriu.dogapp.views.SelectStateFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 
 
@@ -21,8 +22,7 @@ class SelectCountryViewModel : BaseViewModel() {
         initCountriesList()
     }
 
-    fun saveCountry()
-    {
+    fun saveCountry() {
 
     }
 
@@ -33,18 +33,38 @@ class SelectCountryViewModel : BaseViewModel() {
 
         countryAdapter?.notifyItemChanged(countryAdapter?.countriesList!!.indexOf(countryObj))
 
-        navigationService.showOverlay(
-            OverlayActivity::class.java,
-            false,
-            LocalDBItems.fragmentName,
-            SelectCityFragment::class.qualifiedName
-        )
-
-        if (selectedCountry != null)
-            exchangeInfoService.put(
-                SelectCityViewModel::class.qualifiedName!!,
-                selectedCountry!!.country!!
+        if (countryObj.country!!.states.size != 0) {
+            // has more states so navigate to states page
+            navigationService.showOverlay(
+                OverlayActivity::class.java,
+                false,
+                LocalDBItems.fragmentName,
+                SelectStateFragment::class.qualifiedName
             )
+
+            if (selectedCountry != null)
+                exchangeInfoService.put(
+                    SelectStateViewModel::class.qualifiedName!!,
+                    selectedCountry!!.country!!.states
+                )
+
+        } else {
+//            todo navigate directly to cities
+//            navigationService.showOverlay(
+//                OverlayActivity::class.java,
+//                false,
+//                LocalDBItems.fragmentName,
+//                SelectCityFragment::class.qualifiedName
+//            )
+//
+//            if (selectedCountry != null)
+//                exchangeInfoService.put(
+//                    SelectCityViewModel::class.qualifiedName!!,
+//                    selectedCountry!!.country!!
+//                )
+        }
+
+
     }
 
     private fun initCountriesList() {
