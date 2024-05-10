@@ -56,11 +56,19 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{viewModel.user.city}"
+                    android:layout_below="@id/friend_profile_linear_layout"
+                    />
+
                 <LinearLayout
                     android:id="@+id/phoneNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/friend_profile_linear_layout"
+                    android:layout_below="@id/city"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
