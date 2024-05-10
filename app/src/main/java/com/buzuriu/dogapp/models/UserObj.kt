@@ -8,6 +8,7 @@ data class UserObj(
     var name: String? = null,
     var phone: String? = null,
     var gender: String? = null,
+    var city: String = "",
     var rating: Float? = null,
     var imageUrl: String = "",
     var relationWithCurrentUser : FriendshipStateEnum = FriendshipStateEnum.NOT_REQUESTED

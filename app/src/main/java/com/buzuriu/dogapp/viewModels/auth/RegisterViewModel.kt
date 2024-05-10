@@ -40,7 +40,6 @@ class RegisterViewModel : BaseAuthViewModel() {
     }
 
 
-
     fun registerClick() {
         if (!fieldsAreCompleted()) return
 
@@ -66,8 +65,8 @@ class RegisterViewModel : BaseAuthViewModel() {
                                     name.value,
                                     phone.value,
                                     currentGenderString!!,
-
-                                    )
+                                    city.value!!
+                                )
                                 showLoadingView(true)
                                 viewModelScope.launch(Dispatchers.IO) {
 
