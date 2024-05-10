@@ -8,6 +8,8 @@ import com.beastwall.localisation.model.Country
 import com.buzuriu.dogapp.adapters.CityAdapter
 import com.buzuriu.dogapp.models.CityObj
 import com.buzuriu.dogapp.models.CountryObj
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SelectCityViewModel : BaseViewModel() {
 
@@ -36,5 +38,20 @@ class SelectCityViewModel : BaseViewModel() {
 
     fun saveCity() {
 
+    }
+
+    fun searchByName(searchedString: String) {
+        val auxSearchedCities = java.util.ArrayList<CityObj>()
+        if (citiesList.isNotEmpty()) {
+            for (item in citiesList) {
+                val mySearchedString = searchedString.lowercase(Locale.ROOT)
+                val itemString = item.city!!.name?.lowercase(Locale.ROOT)
+
+                if (itemString!!.contains(mySearchedString) || mySearchedString.isEmpty()) {
+                    auxSearchedCities.add(item)
+                }
+            }
+        }
+        cityAdapter!!.filterList(auxSearchedCities)
     }
 }

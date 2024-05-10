@@ -2,11 +2,14 @@ package com.buzuriu.dogapp.viewModels
 
 import com.beastwall.localisation.model.State
 import com.buzuriu.dogapp.adapters.StateAdapter
+import com.buzuriu.dogapp.models.CountryObj
 import com.buzuriu.dogapp.models.StateObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.SelectCityFragment
 import com.buzuriu.dogapp.views.SelectStateFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SelectStateViewModel : BaseViewModel() {
 
@@ -55,5 +58,20 @@ class SelectStateViewModel : BaseViewModel() {
 
     fun close() {
         navigationService.closeCurrentActivity()
+    }
+
+    fun searchByName(searchedString: String) {
+        val auxSearchedStateList = java.util.ArrayList<StateObj>()
+        if (statesList.isNotEmpty()) {
+            for (item in statesList) {
+                val mySearchedString = searchedString.lowercase(Locale.ROOT)
+                val itemString = item.state!!.name?.lowercase(Locale.ROOT)
+
+                if (itemString!!.contains(mySearchedString) || mySearchedString.isEmpty()) {
+                    auxSearchedStateList.add(item)
+                }
+            }
+        }
+        stateAdapter!!.filterList(auxSearchedStateList)
     }
 }

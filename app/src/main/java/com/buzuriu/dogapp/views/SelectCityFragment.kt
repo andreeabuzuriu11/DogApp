@@ -1,6 +1,8 @@
 package com.buzuriu.dogapp.views
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,7 +27,7 @@ class SelectCityFragment : BaseBoundFragment<SelectCityViewModel, FragmentSelect
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-//        initSearchByNameEditText()
+        initSearchByNameEditText()
     }
 
     private fun setupRecyclerView() {
@@ -38,5 +40,20 @@ class SelectCityFragment : BaseBoundFragment<SelectCityViewModel, FragmentSelect
         recyclerView.adapter = mViewModel.cityAdapter
     }
 
+    private fun initSearchByNameEditText() {
+        currentBinding.selectCityEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                mViewModel.searchByName(charSequence.toString())
+            }
+
+        })
+    }
 
 }
