@@ -15,4 +15,5 @@
     <color name="text_grey">#534B53</color>
     <color name="green_accept">#62BA6D</color>
     <color name="red_decline">#C94B4B</color>
+    <color name="blue">#385166</color>
 </resources>

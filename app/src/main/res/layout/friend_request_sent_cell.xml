@@ -3,6 +3,7 @@
     xmlns:tool="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="friendshipState"
             type="com.buzuriu.dogapp.enums.FriendshipStateEnum" />
@@ -45,26 +46,44 @@
                 android:layout_centerVertical="true">
 
                 <de.hdodenhof.circleimageview.CircleImageView
+                    userImageBinding="@{user}"
+                    android:src="@drawable/ic_user_account"
                     android:layout_width="@dimen/cell_image_width"
                     android:layout_height="@dimen/cell_image_height"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
-                    userImageBinding="@{user}"
-
                     android:layout_marginBottom="20dp" />
 
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:gravity="center_vertical"
-                    android:text="@{user.name}"
-                    android:textColor="@color/text_grey"
-                    android:textSize="24dp"
-                    tool:text="Andy" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="5dp"
+                        android:gravity="center_vertical"
+                        android:text="@{user.name}"
+                        android:textColor="@color/text_grey"
+                        android:textSize="24dp"
+                        tool:text="Andy" />
+
+                    <TextView
+                        android:id="@+id/location"
+                        android:layout_margin="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:width="150dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/blue"
+                        android:text="@{user.city}"
+                        android:textSize="16dp"
+                        tool:text="Caransebes" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -78,14 +97,14 @@
 
                 <Button
                     android:id="@+id/send_req"
+                    enabledBasedOnFriendshipButtonBinding="@{friendshipState}"
+                    friendshipButtonBinding="@{friendshipState}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:width="100dp"
-                    android:textSize="12dp"
-                    friendshipButtonBinding="@{friendshipState}"
-                    enabledBasedOnFriendshipButtonBinding="@{friendshipState}"
-                    android:text="Send" />
+                    android:text="Send"
+                    android:textSize="12dp" />
 
             </LinearLayout>
 

@@ -4,54 +4,62 @@
     xmlns:tool="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="user"
             type="com.buzuriu.dogapp.models.UserObj" />
 
     </data>
+
     <LinearLayout
         android:id="@+id/friend_cell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-        >
+        android:layout_marginTop="10dp">
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"
-            android:background="@drawable/rounded_cell"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/rounded_cell">
 
             <LinearLayout
 
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                >
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="@dimen/cell_image_width"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:src="@drawable/ic_user_account"
-                    android:layout_height="@dimen/cell_image_height"
                     userImageBinding="@{user}"
-                    />
+                    android:layout_width="@dimen/cell_image_width"
+                    android:layout_height="@dimen/cell_image_height"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/ic_user_account" />
 
-                <TextView
-                    android:id="@+id/dog_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:text="@{user.name}"
-                    tool:text="Rex"
-                    android:textColor="@color/text_grey"
-                    android:textSize="24dp"
-                    android:gravity="center_vertical"/>
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/dog_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="@{user.name}"
+                        android:textColor="@color/text_grey"
+                        android:layout_marginBottom="5dp"
+                        android:textSize="24dp"
+                        tool:text="Rex" />
+
+                </LinearLayout>
 
 
             </LinearLayout>
