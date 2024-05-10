@@ -17,28 +17,12 @@ class SelectCityViewModel : BaseViewModel() {
 
     init {
         cityAdapter = CityAdapter(citiesList, this)
-        selectedCountry =
-            exchangeInfoService.get<Country>(this::class.java.name)!!
-        initCitiesList()
-    }
-
-
-    private fun initCitiesList() {
-        Thread {
-            var cities = listOf<City>()
-
-            val states =
-                selectedCountry!!.states
-
-            Handler(Looper.getMainLooper()).post {
-
-                for (city in cities) {
-                        citiesList.add(CityObj(city, false))
-
-                    }
-                cityAdapter!!.notifyDataSetChanged()
-            }
-        }.start()
+        val cities =
+            exchangeInfoService.get<List<City>>(this::class.java.name)!!
+        for (city in cities) {
+            citiesList.add(CityObj(city, false))
+        }
+        cityAdapter!!.notifyDataSetChanged()
     }
 
 
@@ -47,7 +31,7 @@ class SelectCityViewModel : BaseViewModel() {
     }
 
     fun close() {
-
+        navigationService.closeCurrentActivity()
     }
 
     fun saveCity() {
