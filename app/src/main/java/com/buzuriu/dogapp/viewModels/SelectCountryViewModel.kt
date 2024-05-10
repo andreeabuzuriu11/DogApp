@@ -4,6 +4,7 @@ import com.buzuriu.dogapp.adapters.CountryAdapter
 import com.buzuriu.dogapp.models.CountryObj
 import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.viewModels.auth.RegisterViewModel
 import com.buzuriu.dogapp.views.SelectStateFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import java.util.*
@@ -51,19 +52,8 @@ class SelectCountryViewModel : BaseViewModel() {
                 )
 
         } else {
-//            todo navigate directly to cities
-//            navigationService.showOverlay(
-//                OverlayActivity::class.java,
-//                false,
-//                LocalDBItems.fragmentName,
-//                SelectCityFragment::class.qualifiedName
-//            )
-//
-//            if (selectedCountry != null)
-//                exchangeInfoService.put(
-//                    SelectCityViewModel::class.qualifiedName!!,
-//                    selectedCountry!!.country!!
-//                )
+            exchangeInfoService.put(RegisterViewModel::class.qualifiedName!!, locationObj!!)
+            close()
         }
 
 

@@ -21,11 +21,16 @@ class LocationObj {
         if (country!!.name.isNotEmpty())
             finalString += country!!.name
 
-        if (state!!.name.isNotEmpty())
-            finalString += ", ${state!!.name}"
+        if (state?.name == null)
+            return finalString
+        else {
+            finalString += ", " + state!!.name
+        }
 
-        if (city!!.name.isNotEmpty())
-            finalString += ", ${city!!.name}"
+        if (country?.name == null)
+            return finalString
+        else
+            finalString += ", " + city!!.name
 
         return finalString
     }

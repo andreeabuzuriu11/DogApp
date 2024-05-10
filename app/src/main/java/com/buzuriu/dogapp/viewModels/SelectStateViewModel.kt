@@ -5,6 +5,7 @@ import com.buzuriu.dogapp.adapters.StateAdapter
 import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.models.StateObj
 import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.viewModels.auth.RegisterViewModel
 import com.buzuriu.dogapp.views.SelectCityFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import java.util.*
@@ -54,7 +55,12 @@ class SelectStateViewModel : BaseViewModel() {
                 SelectCityViewModel::class.qualifiedName!!,
                 locationObj!!
             )
-
+        }
+        else
+        {
+            // just close and save as it is
+            exchangeInfoService.put(RegisterViewModel::class.qualifiedName!!, locationObj!!)
+            close()
 
         }
     }
