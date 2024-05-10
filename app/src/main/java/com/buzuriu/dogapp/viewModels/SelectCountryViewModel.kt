@@ -30,7 +30,7 @@ class SelectCountryViewModel : BaseViewModel() {
     }
 
     fun selectCountry(countryObj: CountryObj) {
-
+        unselectPreviousCountry()
         countryObj.isSelected = true
         selectedCountry = countryObj
 
@@ -68,6 +68,16 @@ class SelectCountryViewModel : BaseViewModel() {
         }
 
 
+    }
+
+    private fun unselectPreviousCountry() {
+        for (country in countriesList) {
+            if (country.isSelected!!) {
+                country.isSelected = false
+                countryAdapter?.notifyItemChanged(countryAdapter?.countriesList!!.indexOf(country))
+                return
+            }
+        }
     }
 
     private fun initCountriesList() {

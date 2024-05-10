@@ -8,7 +8,7 @@ import com.buzuriu.dogapp.models.CityObj
 import com.buzuriu.dogapp.viewModels.SelectCityViewModel
 
 class CityAdapter(
-    private var citiesList: ArrayList<CityObj>,
+    var citiesList: ArrayList<CityObj>,
     private var viewModel: SelectCityViewModel? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

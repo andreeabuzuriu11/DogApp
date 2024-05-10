@@ -33,6 +33,7 @@ class SelectStateViewModel : BaseViewModel() {
     }
 
     fun selectState(stateObj: StateObj) {
+        unselectPreviousState()
         stateObj.isSelected = true
         selectedState = stateObj
 
@@ -58,6 +59,16 @@ class SelectStateViewModel : BaseViewModel() {
 
     fun close() {
         navigationService.closeCurrentActivity()
+    }
+
+    private fun unselectPreviousState() {
+        for (state in statesList) {
+            if (state.isSelected!!) {
+                state.isSelected = false
+                stateAdapter?.notifyItemChanged(stateAdapter?.statesList!!.indexOf(state))
+                return
+            }
+        }
     }
 
     fun searchByName(searchedString: String) {

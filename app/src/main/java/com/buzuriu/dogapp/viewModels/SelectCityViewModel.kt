@@ -15,6 +15,7 @@ class SelectCityViewModel : BaseViewModel() {
 
     var cityAdapter: CityAdapter? = null
     var selectedCountry: Country? = null
+    var selectedCity: CityObj? = null
     private var citiesList: ArrayList<CityObj> = ArrayList()
 
     init {
@@ -29,7 +30,11 @@ class SelectCityViewModel : BaseViewModel() {
 
 
     public fun selectCity(cityObj: CityObj) {
+        unselectPreviousCity()
+        cityObj.isSelected = true
+        selectedCity = cityObj
 
+        cityAdapter?.notifyItemChanged(cityAdapter?.citiesList!!.indexOf(cityObj))
     }
 
     fun close() {
@@ -53,5 +58,15 @@ class SelectCityViewModel : BaseViewModel() {
             }
         }
         cityAdapter!!.filterList(auxSearchedCities)
+    }
+
+    private fun unselectPreviousCity() {
+        for (city in citiesList) {
+            if (city.isSelected!!) {
+                city.isSelected = false
+                cityAdapter?.notifyItemChanged(cityAdapter?.citiesList!!.indexOf(city))
+                return
+            }
+        }
     }
 }
