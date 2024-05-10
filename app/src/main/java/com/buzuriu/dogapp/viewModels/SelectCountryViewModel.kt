@@ -21,8 +21,9 @@ class SelectCountryViewModel : BaseViewModel() {
     private var countriesList: ArrayList<CountryObj> = ArrayList()
 
     init {
+        countriesList =
+            localDatabaseService.get<ArrayList<CountryObj>>(LocalDBItems.countries)!!
         countryAdapter = CountryAdapter(countriesList, this)
-        initCountriesList()
     }
 
     fun saveCountry() {
@@ -79,20 +80,6 @@ class SelectCountryViewModel : BaseViewModel() {
             }
         }
     }
-
-    private fun initCountriesList() {
-        Thread {
-            val countries =
-                Localisation.getAllCountriesStatesAndCities()
-            Handler(Looper.getMainLooper()).post {
-                for (country in countries) {
-                    countriesList.add(CountryObj(country, false))
-                }
-                countryAdapter!!.notifyDataSetChanged()
-            }
-        }.start()
-    }
-
 
     fun close() {
         navigationService.closeCurrentActivity()

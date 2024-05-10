@@ -14,5 +14,6 @@ class LocalDBItems {
         var pastMeetingsUserJoined = "pastMeetingsUserJoined"
         var fragmentName = "fragmentName"
         var mapBundle = "MapBundle"
+        var countries = "Countries"
     }
 }

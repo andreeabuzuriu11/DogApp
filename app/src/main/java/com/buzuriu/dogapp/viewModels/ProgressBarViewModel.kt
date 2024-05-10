@@ -1,6 +1,10 @@
 package com.buzuriu.dogapp.viewModels
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.viewModelScope
+import com.beastwall.localisation.Localisation
+import com.beastwall.localisation.model.Country
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.LocalDBItems
@@ -17,6 +21,7 @@ import java.lang.Exception
 class ProgressBarViewModel : BaseViewModel() {
 
     init {
+        readCountriesList()
         if (Firebase.auth.currentUser != null) {
             viewModelScope.launch(Dispatchers.IO) {
                 delay(1000)
@@ -47,7 +52,7 @@ class ProgressBarViewModel : BaseViewModel() {
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
         val userMeetings: ArrayList<MeetingObj>? =
-            databaseService.fetchUserMeetings(currentUser!!.uid, object : IOnCompleteListener{
+            databaseService.fetchUserMeetings(currentUser!!.uid, object : IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: Exception?) {
 
                 }
@@ -64,8 +69,7 @@ class ProgressBarViewModel : BaseViewModel() {
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 if (dog != null) {
-                    if (user != null)
-                    {
+                    if (user != null) {
                         val meetingObj = MyCustomMeetingObj(meeting, user, dog)
                         allCustomMeetings.add(meetingObj)
                     }
@@ -123,6 +127,20 @@ class ProgressBarViewModel : BaseViewModel() {
         } else {
             navigationService.navigateToActivity(LoginActivity::class.java, true)
         }
+    }
+
+    private fun readCountriesList() {
+        var countriesList = ArrayList<CountryObj>()
+        Thread {
+            val countries =
+                Localisation.getAllCountriesStatesAndCities()
+            Handler(Looper.getMainLooper()).post {
+                for (country in countries) {
+                    countriesList.add(CountryObj(country, false))
+                }
+                localDatabaseService.add(LocalDBItems.countries, countriesList)
+            }
+        }.start()
     }
 
 }
