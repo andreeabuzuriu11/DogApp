@@ -4,11 +4,14 @@ import android.os.Handler
 import android.os.Looper
 import com.beastwall.localisation.Localisation
 import com.buzuriu.dogapp.adapters.CountryAdapter
+import com.buzuriu.dogapp.models.BreedObj
 import com.buzuriu.dogapp.models.CountryObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.SelectCityFragment
 import com.buzuriu.dogapp.views.SelectStateFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class SelectCountryViewModel : BaseViewModel() {
@@ -83,5 +86,20 @@ class SelectCountryViewModel : BaseViewModel() {
 
     fun close() {
         navigationService.closeCurrentActivity()
+    }
+
+    fun searchByName(searchedString: String) {
+        val auxSearchedCountries = java.util.ArrayList<CountryObj>()
+        if (countriesList.isNotEmpty()) {
+            for (item in countriesList) {
+                val mySearchedString = searchedString.lowercase(Locale.ROOT)
+                val itemString = item.country!!.name?.lowercase(Locale.ROOT)
+
+                if (itemString!!.contains(mySearchedString) || mySearchedString.isEmpty()) {
+                    auxSearchedCountries.add(item)
+                }
+            }
+        }
+        countryAdapter!!.filterList(auxSearchedCountries)
     }
 }
