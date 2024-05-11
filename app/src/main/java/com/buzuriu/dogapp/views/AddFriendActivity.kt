@@ -16,7 +16,8 @@ class AddFriendActivity :
 
     override val layoutId = R.layout.activity_add_friend
     private var activityAddFriendBinding: ActivityAddFriendBinding? = null
-    private lateinit var searchView: SearchView
+    private lateinit var nameEmailSearchView: SearchView
+    private lateinit var citySearchView: SearchView
 
 
     override fun setupDataBinding(binding: ActivityAddFriendBinding) {
@@ -39,14 +40,42 @@ class AddFriendActivity :
         recyclerView?.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView?.adapter = mViewModel.userAdapter
 
-        val currentSearchView =
-            findViewById<SearchView>(com.buzuriu.dogapp.R.id.search_view)
+        val nameSearchView =
+            findViewById<SearchView>(R.id.nameEmailSearchView)
 
-        if (currentSearchView != null) {
-            searchView = currentSearchView
+        val cSearchView =
+            findViewById<SearchView>(R.id.citySearchView)
+
+        if (nameSearchView != null) {
+            nameEmailSearchView = nameSearchView
         }
 
-        searchView.setOnQueryTextListener(
+        if (cSearchView != null) {
+            citySearchView = cSearchView
+        }
+
+        citySearchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    val vm = mViewModel
+
+                    vm.findUser(newText)
+                    return false
+                }
+
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    val vm = mViewModel
+                    vm.findUser(query)
+
+                    //todo fix loading
+                    vm.showLoading(false)
+
+                    return false
+                }
+            })
+
+        nameEmailSearchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {

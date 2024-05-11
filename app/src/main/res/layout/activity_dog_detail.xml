@@ -188,6 +188,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginStart="16dp"
                     android:onClick="@{()->viewModel.showMore()}"
+                    android:background="@drawable/rounded_button"
                     android:text="@{viewModel.findOutMoreText}" />
 
                 <androidx.recyclerview.widget.RecyclerView
