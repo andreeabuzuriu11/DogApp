@@ -15,6 +15,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
+import java.io.InputStreamReader
 
 class ProgressBarViewModel : BaseViewModel() {
 
@@ -140,5 +143,7 @@ class ProgressBarViewModel : BaseViewModel() {
             }
         }.start()
     }
+
+
 
 }

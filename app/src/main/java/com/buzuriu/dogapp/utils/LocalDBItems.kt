@@ -15,5 +15,6 @@ class LocalDBItems {
         var fragmentName = "fragmentName"
         var mapBundle = "MapBundle"
         var countries = "Countries"
+        var dogPersonalityList = "dogPersonalityList"
     }
 }

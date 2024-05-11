@@ -7,10 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
-import com.buzuriu.dogapp.models.DogObj
-import com.buzuriu.dogapp.models.MeetingObj
-import com.buzuriu.dogapp.models.MyCustomMeetingObj
-import com.buzuriu.dogapp.models.ParticipantObj
+import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
@@ -22,16 +19,20 @@ import kotlinx.coroutines.launch
 class DogDetailViewModel : BaseViewModel() {
 
     var dog = MutableLiveData<DogObj>()
+    var dogPersonality: DogPersonality? = null
 
     init {
         dog.value = exchangeInfoService.get<DogObj>(this::class.java.name)!!
+        dogPersonality =
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!.first() { it.breed == dog.value!!.breed }
+
     }
 
     override fun onResume() {
         super.onResume()
         val editedDog = exchangeInfoService.get<DogObj>(this::class.java.name)
         if (editedDog != null) {
-            dog.value = editedDog!!
+            dog.value = editedDog
         }
     }
 
@@ -64,7 +65,8 @@ class DogDetailViewModel : BaseViewModel() {
                 IOnCompleteListener {
                 @RequiresApi(Build.VERSION_CODES.N)
                 override fun onComplete(successful: Boolean, exception: Exception?) {
-                    val allDogsList = localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
+                    val allDogsList =
+                        localDatabaseService.get<ArrayList<DogObj>>(LocalDBItems.localDogsList)
                     allDogsList!!.remove(dog.value!!)
 
                     localDatabaseService.add(LocalDBItems.localDogsList, allDogsList)
@@ -176,7 +178,8 @@ class DogDetailViewModel : BaseViewModel() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun deleteMeetingRelatedToDogFromLocalDatabase() {
         val meetingsList: ArrayList<MyCustomMeetingObj> =
-            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList) ?: return
+            localDatabaseService.get<ArrayList<MyCustomMeetingObj>>(LocalDBItems.localMeetingsList)
+                ?: return
 
         if (meetingsList.any { it.meetingObj!!.dogUid == dog.value!!.uid }) {
             meetingsList.removeIf { x: MyCustomMeetingObj -> x.meetingObj!!.dogUid == dog.value!!.uid }
