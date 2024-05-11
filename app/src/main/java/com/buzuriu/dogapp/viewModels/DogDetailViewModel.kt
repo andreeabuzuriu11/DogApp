@@ -8,6 +8,7 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.utils.DogPersonalityUtils.Companion.getDogPersonalityTraitListFromDogPersonality
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.AddDogActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
@@ -20,12 +21,14 @@ class DogDetailViewModel : BaseViewModel() {
 
     var dog = MutableLiveData<DogObj>()
     var dogPersonality: DogPersonality? = null
+    var dogPersonalityTraitList: ArrayList<DogPersonalityTraitObj>? = null
 
     init {
         dog.value = exchangeInfoService.get<DogObj>(this::class.java.name)!!
         dogPersonality =
-            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!.first() { it.breed == dog.value!!.breed }
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!.first { it.breed == dog.value!!.breed }
 
+        dogPersonalityTraitList = getDogPersonalityTraitListFromDogPersonality(dogPersonality!!)
     }
 
     override fun onResume() {
