@@ -54,72 +54,67 @@ class MyDogsViewModel : BaseViewModel() {
 //        val csvParser = CSVParser(bufferedReader, CSVFormat.DEFAULT);
 
         val result: MutableList<Array<String>> = mutableListOf()
-        val inputStream = activityService.activity!!.applicationContext.assets.open("akc-data-latest.csv")
+        val inputStream =
+            activityService.activity!!.applicationContext.assets.open("akc-data-latest.csv")
         val reader = InputStreamReader(inputStream)
 
-        // Initialize OpenCSV reader
-        val csvReader = CSVReader(reader)
+        val csvParser = CSVParser(
+            reader, CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withIgnoreHeaderCase()
+                .withTrim()
+        );
 
-        // Read each line of the CSV file
-//        var line: Array<String>?
-//        while (csvReader.readNext().also { line = it } != null) {
-//            result.add(line!!)
-//        }
 
-        var line: Array<String>?
-        while (csvReader.readNext().also { line = it } != null) {
-            result.add(line!!)
+        for (csvRecord in csvParser) {
+            val breed = csvRecord.get(0);
+            val description = csvRecord.get(1);
+            val temperament = csvRecord.get(2);
+            var popularity = csvRecord.get(3);
+            var min_height = csvRecord.get(4);
+            var max_height = csvRecord.get(5);
+            var min_weight = csvRecord.get(6);
+            var max_weight = csvRecord.get(7);
+            var min_expectancy = csvRecord.get(8);
+            var max_expectancy = csvRecord.get(9);
+            var group = csvRecord.get(10);
+            var grooming_frequency_value = csvRecord.get(11);
+            var grooming_frequency_category = csvRecord.get(12);
+            var shedding_value = csvRecord.get(13);
+            var shedding_category = csvRecord.get(14);
+            var energy_level_value = csvRecord.get(15);
+            var energy_level_category = csvRecord.get(16);
+            var trainability_value = csvRecord.get(17);
+            var trainability_category = csvRecord.get(18);
+            var demeanor_value = csvRecord.get(19);
+            var demeanor_category = csvRecord.get(20);
+            println(
+                DogPersonality(
+                    breed,
+                    description,
+                    temperament,
+                    popularity,
+                    min_height,
+                    max_height,
+                    min_weight,
+                    max_weight,
+                    min_expectancy,
+                    max_expectancy,
+                    group,
+                    grooming_frequency_value,
+                    grooming_frequency_category,
+                    shedding_value,
+                    shedding_category,
+                    energy_level_value,
+                    energy_level_category,
+                    trainability_value,
+                    trainability_category,
+                    demeanor_value,
+                    demeanor_category
+                )
+            );
         }
 
-
-//        for (csvRecord in csvParser) {
-//            val breed = csvRecord.get(0);
-//            val description = csvRecord.get(1);
-//            val temperament = csvRecord.get(2);
-//            var popularity = csvRecord.get(3);
-//            var min_height = csvRecord.get(4);
-//            var max_height = csvRecord.get(5);
-//            var min_weight = csvRecord.get(6);
-//            var max_weight = csvRecord.get(7);
-//            var min_expectancy = csvRecord.get(8);
-//            var max_expectancy = csvRecord.get(9);
-//            var group = csvRecord.get(10);
-//            var grooming_frequency_value = csvRecord.get(11);
-//            var grooming_frequency_category = csvRecord.get(12);
-//            var shedding_value = csvRecord.get(13);
-//            var shedding_category = csvRecord.get(14);
-//            var energy_level_value = csvRecord.get(15);
-//            var energy_level_category = csvRecord.get(16);
-//            var trainability_value = csvRecord.get(17);
-//            var trainability_category = csvRecord.get(18);
-//            var demeanor_value = csvRecord.get(19);
-//            var demeanor_category = csvRecord.get(20);
-//            println(
-//                DogPersonality(
-//                    breed,
-//                    description,
-//                    temperament,
-//                    popularity,
-//                    min_height,
-//                    max_height,
-//                    min_weight,
-//                    max_weight,
-//                    min_expectancy,
-//                    max_expectancy,
-//                    group,
-//                    grooming_frequency_value,
-//                    grooming_frequency_category,
-//                    shedding_value,
-//                    shedding_category,
-//                    energy_level_value,
-//                    energy_level_category,
-//                    trainability_value,
-//                    trainability_category,
-//                    demeanor_value,
-//                    demeanor_category
-//                )
-//            );
-//        }
     }
 
     override fun onResume() {
