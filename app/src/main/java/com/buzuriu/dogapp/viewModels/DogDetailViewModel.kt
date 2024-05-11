@@ -17,14 +17,16 @@ import com.buzuriu.dogapp.views.main.ui.my_meetings.MyMeetingsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.apache.commons.lang3.mutable.Mutable
 
 class DogDetailViewModel : BaseViewModel() {
 
     var dog = MutableLiveData<DogObj>()
-    var isDogPersonalityVisible =  MutableLiveData<Boolean>()
+    var isDogPersonalityVisible = MutableLiveData<Boolean>()
     private var dogPersonality: DogPersonality? = null
     private var dogPersonalityTraitList: ArrayList<DogPersonalityTraitObj>
     var dogPersonalityTraitAdapter: DogPersonalityTraitAdapter? = null
+    var findOutMoreText = MutableLiveData<String>()
 
     init {
         dog.value = exchangeInfoService.get<DogObj>(this::class.java.name)!!
@@ -33,6 +35,7 @@ class DogDetailViewModel : BaseViewModel() {
                 .first { it.breed == dog.value!!.breed }
 
         isDogPersonalityVisible.value = false
+        findOutMoreText.value = "Show more about " + dog.value!!.name
 
         dogPersonalityTraitList = getDogPersonalityTraitListFromDogPersonality(dogPersonality!!)
         dogPersonalityTraitList.removeAt(0) // remove breed as it's already stated
@@ -203,6 +206,11 @@ class DogDetailViewModel : BaseViewModel() {
     }
 
     fun showMore() {
+        if (isDogPersonalityVisible.value!!)
+            findOutMoreText.value = "Show more about " + dog.value!!.name
+        else
+            findOutMoreText.value = "Hide"
+
         isDogPersonalityVisible.value = !isDogPersonalityVisible.value!!
     }
 

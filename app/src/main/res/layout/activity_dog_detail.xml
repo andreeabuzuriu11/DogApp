@@ -85,7 +85,8 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/breedHint"
                             android:paddingTop="10dp"
-                            android:paddingBottom="10dp"                            android:text="@{viewModel.dog.breed}"
+                            android:paddingBottom="10dp"
+                            android:text="@{viewModel.dog.breed}"
                             android:textSize="16dp" />
                     </LinearLayout>
 
@@ -114,7 +115,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingTop="10dp"
-                            android:paddingBottom="10dp"                            android:text="@{viewModel.dog.ageValue}"
+                            android:paddingBottom="10dp"
+                            android:text="@{viewModel.dog.ageValue}"
                             android:textSize="16dp" />
 
                         <TextView
@@ -152,7 +154,8 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/gender_hint"
                             android:paddingTop="10dp"
-                            android:paddingBottom="10dp"                            android:text="@{viewModel.dog.gender}"
+                            android:paddingBottom="10dp"
+                            android:text="@{viewModel.dog.gender}"
                             android:textSize="16dp" />
                     </LinearLayout>
 
@@ -179,19 +182,20 @@
 
                 <Button
                     android:id="@+id/showMoreButton"
-                    android:layout_below="@+id/dogDetailsLinearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Show more"
+                    android:layout_below="@+id/dogDetailsLinearLayout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="16dp"
                     android:onClick="@{()->viewModel.showMore()}"
-                    />
+                    android:text="@{viewModel.findOutMoreText}" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/dog_personality_traits_list"
-                    android:visibility="@{viewModel.isDogPersonalityVisible ? View.VISIBLE : View.GONE}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/showMoreButton" />
+                    android:layout_below="@+id/showMoreButton"
+                    android:visibility="@{viewModel.isDogPersonalityVisible ? View.VISIBLE : View.GONE}" />
 
             </RelativeLayout>
 
