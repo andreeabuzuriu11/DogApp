@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
+import com.buzuriu.dogapp.adapters.DogPersonalityTraitAdapter
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
@@ -20,15 +21,18 @@ import kotlinx.coroutines.launch
 class DogDetailViewModel : BaseViewModel() {
 
     var dog = MutableLiveData<DogObj>()
-    var dogPersonality: DogPersonality? = null
-    var dogPersonalityTraitList: ArrayList<DogPersonalityTraitObj>? = null
+    private var dogPersonality: DogPersonality? = null
+    private var dogPersonalityTraitList: ArrayList<DogPersonalityTraitObj>
+    var dogPersonalityTraitAdapter: DogPersonalityTraitAdapter? = null
 
     init {
         dog.value = exchangeInfoService.get<DogObj>(this::class.java.name)!!
         dogPersonality =
-            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!.first { it.breed == dog.value!!.breed }
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+                .first { it.breed == dog.value!!.breed }
 
         dogPersonalityTraitList = getDogPersonalityTraitListFromDogPersonality(dogPersonality!!)
+        dogPersonalityTraitAdapter = DogPersonalityTraitAdapter(dogPersonalityTraitList)
     }
 
     override fun onResume() {

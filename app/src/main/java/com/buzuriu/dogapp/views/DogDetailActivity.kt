@@ -1,7 +1,10 @@
 package com.buzuriu.dogapp.views
 
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.ActivityDogDetailBinding
 import com.buzuriu.dogapp.viewModels.DogDetailViewModel
@@ -11,8 +14,17 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
     DogDetailViewModel::class.java
 ) {
     override val layoutId = R.layout.activity_dog_detail
+    var activityDogDetailBinding: ActivityDogDetailBinding? = null
     override fun setupDataBinding(binding: ActivityDogDetailBinding) {
         binding.viewModel = mViewModel
+        activityDogDetailBinding = binding
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setupRecyclerView()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -33,5 +45,11 @@ class DogDetailActivity : BaseBoundActivity<DogDetailViewModel, ActivityDogDetai
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setupRecyclerView() {
+        val recyclerView = activityDogDetailBinding!!.dogPersonalityTraitsList
+        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = mViewModel.dogPersonalityTraitAdapter
     }
 }
