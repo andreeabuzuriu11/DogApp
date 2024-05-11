@@ -45,6 +45,7 @@ class MyDogsViewModel : BaseViewModel() {
     }
 
     fun readCsv() {
+        var dogPersonalityList = ArrayList<DogPersonality>()
 //        val bufferedReader = BufferedReader(FileReader(File("assets/akc-data-latest.csv")))
 //        val csvParser = CSVParser(bufferedReader, CSVFormat.DEFAULT);
 //        var bufferedReader =
@@ -88,7 +89,8 @@ class MyDogsViewModel : BaseViewModel() {
             var trainability_category = csvRecord.get(18);
             var demeanor_value = csvRecord.get(19);
             var demeanor_category = csvRecord.get(20);
-            println(
+
+            dogPersonalityList.add(
                 DogPersonality(
                     breed,
                     description,
@@ -112,8 +114,10 @@ class MyDogsViewModel : BaseViewModel() {
                     demeanor_value,
                     demeanor_category
                 )
-            );
+            )
         }
+
+
 
     }
 
