@@ -19,13 +19,14 @@
     <RelativeLayout
         android:id="@+id/dog_cell_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/traitAndValueLinearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -33,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="@{dogPersonalityTrait.trait}"
-                android:textSize="20sp"
+                android:textSize="16dp"
                 android:textStyle="bold"
                 tools:text="Trait" />
 
@@ -42,9 +43,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name_hint"
-                android:padding="10dp"
-                android:text="@{dogPersonalityTrait.value}"
-                android:textSize="20sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@={dogPersonalityTrait.value}"
+                android:textSize="16dp"
                 tools:text="Value djaiuhduias dhuaishda hduias dashuidas dhasid dsahuidas dausihads hidas dsahui" />
 
 
@@ -54,7 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/traitAndValueLinearLayout"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="120dp"
+            android:layout_marginRight="20dp"
             android:background="@color/light_grey" />
 
 

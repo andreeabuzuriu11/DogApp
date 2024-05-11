@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 class DogDetailViewModel : BaseViewModel() {
 
     var dog = MutableLiveData<DogObj>()
+    var isDogPersonalityVisible =  MutableLiveData<Boolean>()
     private var dogPersonality: DogPersonality? = null
     private var dogPersonalityTraitList: ArrayList<DogPersonalityTraitObj>
     var dogPersonalityTraitAdapter: DogPersonalityTraitAdapter? = null
@@ -30,6 +31,8 @@ class DogDetailViewModel : BaseViewModel() {
         dogPersonality =
             localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
                 .first { it.breed == dog.value!!.breed }
+
+        isDogPersonalityVisible.value = false
 
         dogPersonalityTraitList = getDogPersonalityTraitListFromDogPersonality(dogPersonality!!)
         dogPersonalityTraitList.removeAt(0) // remove breed as it's already stated
@@ -197,6 +200,10 @@ class DogDetailViewModel : BaseViewModel() {
             )
         }
         localDatabaseService.add(LocalDBItems.localMeetingsList, meetingsList)
+    }
+
+    fun showMore() {
+        isDogPersonalityVisible.value = !isDogPersonalityVisible.value!!
     }
 
 }
