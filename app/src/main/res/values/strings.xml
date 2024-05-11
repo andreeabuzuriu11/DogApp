@@ -108,4 +108,5 @@
     <string name="start_typing_a_country_name">Start typing a country name</string>
     <string name="start_typing_a_state_name">Start typing a state name</string>
     <string name="select_state">Select state</string>
+    <string name="owner">Owner?</string>
 </resources>
