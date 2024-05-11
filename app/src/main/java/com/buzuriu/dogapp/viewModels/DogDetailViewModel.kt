@@ -32,6 +32,7 @@ class DogDetailViewModel : BaseViewModel() {
                 .first { it.breed == dog.value!!.breed }
 
         dogPersonalityTraitList = getDogPersonalityTraitListFromDogPersonality(dogPersonality!!)
+        dogPersonalityTraitList.removeAt(0) // remove breed as it's already stated
         dogPersonalityTraitAdapter = DogPersonalityTraitAdapter(dogPersonalityTraitList)
     }
 

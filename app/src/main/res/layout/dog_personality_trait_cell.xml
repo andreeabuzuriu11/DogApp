@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -18,34 +19,43 @@
     <RelativeLayout
         android:id="@+id/dog_cell_layout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:padding="10dp">
 
         <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/traitAndValueLinearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp">
-
+            android:orientation="horizontal">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:text="@{dogPersonalityTrait.trait}"
-                android:textSize="20dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 tools:text="Trait" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
+                android:id="@+id/dog_name"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="@string/name_hint"
+                android:padding="10dp"
                 android:text="@{dogPersonalityTrait.value}"
-                android:textSize="18dp"
-                android:textColor="@color/text_grey"
-                tools:text="Value" />
+                android:textSize="20sp"
+                tools:text="Value djaiuhduias dhuaishda hduias dashuidas dhasid dsahuidas dausihads hidas dsahui" />
+
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/traitAndValueLinearLayout"
+            android:layout_marginLeft="100dp"
+            android:background="@color/light_grey" />
 
 
     </RelativeLayout>

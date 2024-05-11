@@ -31,8 +31,7 @@ class DogPersonalityUtils {
 
         fun getDogPersonalityTraitListFromDogPersonality(dogPersonality: DogPersonality): ArrayList<DogPersonalityTraitObj> {
 
-            var finalList = kotlin.collections.ArrayList<DogPersonalityTraitObj>()
-
+            val finalList = kotlin.collections.ArrayList<DogPersonalityTraitObj>()
 
             finalList.add(DogPersonalityTraitObj(breed, dogPersonality.breed))
             finalList.add(DogPersonalityTraitObj(description, dogPersonality.description))
