@@ -56,7 +56,30 @@ class FilterMeetingsViewModel : BaseViewModel() {
             for (item in splitArray) {
                 if (!(list.contains(item))) {
                     val t = removeFirstCharacterIfWhitespace(item)
-                    list.add(t)
+                    if (t.isNotEmpty())
+                        list.add(t)
+                }
+            }
+        }
+
+        return list
+    }
+
+    fun getEnergyLevelList(): List<String> {
+        val list = ArrayList<String>()
+        // extract all temperaments ever, only once
+        val dogPersonalityList =
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+        for (dogPersonality in dogPersonalityList) {
+            val temp = dogPersonality.energy_level_category
+
+            val splitArray = temp.split(",").toTypedArray()
+
+            for (item in splitArray) {
+                if (!(list.contains(item))) {
+                    val t = removeFirstCharacterIfWhitespace(item)
+                    if (t.isNotEmpty())
+                        list.add(t)
                 }
             }
         }
