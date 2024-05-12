@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.FilterAdapter
 import com.buzuriu.dogapp.models.DogPersonality
 import com.buzuriu.dogapp.models.FilterByDogBreedObj
+import com.buzuriu.dogapp.models.FilterByDogTemperamentObj
 import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
 import com.buzuriu.dogapp.utils.LocalDBItems
@@ -23,7 +24,8 @@ class FilterMeetingsViewModel : BaseViewModel() {
     private var filterByUserGenderList = FilterItems.filterByUserGenderItems
     private var filterByDogBreedListString: ArrayList<String>?
     private var filterByDogBreedList = ArrayList<IFilterObj>()
-    private var filterByDogTemperamentList = ArrayList<IFilterObj>()
+
+    private var filterByDogTemperament = FilterItems.filterByDogTemperament
     internal var selectedTemperamentObj = String()
     internal var selectedEnergyLevel = String()
 
@@ -41,8 +43,16 @@ class FilterMeetingsViewModel : BaseViewModel() {
         }
         filterAdapterDogBreed = FilterAdapter(filterByDogBreedList, this)
 
-
     }
+
+    public fun setTemperamentFilter()
+    {
+        var selectedTemperament = selectedTemperamentObj
+        filterByDogTemperament.add(FilterByDogTemperamentObj(selectedTemperament, true))
+
+        FilterItems.setFilterByDogTemperament(selectedTemperament)
+    }
+
 
 
     private fun refreshFilters() {
@@ -53,6 +63,8 @@ class FilterMeetingsViewModel : BaseViewModel() {
         for (i in filterByUserGenderList)
             i.isSelected = false
         for (i in filterByDogBreedList)
+            i.isSelected = false
+        for (i in filterByDogTemperament)
             i.isSelected = false
     }
 
@@ -69,6 +81,9 @@ class FilterMeetingsViewModel : BaseViewModel() {
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
         for (i in filterByDogBreedList)
+            if (i.isSelected == true)
+                listOfCheckedFilters.add(i)
+        for (i in filterByDogTemperament)
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
 

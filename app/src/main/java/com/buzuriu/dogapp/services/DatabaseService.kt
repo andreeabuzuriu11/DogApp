@@ -480,7 +480,10 @@ class DatabaseService(
         return null
     }
 
-    override suspend fun fetchRelationBetweenUsers(userId: String, foundUserId: String): FriendshipStateEnum {
+    override suspend fun fetchRelationBetweenUsers(
+        userId: String,
+        foundUserId: String
+    ): FriendshipStateEnum {
 
         var friendshipState = FriendshipStateEnum.NOT_REQUESTED
         var reqObj = fetchRequestObj(userId, object : IOnCompleteListener {
@@ -1151,9 +1154,15 @@ class DatabaseService(
                 for (querySnapshot in meetingDocSnapshot) {
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
 
+                    var dogPersonality =
+                        localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+                            .first { it.breed == meeting.dogBreed }
+
                     if (MeetingUtils.checkFiltersAreAllAccomplished(
-                            meeting, filters,
-                            localDatabaseService.get<LatLng>(LocalDBItems.userLocation)
+                            meeting,
+                            filters,
+                            localDatabaseService.get<LatLng>(LocalDBItems.userLocation),
+                            dogPersonality
                         ) && !MeetingUtils.isMeetingInThePast(meeting)
                     ) {
 

@@ -1,11 +1,13 @@
 package com.buzuriu.dogapp.utils
 
 import com.buzuriu.dogapp.models.*
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class FilterItems {
 
     companion object {
-        var temperament = ""
+
 
         var filterByTimeItems = arrayListOf<IFilterObj>(
             FilterByTimeObj("Today", false),
@@ -24,7 +26,18 @@ class FilterItems {
         )
 
         var filterByDogTemperament = arrayListOf<IFilterObj>(
-            FilterByDogTemperamentObj(temperament, false)
+
         )
+
+        fun setFilterByDogTemperament(temperament: String) {
+//            if (filterByDogTemperament.count() == 1)
+//                filterByDogTemperament.removeAt(0)
+            if (filterByDogTemperament.size>0)
+                filterByDogTemperament.removeAll(filterByDogTemperament.toSet())
+
+            filterByDogTemperament.add(FilterByDogTemperamentObj(temperament, true))
+        }
+
     }
+
 }

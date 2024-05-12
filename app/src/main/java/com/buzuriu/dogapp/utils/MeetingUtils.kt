@@ -1,6 +1,7 @@
 package com.buzuriu.dogapp.utils
 
 import com.buzuriu.dogapp.models.*
+import com.buzuriu.dogapp.services.LocalDatabaseService
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 import kotlin.collections.ArrayList
@@ -12,13 +13,14 @@ class MeetingUtils {
         fun checkFiltersAreAllAccomplished(
             meetingObj: MeetingObj,
             filterList: ArrayList<IFilterObj>,
-            userLocation: LatLng?
+            userLocation: LatLng?, dogPersonality: DogPersonality
         )
                 : Boolean {
             return dogGenderAccepted(meetingObj, filterList) &&
                     userGenderAccepted(meetingObj, filterList) &&
                     timeTypeAccepted(meetingObj, filterList) &&
                     breedTypeAccepted(meetingObj, filterList) &&
+                    temperamentTypeAccepted(meetingObj, filterList, dogPersonality) &&
                     distanceAccepted(meetingObj, filterList, userLocation)
         }
 
@@ -54,6 +56,24 @@ class MeetingUtils {
             val timeFilter = checkFilterIsType<FilterByTimeObj>(filterList) ?: return true
 
             if (DateUtils.isMeetingHappeningAtThisTime(meetingObj, timeFilter))
+                return true
+
+            return false
+        }
+        private fun temperamentTypeAccepted(
+            meetingObj: MeetingObj,
+            filterList: ArrayList<IFilterObj>,
+            dogPersonality: DogPersonality
+        ): Boolean {
+            val temperamentFilter = checkFilterIsType<FilterByDogTemperamentObj>(filterList) ?: return true
+
+            // get dog breed
+            // check if this breed type has the temperament selected
+
+            if (temperamentFilter.name == "All")
+                return true
+
+            if (dogPersonality.temperament.contains(temperamentFilter.name.toString()))
                 return true
 
             return false

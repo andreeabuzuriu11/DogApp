@@ -67,6 +67,7 @@ class FilterMeetingsFragment :
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                     mViewModel.selectedTemperamentObj = temperamentList[position]
+                    mViewModel.setTemperamentFilter()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
