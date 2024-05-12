@@ -45,6 +45,8 @@ class FilterMeetingsViewModel : BaseViewModel() {
 
     fun getTemperamentList(): List<String> {
         val list = ArrayList<String>()
+
+        list.add("All")
         // extract all temperaments ever, only once
         val dogPersonalityList =
             localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
@@ -55,9 +57,9 @@ class FilterMeetingsViewModel : BaseViewModel() {
 
             for (item in splitArray) {
                 if (!(list.contains(item))) {
-                    val t = removeFirstCharacterIfWhitespace(item)
-                    if (t.isNotEmpty())
-                        list.add(t)
+                    val itemNoWhitespace = removeFirstCharacterIfWhitespace(item)
+                    if (itemNoWhitespace.isNotEmpty())
+                        list.add(itemNoWhitespace)
                 }
             }
         }
@@ -67,6 +69,8 @@ class FilterMeetingsViewModel : BaseViewModel() {
 
     fun getEnergyLevelList(): List<String> {
         val list = ArrayList<String>()
+        list.add("All")
+
         // extract all temperaments ever, only once
         val dogPersonalityList =
             localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
@@ -77,9 +81,9 @@ class FilterMeetingsViewModel : BaseViewModel() {
 
             for (item in splitArray) {
                 if (!(list.contains(item))) {
-                    val t = removeFirstCharacterIfWhitespace(item)
-                    if (t.isNotEmpty())
-                        list.add(t)
+                    val itemNoWhitespace = removeFirstCharacterIfWhitespace(item)
+                    if (itemNoWhitespace.isNotEmpty())
+                        list.add(itemNoWhitespace)
                 }
             }
         }
