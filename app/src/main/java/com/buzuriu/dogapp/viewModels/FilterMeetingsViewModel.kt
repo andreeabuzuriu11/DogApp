@@ -119,7 +119,7 @@ class FilterMeetingsViewModel : BaseViewModel() {
             }
         }
 
-        return list
+        return list.distinct()
     }
 
     fun getEnergyLevelList(): List<String> {
@@ -143,7 +143,7 @@ class FilterMeetingsViewModel : BaseViewModel() {
             }
         }
 
-        return list
+        return list.distinct()
     }
 
 }
