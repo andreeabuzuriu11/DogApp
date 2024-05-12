@@ -2,9 +2,11 @@ package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.FilterAdapter
+import com.buzuriu.dogapp.models.DogPersonality
 import com.buzuriu.dogapp.models.FilterByDogBreedObj
 import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
+import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 
 class FilterMeetingsViewModel : BaseViewModel() {
@@ -21,6 +23,8 @@ class FilterMeetingsViewModel : BaseViewModel() {
     private var filterByDogBreedListString: ArrayList<String>?
     private var filterByDogBreedList = ArrayList<IFilterObj>()
 
+    private var temperamentList = ArrayList<String>()
+
 
     init {
         filterAdapterTime = FilterAdapter(filterByTimeList, this)
@@ -34,6 +38,28 @@ class FilterMeetingsViewModel : BaseViewModel() {
             }
         }
         filterAdapterDogBreed = FilterAdapter(filterByDogBreedList, this)
+
+        var list = ArrayList<String>()
+        // extract all temperaments ever, only once
+        var dogPersonalityList =
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+        for (dogPersonality in dogPersonalityList) {
+            var temp = dogPersonality.temperament
+
+            var splitArray = temp.split(",").toTypedArray()
+
+            for (item in splitArray) {
+                if (!(list.contains(item)))
+                    list.add(item)
+            }
+        }
+
+        var t = list
+
+    }
+
+    fun getTextBetweenCommas() {
+
     }
 
     private fun refreshFilters() {
