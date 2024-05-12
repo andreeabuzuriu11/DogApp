@@ -49,17 +49,20 @@ class FilterMeetingsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setupTemperamentSpinner(view)
 
-        val languages = mViewModel.getTemperamentList()
+    }
+
+    private fun setupTemperamentSpinner(view: View) {
+        val temperamentList = mViewModel.getTemperamentList()
 
         val spinner = view.findViewById<Spinner>(R.id.temperamentSpinner)
         if (spinner != null) {
             val adapter = ArrayAdapter(
                 context!!,
-                android.R.layout.simple_spinner_item, languages
+                android.R.layout.simple_spinner_item, temperamentList
             )
             spinner.adapter = adapter
         }
-
     }
 }
