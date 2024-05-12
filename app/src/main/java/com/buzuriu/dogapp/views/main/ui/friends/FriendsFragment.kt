@@ -31,7 +31,6 @@ class FriendsFragment :
         setupMyFriendsList()
         setupFriendsRequestList()
 
-
         setupRefreshMyFriendsList(view)
         setupRefreshFriendsRequest(view)
 

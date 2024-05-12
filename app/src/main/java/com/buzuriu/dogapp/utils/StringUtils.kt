@@ -16,5 +16,11 @@ class StringUtils {
             return string.all { it.isLetter() }
         }
 
+        fun removeFirstCharacterIfWhitespace(word: String): String {
+            var newWord = String()
+            newWord = word.removePrefix(" ")
+            return newWord
+        }
+
     }
 }

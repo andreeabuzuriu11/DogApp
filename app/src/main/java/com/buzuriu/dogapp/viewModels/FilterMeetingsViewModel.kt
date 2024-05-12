@@ -7,6 +7,7 @@ import com.buzuriu.dogapp.models.FilterByDogBreedObj
 import com.buzuriu.dogapp.models.IFilterObj
 import com.buzuriu.dogapp.utils.FilterItems
 import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.utils.StringUtils.Companion.removeFirstCharacterIfWhitespace
 import com.buzuriu.dogapp.views.main.ui.map.MapViewModel
 
 class FilterMeetingsViewModel : BaseViewModel() {
@@ -63,12 +64,6 @@ class FilterMeetingsViewModel : BaseViewModel() {
         return list
     }
 
-    fun removeFirstCharacterIfWhitespace(word: String): String {
-        var newWord = String()
-        newWord = word.removePrefix(" ")
-        return newWord
-
-    }
 
     private fun refreshFilters() {
         for (i in filterByTimeList)
