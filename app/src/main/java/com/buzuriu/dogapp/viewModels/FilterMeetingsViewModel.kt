@@ -43,22 +43,31 @@ class FilterMeetingsViewModel : BaseViewModel() {
     }
 
     fun getTemperamentList(): List<String> {
-        var list = ArrayList<String>()
+        val list = ArrayList<String>()
         // extract all temperaments ever, only once
-        var dogPersonalityList =
+        val dogPersonalityList =
             localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
         for (dogPersonality in dogPersonalityList) {
-            var temp = dogPersonality.temperament
+            val temp = dogPersonality.temperament
 
-            var splitArray = temp.split(",").toTypedArray()
+            val splitArray = temp.split(",").toTypedArray()
 
             for (item in splitArray) {
-                if (!(list.contains(item)))
-                    list.add(item)
+                if (!(list.contains(item))) {
+                    val t = removeFirstCharacterIfWhitespace(item)
+                    list.add(t)
+                }
             }
         }
 
         return list
+    }
+
+    fun removeFirstCharacterIfWhitespace(word: String): String {
+        var newWord = String()
+        newWord = word.removePrefix(" ")
+        return newWord
+
     }
 
     private fun refreshFilters() {
