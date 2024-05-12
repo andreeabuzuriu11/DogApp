@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.views
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.recyclerview.widget.GridLayoutManager
@@ -63,19 +64,38 @@ class FilterMeetingsFragment :
                 android.R.layout.simple_spinner_item, temperamentList
             )
             spinner.adapter = adapter
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                    mViewModel.selectedTemperamentObj = temperamentList[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+
+                }
+            }
         }
+
     }
 
     private fun setupEnergyLevelSpinner(view: View) {
-        val temperamentList = mViewModel.getEnergyLevelList()
+        val energyLevelList = mViewModel.getEnergyLevelList()
 
         val spinner = view.findViewById<Spinner>(R.id.energyLevelSpinner)
         if (spinner != null) {
             val adapter = ArrayAdapter(
                 context!!,
-                android.R.layout.simple_spinner_item, temperamentList
+                android.R.layout.simple_spinner_item, energyLevelList
             )
             spinner.adapter = adapter
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                    mViewModel.selectedEnergyLevel = energyLevelList[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+
+                }
+            }
         }
     }
 }

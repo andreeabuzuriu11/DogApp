@@ -23,8 +23,9 @@ class FilterMeetingsViewModel : BaseViewModel() {
     private var filterByUserGenderList = FilterItems.filterByUserGenderItems
     private var filterByDogBreedListString: ArrayList<String>?
     private var filterByDogBreedList = ArrayList<IFilterObj>()
-
-    private var temperamentList = ArrayList<String>()
+    private var filterByDogTemperamentList = ArrayList<IFilterObj>()
+    internal var selectedTemperamentObj = String()
+    internal var selectedEnergyLevel = String()
 
 
     init {
@@ -41,54 +42,6 @@ class FilterMeetingsViewModel : BaseViewModel() {
         filterAdapterDogBreed = FilterAdapter(filterByDogBreedList, this)
 
 
-    }
-
-    fun getTemperamentList(): List<String> {
-        val list = ArrayList<String>()
-
-        list.add("All")
-        // extract all temperaments ever, only once
-        val dogPersonalityList =
-            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
-        for (dogPersonality in dogPersonalityList) {
-            val temp = dogPersonality.temperament
-
-            val splitArray = temp.split(",").toTypedArray()
-
-            for (item in splitArray) {
-                if (!(list.contains(item))) {
-                    val itemNoWhitespace = removeFirstCharacterIfWhitespace(item)
-                    if (itemNoWhitespace.isNotEmpty())
-                        list.add(itemNoWhitespace)
-                }
-            }
-        }
-
-        return list
-    }
-
-    fun getEnergyLevelList(): List<String> {
-        val list = ArrayList<String>()
-        list.add("All")
-
-        // extract all temperaments ever, only once
-        val dogPersonalityList =
-            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
-        for (dogPersonality in dogPersonalityList) {
-            val temp = dogPersonality.energy_level_category
-
-            val splitArray = temp.split(",").toTypedArray()
-
-            for (item in splitArray) {
-                if (!(list.contains(item))) {
-                    val itemNoWhitespace = removeFirstCharacterIfWhitespace(item)
-                    if (itemNoWhitespace.isNotEmpty())
-                        list.add(itemNoWhitespace)
-                }
-            }
-        }
-
-        return list
     }
 
 
@@ -143,6 +96,54 @@ class FilterMeetingsViewModel : BaseViewModel() {
 
     override fun onDestroy() {
         refreshFilters()
+    }
+
+    fun getTemperamentList(): List<String> {
+        val list = ArrayList<String>()
+
+        list.add("All")
+        // extract all temperaments ever, only once
+        val dogPersonalityList =
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+        for (dogPersonality in dogPersonalityList) {
+            val temp = dogPersonality.temperament
+
+            val splitArray = temp.split(",").toTypedArray()
+
+            for (item in splitArray) {
+                if (!(list.contains(item))) {
+                    val itemNoWhitespace = removeFirstCharacterIfWhitespace(item)
+                    if (itemNoWhitespace.isNotEmpty())
+                        list.add(itemNoWhitespace)
+                }
+            }
+        }
+
+        return list
+    }
+
+    fun getEnergyLevelList(): List<String> {
+        val list = ArrayList<String>()
+        list.add("All")
+
+        // extract all temperaments ever, only once
+        val dogPersonalityList =
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+        for (dogPersonality in dogPersonalityList) {
+            val temp = dogPersonality.energy_level_category
+
+            val splitArray = temp.split(",").toTypedArray()
+
+            for (item in splitArray) {
+                if (!(list.contains(item))) {
+                    val itemNoWhitespace = removeFirstCharacterIfWhitespace(item)
+                    if (itemNoWhitespace.isNotEmpty())
+                        list.add(itemNoWhitespace)
+                }
+            }
+        }
+
+        return list
     }
 
 }
