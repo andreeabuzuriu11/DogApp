@@ -2,6 +2,8 @@ package com.buzuriu.dogapp.views
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.recyclerview.widget.GridLayoutManager
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentFilterMeetingsBinding
@@ -47,6 +49,17 @@ class FilterMeetingsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-    }
 
+        val languages = mViewModel.getTemperamentList()
+
+        val spinner = view.findViewById<Spinner>(R.id.temperamentSpinner)
+        if (spinner != null) {
+            val adapter = ArrayAdapter(
+                context!!,
+                android.R.layout.simple_spinner_item, languages
+            )
+            spinner.adapter = adapter
+        }
+
+    }
 }

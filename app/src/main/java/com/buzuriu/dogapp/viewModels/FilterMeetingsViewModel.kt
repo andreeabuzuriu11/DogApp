@@ -39,6 +39,10 @@ class FilterMeetingsViewModel : BaseViewModel() {
         }
         filterAdapterDogBreed = FilterAdapter(filterByDogBreedList, this)
 
+
+    }
+
+    fun getTemperamentList(): List<String> {
         var list = ArrayList<String>()
         // extract all temperaments ever, only once
         var dogPersonalityList =
@@ -54,12 +58,7 @@ class FilterMeetingsViewModel : BaseViewModel() {
             }
         }
 
-        var t = list
-
-    }
-
-    fun getTextBetweenCommas() {
-
+        return list
     }
 
     private fun refreshFilters() {
