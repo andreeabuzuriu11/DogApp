@@ -1156,13 +1156,13 @@ class DatabaseService(
 
                     var dogPersonality =
                         localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
-                            .first { it.breed == meeting.dogBreed }
+                            .firstOrNull { it.breed == meeting.dogBreed }
 
                     if (MeetingUtils.checkFiltersAreAllAccomplished(
                             meeting,
                             filters,
                             localDatabaseService.get<LatLng>(LocalDBItems.userLocation),
-                            dogPersonality
+                            dogPersonality!!
                         ) && !MeetingUtils.isMeetingInThePast(meeting)
                     ) {
 
