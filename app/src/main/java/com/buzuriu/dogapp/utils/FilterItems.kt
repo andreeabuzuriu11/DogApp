@@ -29,13 +29,24 @@ class FilterItems {
 
         )
 
+        var filterByDogEnergyLevel = arrayListOf<IFilterObj>(
+
+        )
+
         fun setFilterByDogTemperament(temperament: String) {
-//            if (filterByDogTemperament.count() == 1)
-//                filterByDogTemperament.removeAt(0)
+
             if (filterByDogTemperament.size>0)
                 filterByDogTemperament.removeAll(filterByDogTemperament.toSet())
 
             filterByDogTemperament.add(FilterByDogTemperamentObj(temperament, true))
+        }
+
+        fun setFilterByDogEnergyLevel(temperament: String) {
+
+            if (filterByDogEnergyLevel.size>0)
+                filterByDogEnergyLevel.removeAll(filterByDogEnergyLevel.toSet())
+
+            filterByDogEnergyLevel.add(FilterByDogEnergyLevelObj(temperament, true))
         }
 
     }

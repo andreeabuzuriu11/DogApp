@@ -20,7 +20,8 @@ class MeetingUtils {
                     userGenderAccepted(meetingObj, filterList) &&
                     timeTypeAccepted(meetingObj, filterList) &&
                     breedTypeAccepted(meetingObj, filterList) &&
-                    temperamentTypeAccepted(meetingObj, filterList, dogPersonality) &&
+                    temperamentTypeAccepted(filterList, dogPersonality) &&
+                    energyLevelAccepted(filterList, dogPersonality) &&
                     distanceAccepted(meetingObj, filterList, userLocation)
         }
 
@@ -61,19 +62,30 @@ class MeetingUtils {
             return false
         }
         private fun temperamentTypeAccepted(
-            meetingObj: MeetingObj,
             filterList: ArrayList<IFilterObj>,
             dogPersonality: DogPersonality
         ): Boolean {
             val temperamentFilter = checkFilterIsType<FilterByDogTemperamentObj>(filterList) ?: return true
 
-            // get dog breed
-            // check if this breed type has the temperament selected
-
             if (temperamentFilter.name == "All")
                 return true
 
             if (dogPersonality.temperament.contains(temperamentFilter.name.toString()))
+                return true
+
+            return false
+        }
+
+        private fun energyLevelAccepted(
+            filterList: ArrayList<IFilterObj>,
+            dogPersonality: DogPersonality
+        ): Boolean {
+            val energyFilter = checkFilterIsType<FilterByDogEnergyLevelObj>(filterList) ?: return true
+
+            if (energyFilter.name == "All")
+                return true
+
+            if (dogPersonality.energy_level_category.contains(energyFilter.name.toString()))
                 return true
 
             return false

@@ -356,6 +356,8 @@ class MapViewModel : BaseViewModel() {
             removeFilterType<FilterByDogBreedObj>()
             removeFilterType<FilterByDogGenderObj>()
             removeFilterType<FilterByUserGenderObj>()
+            removeFilterType<FilterByDogTemperamentObj>()
+            removeFilterType<FilterByDogEnergyLevelObj>()
 
             filtersList.addAll(filters)
             filterAdapter!!.notifyDataSetChanged()

@@ -2,10 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.FilterAdapter
-import com.buzuriu.dogapp.models.DogPersonality
-import com.buzuriu.dogapp.models.FilterByDogBreedObj
-import com.buzuriu.dogapp.models.FilterByDogTemperamentObj
-import com.buzuriu.dogapp.models.IFilterObj
+import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.FilterItems
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.StringUtils.Companion.removeFirstCharacterIfWhitespace
@@ -26,6 +23,7 @@ class FilterMeetingsViewModel : BaseViewModel() {
     private var filterByDogBreedList = ArrayList<IFilterObj>()
 
     private var filterByDogTemperament = FilterItems.filterByDogTemperament
+    private var filterByDogEnergyLevel = FilterItems.filterByDogEnergyLevel
     internal var selectedTemperamentObj = String()
     internal var selectedEnergyLevel = String()
 
@@ -45,14 +43,19 @@ class FilterMeetingsViewModel : BaseViewModel() {
 
     }
 
-    public fun setTemperamentFilter()
-    {
+    fun setTemperamentFilter() {
         var selectedTemperament = selectedTemperamentObj
         filterByDogTemperament.add(FilterByDogTemperamentObj(selectedTemperament, true))
 
         FilterItems.setFilterByDogTemperament(selectedTemperament)
     }
 
+    fun setEnergyLevel() {
+        var selectedEnergyLevel = selectedEnergyLevel
+        filterByDogEnergyLevel.add(FilterByDogEnergyLevelObj(selectedEnergyLevel, true))
+
+        FilterItems.setFilterByDogEnergyLevel(selectedEnergyLevel)
+    }
 
 
     private fun refreshFilters() {
@@ -65,6 +68,8 @@ class FilterMeetingsViewModel : BaseViewModel() {
         for (i in filterByDogBreedList)
             i.isSelected = false
         for (i in filterByDogTemperament)
+            i.isSelected = false
+        for (i in filterByDogEnergyLevel)
             i.isSelected = false
     }
 
@@ -84,6 +89,9 @@ class FilterMeetingsViewModel : BaseViewModel() {
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
         for (i in filterByDogTemperament)
+            if (i.isSelected == true)
+                listOfCheckedFilters.add(i)
+        for (i in filterByDogEnergyLevel)
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
 

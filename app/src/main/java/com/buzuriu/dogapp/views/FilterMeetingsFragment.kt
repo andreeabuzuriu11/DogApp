@@ -91,6 +91,7 @@ class FilterMeetingsFragment :
             spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                     mViewModel.selectedEnergyLevel = energyLevelList[position]
+                    mViewModel.setEnergyLevel()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
