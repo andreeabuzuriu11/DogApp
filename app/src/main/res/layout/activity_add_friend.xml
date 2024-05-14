@@ -35,17 +35,6 @@
                 android:queryHint="Name or E-mail"
                 android:switchTextAppearance="@color/black" />
 
-            <SearchView
-                android:id="@+id/citySearchView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="5dp"
-                android:autofillHints="@string/search_for_user"
-                android:queryHint="City"
-                android:switchTextAppearance="@color/black" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/users_found_list"
                 android:layout_width="match_parent"
