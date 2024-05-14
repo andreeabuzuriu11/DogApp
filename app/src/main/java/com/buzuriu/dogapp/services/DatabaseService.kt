@@ -1080,6 +1080,23 @@ class DatabaseService(
         tasksQueryList.add(query)
     }
 
+    private fun setDogTemperamentTypeQuery(filterType: IFilterObj) {
+        val listOfBreedsThatMeetRequirement = arrayListOf<String>()
+        val dogPersonalityList =
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+        for (dogPersonality in dogPersonalityList) {
+            if (dogPersonality.temperament.contains(filterType.name!!))
+                listOfBreedsThatMeetRequirement.add(dogPersonality.breed)
+        }
+
+        for (breedThatMeets in listOfBreedsThatMeetRequirement) {
+            val query = meetingsQuery!!
+                .whereEqualTo(FieldsItems.dogBreed, breedThatMeets)
+                .get()
+            tasksQueryList.add(query)
+        }
+    }
+
     private fun setMeetingsDistanceQuery(radiusInKM: Int) {
         val myCurrentUserLocation = localDatabaseService!!.get<LatLng>(LocalDBItems.userLocation)
         if (myCurrentUserLocation == null) {
@@ -1128,6 +1145,9 @@ class DatabaseService(
                 }
                 is FilterByLocationObj -> {
                     setMeetingsDistanceQuery(it.distance!!)
+                }
+                is FilterByDogTemperamentObj -> {
+                    setDogTemperamentTypeQuery(it)
                 }
             }
         }

@@ -131,7 +131,10 @@ class MapViewModel : BaseViewModel() {
                                                 successful: Boolean,
                                                 exception: Exception?
                                             ) {
-                                                MyCustomMeetingUtils.removeMeetFromUserJoinedMeetings(meeting, localDatabaseService)
+                                                MyCustomMeetingUtils.removeMeetFromUserJoinedMeetings(
+                                                    meeting,
+                                                    localDatabaseService
+                                                )
                                                 snackMessageService.displaySnackBar("Your intention of not attending this walk with ${meeting.user!!.name} successfully saved")
                                             }
                                         })
@@ -189,7 +192,7 @@ class MapViewModel : BaseViewModel() {
             for (meet in allMeetingsParticipants)
                 if (meet.userUid == currentUser!!.uid) {
                     userJoinedMeetings.add(meeting)
-                    MyCustomMeetingUtils.changeStateOfMeeting(meeting,userJoinedMeetings)
+                    MyCustomMeetingUtils.changeStateOfMeeting(meeting, userJoinedMeetings)
                     mapOfMeetingUidAndCurrentUserAsParticipant[meeting.meetingObj?.uid!!] =
                         meet
                 }
@@ -252,7 +255,7 @@ class MapViewModel : BaseViewModel() {
                 pastMeetingsListUserJoined.clear()
                 for (item in list) {
                     // todo fix crash here
-                    try{
+                    try {
                         if (item.meetingObj!!.userUid == currentUser!!.uid) {
                             // if meeting has user uid same id as current, it means that the user created
                             // that particular meeting
@@ -262,9 +265,7 @@ class MapViewModel : BaseViewModel() {
                             if (wasUserParticipant(item))
                                 pastMeetingsListUserJoined.add(item)
                         }
-                    }
-                    catch (ex:Exception)
-                    {
+                    } catch (ex: Exception) {
                         println("User might be deleted, user = " + item.meetingObj!!.userUid)
                         println("Current user might be null, user = " + currentUser!!.uid)
                     }
@@ -307,11 +308,15 @@ class MapViewModel : BaseViewModel() {
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
-                user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
-                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                user =
+                    databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener {
+                        override fun onComplete(
+                            successful: Boolean,
+                            exception: java.lang.Exception?
+                        ) {
 
-                    }
-                })
+                        }
+                    })
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 if (user != null && dog != null) {
@@ -440,11 +445,15 @@ class MapViewModel : BaseViewModel() {
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
-                user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
-                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                user =
+                    databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener {
+                        override fun onComplete(
+                            successful: Boolean,
+                            exception: java.lang.Exception?
+                        ) {
 
-                    }
-                })
+                        }
+                    })
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 val reviews = fetchUserReviews(meeting.userUid!!)!!
@@ -486,15 +495,19 @@ class MapViewModel : BaseViewModel() {
 
         if (allMeetings != null) {
             for (meeting in allMeetings) {
-                user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
-                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                user =
+                    databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener {
+                        override fun onComplete(
+                            successful: Boolean,
+                            exception: java.lang.Exception?
+                        ) {
 
-                    }
-                })
+                        }
+                    })
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 val reviews = fetchUserReviews(meeting.userUid!!)
-                if (reviews != null && user!=null) {
+                if (reviews != null && user != null) {
                     val meanOfReviews = getMeanOfReviews(reviews)
                     user.rating = meanOfReviews
                     if (dog != null) {
