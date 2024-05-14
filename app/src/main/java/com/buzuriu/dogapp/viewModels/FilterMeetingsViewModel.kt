@@ -44,14 +44,16 @@ class FilterMeetingsViewModel : BaseViewModel() {
     }
 
     fun setTemperamentFilter() {
-        var selectedTemperament = selectedTemperamentObj
+        if (selectedTemperamentObj == "All") return
+        val selectedTemperament = selectedTemperamentObj
         filterByDogTemperament.add(FilterByDogTemperamentObj(selectedTemperament, true))
 
         FilterItems.setFilterByDogTemperament(selectedTemperament)
     }
 
     fun setEnergyLevel() {
-        var selectedEnergyLevel = selectedEnergyLevel
+        if (selectedEnergyLevel == "All") return
+        val selectedEnergyLevel = selectedEnergyLevel
         filterByDogEnergyLevel.add(FilterByDogEnergyLevelObj(selectedEnergyLevel, true))
 
         FilterItems.setFilterByDogEnergyLevel(selectedEnergyLevel)
