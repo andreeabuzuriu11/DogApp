@@ -1080,12 +1080,33 @@ class DatabaseService(
         tasksQueryList.add(query)
     }
 
-    private fun setDogTemperamentTypeQuery(filterType: IFilterObj) {
+    private fun setDogTemperamentTypeQuery(
+        filterType: IFilterObj,
+        dogPersonalityList: List<DogPersonality>
+    ) {
         val listOfBreedsThatMeetRequirement = arrayListOf<String>()
-        val dogPersonalityList =
-            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+
         for (dogPersonality in dogPersonalityList) {
             if (dogPersonality.temperament.contains(filterType.name!!))
+                listOfBreedsThatMeetRequirement.add(dogPersonality.breed)
+        }
+
+        for (breedThatMeets in listOfBreedsThatMeetRequirement) {
+            val query = meetingsQuery!!
+                .whereEqualTo(FieldsItems.dogBreed, breedThatMeets)
+                .get()
+            tasksQueryList.add(query)
+        }
+    }
+
+    private fun setDogEnergyLevelTypeQuery(
+        filterType: IFilterObj,
+        dogPersonalityList: List<DogPersonality>
+    ) {
+        val listOfBreedsThatMeetRequirement = arrayListOf<String>()
+
+        for (dogPersonality in dogPersonalityList) {
+            if (dogPersonality.energy_level_category.contains(filterType.name!!))
                 listOfBreedsThatMeetRequirement.add(dogPersonality.breed)
         }
 
@@ -1128,7 +1149,10 @@ class DatabaseService(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setFiltersQuery(filtersList: ArrayList<IFilterObj>) {
+    private fun setFiltersQuery(
+        filtersList: ArrayList<IFilterObj>,
+        dogPersonalityList: List<DogPersonality>
+    ) {
         filtersList.forEach {
             when (it) {
                 is FilterByTimeObj -> {
@@ -1147,7 +1171,10 @@ class DatabaseService(
                     setMeetingsDistanceQuery(it.distance!!)
                 }
                 is FilterByDogTemperamentObj -> {
-                    setDogTemperamentTypeQuery(it)
+                    setDogTemperamentTypeQuery(it, dogPersonalityList)
+                }
+                is FilterByDogEnergyLevelObj -> {
+                    setDogEnergyLevelTypeQuery(it, dogPersonalityList)
                 }
             }
         }
@@ -1163,7 +1190,10 @@ class DatabaseService(
         meetingsQuery =
             firestore.collection(meetingsCollection)
 
-        setFiltersQuery(filters)
+        val dogPersonalityList =
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
+
+        setFiltersQuery(filters, dogPersonalityList)
 
         val allTasks =
             Tasks.whenAllSuccess<QuerySnapshot>(tasksQueryList)
@@ -1175,8 +1205,7 @@ class DatabaseService(
                     val meeting = querySnapshot.toObject(MeetingObj::class.java)
 
                     var dogPersonality =
-                        localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
-                            .firstOrNull { it.breed == meeting.dogBreed }
+                        dogPersonalityList.firstOrNull { it.breed == meeting.dogBreed }
 
                     if (dogPersonality == null)
                         return@addOnSuccessListener
