@@ -494,11 +494,11 @@ class MapViewModel : BaseViewModel() {
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 val reviews = fetchUserReviews(meeting.userUid!!)
-                if (reviews != null) {
+                if (reviews != null && user!=null) {
                     val meanOfReviews = getMeanOfReviews(reviews)
-                    user?.rating = meanOfReviews
+                    user.rating = meanOfReviews
                     if (dog != null) {
-                        val meetingObj = MyCustomMeetingObj(meeting, user!!, dog)
+                        val meetingObj = MyCustomMeetingObj(meeting, user, dog)
                         allCustomMeetings.add(meetingObj)
                     }
                 } else {
