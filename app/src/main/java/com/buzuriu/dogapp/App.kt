@@ -24,6 +24,7 @@ class App : Application() {
         single<IActivityForResultService> { ActivityForResultService() }
         single<IStorageService> { StorageService() }
         single<ILocalDatabaseService> { LocalDatabaseService() }
+        single<ICsvDataService> { CsvDataService(get(), get()) }
     }
 
     private val activityService: ICurrentActivityService by inject()

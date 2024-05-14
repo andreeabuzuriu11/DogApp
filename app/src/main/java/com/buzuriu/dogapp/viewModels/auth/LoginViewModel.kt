@@ -97,7 +97,7 @@ class LoginViewModel : BaseViewModel() {
         val allCustomMeetings = ArrayList<MyCustomMeetingObj>()
 
         val userMeetings: ArrayList<MeetingObj>? =
-            databaseService.fetchUserMeetings(currentUser!!.uid, object : IOnCompleteListener{
+            databaseService.fetchUserMeetings(currentUser!!.uid, object : IOnCompleteListener {
                 override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
 
                 }
@@ -106,20 +106,22 @@ class LoginViewModel : BaseViewModel() {
         if (userMeetings != null) {
             for (meeting in userMeetings) {
 
-                user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
-                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                user =
+                    databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener {
+                        override fun onComplete(
+                            successful: Boolean,
+                            exception: java.lang.Exception?
+                        ) {
 
-                    }
-                })
+                        }
+                    })
                 dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                 if (dog != null) {
                     try {
                         val meetingObj = MyCustomMeetingObj(meeting, user!!, dog)
                         allCustomMeetings.add(meetingObj)
-                    }
-                    catch (ex:Exception)
-                    {
+                    } catch (ex: Exception) {
                         println("Exception was caught. ")
                         println("Exception user = " + user!!.name)
                         println("Exception dog = " + user!!.name)
@@ -131,6 +133,7 @@ class LoginViewModel : BaseViewModel() {
             localDatabaseService.add(LocalDBItems.localMeetingsList, allCustomMeetings)
         }
     }
+
 
     private suspend fun getAllMeetingsThatUserJoined() {
         var allMeetingsParticipants: ArrayList<ParticipantObj>
@@ -149,11 +152,16 @@ class LoginViewModel : BaseViewModel() {
                 databaseService.fetchAllMeetingParticipants(meeting.uid!!)!!
             for (participant in allMeetingsParticipants)
                 if (participant.userUid == currentUser!!.uid) {
-                    user = databaseService.fetchUserByUid(meeting.userUid!!, object : IOnCompleteListener{
-                        override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+                    user = databaseService.fetchUserByUid(
+                        meeting.userUid!!,
+                        object : IOnCompleteListener {
+                            override fun onComplete(
+                                successful: Boolean,
+                                exception: java.lang.Exception?
+                            ) {
 
-                        }
-                    })
+                            }
+                        })
                     dog = databaseService.fetchDogByUid(meeting.dogUid!!)
 
                     if (dog != null) {
@@ -166,11 +174,12 @@ class LoginViewModel : BaseViewModel() {
     }
 
     private suspend fun getUserAccountInfo() {
-        val userObj: UserObj? = databaseService.fetchUserByUid(currentUser!!.uid, object : IOnCompleteListener{
-            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+        val userObj: UserObj? =
+            databaseService.fetchUserByUid(currentUser!!.uid, object : IOnCompleteListener {
+                override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
 
-            }
-        })
+                }
+            })
 
         if (userObj != null)
             localDatabaseService.add(LocalDBItems.currentUser, userObj)
@@ -180,5 +189,6 @@ class LoginViewModel : BaseViewModel() {
             navigationService.navigateToActivity(RegisterActivity::class.java, true)
         }
     }
+
 
 }

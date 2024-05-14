@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import com.buzuriu.dogapp.adapters.CountryAdapter
 import com.buzuriu.dogapp.models.CountryObj
+import com.buzuriu.dogapp.models.DogPersonality
 import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.viewModels.auth.RegisterViewModel
@@ -19,9 +20,16 @@ class SelectCountryViewModel : BaseViewModel() {
     private var countriesList: ArrayList<CountryObj> = ArrayList()
 
     init {
+        initDogPersonalityListIfNecessary()
         countriesList =
             localDatabaseService.get<ArrayList<CountryObj>>(LocalDBItems.countries)!!
         countryAdapter = CountryAdapter(countriesList, this)
+    }
+
+    private fun initDogPersonalityListIfNecessary() {
+        if (
+            localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList) == null)
+            csvDataService.readDogPersonalityCsv()
     }
 
     fun saveCountry() {
