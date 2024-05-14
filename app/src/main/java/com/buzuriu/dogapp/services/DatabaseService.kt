@@ -1158,6 +1158,9 @@ class DatabaseService(
                         localDatabaseService.get<List<DogPersonality>>(LocalDBItems.dogPersonalityList)!!
                             .firstOrNull { it.breed == meeting.dogBreed }
 
+                    if (dogPersonality == null)
+                        return@addOnSuccessListener
+
                     if (MeetingUtils.checkFiltersAreAllAccomplished(
                             meeting,
                             filters,

@@ -13,15 +13,15 @@ class MeetingUtils {
         fun checkFiltersAreAllAccomplished(
             meetingObj: MeetingObj,
             filterList: ArrayList<IFilterObj>,
-            userLocation: LatLng?, dogPersonality: DogPersonality
+            userLocation: LatLng?, dogPersonality: DogPersonality? = null
         )
                 : Boolean {
             return dogGenderAccepted(meetingObj, filterList) &&
                     userGenderAccepted(meetingObj, filterList) &&
                     timeTypeAccepted(meetingObj, filterList) &&
                     breedTypeAccepted(meetingObj, filterList) &&
-                    temperamentTypeAccepted(filterList, dogPersonality) &&
-                    energyLevelAccepted(filterList, dogPersonality) &&
+                    temperamentTypeAccepted(filterList, dogPersonality!!) &&
+                    energyLevelAccepted(filterList, dogPersonality!!) &&
                     distanceAccepted(meetingObj, filterList, userLocation)
         }
 
