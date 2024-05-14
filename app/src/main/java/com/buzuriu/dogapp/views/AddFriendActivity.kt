@@ -43,37 +43,9 @@ class AddFriendActivity :
         val nameSearchView =
             findViewById<SearchView>(R.id.nameEmailSearchView)
 
-        val cSearchView =
-            findViewById<SearchView>(R.id.citySearchView)
-
         if (nameSearchView != null) {
             nameEmailSearchView = nameSearchView
         }
-
-        if (cSearchView != null) {
-            citySearchView = cSearchView
-        }
-
-        citySearchView.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-
-                override fun onQueryTextChange(newText: String): Boolean {
-                    val vm = mViewModel
-
-                    vm.findUser(newText)
-                    return false
-                }
-
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    val vm = mViewModel
-                    vm.findUser(query)
-
-                    //todo fix loading
-                    vm.showLoading(false)
-
-                    return false
-                }
-            })
 
         nameEmailSearchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
