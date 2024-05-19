@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.DogAdapter
+import com.buzuriu.dogapp.adapters.DogFriendAdapter
 import com.buzuriu.dogapp.adapters.FriendMeetingAdapter
 import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.listeners.IClickListener
@@ -40,12 +41,12 @@ class FriendProfileViewModel : BaseViewModel() {
         mutableMapOf()
 
     var meetingsAdapter: FriendMeetingAdapter? = null
-    var dogAdapter: DogAdapter? = null
+    var dogAdapter: DogFriendAdapter? = null
 
     init {
         user.value = exchangeInfoService.get<UserObj>(this::class.qualifiedName!!)!!
         meetingsAdapter = FriendMeetingAdapter(meetingsList, ::selectedMeeting, this)
-        dogAdapter = DogAdapter(dogsList, ::selectedDog)
+        dogAdapter = DogFriendAdapter(dogsList, ::selectedDog)
 
         viewModelScope.launch {
             fetchMeetingsForUser()
