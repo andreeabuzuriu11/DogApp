@@ -51,7 +51,7 @@ class FriendProfileActivity :
 
     private fun setupDogsRecyclerView() {
         val recyclerView = activityAddFriendBinding!!.dogsList
-        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         recyclerView.adapter = mViewModel.dogAdapter
     }
 
