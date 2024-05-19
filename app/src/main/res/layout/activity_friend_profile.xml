@@ -128,11 +128,36 @@
 
                 </LinearLayout>
 
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutDogsList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/sendEmail"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Dogs"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/dogs_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{viewModel.isLoadingViewVisible ? View.GONE : View.VISIBLE}" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/placeHolder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/dogs_list"
+                    android:layout_below="@+id/linearLayoutDogsList"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:text="@string/no_events"
@@ -140,17 +165,10 @@
                     android:visibility="@{viewModel.isPlaceholderVisible ? View.GONE : View.VISIBLE}" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/dogs_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/sendEmail"
-                    android:visibility="@{viewModel.isLoadingViewVisible ? View.GONE : View.VISIBLE}" />
-
-                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/meetings_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/dogs_list"
+                    android:layout_below="@+id/linearLayoutDogsList"
                     android:layout_marginTop="10dp"
                     android:visibility="@{viewModel.isLoadingViewVisible ? View.GONE : View.VISIBLE}" />
 
