@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.listeners.IClickListener
+import com.buzuriu.dogapp.models.CountryObj
 import com.buzuriu.dogapp.models.DogObj
 import com.buzuriu.dogapp.models.DogPersonality
 import com.buzuriu.dogapp.utils.LocalDBItems
@@ -37,7 +38,6 @@ class MyDogsViewModel : BaseViewModel() {
         dogAdapter = DogAdapter(dogsList, ::selectedDog)
         dogAdapter!!.notifyDataSetChanged()
     }
-
 
 
     override fun onResume() {
@@ -81,7 +81,11 @@ class MyDogsViewModel : BaseViewModel() {
             object :
                 IClickListener {
                 override fun clicked() {
+                    var countriesList =
+                        localDatabaseService.get<ArrayList<CountryObj>>(LocalDBItems.countries)!!
                     localDatabaseService.clear()
+                    localDatabaseService.add(LocalDBItems.countries, countriesList)
+
                     navigationService.navigateToActivity(LoginActivity::class.java, true)
                     firebaseAuthService.logout()
                 }

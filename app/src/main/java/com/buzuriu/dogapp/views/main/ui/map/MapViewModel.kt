@@ -264,7 +264,7 @@ class MapViewModel : BaseViewModel() {
                         }
                     } catch (ex: Exception) {
                         println("User might be deleted, user = " + item.meetingObj!!.userUid)
-                        println("Current user might be null, user = " + currentUser!!.uid)
+                        println("Current user might be null, user = " + currentUser?.uid)
                     }
 
                 }
