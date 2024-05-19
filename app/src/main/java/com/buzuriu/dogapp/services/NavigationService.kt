@@ -2,6 +2,8 @@ package com.buzuriu.dogapp.services
 
 import android.app.Activity
 import android.content.Intent
+import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 
 interface INavigationService {
 
@@ -18,8 +20,7 @@ interface INavigationService {
     )
 
     fun closeCurrentActivity()
-
-
+    fun closeFragment()
 }
 
 class NavigationService(private val currentActivityService: ICurrentActivityService) :
@@ -91,4 +92,14 @@ class NavigationService(private val currentActivityService: ICurrentActivityServ
         }
     }
 
+
+    override fun closeFragment() {
+        val activity: Activity? = currentActivityService.activity
+
+        if (activity != null) {
+            activity.onBackPressed()
+        } else {
+            throw Exception("Current activity was null. Please setup ICurrentActivityService correctly.")
+        }
+    }
 }

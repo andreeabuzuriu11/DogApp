@@ -58,6 +58,7 @@ class SelectCountryViewModel : BaseViewModel() {
                     SelectStateViewModel::class.qualifiedName!!,
                     locationObj!!
                 )
+            close()
 
         } else {
             exchangeInfoService.put(RegisterViewModel::class.qualifiedName!!, locationObj!!)
@@ -78,7 +79,7 @@ class SelectCountryViewModel : BaseViewModel() {
     }
 
     fun close() {
-        navigationService.closeCurrentActivity()
+        navigationService.closeFragment()
     }
 
     fun searchByName(searchedString: String) {

@@ -27,7 +27,7 @@ class LocationObj {
             finalString += ", " + state!!.name
         }
 
-        if (country?.name == null)
+        if (city?.name == null)
             return finalString
         else
             finalString += ", " + city!!.name

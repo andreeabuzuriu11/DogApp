@@ -2,6 +2,7 @@ package com.buzuriu.dogapp.viewModels
 
 import com.beastwall.localisation.model.City
 import com.beastwall.localisation.model.Country
+import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.adapters.CityAdapter
 import com.buzuriu.dogapp.models.CityObj
 import com.buzuriu.dogapp.models.LocationObj
@@ -38,7 +39,7 @@ class SelectCityViewModel : BaseViewModel() {
     }
 
     fun close() {
-        navigationService.closeCurrentActivity()
+        navigationService.closeFragment()
     }
 
     fun saveCity() {

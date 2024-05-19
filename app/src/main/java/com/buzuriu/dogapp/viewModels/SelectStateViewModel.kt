@@ -12,7 +12,7 @@ import java.util.*
 
 class SelectStateViewModel : BaseViewModel() {
 
-    var currentLocationObj : LocationObj? = null
+    var currentLocationObj: LocationObj? = null
     var selectedState: StateObj? = null
     var stateAdapter: StateAdapter? = null
     var locationObj: LocationObj? = null
@@ -21,7 +21,7 @@ class SelectStateViewModel : BaseViewModel() {
 
     init {
         stateAdapter = StateAdapter(statesList, this)
-         locationObj =
+        locationObj =
             exchangeInfoService.get<LocationObj>(this::class.java.name)!!
         var states = locationObj!!.country!!.states
         for (state in states) {
@@ -55,18 +55,17 @@ class SelectStateViewModel : BaseViewModel() {
                 SelectCityViewModel::class.qualifiedName!!,
                 locationObj!!
             )
-        }
-        else
-        {
+            close()
+
+        } else {
             // just close and save as it is
             exchangeInfoService.put(RegisterViewModel::class.qualifiedName!!, locationObj!!)
             close()
-
         }
     }
 
     fun close() {
-        navigationService.closeCurrentActivity()
+        navigationService.closeFragment()
     }
 
     private fun unselectPreviousState() {
