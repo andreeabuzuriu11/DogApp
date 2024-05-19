@@ -34,6 +34,7 @@ class FriendProfileActivity :
         super.onCreate(savedInstanceState)
 
         setupRecyclerView()
+        setupDogsRecyclerView()
     }
 
 
@@ -46,6 +47,12 @@ class FriendProfileActivity :
         val recyclerView = activityAddFriendBinding!!.meetingsList
         recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mViewModel.meetingsAdapter
+    }
+
+    private fun setupDogsRecyclerView() {
+        val recyclerView = activityAddFriendBinding!!.dogsList
+        recyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = mViewModel.dogAdapter
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

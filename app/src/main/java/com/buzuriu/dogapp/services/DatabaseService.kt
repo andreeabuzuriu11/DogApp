@@ -11,6 +11,7 @@ import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.utils.MapUtils
 import com.buzuriu.dogapp.utils.MeetingUtils
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskCompletionSource
 import com.google.android.gms.tasks.Tasks
@@ -86,7 +87,11 @@ interface IDatabaseService {
 
     suspend fun fetchUserByUid(userUid: String, onCompleteListener: IOnCompleteListener): UserObj?
     suspend fun fetchUsers(onCompleteListener: IOnCompleteListener): List<UserObj>?
-    suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj>?
+    suspend fun fetchUserDogs(
+        userUid: String,
+        onCompleteListener: IOnCompleteListener
+    ): ArrayList<DogObj>?
+
     suspend fun fetchReviewsFor(field: String, userUid: String): ArrayList<ReviewObj>?
     suspend fun fetchMeetings(
         filtersList: ArrayList<IFilterObj>?,
@@ -718,7 +723,10 @@ class DatabaseService(
         return usersList
     }
 
-    override suspend fun fetchUserDogs(userUid: String): ArrayList<DogObj> {
+    override suspend fun fetchUserDogs(
+        userUid: String,
+        onCompleteListener: IOnCompleteListener
+    ): ArrayList<DogObj> {
         val dogList = ArrayList<DogObj>()
         val queryList = ArrayList<Task<QuerySnapshot>>()
         val query = firestore.collection(dogCollection)
@@ -740,6 +748,7 @@ class DatabaseService(
             }
         }
             .addOnFailureListener { throw it }
+            .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
 
         allTasks.await()
 

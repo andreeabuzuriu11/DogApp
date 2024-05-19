@@ -43,7 +43,10 @@ class ProgressBarViewModel : BaseViewModel() {
     }
 
     private suspend fun prepareForMain() {
-        val userDogs = databaseService.fetchUserDogs(currentUser!!.uid)
+        val userDogs = databaseService.fetchUserDogs(currentUser!!.uid, object : IOnCompleteListener{
+            override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+            }
+        })
         if (userDogs != null) {
             localDatabaseService.add(LocalDBItems.localDogsList, userDogs)
         }

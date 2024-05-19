@@ -60,10 +60,9 @@
                     android:id="@+id/city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:text="@{viewModel.user.city}"
                     android:layout_below="@id/friend_profile_linear_layout"
-                    />
+                    android:layout_centerHorizontal="true"
+                    android:text="@{viewModel.user.city}" />
 
                 <LinearLayout
                     android:id="@+id/phoneNumber"
@@ -133,20 +132,26 @@
                     android:id="@+id/placeHolder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/sendEmail"
+                    android:layout_below="@+id/dogs_list"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:text="@string/no_events"
                     android:textSize="18dp"
                     android:visibility="@{viewModel.isPlaceholderVisible ? View.GONE : View.VISIBLE}" />
 
-
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/meetings_list"
-                    android:layout_marginTop="10dp"
+                    android:id="@+id/dogs_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/sendEmail"
+                    android:visibility="@{viewModel.isLoadingViewVisible ? View.GONE : View.VISIBLE}" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/meetings_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dogs_list"
+                    android:layout_marginTop="10dp"
                     android:visibility="@{viewModel.isLoadingViewVisible ? View.GONE : View.VISIBLE}" />
 
                 <ProgressBar

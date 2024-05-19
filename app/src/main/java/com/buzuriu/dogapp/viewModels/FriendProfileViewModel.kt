@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.R
+import com.buzuriu.dogapp.adapters.DogAdapter
 import com.buzuriu.dogapp.adapters.FriendMeetingAdapter
 import com.buzuriu.dogapp.enums.MeetingStateEnum
 import com.buzuriu.dogapp.listeners.IClickListener
@@ -32,18 +33,22 @@ class FriendProfileViewModel : BaseViewModel() {
 
     var isPlaceholderVisible = MutableLiveData(false)
     private var meetingsList = ArrayList<MyCustomMeetingObj>()
+    private var dogsList = ArrayList<DogObj>()
     private val userJoinedMeetings = ArrayList<MyCustomMeetingObj>()
     var mapOfMeetingUidAndCurrentUserAsParticipant: MutableMap<String, ParticipantObj> =
         mutableMapOf()
 
     var meetingsAdapter: FriendMeetingAdapter? = null
+    var dogAdapter: DogAdapter? = null
 
     init {
         user.value = exchangeInfoService.get<UserObj>(this::class.qualifiedName!!)!!
         meetingsAdapter = FriendMeetingAdapter(meetingsList, ::selectedMeeting, this)
+        dogAdapter = DogAdapter(dogsList, ::selectedDog)
 
         viewModelScope.launch {
             fetchMeetingsForUser()
+            fetchDogsForUser()
             getAllMeetingsThatUserJoined()
         }
 
@@ -108,6 +113,34 @@ class FriendProfileViewModel : BaseViewModel() {
     }
 
 
+    public fun fetchDogsForUser() {
+        var dog: DogObj?
+        showLoadingView(true)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val dogs: ArrayList<DogObj>? =
+                databaseService.fetchUserDogs(user.value!!.uid!!, object : IOnCompleteListener {
+                    override fun onComplete(successful: Boolean, exception: java.lang.Exception?) {
+
+                    }
+                })
+
+            viewModelScope.launch(Dispatchers.Main) {
+                if (dogs != null) {
+                    for (dog in dogs)
+                        dogsList.add(dog)
+                }
+
+                dogAdapter!!.notifyDataSetChanged()
+            }
+
+        }
+
+        showLoadingView(false)
+
+    }
+
+
     private suspend fun fetchUserReviews(userUid: String): ArrayList<ReviewObj>? {
         return databaseService.fetchReviewsFor(FieldsItems.userThatReviewIsFor, userUid)
     }
@@ -124,6 +157,10 @@ class FriendProfileViewModel : BaseViewModel() {
     private fun selectedMeeting(myCustomMeetingObj: MyCustomMeetingObj) {
         exchangeInfoService.put(MeetingDetailViewModel::class.java.name, myCustomMeetingObj)
         navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
+    }
+
+    private fun selectedDog(dog: DogObj) {
+        // logic for selecting dog
     }
 
 
@@ -155,7 +192,7 @@ class FriendProfileViewModel : BaseViewModel() {
         }
     }
 
-    // todo fix duplicated
+// todo fix duplicated
 
     fun joinOrLeaveMeeting(meeting: MyCustomMeetingObj) {
         if (!LocalDataUtils.doesUserHaveAtLeastOneDog(localDatabaseService)) {
@@ -216,7 +253,7 @@ class FriendProfileViewModel : BaseViewModel() {
     }
 
 
-    // todo fix duplicated
+// todo fix duplicated
 
     private fun hasUserAlreadyJoinedMeeting(meeting: MyCustomMeetingObj): Boolean {
         var meetingsThatUserAlreadyJoined = ArrayList<MyCustomMeetingObj>()
@@ -231,7 +268,7 @@ class FriendProfileViewModel : BaseViewModel() {
     }
 
 
-    // todo fix duplicated
+// todo fix duplicated
 
     private suspend fun getAllMeetingsThatUserJoined(): ArrayList<MyCustomMeetingObj> {
         var allMeetingsParticipants: ArrayList<ParticipantObj>
