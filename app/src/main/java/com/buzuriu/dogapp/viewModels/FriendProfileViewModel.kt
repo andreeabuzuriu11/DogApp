@@ -262,7 +262,7 @@ class FriendProfileViewModel : BaseViewModel() {
             }
 
             val intent = Intent(Intent.ACTION_CALL)
-            intent.data = Uri.parse("tel:${user.value!!.name}")
+            intent.data = Uri.parse("tel:${user.value!!.phone}")
             viewModelScope.launch(Dispatchers.Main) {
 
                 activityForResultService.launchCurrentActivityResultLauncher(
