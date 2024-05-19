@@ -19,6 +19,7 @@ import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.*
 import com.buzuriu.dogapp.utils.*
+import com.buzuriu.dogapp.views.DogDetailActivity
 import com.buzuriu.dogapp.views.MeetingDetailActivity
 import com.buzuriu.dogapp.views.SelectDogForJoinMeetFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
@@ -113,8 +114,7 @@ class FriendProfileViewModel : BaseViewModel() {
     }
 
 
-    public fun fetchDogsForUser() {
-        var dog: DogObj?
+    private fun fetchDogsForUser() {
         showLoadingView(true)
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -159,8 +159,9 @@ class FriendProfileViewModel : BaseViewModel() {
         navigationService.navigateToActivity(MeetingDetailActivity::class.java, false)
     }
 
-    private fun selectedDog(dog: DogObj) {
-        // logic for selecting dog
+    private fun selectedDog(dogObj: DogObj) {
+        exchangeInfoService.put(DogDetailViewModel::class.java.name, dogObj)
+        navigationService.navigateToActivity(DogDetailActivity::class.java, false)
     }
 
 
