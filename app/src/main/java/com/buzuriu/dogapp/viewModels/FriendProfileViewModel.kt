@@ -48,6 +48,8 @@ class FriendProfileViewModel : BaseViewModel() {
         meetingsAdapter = FriendMeetingAdapter(meetingsList, ::selectedMeeting, this)
         dogAdapter = DogFriendAdapter(dogsList, ::selectedDog)
 
+        // throw RuntimeException("Test Crash") // Force a crash
+
         viewModelScope.launch {
             fetchMeetingsForUser()
             fetchDogsForUser()

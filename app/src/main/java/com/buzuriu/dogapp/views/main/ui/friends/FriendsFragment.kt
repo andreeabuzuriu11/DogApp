@@ -37,19 +37,16 @@ class FriendsFragment :
     }
 
     private fun setupRefreshMyFriendsList(view: View) {
-        var myFriendsRefreshLayout =
+        val myFriendsRefreshLayout =
             view.findViewById<SwipeRefreshLayout>(R.id.myFriendsRefreshLayout)
 
         myFriendsRefreshLayout.setOnRefreshListener {
-            // set the is refreshing to false so the loading view stops
             myFriendsRefreshLayout.isRefreshing = false
 
-            // read data again
             viewLifecycleOwner.lifecycleScope.launch {
                 mViewModel.fetchMyFriends()
             }
 
-            // notify the adapter
             currentBinding.usersFoundList.adapter!!.notifyDataSetChanged()
         }
     }
