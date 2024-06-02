@@ -82,6 +82,7 @@ class EditAccountViewModel : BaseViewModel() {
                                 )
                                 delay(2000)
                                 changeMeetingInfoRelatedToThisUser()
+                                firebaseAnalyticsService.logEvent("Event", "UserEvent", "Edit_Account")
                                 navigationService.closeCurrentActivity()
                             }
                         } else {

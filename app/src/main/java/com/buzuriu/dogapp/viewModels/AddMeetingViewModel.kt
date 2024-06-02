@@ -86,6 +86,7 @@ class AddMeetingViewModel : BaseViewModel() {
                             exchangeInfoService.put(MyMeetingsViewModel::class.java.name, true)
                             addMeetingToLocalDatabase(newMeeting)
                             delay(2000)
+                            firebaseAnalyticsService.logEvent("Event", "MeetingEvent", "Create_Meeting")
                             navigationService.closeCurrentActivity()
                         }
                     } else {

@@ -92,6 +92,8 @@ class EditMeetingViewModel : BaseViewModel() {
                                     myCustomMeetingObj!!
                                 )
                                 delay(2000)
+                                firebaseAnalyticsService.logEvent("Event", "MeetingEvent", "Edit_Meeting")
+
                                 navigationService.closeCurrentActivity()
                             }
                         } else {

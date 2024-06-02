@@ -31,6 +31,8 @@ class PastMeetingDetailViewModel : BaseViewModel() {
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(pastMeeting.value!!.meetingObj?.location!!)
 
+        firebaseAnalyticsService.logEvent("Event", "MeetingEvent", "View_Details")
+
         viewModelScope.launch {
             fetchAllParticipantsForMeeting()
         }

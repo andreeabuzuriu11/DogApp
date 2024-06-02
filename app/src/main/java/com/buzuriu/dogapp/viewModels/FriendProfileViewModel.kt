@@ -50,6 +50,8 @@ class FriendProfileViewModel : BaseViewModel() {
 
         // throw RuntimeException("Test Crash") // Force a crash
 
+        firebaseAnalyticsService.logEvent("Event", "FriendEvent", "View_Profile")
+
         viewModelScope.launch {
             fetchMeetingsForUser()
             fetchDogsForUser()

@@ -97,6 +97,8 @@ class FilterMeetingsViewModel : BaseViewModel() {
             if (i.isSelected == true)
                 listOfCheckedFilters.add(i)
 
+        firebaseAnalyticsService.logEvent("Event", "MeetingEvent", "Filter_Meeting")
+
         exchangeInfoService.put(MapViewModel::class.java.name, listOfCheckedFilters)
 
         navigationService.closeCurrentActivity()

@@ -25,6 +25,8 @@ class MeetingDetailViewModel : BaseViewModel() {
         myLatLng.value =
             MapUtils.getLatLngFromGeoPoint(myCustomMeetingObj.value?.meetingObj?.location!!)
 
+        firebaseAnalyticsService.logEvent("Event", "MeetingEvent", "View_Details")
+
         viewModelScope.launch {
             fetchDogUserAttendsWith()
         }

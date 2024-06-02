@@ -206,6 +206,9 @@ class DogDetailViewModel : BaseViewModel() {
     }
 
     fun showMore() {
+
+        firebaseAnalyticsService.logEvent("Event", "DogEvent", "Show_Characteristics")
+
         if (isDogPersonalityVisible.value!!)
             findOutMoreText.value = "Show more about " + dog.value!!.name
         else
