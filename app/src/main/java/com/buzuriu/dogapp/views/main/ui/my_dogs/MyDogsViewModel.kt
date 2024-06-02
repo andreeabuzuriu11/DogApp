@@ -70,6 +70,8 @@ class MyDogsViewModel : BaseViewModel() {
     }
 
     fun goToAccountDetails() {
+        firebaseAnalyticsService.logEvent("Event", "UserEvent", "View_Profile")
+
         navigationService.navigateToActivity(AccountDetailActivity::class.java, false)
     }
 

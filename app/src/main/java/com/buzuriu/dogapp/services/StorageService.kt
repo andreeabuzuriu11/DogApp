@@ -24,7 +24,7 @@ class StorageService : IStorageService {
         imageByteArray: ByteArray
     ): String {
 
-        var imageUrl : String = ""
+        var imageUrl = ""
         val randomUUID = StringUtils.getRandomUID()
 
         val uploadImageTask =

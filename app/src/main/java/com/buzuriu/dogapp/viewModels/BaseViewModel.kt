@@ -36,6 +36,7 @@ open class BaseViewModel : ViewModel(), KoinComponent {
     protected val snackMessageService: ISnackMessageService by inject()
     protected val storageService: IStorageService by inject()
     protected val csvDataService: ICsvDataService by inject()
+    protected val firebaseAnalyticsService: IFirebaseAnalyticsService by inject()
 
     protected val currentUser get() = firebaseAuthService.getCurrentUser()
 

@@ -107,4 +107,7 @@ dependencies {
     // for csv reading
     implementation 'org.apache.commons:commons-csv:1.5'
     implementation 'com.opencsv:opencsv:5.5.2'
+
+    implementation 'com.google.firebase:firebase-analytics-ktx:19.0.1'
+
 }

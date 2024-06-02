@@ -238,6 +238,8 @@ class AddDogViewModel : BaseViewModel() {
                                                         )
                                                         addOrEditDogToData(dog)
                                                         if (!isEdit) {
+                                                            firebaseAnalyticsService.logEvent("Event", "DogEvent", "Add_Dog")
+
                                                             snackMessageService.displaySnackBar(R.string.added_success_message)
                                                         } else {
                                                             val meetingsToChange =
@@ -253,6 +255,8 @@ class AddDogViewModel : BaseViewModel() {
                                                                         dog
                                                                     )
                                                                 )
+                                                            firebaseAnalyticsService.logEvent("Event", "DogEvent", "Edit_Dog")
+
                                                             snackMessageService.displaySnackBar(R.string.edited_success_message)
                                                         }
 

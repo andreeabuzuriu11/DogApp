@@ -25,6 +25,7 @@ class App : Application() {
         single<IStorageService> { StorageService() }
         single<ILocalDatabaseService> { LocalDatabaseService() }
         single<ICsvDataService> { CsvDataService(get(), get()) }
+        single<IFirebaseAnalyticsService> { FirebaseAnalyticsService() }
     }
 
     private val activityService: ICurrentActivityService by inject()

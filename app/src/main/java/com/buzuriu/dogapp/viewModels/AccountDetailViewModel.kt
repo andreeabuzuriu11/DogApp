@@ -30,6 +30,8 @@ class AccountDetailViewModel : BaseViewModel() {
     }
 
     fun editUser() {
+        firebaseAnalyticsService.logEvent("Event", "UserEvent", "Edit_Profile")
+
         exchangeInfoService.put(EditAccountViewModel::class.java.name, user.value!!)
         navigationService.navigateToActivity(EditAccountActivity::class.java)
     }
