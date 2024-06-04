@@ -126,7 +126,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/user_image"
-                        userImageBinding="@={viewModel.user}"
+                        userImageBinding="@{viewModel.user}"
                         android:layout_width="200dp"
                         android:layout_height="200dp"
                         android:layout_centerInParent="true"
