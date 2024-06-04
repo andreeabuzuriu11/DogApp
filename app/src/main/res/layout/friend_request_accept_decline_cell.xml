@@ -31,7 +31,7 @@
                 android:layout_centerVertical="true">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    imageBinding="@{user.imageUrl}"
+                    userImageBinding="@{user}"
                     android:layout_width="@dimen/cell_image_width"
                     android:layout_height="@dimen/cell_image_height"
                     android:layout_marginLeft="20dp"

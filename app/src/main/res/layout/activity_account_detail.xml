@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -22,10 +24,10 @@
                 android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:layout_margin="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/relativeLayout1"
+                    android:layout_margin="20dp"
                     android:layout_marginTop="30dp"
                     android:orientation="vertical">
 
@@ -77,11 +79,10 @@
                             android:layout_width="230dp"
                             android:layout_height="wrap_content"
                             android:hint="@string/phone"
-                            android:text="@{viewModel.user.phone}"
                             android:padding="10dp"
+                            android:text="@{viewModel.user.phone}"
                             android:textSize="20sp" />
                     </LinearLayout>
-
 
 
                     <View
@@ -114,19 +115,18 @@
                     </LinearLayout>
 
 
-
                 </LinearLayout>
 
                 <RelativeLayout
-                    android:background="@color/beige"
                     android:id="@+id/relativeLayout1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/beige">
 
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/user_image"
-                        userImageBinding="@{viewModel.user}"
+                        userImageBinding="@={viewModel.user}"
                         android:layout_width="200dp"
                         android:layout_height="200dp"
                         android:layout_centerInParent="true"
@@ -160,7 +160,6 @@
                 android:layout_height="150dp"
                 android:layout_centerInParent="true" />
         </RelativeLayout>
-
 
 
     </RelativeLayout>
