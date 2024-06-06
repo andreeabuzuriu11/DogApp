@@ -41,14 +41,16 @@ class ReviewParticipantsViewModel : BaseViewModel() {
                 databaseService.updateReview(
                     review.uid!!,
                     userWithReview.reviewObj!!.numberOfStars!!,
+                    userWithReview.reviewObj!!.reviewText!!,
                     object : IOnCompleteListener {
                         override fun onComplete(successful: Boolean, exception: Exception?) {
                             if (successful) {
                                 viewModelScope.launch(Dispatchers.Main) {
                                     snackMessageService.displaySnackBar("Review edited successfully")
-                                    changeNumberOfStarsInLocalDatabase(
+                                    changeNumberOfStarsAndReviewTextInLocalDatabase(
                                         userWithReview.userUid!!,
-                                        userWithReview.reviewObj!!.numberOfStars!!
+                                        userWithReview.reviewObj!!.numberOfStars!!,
+                                        userWithReview.reviewObj!!.reviewText!!
                                     )
                                     Log.d("DEBUG", "The review has been successfully changed for ${userWithReview.userObj?.name}")
                                     delay(2000)
@@ -96,7 +98,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
         }
     }
 
-    fun changeNumberOfStarsInLocalDatabase(userUid: String, newNumberOfStars: Float) {
+    fun changeNumberOfStarsAndReviewTextInLocalDatabase(userUid: String, newNumberOfStars: Float, newReviewText: String) {
         val review: ReviewObj?
         val listOfReviews =
             localDatabaseService.get<java.util.ArrayList<ReviewObj>>(LocalDBItems.reviewsUserLeft)
@@ -106,6 +108,7 @@ class ReviewParticipantsViewModel : BaseViewModel() {
             listOfReviews.remove(review)
             val newReviewObj: ReviewObj? = review
             newReviewObj!!.numberOfStars = newNumberOfStars
+            newReviewObj!!.reviewText = newReviewText
             listOfReviews.add(newReviewObj)
         }
         ratingUserCellAdapter!!.notifyDataSetChanged()

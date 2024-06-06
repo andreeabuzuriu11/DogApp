@@ -13,7 +13,7 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="140dp">
+        android:layout_height="200dp">
 
         <View
             android:layout_above="@+id/participant_cell_layout"
@@ -46,6 +46,14 @@
                     numberOfStars="@={userWithReviewObj.reviewObj.numberOfStars}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/reviewText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="My opinion is that..."
+                    android:text="@={userWithReviewObj.reviewObj.reviewText}"
+                    android:backgroundTint="@color/light_grey"/>
 
                 <Button
                     android:id="@+id/rate_it"

@@ -335,7 +335,8 @@ class MapViewModel : BaseViewModel() {
                     review.uid!!,
                     review.userIdThatLeftReview!!,
                     review.userThatReviewIsFor!!,
-                    review.numberOfStars!!
+                    review.numberOfStars!!,
+                    review.reviewText
                 )
                 allReviewsUserHasLeft.add(reviewObj)
             }

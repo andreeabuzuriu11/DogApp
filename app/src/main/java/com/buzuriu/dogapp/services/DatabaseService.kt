@@ -70,6 +70,7 @@ interface IDatabaseService {
     suspend fun updateReview(
         reviewUid: String,
         newNumberOfStars: Float,
+        newReviewText: String,
         onCompleteListener: IOnCompleteListener
     )
 
@@ -318,11 +319,15 @@ class DatabaseService(
     override suspend fun updateReview(
         reviewUid: String,
         newNumberOfStars: Float,
+        newReviewText: String,
         onCompleteListener: IOnCompleteListener
     ) {
         firestore.collection(reviewCollection)
             .document(reviewUid)
-            .update("numberOfStars", newNumberOfStars)
+            .update(
+                "numberOfStars", newNumberOfStars,
+                "reviewText", newReviewText
+            )
             .addOnCompleteListener { onCompleteListener.onComplete(it.isSuccessful, it.exception) }
             .await()
     }
