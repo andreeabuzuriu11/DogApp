@@ -539,6 +539,11 @@ class MapViewModel : BaseViewModel() {
             LocalDBItems.fragmentName,
             UserReviewsFragment::class.qualifiedName
         )
+        if (meeting.user!!.uid!=null)
+            exchangeInfoService.put(
+                UserReviewsViewModel::class.qualifiedName!!,
+                meeting.user!!.uid!!
+            )
     }
 
 
