@@ -44,6 +44,9 @@ class MeetingAdapter(
                 viewModel.joinOrLeaveMeeting(meeting)
             }
             applicationBinding.meetingState = meeting.meetingStateEnum
+            applicationBinding.userRating.setOnClickListener {
+                viewModel.seeAllReviews(meeting)
+            }
         }
     }
 }
