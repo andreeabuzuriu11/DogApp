@@ -41,10 +41,13 @@ object ImageViewBindingAdapter {
     @BindingAdapter("userImageBinding")
     @JvmStatic
     fun ImageView.imageUrl(user: UserObj?) {
-        if (user?.imageUrl != "")
-            Picasso.get()
-                .load(user?.imageUrl)
-                .placeholder(R.drawable.ic_user_account)
-                .into(this)
+        if (user!=null){
+            if (user.imageUrl != "")
+                Picasso.get()
+                    .load(user.imageUrl)
+                    .placeholder(R.drawable.ic_user_account)
+                    .into(this)
+        }
+
     }
 }
