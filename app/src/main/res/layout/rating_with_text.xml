@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="userWithReviewObj"
+            type="com.buzuriu.dogapp.models.UserWithReviewObj" />
+
+        <variable
+            name="viewModel"
+            type="com.buzuriu.dogapp.viewModels.UserReviewsViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="200dp">
+
+        <View
+            android:layout_above="@+id/participant_cell_layout"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey" />
+
+        <RelativeLayout
+            android:id="@+id/participant_cell_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:hint="user name"
+                    android:text="@{userWithReviewObj.userObj.name}"
+                    android:textSize="18dp"></TextView>
+
+                <com.buzuriu.dogapp.components.RatingBarWithNumber
+                    android:id="@+id/rating_bar_with_number"
+                    numberOfStars="@={userWithReviewObj.reviewObj.numberOfStars}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/reviewText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="My opinion is that..."
+                    android:text="@={userWithReviewObj.reviewObj.reviewText}"
+                    android:backgroundTint="@color/light_grey"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/participant_cell_layout"
+            android:background="@color/light_grey" />
+
+    </RelativeLayout>
+
+</layout>
