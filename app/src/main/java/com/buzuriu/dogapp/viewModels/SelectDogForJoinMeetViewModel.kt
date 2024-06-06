@@ -134,6 +134,7 @@ class SelectDogForJoinMeetViewModel : BaseViewModel() {
         }
         exchangeInfoService.put(MeetingDetailViewModel::class.java.name, selectedDog.value!!)
         exchangeInfoService.put(MapViewModel::class.java.name, attendedMeeting!!)
+        exchangeInfoService.put(FriendProfileViewModel::class.java.name, attendedMeeting!!)
         close()
     }
 

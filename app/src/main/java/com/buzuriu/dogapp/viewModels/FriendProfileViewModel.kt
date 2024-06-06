@@ -104,6 +104,10 @@ class FriendProfileViewModel : BaseViewModel() {
                         if (!MeetingUtils.isMeetingInThePast(meeting)) {
                             val meetingObj = MyCustomMeetingObj(meeting, user.value!!, dog!!)
                             meetingsList.add(meetingObj)
+                            if (hasUserAlreadyJoinedMeeting(meetingObj))
+                                meetingObj.meetingStateEnum = MeetingStateEnum.JOINED
+                            else
+                                meetingObj.meetingStateEnum = MeetingStateEnum.NOT_JOINED
                         }
 
                     }
@@ -144,7 +148,6 @@ class FriendProfileViewModel : BaseViewModel() {
         showLoadingView(false)
 
     }
-
 
     private suspend fun fetchUserReviews(userUid: String): ArrayList<ReviewObj>? {
         return databaseService.fetchReviewsFor(FieldsItems.userThatReviewIsFor, userUid)

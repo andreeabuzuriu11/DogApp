@@ -20,12 +20,12 @@ class FriendMeetingAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         val applicationBinding =
             FriendsMeetingCellBinding.inflate(layoutInflater, parent, false)
-        return MeetingViewHolder(applicationBinding)
+        return FriendMeetingViewHolder(applicationBinding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val meeting = meetingList[position]
-        if (holder is FriendMeetingAdapter.MeetingViewHolder) {
+        if (holder is FriendMeetingAdapter.FriendMeetingViewHolder) {
             (holder).bind(meeting)
         }
     }
@@ -34,7 +34,7 @@ class FriendMeetingAdapter(
         return meetingList.size
     }
 
-    inner class MeetingViewHolder(private var applicationBinding: FriendsMeetingCellBinding) :
+    inner class FriendMeetingViewHolder(private var applicationBinding: FriendsMeetingCellBinding) :
         RecyclerView.ViewHolder(applicationBinding.root) {
         fun bind(meeting: MyCustomMeetingObj) {
             applicationBinding.meeting = meeting
