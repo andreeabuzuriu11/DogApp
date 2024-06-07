@@ -2,18 +2,20 @@ package com.buzuriu.dogapp.viewModels
 
 import androidx.lifecycle.viewModelScope
 import com.buzuriu.dogapp.adapters.RatingWithTextAdapter
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.ReviewObj
-import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.models.UserWithReviewObj
 import com.buzuriu.dogapp.utils.FieldsItems
+import com.google.firebase.firestore.auth.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class UserReviewsViewModel : BaseViewModel() {
 
     var ratingWithTextAdapter: RatingWithTextAdapter? = null
     private var userWithReviewList = ArrayList<UserWithReviewObj>()
-    private var reviewList = ArrayList<ReviewObj>()
+    private var reviewList = ArrayList<UserWithReviewObj>()
     private var currentUid : String? = null
 
     init {
@@ -38,8 +40,8 @@ class UserReviewsViewModel : BaseViewModel() {
         }
     }
 
-    private suspend fun getAllReviewsThatUserGot(): ArrayList<ReviewObj> {
-        val allReviewsUserHasLeft = ArrayList<ReviewObj>()
+    private suspend fun getAllReviewsThatUserGot(): ArrayList<UserWithReviewObj> {
+        val allReviewsUserHasGot = ArrayList<UserWithReviewObj>()
 
         val list: ArrayList<ReviewObj>? =
             databaseService.fetchReviewsFor(FieldsItems.userThatReviewIsFor, currentUid!!)
@@ -52,10 +54,21 @@ class UserReviewsViewModel : BaseViewModel() {
                     review.numberOfStars!!,
                     review.reviewText
                 )
-                allReviewsUserHasLeft.add(reviewObj)
+                var userObj = databaseService.fetchUserByUid(review.userIdThatLeftReview!!, object : IOnCompleteListener{
+                    override fun onComplete(successful: Boolean, exception: Exception?) {
+                        TODO("Not yet implemented")
+
+
+
+                    }
+
+                })
+
+                var userWithReviewObj = UserWithReviewObj(review.userIdThatLeftReview!!, userObj!!, reviewObj)
+                allReviewsUserHasGot.add(userWithReviewObj)
             }
         }
-        return allReviewsUserHasLeft
+        return allReviewsUserHasGot
     }
 
     private suspend fun fetchUserReviews(userUid: String) {

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="userWithReviewObj"
-            type="com.buzuriu.dogapp.models.ReviewObj" />
+            type="com.buzuriu.dogapp.models.UserWithReviewObj" />
 
         <variable
             name="viewModel"
@@ -38,12 +38,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:hint="user name"
-                    android:text="@{userWithReviewObj.userIdThatLeftReview}"
+                    android:text="@{userWithReviewObj.userObj.name}"
                     android:textSize="18dp"></TextView>
 
                 <com.buzuriu.dogapp.components.RatingBarWithNumber
                     android:id="@+id/rating_bar_with_number"
-                    numberOfStars="@={userWithReviewObj.numberOfStars}"
+                    numberOfStars="@={userWithReviewObj.reviewObj.numberOfStars}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="My opinion is that..."
-                    android:text="@={userWithReviewObj.reviewText}"
+                    android:text="@={userWithReviewObj.reviewObj.reviewText}"
                     android:backgroundTint="@color/light_grey"/>
 
             </LinearLayout>

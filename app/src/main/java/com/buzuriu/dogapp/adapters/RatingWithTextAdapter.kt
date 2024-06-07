@@ -7,9 +7,10 @@ import com.buzuriu.dogapp.databinding.RatingWithTextBinding
 import com.buzuriu.dogapp.models.ReviewObj
 import com.buzuriu.dogapp.models.UserWithReviewObj
 import com.buzuriu.dogapp.viewModels.UserReviewsViewModel
+import com.google.firebase.firestore.auth.User
 
 class RatingWithTextAdapter(
-    private var reviewUserList: ArrayList<ReviewObj>,
+    private var reviewUserList: ArrayList<UserWithReviewObj>,
     var viewModel: UserReviewsViewModel
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -34,7 +35,7 @@ class RatingWithTextAdapter(
 
     inner class RatingWithTextViewHolder(private var applicationBinding: RatingWithTextBinding)
         : RecyclerView.ViewHolder(applicationBinding.root) {
-        fun bind(userWithReviewObj: ReviewObj) {
+        fun bind(userWithReviewObj: UserWithReviewObj) {
             applicationBinding.userWithReviewObj = userWithReviewObj
         }
     }
