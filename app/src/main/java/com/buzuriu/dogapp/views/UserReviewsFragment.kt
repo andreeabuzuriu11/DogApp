@@ -1,5 +1,11 @@
 package com.buzuriu.dogapp.views
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.databinding.FragmentUserReviewsBinding
 import com.buzuriu.dogapp.viewModels.UserReviewsViewModel
@@ -14,6 +20,22 @@ class UserReviewsFragment :
     override fun setupDataBinding(binding: FragmentUserReviewsBinding) {
         currentBinding = binding
         binding.viewModel = mViewModel
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupReviewsList()
+    }
+
+    private fun setupReviewsList() {
+        val recyclerView = currentBinding.reviewList
+        recyclerView.layoutManager = LinearLayoutManager(
+            activity,
+            RecyclerView.VERTICAL,
+            false
+        )//LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = mViewModel.ratingWithTextAdapter
     }
 
     override val layoutId: Int

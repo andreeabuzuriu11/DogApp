@@ -19,7 +19,7 @@ class UserReviewsViewModel : BaseViewModel() {
     init {
         currentUid = exchangeInfoService.get<String>(this::class.java.name)
 
-        ratingWithTextAdapter = RatingWithTextAdapter(userWithReviewList, this)
+        ratingWithTextAdapter = RatingWithTextAdapter(reviewList, this)
 
         viewModelScope.launch {
             fetchAllReviewsUserLeft()
@@ -31,9 +31,9 @@ class UserReviewsViewModel : BaseViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val list = getAllReviewsThatUserGot()
             viewModelScope.launch(Dispatchers.Main) {
-                userWithReviewList.clear()
-
+                reviewList.clear()
                 reviewList.addAll(list)
+                ratingWithTextAdapter!!.notifyDataSetChanged()
             }
         }
     }
