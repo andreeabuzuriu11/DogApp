@@ -20,6 +20,7 @@ interface IFirebaseAuthService {
     )
 
     suspend fun resetPassword(email: String, onCompleteListener: IOnCompleteListener)
+    fun deleteAccount(onCompleteListener: IOnCompleteListener)
 
     fun logout()
 }
@@ -58,5 +59,9 @@ class FirebaseAuthService : IFirebaseAuthService {
 
     override fun logout() {
         auth.signOut()
+    }
+
+    override fun deleteAccount(onCompleteListener: IOnCompleteListener) {
+        auth.currentUser!!.delete()
     }
 }
