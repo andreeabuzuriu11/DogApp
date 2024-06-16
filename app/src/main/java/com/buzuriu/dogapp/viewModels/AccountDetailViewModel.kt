@@ -2,9 +2,15 @@ package com.buzuriu.dogapp.viewModels
 
 import android.graphics.Bitmap
 import androidx.lifecycle.MutableLiveData
+import com.buzuriu.dogapp.listeners.IClickListener
+import com.buzuriu.dogapp.listeners.IOnCompleteListener
+import com.buzuriu.dogapp.models.CountryObj
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.EditAccountActivity
+import com.buzuriu.dogapp.views.auth.LoginActivity
+import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
+import java.lang.Exception
 
 
 class AccountDetailViewModel : BaseViewModel() {
@@ -34,5 +40,28 @@ class AccountDetailViewModel : BaseViewModel() {
 
         exchangeInfoService.put(EditAccountViewModel::class.java.name, user.value!!)
         navigationService.navigateToActivity(EditAccountActivity::class.java)
+    }
+
+    fun deleteUser() {
+        alertMessageService.displayAlertDialog(
+            "Delete account?",
+            "Are you sure you want to delete your account? This action cannot be undone.",
+            "Yes, delete it",
+            object :
+                IClickListener {
+                override fun clicked() {
+                   firebaseAuthService.deleteAccount(object : IOnCompleteListener{
+                       override fun onComplete(successful: Boolean, exception: Exception?) {
+                           var countriesList =
+                               localDatabaseService.get<ArrayList<CountryObj>>(LocalDBItems.countries)!!
+                           localDatabaseService.clear()
+                           localDatabaseService.add(LocalDBItems.countries, countriesList)
+
+                           navigationService.navigateToActivity(LoginActivity::class.java, true)
+                           firebaseAuthService.logout()
+                       }
+                   });
+                }
+            })
     }
 }

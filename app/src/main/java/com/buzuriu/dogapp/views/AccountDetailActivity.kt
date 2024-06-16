@@ -19,7 +19,7 @@ class AccountDetailActivity :
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_edit, menu)
+        menuInflater.inflate(R.menu.menu_edit_and_delete, menu)
         return true
     }
 
@@ -28,6 +28,10 @@ class AccountDetailActivity :
         val id: Int = item.itemId
         if (id == R.id.edit) {
             mViewModel.editUser()
+            return true
+        }
+        if (id == R.id.delete) {
+            mViewModel.deleteUser()
             return true
         }
         return super.onOptionsItemSelected(item)

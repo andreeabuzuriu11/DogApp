@@ -62,6 +62,9 @@ class FirebaseAuthService : IFirebaseAuthService {
     }
 
     override fun deleteAccount(onCompleteListener: IOnCompleteListener) {
-        auth.currentUser!!.delete()
+        var currentUser = getCurrentUser()
+        currentUser!!.delete().addOnCompleteListener{
+            onCompleteListener.onComplete(it.isSuccessful, it.exception)
+        }
     }
 }
