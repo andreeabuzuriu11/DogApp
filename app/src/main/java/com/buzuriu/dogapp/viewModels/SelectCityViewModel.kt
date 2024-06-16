@@ -16,6 +16,7 @@ class SelectCityViewModel : BaseViewModel() {
     var selectedCountry: Country? = null
     var selectedCity: CityObj? = null
     var locationObj: LocationObj? = null
+    var isFromEditAccount: Boolean = false
     private var citiesList: ArrayList<CityObj> = ArrayList()
 
     init {

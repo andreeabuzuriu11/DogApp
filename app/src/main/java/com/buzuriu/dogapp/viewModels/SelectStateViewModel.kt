@@ -16,6 +16,7 @@ class SelectStateViewModel : BaseViewModel() {
     var selectedState: StateObj? = null
     var stateAdapter: StateAdapter? = null
     var locationObj: LocationObj? = null
+
     private var statesList: ArrayList<StateObj> = ArrayList()
 
 

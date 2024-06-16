@@ -14,9 +14,14 @@ import com.buzuriu.dogapp.R
 import com.buzuriu.dogapp.listeners.IGetActivityForResultListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.AlertDialogTextObj
+import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.utils.ImageUtils
+import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.views.SelectCountryFragment
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
+import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -40,6 +45,13 @@ class EditAccountViewModel : BaseViewModel() {
             userImageUrl.value = user.value?.imageUrl
     }
 
+    override fun onResume() {
+        val selectedCity = exchangeInfoService.get<LocationObj>(this::class.qualifiedName!!)
+        if (selectedCity != null) {
+            user.value!!.city = selectedCity.toString()
+        }
+    }
+
     private fun checkUserGender(gender: String) {
         if (gender == "female")
             isFemaleGenderSelected.value = true
@@ -59,6 +71,7 @@ class EditAccountViewModel : BaseViewModel() {
             user.value!!.name,
             user.value!!.phone,
             currentGenderString,
+            user.value!!.city
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -214,5 +227,15 @@ class EditAccountViewModel : BaseViewModel() {
 
     private fun exit() {
         navigationService.closeCurrentActivity()
+    }
+
+    fun selectCity() {
+        exchangeInfoService.put(SelectCountryViewModel::class.java.name, true)
+        navigationService.showOverlay(
+            OverlayActivity::class.java,
+            false,
+            LocalDBItems.fragmentName,
+            SelectCountryFragment::class.qualifiedName
+        )
     }
 }

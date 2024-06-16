@@ -10,7 +10,9 @@ import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.services.ILocalDatabaseService
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.EditAccountActivity
+import com.buzuriu.dogapp.views.SelectCountryFragment
 import com.buzuriu.dogapp.views.auth.LoginActivity
+import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
 import java.lang.Exception
 
@@ -63,7 +65,6 @@ class AccountDetailViewModel : BaseViewModel() {
                            localDatabaseService.clear()
                            localDatabaseService.add(LocalDBItems.countries, countriesList)
 
-
                            navigationService.navigateToActivity(LoginActivity::class.java, true)
                            firebaseAuthService.logout()
                        }
@@ -71,4 +72,6 @@ class AccountDetailViewModel : BaseViewModel() {
                 }
             })
     }
+
+
 }
