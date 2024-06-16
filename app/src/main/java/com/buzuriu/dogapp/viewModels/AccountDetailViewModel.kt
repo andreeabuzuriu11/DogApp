@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import com.buzuriu.dogapp.listeners.IClickListener
 import com.buzuriu.dogapp.listeners.IOnCompleteListener
 import com.buzuriu.dogapp.models.CountryObj
+import com.buzuriu.dogapp.models.MyCustomMeetingObj
 import com.buzuriu.dogapp.models.UserObj
+import com.buzuriu.dogapp.services.ILocalDatabaseService
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.views.EditAccountActivity
 import com.buzuriu.dogapp.views.auth.LoginActivity
@@ -52,10 +54,15 @@ class AccountDetailViewModel : BaseViewModel() {
                 override fun clicked() {
                    firebaseAuthService.deleteAccount(object : IOnCompleteListener{
                        override fun onComplete(successful: Boolean, exception: Exception?) {
-                           var countriesList =
+                           val countriesList =
                                localDatabaseService.get<ArrayList<CountryObj>>(LocalDBItems.countries)!!
+
+                           // todo delete user meetings
+                           // todo delete user as participant for all meetings
+
                            localDatabaseService.clear()
                            localDatabaseService.add(LocalDBItems.countries, countriesList)
+
 
                            navigationService.navigateToActivity(LoginActivity::class.java, true)
                            firebaseAuthService.logout()
