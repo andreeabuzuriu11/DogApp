@@ -4,6 +4,7 @@ import com.buzuriu.dogapp.adapters.EditStateAdapter
 import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.models.StateObj
 import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.views.EditCityFragment
 import com.buzuriu.dogapp.views.SelectCityFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import java.util.*
@@ -47,11 +48,11 @@ class EditStateViewModel : BaseViewModel() {
                 OverlayActivity::class.java,
                 false,
                 LocalDBItems.fragmentName,
-                SelectCityFragment::class.qualifiedName
+                EditCityFragment::class.qualifiedName
             )
 
             exchangeInfoService.put(
-                SelectCityViewModel::class.qualifiedName!!,
+                EditCityViewModel::class.qualifiedName!!,
                 locationObj!!
             )
             close()

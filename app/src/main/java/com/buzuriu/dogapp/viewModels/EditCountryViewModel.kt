@@ -7,6 +7,7 @@ import com.buzuriu.dogapp.models.DogPersonality
 import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.utils.LocalDBItems
 import com.buzuriu.dogapp.viewModels.auth.RegisterViewModel
+import com.buzuriu.dogapp.views.EditStateFragment
 import com.buzuriu.dogapp.views.SelectStateFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import java.util.*
@@ -50,12 +51,12 @@ class EditCountryViewModel : BaseViewModel() {
                 OverlayActivity::class.java,
                 false,
                 LocalDBItems.fragmentName,
-                SelectStateFragment::class.qualifiedName
+                EditStateFragment::class.qualifiedName
             )
 
             if (selectedCountry != null)
                 exchangeInfoService.put(
-                    SelectStateViewModel::class.qualifiedName!!,
+                    EditStateViewModel::class.qualifiedName!!,
                     locationObj!!
                 )
             close()

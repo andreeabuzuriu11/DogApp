@@ -1,6 +1,5 @@
 package com.buzuriu.dogapp.viewModels
 
-import com.beastwall.localisation.model.State
 import com.buzuriu.dogapp.adapters.StateAdapter
 import com.buzuriu.dogapp.models.LocationObj
 import com.buzuriu.dogapp.models.StateObj
