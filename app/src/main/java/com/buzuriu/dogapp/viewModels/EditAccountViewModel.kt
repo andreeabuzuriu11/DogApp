@@ -19,6 +19,7 @@ import com.buzuriu.dogapp.models.MeetingObj
 import com.buzuriu.dogapp.models.UserObj
 import com.buzuriu.dogapp.utils.ImageUtils
 import com.buzuriu.dogapp.utils.LocalDBItems
+import com.buzuriu.dogapp.views.EditCountryFragment
 import com.buzuriu.dogapp.views.SelectCountryFragment
 import com.buzuriu.dogapp.views.main.ui.OverlayActivity
 import com.buzuriu.dogapp.views.main.ui.my_dogs.MyDogsViewModel
@@ -230,12 +231,12 @@ class EditAccountViewModel : BaseViewModel() {
     }
 
     fun selectCity() {
-        exchangeInfoService.put(SelectCountryViewModel::class.java.name, true)
+        exchangeInfoService.put(EditCountryViewModel::class.java.name, true)
         navigationService.showOverlay(
             OverlayActivity::class.java,
             false,
             LocalDBItems.fragmentName,
-            SelectCountryFragment::class.qualifiedName
+            EditCountryFragment::class.qualifiedName
         )
     }
 }

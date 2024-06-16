@@ -110,4 +110,7 @@
     <string name="select_state">Select state</string>
     <string name="owner">Owner?</string>
     <string name="location">Location</string>
+    <string name="edit_country">Edit country</string>
+    <string name="edit_state">Edit state</string>
+    <string name="edit_city">Edit city</string>
 </resources>
