@@ -185,7 +185,6 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/user_image"
-                        bitmapBinding="@{viewModel.userBitmapImage}"
                         userImageBinding="@{viewModel.user}"
                         android:layout_width="200dp"
                         android:layout_height="200dp"
@@ -193,7 +192,8 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="20dp" />
+                        android:layout_marginBottom="20dp"
+                        android:src="@drawable/ic_user_account"/>
 
                     <ImageView
                         android:layout_width="45dp"
